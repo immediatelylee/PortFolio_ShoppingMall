@@ -148,3 +148,5 @@ $RECYCLE.BIN/
 .gradle/8.2.1/checksums/md5-checksums.bin
 
 .gradle/8.2.1/checksums/sha1-checksums.bin
+
+build/generated/querydsl/com/shoppingmall/project_shoppingmall/domain/QItem.java
