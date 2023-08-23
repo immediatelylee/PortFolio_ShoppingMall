@@ -19,9 +19,13 @@ spring:
       hibernate.format_sql: true
       hibernate.default_batch_fetch_size: 100
   sql.init.mode: always
+  # Thymeleaf cache 사용중지
+  thymeleaf.cache: false
+
 logging:
   level:
     org.hibernate.type.descriptor.sql.BasicBinder: trace
+
 
 
 ---
