@@ -3,7 +3,7 @@ package com.shoppingmall.project_shoppingmall.repository;
 import com.querydsl.core.*;
 import com.querydsl.jpa.impl.*;
 import com.shoppingmall.project_shoppingmall.domain.*;
-import com.shoppingmall.project_shoppingmall.domain.constant.*;
+import com.shoppingmall.project_shoppingmall.constant.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.context.*;

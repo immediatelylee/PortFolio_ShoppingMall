@@ -1,6 +1,6 @@
 package com.shoppingmall.project_shoppingmall.domain;
 
-import com.shoppingmall.project_shoppingmall.domain.constant.*;
+import com.shoppingmall.project_shoppingmall.constant.*;
 import lombok.*;
 
 import javax.persistence.*;
