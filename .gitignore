@@ -223,3 +223,5 @@ build/test-results/test/TEST-com.shoppingmall.project_shoppingmall.ProjectShoppi
 build/test-results/test/TEST-com.shoppingmall.project_shoppingmall.repository.ItemRepositoryTest.xml
 
 build/test-results/test/TEST-com.shoppingmall.project_shoppingmall.service.MemberServiceTest.xml
+
+gradle/wrapper/gradle-wrapper.jar
