@@ -13,7 +13,7 @@ spring:
   jpa:
     open-in-view: false
     defer-datasource-initialization: true
-    hibernate.ddl-auto: create
+    hibernate.ddl-auto: validate
     show-sql: true
     properties:
       hibernate.format_sql: true
@@ -26,7 +26,14 @@ logging:
   level:
     org.hibernate.type.descriptor.sql.BasicBinder: trace
 
-
+#파일 한 개당 최대 사이즈
+spring.servlet.multipart.maxFileSize: 20MB
+#요청당 최대 파일 크기
+spring.servlet.multipart.maxRequestSize: 100MB
+#상품 이미지 업로드 경로
+itemImgLocation: C:/shop/item
+#리소스 업로드 경로
+uploadPath: file:///C:/shop/
 
 ---
 spring:
