@@ -1,6 +1,7 @@
 package com.shoppingmall.project_shoppingmall.domain;
 
 import com.shoppingmall.project_shoppingmall.constant.*;
+import com.shoppingmall.project_shoppingmall.dto.*;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,6 +34,13 @@ public class Item extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus; //상품 판매 상태
 
+    public void updateItem(ItemFormDto itemFormDto){
+        this.itemNm = itemFormDto.getItemNm();
+        this.price = itemFormDto.getPrice();
+        this.stockNumber = itemFormDto.getStockNumber();
+        this.itemDetail = itemFormDto.getItemDetail();
+        this.itemSellStatus = itemFormDto.getItemSellStatus();
+    }
 
 
 }
