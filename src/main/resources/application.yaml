@@ -35,6 +35,9 @@ itemImgLocation: C:/shop/item
 #리소스 업로드 경로
 uploadPath: file:///C:/shop/
 
+#기본 batch size 설정
+spring.jpa.properties.hibernate.default_batch_fetch_size: 1000
+
 ---
 spring:
   config.activate.on-profile: test
