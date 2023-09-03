@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.*;
 import java.security.*;
+import java.sql.*;
 import java.util.*;
 
 @Controller
@@ -53,6 +54,12 @@ public class OrderController {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 4);
         Page<OrderHistDto> ordersHistDtoList = orderService.getOrderList(principal.getName(), pageable);
 
+        System.out.println("로그");
+        List<OrderHistDto> content = ordersHistDtoList.getContent();
+        for (OrderHistDto orderHistDto : content) {
+            System.out.println("orderHistDto : " + orderHistDto.toString());
+        }
+
         model.addAttribute("orders", ordersHistDtoList);
         model.addAttribute("page", pageable.getPageNumber());
         model.addAttribute("maxPage", 5);
@@ -60,15 +67,15 @@ public class OrderController {
         return "order/orderHist";
     }
 
-//    @PostMapping("/order/{orderId}/cancel")
-//    public @ResponseBody ResponseEntity cancelOrder(@PathVariable("orderId") Long orderId , Principal principal){
-//
-//        if(!orderService.validateOrder(orderId, principal.getName())){
-//            return new ResponseEntity<String>("주문 취소 권한이 없습니다.", HttpStatus.FORBIDDEN);
-//        }
-//
-//        orderService.cancelOrder(orderId);
-//        return new ResponseEntity<Long>(orderId, HttpStatus.OK);
-//    }
+    @PostMapping("/order/{orderId}/cancel")
+    public @ResponseBody ResponseEntity cancelOrder(@PathVariable("orderId") Long orderId , Principal principal){
+
+        if(!orderService.validateOrder(orderId, principal.getName())){
+            return new ResponseEntity<String>("주문 취소 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+
+        orderService.cancelOrder(orderId);
+        return new ResponseEntity<Long>(orderId, HttpStatus.OK);
+    }
 
 }
