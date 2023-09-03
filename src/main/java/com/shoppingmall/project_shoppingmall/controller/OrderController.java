@@ -54,12 +54,6 @@ public class OrderController {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 4);
         Page<OrderHistDto> ordersHistDtoList = orderService.getOrderList(principal.getName(), pageable);
 
-        System.out.println("로그");
-        List<OrderHistDto> content = ordersHistDtoList.getContent();
-        for (OrderHistDto orderHistDto : content) {
-            System.out.println("orderHistDto : " + orderHistDto.toString());
-        }
-
         model.addAttribute("orders", ordersHistDtoList);
         model.addAttribute("page", pageable.getPageNumber());
         model.addAttribute("maxPage", 5);
