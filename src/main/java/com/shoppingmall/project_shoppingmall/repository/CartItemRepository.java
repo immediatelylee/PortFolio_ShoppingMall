@@ -3,8 +3,13 @@ package com.shoppingmall.project_shoppingmall.repository;
 import com.shoppingmall.project_shoppingmall.domain.*;
 import org.springframework.data.jpa.repository.*;
 
-public interface CartRepository extends JpaRepository<Cart, Long> {
-    Cart findByMemberId(Long memberId);
+import java.util.List;
+
+public interface CartItemRepository extends JpaRepository<CartItem, Long> {
+
+    CartItem findByCartIdAndItemId(Long cartId, Long itemId);
+
+
 
 
 }
