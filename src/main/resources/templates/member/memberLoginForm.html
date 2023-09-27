@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
+      layout:decorate="~{layouts/layout2}">
 
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
@@ -9,11 +9,22 @@
         .error {
             color: #bd2130;
         }
+        /* 추가한 스타일 */
+        .center-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .form-group {
+            width: 100%;
+            max-width: 300px; /* 입력 창의 최대 너비 설정 */
+        }
     </style>
 </th:block>
 
-<div layout:fragment="content">
-
+<div layout:fragment="content" class=" center-form">
     <form role="form" method="post" action="/members/login">
         <div class="form-group">
             <label th:for="email">이메일주소</label>

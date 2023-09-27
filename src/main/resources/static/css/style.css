@@ -1,0 +1,235 @@
+
+/* Reset some default styles */
+body, ul, li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Style the top header */
+.header-top {
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+}
+
+.left-nav {
+    margin-left: 100px;
+}
+
+/* Style the navigation menu in the top header */
+.header-top nav ul {
+    display: flex;
+}
+
+/* Style the top header menu items */
+.header-top nav li {
+    margin: 10px 0px;
+
+
+}
+/* 가장 오른쪽 메뉴 아이템에만 오른쪽 여백을 추가 */
+.header-top nav li:last-child {
+    margin-right: 300px;
+}
+
+/* Style the top header links */
+.header-top nav a {
+    text-decoration: none;
+    color: white;
+    font-weight:bold;
+    margin-top: 10px;
+}
+
+/* Style the bottom header */
+.header-bottom {
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    height: 165px;
+}
+
+/* Style the h1 in the bottom header */
+.header-bottom h1 {
+    color: #333;
+}
+
+
+
+.menu-box {
+    display: flex;
+    align-items: center;
+    margin-left: 100px; /* 왼쪽 여백 추가 */
+}
+
+/* Style the submenu icon */
+.submenu img {
+    width: 50px; /* 아이콘 크기 조정 */
+    height: 50px;
+    margin-right: 50px; /* 아이콘과 메뉴 항목 사이에 여백 추가 */
+    margin-left: 160px; /* 왼쪽 여백 추가 */
+    margin-bottom: 00px;
+    margin-top: 10px;
+}
+
+/* Style the menu */
+.menu {
+    display: flex;
+    align-items: center;
+}
+
+/* Style the menu items */
+.menu-item {
+    margin-right: 20px; /* 메뉴 항목 사이에 여백 추가 */
+    font-weight: bold; /* 메뉴 항목 폰트 굵게 설정 */
+    white-space: nowrap; /* 줄바꿈을 방지하여 한 줄에 표시 */
+
+}
+/* Style the menu item box for "MuPPY Market" */
+.menu-item-box {
+    border: 2px solid transparent; /* 테두리 초기화 */
+    border-right-color: #000; /* 오른쪽 테두리 색상을 검정으로 설정 */
+    padding: 0px; /* 내부 여백 추가 */
+    vertical-align: middle; /* 텍스트를 수직으로 중앙 정렬 */
+}
+.menu-item-box a {
+    color: black;
+}
+.menu-item-box a:hover{
+    color: black;
+}
+.menu-item-box a:visited {
+    color: black;
+}
+.menu-item-box a:active{
+    color: black;
+}
+
+/* Style "MuPPY Market" */
+.menu-item:nth-child(1) {
+    font-size: 30px; /* 원하는 폰트 크기로 설정 */
+}
+.menu-item:nth-child(2) {
+    font-size: 24px; /* 원하는 폰트 크기로 설정 */
+    margin-left: 20px; /* 메뉴 항목 사이에 여백 추가 */
+}
+.menu-item:nth-child(3) {
+    font-size: 24px; /* 원하는 폰트 크기로 설정 */
+}
+.menu-item:nth-child(4) {
+    font-size: 24px; /* 원하는 폰트 크기로 설정 */
+}
+.menu-item:nth-child(5) {
+    font-size: 24px; /* 원하는 폰트 크기로 설정 */
+}
+.menu-item:nth-child(6) {
+    font-size: 24px; /* 원하는 폰트 크기로 설정 */
+}
+
+/* Style the menu separator */
+.menu-separator {
+    margin-right: 10px; /* 구분선과 메뉴 항목 사이에 여백 추가 */
+}
+
+/* Style the search container */
+.search-container {
+    margin-left: 360px; /* 왼쪽 여백 추가 */
+    margin-right: 260px; /* 오른쪽 여백 추가 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+}
+
+/* Style the search box (containing input and button) */
+.search-box {
+    background-color: #fff;
+    border: 1px solid #000;
+    border-top: transparent;
+    border-left: transparent;
+    border-right: transparent;
+    border-bottom: 1px solid #000;
+    display: flex;
+    align-items: center;
+    padding: 0px;
+    flex-grow: 1; /* 확장 가능한 너비 설정 */
+}
+
+/* Style the search input */
+.search-input {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    flex-grow: 1;
+    padding: 5px;
+}
+
+/* Style the search button */
+.search-button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+
+/* Style the search icon */
+#search-icon img {
+    width: 25px;
+    height: 25px;
+}
+/* Style the icon container */
+.icon-container {
+    display: flex;
+    gap: 10px;
+    margin-right: 10px;
+}
+
+/* Style the icon buttons */
+.icon-button {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+
+/* Style the cart and wish icons */
+.icon-button img {
+    width: 25px;
+    height: 25px;
+}
+
+.footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 15px 0;
+    text-align: center;
+}
+.content{
+    margin-bottom:100px;
+    margin-top: 50px;
+    margin-left: 200px;
+    margin-right: 200px;
+}
+/*테스트*/
+html {
+    position: relative;
+    min-height: 100%;
+    margin: 0;
+}
+body {
+    min-height: 100%;
+}
