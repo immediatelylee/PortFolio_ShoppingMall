@@ -99,15 +99,19 @@ body, ul, li {
 }
 .menu-item-box a {
     color: black;
+    text-decoration-line: none;
 }
 .menu-item-box a:hover{
     color: black;
+    text-decoration-line: none;
 }
 .menu-item-box a:visited {
     color: black;
+    text-decoration-line: none;
 }
 .menu-item-box a:active{
     color: black;
+    text-decoration-line: none;
 }
 
 /* Style "MuPPY Market" */
