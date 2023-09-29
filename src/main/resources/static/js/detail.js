@@ -125,7 +125,4 @@ window.onload=function(){
             }
         });
     }
-
-
-
 }
