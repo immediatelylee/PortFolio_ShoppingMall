@@ -1,0 +1,120 @@
+*{margin:0; padding:0;}
+li{list-style:none;}
+
+.slide_wrapper{
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    height: 660px;
+    overflow:hidden;
+}
+.slides{
+    position: absolute;
+
+}
+.slides.animated{
+    transition: 0.5s ease-out;
+}
+.slides li{
+    width: 1920px;
+    height: 610px;
+    background:#ccc;
+    float:left;
+}
+
+.slideText{
+    /* position: absolute;  수정본에서 마지막에 알려줌 오늘 문제였던거 */
+    bottom: 40.5%;
+    right: 114px;
+    font-size: 18px;
+}
+
+/* 구형컨트롤러 */
+
+.controls{
+    bottom:15.5%; /* Adjust the distance from the bottom as needed */
+    right: 83px; /* Adjust the distance from the right as needed */
+    position: absolute;
+    text-align: right;
+    /* margin-top: 50px; */
+    z-index: 99999;
+    color: white;
+    display: flex;
+}
+
+/* 배경 원 */
+.controls a{
+    display: block;
+    background: #bbb5;
+    color: white;
+    padding: 9px;
+    padding-left: 12px;
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    line-height: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    opacity: 100%;
+    text-shadow: none;
+    letter-spacing: 2px;
+}
+
+
+/* 재생, 일시정지 */
+.pauseplay {
+    position: absolute;
+    bottom:2.5%; /* Adjust the distance from the bottom as needed */
+    right: 141px; /* Adjust the distance from the right as needed */
+    display: flex;
+}
+
+.pauseplay .toggle {
+    display: block;
+    background-size: 30px;
+    background-color: #bbb5;
+    color: white;
+    padding: 9px;
+    padding-left: 9px;
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    line-height: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    opacity: 100%;
+    text-shadow: none;
+    letter-spacing: 2px;
+}
+
+/** 231022 **/
+a.prev {
+    background: url(./web/upload/img/prev.png);
+    background-size: 33px !important;
+    filter: invert(1);
+    background-color: #4445 !important;
+    border-radius: 50%;
+}
+
+a.next {
+    background: url(./web/upload/img/next.png);
+    background-size: 33px !important;
+    filter: invert(1);
+    background-color: #4445 !important;
+    border-radius: 50%;
+}
+
+.slideText {
+    padding: 3px 12px;
+    /* 색상도 추가함. */
+    color: #90908F;
+
+}
+a.toggle {
+    right: 16px;
+    position: relative;
+}
