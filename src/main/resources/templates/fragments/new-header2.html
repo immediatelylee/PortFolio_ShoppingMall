@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css}">
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+    <title>Mary Market</title>
+</head>
+<body>
+<div th:fragment="header">
+
+    <section id="hd_top">
+        <nav class="left-nav">
+            <ul>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                    <a class="nav-link" href="/admin/item/new">상품 등록</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                    <a class="nav-link" href="/admin/items">상품 관리</a>
+                </li>
+            </ul>
+        </nav>
+        <nav>
+            <ul>
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="nav-link" href="/members/login">LOGIN</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="/members/logout">LOGOUT</a>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="/members/new">JOIN</a></li>
+                <li class="nav-item" >
+                    <a class="nav-link" th:href="@{/orders}" sec:authorize="isAuthenticated()">ORDER</a>
+                    <a class="nav-link" href="/members/login" sec:authorize="isAnonymous()">ORDER</a>
+
+                </li>
+                <li class="nav-item" >
+                    <a class="nav-link" th:href="@{/cart}" sec:authorize="isAuthenticated()">CART</a>
+                    <a class="nav-link" href="/members/login" sec:authorize="isAnonymous()">CART</a>
+                </li>
+            </ul>
+        </nav>
+    </section>
+
+    <header id="header">
+        <div class="inner">
+            <div class="hd_left">
+                <div class="hd_subMenu">
+                    <img src="/web/upload/icon/menu_icon.png" class="menu">
+                    <img src="/web/upload/icon/close_icon.png" class="close">
+                    <div id="hd_subMenu">
+                        <div class="inner">
+                            <section class="hd_sub_left">
+                                <ul class="hd_sub_top">
+                                    <li>
+                                        <a href="/product/list.html?cate_no=4446">마리배송</a>
+                                    </li>
+                                    <li class="special">
+                                        <a href="/product/list.html?cate_no=1453">마리특가</a>
+                                    </li>
+                                    <li>
+                                        <a href="/store.html">매장안내</a>
+                                    </li>
+                                </ul>
+                                <ul class="hd_sub_btm">
+                                    <li>
+                                        <a href="/product/fashion.html?cate_no=226">유아동</a>
+                                        <ul>
+                                            <li>
+                                                <a href="/product/fashion.html?cate_no=1650">신생아 의류</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/fashion.html?cate_no=231">유아동 의류</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/fashion.html?cate_no=1658">스포츠 의류</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/fashion.html?cate_no=1673">가방</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/fashion.html?cate_no=1666">신발</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/fashion.html?cate_no=1667">잡화</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="/product/junior.html?cate_no=8246">주니어</a>
+                                        <ul>
+                                            <li>
+                                                <a href="/product/junior.html?cate_no=8269">의류</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/junior.html?cate_no=8286">가방</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/junior.html?cate_no=8386">신발</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/junior.html?cate_no=8285">잡화</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/junior.html?cate_no=8301">스포츠 의류</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/junior.html?cate_no=2136">맨 / 우먼</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="/product/underwear.html?cate_no=9761">라운지/언더웨어</a>
+                                        <ul>
+                                            <li>
+                                                <a href="/product/underwear.html?cate_no=9762">키즈</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/underwear.html?cate_no=9763">주니어</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/underwear.html?cate_no=9764">맨/우먼</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="/product/toy.html?cate_no=227">장난감 &amp; 문구</a>
+                                        <ul>
+                                            <li>
+                                                <a href="/product/toy.html?cate_no=251">장난감</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/toy.html?cate_no=252">문구 &amp; 도서</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/toy.html?cate_no=1195">파티용품</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="/product/living.html?cate_no=228">리빙</a>
+                                        <ul>
+                                            <li>
+                                                <a href="/product/living.html?cate_no=264">키친</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/living.html?cate_no=265">홈데코</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/living.html?cate_no=266">세제 / 방향제</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/living.html?cate_no=274">뷰티</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="/product/newborn.html?cate_no=8640">출산/육아용품</a>
+                                        <ul>
+                                            <li>
+                                                <a href="/product/list.html?cate_no=8643">수유/이유용품</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/list.html?cate_no=8641">기저귀/물티슈</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/list.html?cate_no=8642">위생용품</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/list.html?cate_no=8667">외출용품</a>
+                                            </li>
+                                            <li>
+                                                <a href="/product/list.html?cate_no=8729">출산용품/선물</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </section>
+                            <section class="hd_sub_right">
+                                <ul>
+                                    <li>
+                                        <p>커뮤니티</p>
+                                        <ul>
+                                            <li><a href="/board/free/list.html?board_no=1">공지사항</a></li>
+                                            <li><a href="/event.html">이벤트</a></li>
+                                            <li><a href="/shopinfo/guide.html">Q&amp;A</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <p>내정보</p>
+                                        <ul>
+                                            <li><a href="/myshop/index.html">마이페이지</a></li>
+                                            <li><a href="/myshop/order/list.html">주문조회</a></li>
+                                            <li><a href="/order/basket.html">장바구니</a></li>
+                                            <li><a href="/myshop/wish_list.html">관심상품</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <div class="logo_box">
+                    <div class="hd_logo">
+                        <a href="/index.html"><img src="/web/upload/icon/marymarket_logo.png" alt=""></a>
+                        <div class="event_logo"></div>
+                    </div>
+                    <ul class="hd_menu">
+                        <li><a href="/marypick.html">마리픽</a></li>
+                        <li><a href="/product/list.html?cate_no=8126">베스트</a></li>
+                        <li><a href="/product/new.html?cate_no=8125">신상품</a></li>
+                        <li><a href="/brand.html">브랜드</a></li>
+                        <li><a href="/event.html">이벤트</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="hd_right">
+                <form id="searchBarForm" name="" action="/product/search.html" method="get" target="_self" enctype="multipart/form-data">
+                    <input id="banner_action" name="banner_action" value="" type="hidden">
+                    <div class="xans-element- xans-layout xans-layout-searchheader ">
+                        <!--
+                            $product_page=/product/detail.html
+                            $category_page=/product/list.html
+                            -->
+                        <fieldset>
+                            <legend>검색</legend>
+                            <input id="keyword" name="keyword" fw-filter="" fw-label="검색어" fw-msg="" class="inputTypeText" placeholder="" onmousedown="SEARCH_BANNER.clickSearchForm(this)" value="" type="text">
+                            <input type="image" src="/web/upload/img/search_bt.png" alt="검색" onclick="SEARCH_BANNER.submitSearchBanner(this); return false;">
+                        </fieldset>
+                    </div>
+                </form>
+                <a href="/order/basket.html" class="xans-element- xans-layout xans-layout-orderbasketcount "><img src="/web/upload/img/top_cart.png" alt="CART"></a>
+                <a href="/myshop/wish_list.html"><img src="/web/upload/img/top_wish.png" alt="WISH"></a>
+            </div>
+        </div>
+    </header>
+
+
+</div>
+</body>
+</html>

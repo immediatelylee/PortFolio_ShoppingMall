@@ -5,87 +5,768 @@
 
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
-    <style>
-        .carousel-inner > .item {
-            height: 250px;
-        }
-        .margin{
-            margin-bottom:30px;
-        }
-        .banner{
-            height: 200px;
-        }
-        .card-text{
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-        a:hover{
-            text-decoration:none;
-        }
-        .center{
-            text-align:center;
-        }
-        .banner{
-            position: absolute; top:100; left: 100;
-            /*width: 100%;*/
-            /*height: 100%;*/
-        }
-    </style>
+<!--    <style>-->
+<!--        .carousel-inner > .item {-->
+<!--            height: 250px;-->
+<!--        }-->
+<!--        .margin{-->
+<!--            margin-bottom:30px;-->
+<!--        }-->
+<!--        .banner{-->
+<!--            height: 200px;-->
+<!--        }-->
+<!--        .card-text{-->
+<!--            text-overflow: ellipsis;-->
+<!--            white-space: nowrap;-->
+<!--            overflow: hidden;-->
+<!--        }-->
+<!--        a:hover{-->
+<!--            text-decoration:none;-->
+<!--        }-->
+<!--        .center{-->
+<!--            text-align:center;-->
+<!--        }-->
+<!--        .banner{-->
+<!--            position: absolute; top:100; left: 100;-->
+<!--            /*width: 100%;*/-->
+<!--            /*height: 100%;*/-->
+<!--        }-->
+<!--    </style>-->
 </th:block>
 
 <div layout:fragment="content">
 
-    <div id="carouselControls" class="carousel slide margin" data-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active item">
-                <img class="d-block w-100 banner" src="https://user-images.githubusercontent.com/13268420/112147492-1ab76200-8c20-11eb-8649-3d2f282c3c02.png" alt="First slide">
+    <div class="slide_wrapper">
+
+        <ul class="slides">
+            <li><a href="#"><img src="/img/banner/pc_mainBnr_2.jpg"></a></li>
+            <li><a href="#"><img src="/img/banner/pc_mainBnr_4.jpg"></a></li>
+            <li><a href="#"><img src="/img/banner/pc_mainBnr_5.jpg"></a></li>
+            <li><a href="#"><img src="/img/banner/pc_mainBnr_7.jpg"></a></li>
+        </ul>
+
+    </div>
+
+
+
+    <ul class="controls">
+        <span class="pauseplay">
+            <a class="toggle"> ||</a>
+        </span>
+        <li class="slideprev">
+            <!-- <a class="prev"><img src="./img/prev.png" alt="">prev</a> -->
+            <a class="prev"><img src="#" alt=""></a>
+
+        </li>
+        <span class="slideText">1/9</span>
+        <li class="slidenext">
+            <!-- <a class="next"><img src="./img/next.png" alt="">next</a> -->
+            <a class="next"><img src="#" alt=""></a>
+
+        </li>
+    </ul>
+    <script src="/js/real_slide.js"></script>
+
+<!--mdpick-->
+    <p class="mainTitle"><b>WEEKLY</b> SALE <br></p>
+
+    <div class="main_bn">
+        <div>
+            <a class="weekly_01_link" href="/product/brand.html?cate_no=1189">
+                <img src="/web/upload/img/img9/_1204_weekly_1.jpg" alt="">
+                <center>
+                    <p class="weekly_01_text">
+                        <span class="weekly_01_title"></span><!--br-->
+                    </p>
+                </center>
+            </a>
+        </div>
+        <div>
+            <a class="weekly_02_link" href="/product/brand.html?cate_no=3785">
+                <img src="/web/upload/img/img9/_1204_weekly_2.jpg" alt="">
+                <center>
+                    <p class="weekly_02_text">
+                        <span class="weekly_02_title"></span><!--br-->
+                    </p>
+                </center>
+            </a>
+        </div>
+        <div>
+            <a class="weekly_03_link" href="/product/brand.html?cate_no=5222">
+                <img src="/web/upload/img/img9/_1204_weekly_3.jpg" alt="">
+                <center>
+                    <p class="weekly_03_text">
+                        <span class="weekly_03_title"></span><!--br-->
+                    </p>
+                </center>
+            </a>
+        </div>
+        <div>
+            <a class="weekly_04_link" href="/product/brand.html?cate_no=7820">
+                <img src="/web/upload/img/img9/_1204_weekly_4.jpg" alt="">
+                <center>
+                    <p class="weekly_04_text">
+                        <span class="weekly_04_title"></span><!--br-->
+                    </p>
+                </center>
+            </a>
+        </div>
+    </div>
+    <style>
+        .main_bn {display:flex;}
+    </style>
+
+
+    <p class="mainTitle choice"><b>CHOICE</b> BRAND <br><!--<img src="/web/upload/44_maypop/line.png" alt="">--></p>
+
+    <div class="main_bn">
+        <div>
+            <a class="choice_01_link" href="/product/brand.html?cate_no=3474">
+                <img src="/web/upload/img/img9/_1204_choice_1.jpg" alt="">
+                <center>
+                    <p class="choice_01_text">
+                        <span class="choice_01_title"></span><!--br-->
+                    </p>
+                </center>
+            </a>
+        </div>
+        <div>
+            <a class="choice_02_link" href="/product/brand.html?cate_no=349">
+                <img src="/web/upload/img/img9/_1204_choice_2.jpg" alt="">
+                <center>
+                    <p class="choice_02_text">
+                        <span class="choice_02_title"></span><!--br-->
+                    </p>
+                </center>
+            </a>
+        </div>
+        <div>
+            <a class="choice_03_link" href="/project/23_10373.html?cate_no=10373">
+                <img src="/web/upload/img/img9/_1204_choice_3.jpg" alt="">
+                <center>
+                    <p class="choice_03_text">
+                        <span class="choice_03_title"></span><!--br-->
+                    </p>
+                </center>
+            </a>
+        </div>
+        <div>
+            <a class="choice_04_link" href="/product/brand.html?cate_no=4995">
+                <img src="/web/upload/img/img9/_1204_choice_4.jpg" alt="">
+                <center>
+                    <p class="choice_04_text">
+                        <span class="choice_04_title"></span><!--br-->
+                    </p>
+                </center>
+            </a>
+        </div>
+    </div>
+
+    <style>
+        .choice {
+            padding-top: 100px;
+        }
+    </style>
+
+    <style>
+        .boxx{position:relative;}
+        .sold_i.pick img{border-radius:10%;}
+    </style>
+
+    <div id="main_tabb">
+        <div class="mainTitle ">
+            <b>MD's</b>
+            PICK <br/>
+            <!--<img src="/web/upload/44_maypop/line.png" alt="">-->
+        </div>
+        <div id="tab_listt">
+            <div class="tabtitle">
+                <ul>
+                    <li class="list" rel="0">
+                        <div class="off pick1" ></div>
+                        <div class="on pick1" ></div>
+                    </li>
+                    <li class="list" rel="1">
+                        <div class="off pick2" ></div>
+                        <div class="on pick2" ></div>
+                    </li>
+                </ul>
+            </div>
+            <div class="xans-element- xans-product xans-product-listmain-18 xans-product-listmain xans-product-18 tablist">
+                <!--
+    $count=6
+    -->
+                <div class="item" rel="0" >
+                    <ul>
+                        <li class="tab_left">
+                            <a href="#" class="pick1_link">
+                                <img src="/web/upload/img/img9/_1127_md-pick_1.jpg" alt=""/>
+                            </a>
+                        </li>
+                        <li id="anchorBoxId_55095" class="xans-record-">
+                            <div class="boxx">
+                                <p class="sold_i pick" style="position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                                <a href="/product/detail.html?product_no=55095&cate_no=1&display_group=19" name="anchorBoxName_55095">
+                                    <img src="/web/product/medium/202311/d4249b5837095f0b547d2919faaa04cf.jpg" alt="" class="right_img"/>
+                                </a>
+                                <div class="itemInfo" onclick="location.href='/product/detail.html?product_no=55095&cate_no=1&display_group=19';" style="cursor:pointer;">
+                                    <div style="padding:0 10px 0 0">
+                                        <p class="name">
+                                            <a href="/product/detail.html?product_no=55095&cate_no=1&display_group=19" class="">
+                                                <span style="font-size:12px;color:#292929;font-weight:bold;">[본델스] Ornament glass French fries H10cm</span>
+                                            </a>
+                                        </p>
+                                        <ul class="xans-element- xans-product xans-product-listitem-18 xans-product-listitem xans-product-18 product_ListItem">
+                                            <li name="판매가" class=" xans-record-">
+                                                <span style="font-size:12px;color:#000000;font-weight:bold;">32,000원</span>
+                                                <span id="span_product_tax_type_text" style=""></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="xans-record-">
+                            <div class="boxx">
+                                <p class="sold_i pick" style="position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                                <a href="/product/detail.html?product_no=55014&cate_no=1&display_group=19" name="anchorBoxName_55014">
+                                    <img src="/web/product/medium/202311/b173b91ac4043db339aec357edae17a5.jpg" alt="" class="right_img"/>
+                                </a>
+                                <div class="itemInfo" onclick="location.href='/product/detail.html?product_no=55014&cate_no=1&display_group=19';" style="cursor:pointer;">
+                                    <div style="padding:0 10px 0 0">
+                                        <p class="name">
+                                            <a href="/product/detail.html?product_no=55014&cate_no=1&display_group=19" class="">
+                                                <span style="font-size:12px;color:#292929;font-weight:bold;">[본델스] Ornament glass multi color macaron tower H9.5cm</span>
+                                            </a>
+                                        </p>
+                                        <ul class="xans-element- xans-product xans-product-listitem-18 xans-product-listitem xans-product-18 product_ListItem">
+                                            <li name="판매가" class=" xans-record-">
+                                                <span style="font-size:12px;color:#000000;font-weight:bold;">28,000원</span>
+                                                <span id="span_product_tax_type_text" style=""></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="xans-record-">
+                            <div class="boxx">
+                                <p class="sold_i pick" style="position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                                <a href="/product/detail.html?product_no=55001&cate_no=1&display_group=19" name="anchorBoxName_55001">
+                                    <img src="/web/product/medium/202311/677d40758317d0d4c544f8a64a1ecc72.jpg" alt="" class="right_img"/>
+                                </a>
+                                <div class="itemInfo" onclick="location.href='/product/detail.html?product_no=55001&cate_no=1&display_group=19';" style="cursor:pointer;">
+                                    <div style="padding:0 10px 0 0">
+                                        <p class="name">
+                                            <a href="/product/detail.html?product_no=55001&cate_no=1&display_group=19" class="">
+                                                <span style="font-size:12px;color:#292929;font-weight:bold;">[본델스] Ornament glass gold/pink donut w/decoration H11cm</span>
+                                            </a>
+                                        </p>
+                                        <ul class="xans-element- xans-product xans-product-listitem-18 xans-product-listitem xans-product-18 product_ListItem">
+                                            <li name="판매가" class=" xans-record-">
+                                                <span style="font-size:12px;color:#000000;font-weight:bold;">28,000원</span>
+                                                <span id="span_product_tax_type_text" style=""></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="xans-record-">
+                            <div class="boxx">
+                                <p class="sold_i pick" style="position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                                <a href="/product/detail.html?product_no=55056&cate_no=1&display_group=19" name="anchorBoxName_55056">
+                                    <img src="/web/product/medium/202311/38d3455c6fc08f11169bede8b09cf5d3.jpg" alt="" class="right_img"/>
+                                </a>
+                                <div class="itemInfo" onclick="location.href='/product/detail.html?product_no=55056&cate_no=1&display_group=19';" style="cursor:pointer;">
+                                    <div style="padding:0 10px 0 0">
+                                        <p class="name">
+                                            <a href="/product/detail.html?product_no=55056&cate_no=1&display_group=19" class="">
+                                                <span style="font-size:12px;color:#292929;font-weight:bold;">[본델스] Ornament glass red strawberry jam jar H7cm</span>
+                                            </a>
+                                        </p>
+                                        <ul class="xans-element- xans-product xans-product-listitem-18 xans-product-listitem xans-product-18 product_ListItem">
+                                            <li name="판매가" class=" xans-record-">
+                                                <span style="font-size:12px;color:#000000;font-weight:bold;">32,000원</span>
+                                                <span id="span_product_tax_type_text" style=""></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="xans-record-">
+                            <div class="boxx">
+                                <p class="sold_i pick" style="position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                                <a href="/product/detail.html?product_no=55076&cate_no=1&display_group=19" name="anchorBoxName_55076">
+                                    <img src="/web/product/medium/202311/59d82ebbd183bfb4e2d1737e9ed05e57.jpg" alt="" class="right_img"/>
+                                </a>
+                                <div class="itemInfo" onclick="location.href='/product/detail.html?product_no=55076&cate_no=1&display_group=19';" style="cursor:pointer;">
+                                    <div style="padding:0 10px 0 0">
+                                        <p class="name">
+                                            <a href="/product/detail.html?product_no=55076&cate_no=1&display_group=19" class="">
+                                                <span style="font-size:12px;color:#292929;font-weight:bold;">[본델스] Ornament glass croissant H10cm</span>
+                                            </a>
+                                        </p>
+                                        <ul class="xans-element- xans-product xans-product-listitem-18 xans-product-listitem xans-product-18 product_ListItem">
+                                            <li name="판매가" class=" xans-record-">
+                                                <span style="font-size:12px;color:#000000;font-weight:bold;">29,000원</span>
+                                                <span id="span_product_tax_type_text" style=""></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="xans-record-">
+                            <div class="boxx">
+                                <p class="sold_i pick" style="position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;">
+                                    <img src="/web/upload/icon_202101211218311200.png" class="icon_img" alt="품절"/>
+                                </p>
+                                <a href="/product/detail.html?product_no=55064&cate_no=1&display_group=19" name="anchorBoxName_55064">
+                                    <img src="/web/product/medium/202311/de5024e974d64c6f5b5e250b3fd179ec.jpg" alt="" class="right_img"/>
+                                </a>
+                                <div class="itemInfo" onclick="location.href='/product/detail.html?product_no=55064&cate_no=1&display_group=19';" style="cursor:pointer;">
+                                    <div style="padding:0 10px 0 0">
+                                        <p class="name">
+                                            <a href="/product/detail.html?product_no=55064&cate_no=1&display_group=19" class="">
+                                                <span style="font-size:12px;color:#292929;font-weight:bold;">[본델스] Ornament glass Nijntje/Miffy on star H10.5cm w/box</span>
+                                            </a>
+                                        </p>
+                                        <ul class="xans-element- xans-product xans-product-listitem-18 xans-product-listitem xans-product-18 product_ListItem">
+                                            <li name="판매가" class=" xans-record-">
+                                                <span style="font-size:12px;color:#000000;font-weight:bold;">39,000원</span>
+                                                <span id="span_product_tax_type_text" style=""></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="xans-element- xans-product xans-product-listmain-19 xans-product-listmain xans-product-19 tablist">
+                <!--
+    $count=6
+    -->
+                <div class="item" rel="1" >
+                    <ul>
+                        <li class="tab_left">
+                            <a href="#" class="pick2_link">
+                                <img src="/web/upload/img/img9/_1127_md-pick_2.jpg" alt=""/>
+                            </a>
+                        </li>
+                        <li id="anchorBoxId_23719" class="xans-record-">
+                            <div class="boxx">
+                                <p class="sold_i pick" style="position:absolute; left:50%; top:47%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                                <a href="/product/detail.html?product_no=23719&cate_no=1&display_group=20" name="anchorBoxName_23719">
+                                    <img src="/web/product/medium/202110/cae3b9e0f05be8110b47417ccaf806b8.jpg" alt="" class="right_img"/>
+                                </a>
+                                <div class="itemInfo" onclick="location.href='/product/detail.html?product_no=23719&cate_no=1&display_group=20';" style="cursor:pointer;">
+                                    <div style="padding:0 10px 0 0">
+                                        <p class="name">
+                                            <a href="/product/detail.html?product_no=23719&cate_no=1&display_group=20" class="">
+                                                <span style="font-size:12px;color:#292929;font-weight:bold;">[루이스미샤] JACKET DALILA</span>
+                                            </a>
+                                        </p>
+                                        <ul class="xans-element- xans-product xans-product-listitem-19 xans-product-listitem xans-product-19 product_ListItem">
+                                            <li name="판매가" class=" xans-record-">
+                                                <span style="font-size:12px;color:#000000;font-weight:bold;">128,700원</span>
+                                                <span id="span_product_tax_type_text" style=""></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="xans-record-">
+                            <div class="boxx">
+                                <a href="/product/detail.html?product_no=23722&cate_no=1&display_group=20" name="anchorBoxName_23722">
+                                    <img src="/web/product/medium/202110/5ba1a9ee02042f388b0bb59fcdcb81c4.jpg" alt="" class="right_img"/>
+                                </a>
+                                <div class="itemInfo" onclick="location.href='/product/detail.html?product_no=23722&cate_no=1&display_group=20';" style="cursor:pointer;">
+                                    <div style="padding:0 10px 0 0">
+                                        <p class="name">
+                                            <a href="/product/detail.html?product_no=23722&cate_no=1&display_group=20" class="">
+                                                <span style="font-size:12px;color:#292929;font-weight:bold;">[루이스미샤] COAT NALIDEE</span>
+                                            </a>
+                                        </p>
+                                        <ul class="xans-element- xans-product xans-product-listitem-19 xans-product-listitem xans-product-19 product_ListItem">
+                                            <li name="판매가" class=" xans-record-">
+                                                <span style="font-size:12px;color:#000000;font-weight:bold;">121,550원</span>
+                                                <span id="span_product_tax_type_text" style=""></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="xans-record-">
+                            <div class="boxx">
+                                <a href="/product/detail.html?product_no=23726&cate_no=1&display_group=20" name="anchorBoxName_23726">
+                                    <img src="/web/product/medium/202110/6188c43d59942b1a8cca9be9e35a7c6e.jpg" alt="" class="right_img"/>
+                                </a>
+                                <div class="itemInfo" onclick="location.href='/product/detail.html?product_no=23726&cate_no=1&display_group=20';" style="cursor:pointer;">
+                                    <div style="padding:0 10px 0 0">
+                                        <p class="name">
+                                            <a href="/product/detail.html?product_no=23726&cate_no=1&display_group=20" class="">
+                                                <span style="font-size:12px;color:#292929;font-weight:bold;">[루이스미샤] KNITWEAR GEORGETTE</span>
+                                            </a>
+                                        </p>
+                                        <ul class="xans-element- xans-product xans-product-listitem-19 xans-product-listitem xans-product-19 product_ListItem">
+                                            <li name="판매가" class=" xans-record-">
+                                                <span style="font-size:12px;color:#000000;font-weight:bold;">96,200원</span>
+                                                <span id="span_product_tax_type_text" style=""></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="xans-record-">
+                            <div class="boxx">
+                                <a href="/product/detail.html?product_no=50490&cate_no=1&display_group=20" name="anchorBoxName_50490">
+                                    <img src="/web/product/medium/202308/4e8da7d587abdcb104a967635245dc16.jpg" alt="" class="right_img"/>
+                                </a>
+                                <div class="itemInfo" onclick="location.href='/product/detail.html?product_no=50490&cate_no=1&display_group=20';" style="cursor:pointer;">
+                                    <div style="padding:0 10px 0 0">
+                                        <p class="name">
+                                            <a href="/product/detail.html?product_no=50490&cate_no=1&display_group=20" class="">
+                                                <span style="font-size:12px;color:#292929;font-weight:bold;">[루이스미샤] Cape Clara MAUVE (8~10Y)</span>
+                                            </a>
+                                        </p>
+                                        <ul class="xans-element- xans-product xans-product-listitem-19 xans-product-listitem xans-product-19 product_ListItem">
+                                            <li name="판매가" class=" xans-record-">
+                                                <span style="font-size:12px;color:#000000;font-weight:bold;">209,000원</span>
+                                                <span id="span_product_tax_type_text" style=""></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="xans-record-">
+                            <div class="boxx">
+                                <a href="/product/detail.html?product_no=50492&cate_no=1&display_group=20" name="anchorBoxName_50492">
+                                    <img src="/web/product/medium/202308/e4b7c583faadf5134742666003c0db37.jpg" alt="" class="right_img"/>
+                                </a>
+                                <div class="itemInfo" onclick="location.href='/product/detail.html?product_no=50492&cate_no=1&display_group=20';" style="cursor:pointer;">
+                                    <div style="padding:0 10px 0 0">
+                                        <p class="name">
+                                            <a href="/product/detail.html?product_no=50492&cate_no=1&display_group=20" class="">
+                                                <span style="font-size:12px;color:#292929;font-weight:bold;">[루이스미샤] Cape Clara CREAM (8~10Y)</span>
+                                            </a>
+                                        </p>
+                                        <ul class="xans-element- xans-product xans-product-listitem-19 xans-product-listitem xans-product-19 product_ListItem">
+                                            <li name="판매가" class=" xans-record-">
+                                                <span style="font-size:12px;color:#000000;font-weight:bold;">209,000원</span>
+                                                <span id="span_product_tax_type_text" style=""></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="xans-record-">
+                            <div class="boxx">
+                                <a href="/product/detail.html?product_no=50501&cate_no=1&display_group=20" name="anchorBoxName_50501">
+                                    <img src="/web/product/medium/202308/afc8bb5b3e8a1a09d607c066cd07c796.jpg" alt="" class="right_img"/>
+                                </a>
+                                <div class="itemInfo" onclick="location.href='/product/detail.html?product_no=50501&cate_no=1&display_group=20';" style="cursor:pointer;">
+                                    <div style="padding:0 10px 0 0">
+                                        <p class="name">
+                                            <a href="/product/detail.html?product_no=50501&cate_no=1&display_group=20" class="">
+                                                <span style="font-size:12px;color:#292929;font-weight:bold;">[루이스미샤] Jumper Acacia CREAM (4~6Y)</span>
+                                            </a>
+                                        </p>
+                                        <ul class="xans-element- xans-product xans-product-listitem-19 xans-product-listitem xans-product-19 product_ListItem">
+                                            <li name="판매가" class=" xans-record-">
+                                                <span style="font-size:12px;color:#000000;font-weight:bold;">160,000원</span>
+                                                <span id="span_product_tax_type_text" style=""></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 
-    <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
-    <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">
-        <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'"></p>
-    </div>
 
-    <div class="row">
-        <th:block th:each="item, status: ${items.getContent()}">
-            <div class="col-md-4 margin">
-                <div class="card">
-                    <a th:href="'/item/' +${item.id}" class="text-dark">
-                        <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">
-                        <div class="card-body">
-                            <h4 class="card-title">[[${item.itemNm}]]</h4>
-                            <p class="card-text">[[${item.itemDetail}]]</p>
-                            <h3 class="card-title text-danger">[[${item.price}]]원</h3>
-                        </div>
+
+    <!-- 이슈아이템즈  -->
+
+    <div class=" hot_brand ">
+        <style>
+            .hot_brand {   overflow:hidden;clear:both; width:100%; display: inline-block; background: #f8f8f8;padding: 30px 0 120px 0;}
+            .hot_brand ul {max-width:1500px; width:95%; min-width:800px; margin:0 auto}
+            .hot_brand ul li.hh { width:33.33%; float:left;text-align: center;display:inline-block }
+            .hot_brand .thumbnail img { max-width:100%}
+            .hot_list {margin:0 auto;padding:0 0 50px 0;  width:470px; background: #fff; display: inline-block}
+            .hot_list .hot_item { margin:0 auto 0px;width:370px; height:140px; clear: both;box-sizing:border-box;  padding:10px 0}
+            .hot_top { text-align: center; padding:40px 0; width:370px; margin:0 auto; font-size:14px}
+            .hot_top span { display: block; font-size:20px; font-weight:700; letter-spacing:1.0px; line-height:40px}
+            .hot_top img {max-width:100%;display: block; margin:0 0 5px 0}
+            .hot_brand	.description {box-sizing:border-box; padding: 0 10px 10px 10px; width:240px;float:right; position: relative; }
+            .hot_brand	.description li { padding:8px 0; font-family:'Apercu Pro','Open Sans','Noto Sans','Malgun Gothic','Nanum Gothic',Verdana,Dotum,AppleGothic,sans-serif;}
+            .hot_brand .name span { font-weight:600 !important; color:#000 !important}
+            .hot_brand .spec li { display: block}
+            .hot_brand	.thumbnail { width:120px; float:left; position:relative;}
+            .hot_brand	.thumbnail img { height:120px; border:1px solid #ececec; }
+            .hot_brand	.thumbnail img:hover { opacity:0.8;}
+            .hot_brand .description .name { height: 38px; overflow: hidden; margin: 30px 0 0 0px;}
+        </style>
+        <p class=" mainTitle ">
+            <b>ISSUE</b> ITEMS <br/><!--<img src=" /web/upload/44_maypop/line.png " alt="">-->
+        </p>
+        <ul>
+            <li class=" hh ">
+                <div class=" xans-element- xans-product xans-product-listmain-8 xans-product-listmain xans-product-8 hot_list ">
+                    <!--
+                        $count = 3
+                        -->
+                    <a class=" issue_01_link " href=" #">
+                        <p class=" hot_top issue_01_text "><img src="/web/upload/img/img9/_1127_issue_1.jpg " alt=""/><span class=" issue_01_title "></span></p>
                     </a>
+                    <div class=" hot_item xans-record-">
+                        <div class=" thumbnail ">
+                            <p class=" sold_i " style=" position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                            <a href=" /product/틴티-유아버블클렌저-버블폼-3종-set/35742/category/1/display/9 /" name=" anchorBoxName_35742 "><img src="/web/product/medium/202211/6e2ad97922f50d95176d2e5c6b358663.jpg" class=" listImage "/></a>
+                        </div>
+                        <div class=" description ">
+                            <div class=" name ">
+                                <a href=" /product/틴티-유아버블클렌저-버블폼-3종-set/35742/category/1/display/9 /" class=""><span class=" title displaynone "><span style=" font-size:14px;color:#000000;">상품명</span> :</span> <span style=" font-size:14px;color:#000000;">[틴티] 유아버블클렌저 버블폼 3종 SET</span></a>
+                                <span class=" oLike likeButton likePrd likePrd_35742 "><button type=" button "><img src="/web/upload/icon_202106250943322100.png" class="likePrdIcon" product_no=" 35742 " category_no=" 1 " icon_status=" off " alt=" 좋아요 등록 전 " /> <span class=" likePrdCount likePrdCount_35742 ">0</span></button></span>
+                            </div>
+                            <ul class=" xans-element- xans-product xans-product-listitem-8 xans-product-listitem xans-product-8 spec ">
+                                <li class=" xans-record-"> <span style=" font-size:13px;color:#555555;"><a href=" /product/brand.html?cate_no=5096 " class=" k ">TINTI</a></span></li>
+                                <li class=" xans-record-"> <span style=" font-size:13px;color:#000000;font-weight:bold;">16,900원</span><span id=" span_product_tax_type_text " style=""> </span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class=" hot_item xans-record-">
+                        <div class=" thumbnail ">
+                            <p class=" sold_i " style=" position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                            <a href=" /product/틴티-유아버블클렌저-버블건-3종-set/35741/category/1/display/9 /" name=" anchorBoxName_35741 "><img src=" //www.karymarket.com/web/product/medium/202211/d93ac6f6df91467e86e6068118e65e19.jpg " class=" listImage "/></a>
+                        </div>
+                        <div class=" description ">
+                            <div class=" name ">
+                                <a href=" /product/틴티-유아버블클렌저-버블건-3종-set/35741/category/1/display/9 /" class=""><span class=" title displaynone "><span style=" font-size:14px;color:#000000;">상품명</span> :</span> <span style=" font-size:14px;color:#000000;">[틴티] 유아버블클렌저 버블건 3종 SET</span></a>
+                                <span class=" oLike likeButton likePrd likePrd_35741 "><button type=" button "><img src="/web/upload/icon_202106250943322100.png "  class=" likePrdIcon " product_no=" 35741 " category_no=" 1 " icon_status=" off " alt=" 좋아요 등록 전 " /> <span class=" likePrdCount likePrdCount_35741 ">0</span></button></span>
+                            </div>
+                            <ul class=" xans-element- xans-product xans-product-listitem-8 xans-product-listitem xans-product-8 spec ">
+                                <li class=" xans-record-"> <span style=" font-size:13px;color:#555555;"><a href=" /product/brand.html?cate_no=5096 " class=" k ">TINTI</a></span></li>
+                                <li class=" xans-record-"> <span style=" font-size:13px;color:#000000;font-weight:bold;">16,900원</span><span id=" span_product_tax_type_text " style=""> </span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class=" hot_item xans-record-">
+                        <div class=" thumbnail ">
+                            <p class=" sold_i " style=" position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                            <a href=" /product/틴티-입욕장난감-크래클링-베스/35746/category/1/display/9 /" name=" anchorBoxName_35746 "><img src="/web/product/medium/202211/496c229847b59056336b44daabbf1a01.jpg " class=" listImage "/></a>
+                        </div>
+                        <div class=" description ">
+                            <div class=" name ">
+                                <a href=" /product/틴티-입욕장난감-크래클링-베스/35746/category/1/display/9 /" class=""><span class=" title displaynone "><span style=" font-size:14px;color:#000000;">상품명</span> :</span> <span style=" font-size:14px;color:#000000;">[틴티] 입욕장난감 크래클링 베스</span></a>
+                                <span class=" oLike likeButton likePrd likePrd_35746 "><button type=" button "><img src=" /web/upload/icon_202106250943322100.png "  class=" likePrdIcon " product_no=" 35746 " category_no=" 1 " icon_status=" off " alt=" 좋아요 등록 전 " /> <span class=" likePrdCount likePrdCount_35746 ">0</span></button></span>
+                            </div>
+                            <ul class=" xans-element- xans-product xans-product-listitem-8 xans-product-listitem xans-product-8 spec ">
+                                <li class=" xans-record-"> <span style=" font-size:13px;color:#555555;"><a href=" /product/brand.html?cate_no=5096 " class=" k ">TINTI</a></span></li>
+                                <li class=" xans-record-"> <span style=" font-size:13px;color:#000000;font-weight:bold;">12,900원</span><span id=" span_product_tax_type_text " style=""> </span></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </th:block>
-    </div>
-
-    <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})" >
-        <ul class="pagination justify-content-center">
-
-            <li class="page-item" th:classappend="${items.number eq 0}?'disabled':''">
-                <a th:href="@{'/' + '?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number-1}}" aria-label='Previous' class="page-link">
-                    <span aria-hidden='true'>Previous</span>
-                </a>
             </li>
-
-            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${items.number eq page-1}?'active':''">
-                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>
+            <li class=" hh ">
+                <div class=" xans-element- xans-product xans-product-listmain-9 xans-product-listmain xans-product-9 hot_list ">
+                    <!--
+                        $count = 3
+                        -->
+                    <a class=" issue_02_link " href=" #">
+                        <p class=" hot_top issue_02_text "><img src="/web/upload/img/img9/_1127_issue_2.jpg " alt=""/><span class=" issue_02_title "></span></p>
+                    </a>
+                    <div class=" hot_item xans-record-">
+                        <div class=" thumbnail ">
+                            <p class=" sold_i " style=" position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                            <a href=" /product/아이홉-데미지드-헤어-트리트먼트/31290/category/1/display/10 /" name=" anchorBoxName_31290 "><img src="/web/product/medium/202208/69c44ad7180949cb1c9e293f63d9fc4c.jpg " class=" listImage "/></a>
+                        </div>
+                        <div class=" description ">
+                            <div class=" name ">
+                                <a href=" /product/아이홉-데미지드-헤어-트리트먼트/31290/category/1/display/10 /" class=""><span class=" title displaynone "><span style=" font-size:14px;color:#555555;">상품명</span> :</span> <span style=" font-size:14px;color:#555555;">아이홉 데미지드  헤어 트리트먼트</span></a>
+                                <span class=" oLike likeButton likePrd likePrd_31290 "><button type=" button "><img src="/web/upload/icon_202106250943322100.png "  class=" likePrdIcon " product_no=" 31290 " category_no=" 1 " icon_status=" off " alt=" 좋아요 등록 전 " /> <span class=" likePrdCount likePrdCount_31290 ">0</span></button></span>
+                            </div>
+                            <ul class=" xans-element- xans-product xans-product-listitem-9 xans-product-listitem xans-product-9 spec ">
+                                <li class=" xans-record-"> <span style=" font-size:12px;color:#555555;"><a href=" /product/brand.html?cate_no=4332 " class=" k ">iHOPE</a></span></li>
+                                <li class=" xans-record-"> <span style=" font-size:14px;color:#000000;font-weight:bold;">43,200원</span><span id=" span_product_tax_type_text " style=""> </span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class=" hot_item xans-record-">
+                        <div class=" thumbnail ">
+                            <p class=" sold_i " style=" position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                            <a href=" /product/아이홉-데일리-바디-크림/31292/category/1/display/10 /" name=" anchorBoxName_31292 "><img src="/web/product/medium/202301/b29db0e7063382bd3b2fec955bfcc13b.jpg " class=" listImage "/></a>
+                        </div>
+                        <div class=" description ">
+                            <div class=" name ">
+                                <a href=" /product/아이홉-데일리-바디-크림/31292/category/1/display/10 /" class=""><span class=" title displaynone "><span style=" font-size:14px;color:#555555;">상품명</span> :</span> <span style=" font-size:14px;color:#555555;">아이홉 데일리 바디 크림</span></a>
+                                <span class=" oLike likeButton likePrd likePrd_31292 "><button type=" button "><img src="/web/upload/icon_202106250943322100.png "  class=" likePrdIcon " product_no=" 31292 " category_no=" 1 " icon_status=" off " alt=" 좋아요 등록 전 " /> <span class=" likePrdCount likePrdCount_31292 ">0</span></button></span>
+                            </div>
+                            <ul class=" xans-element- xans-product xans-product-listitem-9 xans-product-listitem xans-product-9 spec ">
+                                <li class=" xans-record-"> <span style=" font-size:12px;color:#555555;"><a href=" /product/brand.html?cate_no=4332 " class=" k ">iHOPE</a></span></li>
+                                <li class=" xans-record-"> <span style=" font-size:14px;color:#000000;font-weight:bold;">35,100원</span><span id=" span_product_tax_type_text " style=""> </span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class=" hot_item xans-record-">
+                        <div class=" thumbnail ">
+                            <p class=" sold_i " style=" position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                            <a href=" /product/아이홉-퓨리파잉-스칼프-헤어-샴푸/31289/category/1/display/10 /" name=" anchorBoxName_31289 "><img src="/web/product/medium/202310/bf14a9f9c9cc1dfa5a53e773f0579f59.jpg " class=" listImage "/></a>
+                        </div>
+                        <div class=" description ">
+                            <div class=" name ">
+                                <a href=" /product/아이홉-퓨리파잉-스칼프-헤어-샴푸/31289/category/1/display/10 /" class=""><span class=" title displaynone "><span style=" font-size:14px;color:#555555;">상품명</span> :</span> <span style=" font-size:14px;color:#555555;">아이홉 퓨리파잉 스칼프 헤어 샴푸</span></a>
+                                <span class=" oLike likeButton likePrd likePrd_31289 "><button type=" button "><img src="/web/upload/icon_202106250943322100.png "  class=" likePrdIcon " product_no=" 31289 " category_no=" 1 " icon_status=" off " alt=" 좋아요 등록 전 " /> <span class=" likePrdCount likePrdCount_31289 ">0</span></button></span>
+                            </div>
+                            <ul class=" xans-element- xans-product xans-product-listitem-9 xans-product-listitem xans-product-9 spec ">
+                                <li class=" xans-record-"> <span style=" font-size:12px;color:#555555;"><a href=" /product/brand.html?cate_no=4332 " class=" k ">iHOPE</a></span></li>
+                                <li class=" xans-record-"> <span style=" font-size:14px;color:#000000;font-weight:bold;">43,200원</span><span id=" span_product_tax_type_text " style=""> </span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </li>
-
-            <li class="page-item" th:classappend="${items.number+1 ge items.totalPages}?'disabled':''">
-                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number+1}}" aria-label='Next' class="page-link">
-                    <span aria-hidden='true'>Next</span>
-                </a>
+            <li class=" hh ">
+                <div class=" xans-element- xans-product xans-product-listmain-10 xans-product-listmain xans-product-10 hot_list ">
+                    <!--
+                        $count = 3
+                        -->
+                    <a class=" issue_03_link " href=" #">
+                        <p class=" hot_top issue_03_text "><img src="H/web/upload/img/img9/_1127_issue_3.jpg " alt=""/><span class=" issue_03_title "></span></p>
+                    </a>
+                    <div class=" hot_item xans-record-">
+                        <div class=" thumbnail ">
+                            <p class=" sold_i " style=" position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                            <a href=" /product/쪼비-휴대용쪽쪽이살균기/55151/category/1/display/11 /" name=" anchorBoxName_55151 "><img src="/web/product/medium/202311/d68c0b4c24c537b584ffcfa04a8c8174.png " class=" listImage "/></a>
+                        </div>
+                        <div class=" description ">
+                            <div class=" name ">
+                                <a href=" /product/쪼비-휴대용쪽쪽이살균기/55151/category/1/display/11 /" class=""><span class=" title displaynone "><span style=" font-size:14px;color:#000000;">상품명</span> :</span> <span style=" font-size:14px;color:#000000;">쪼비 휴대용쪽쪽이살균기</span></a>
+                                <span class=" oLike likeButton likePrd likePrd_55151 "><button type=" button "><img src="/web/upload/icon_202106250943322100.png "  class=" likePrdIcon " product_no=" 55151 " category_no=" 1 " icon_status=" off " alt=" 좋아요 등록 전 " /> <span class=" likePrdCount likePrdCount_55151 ">0</span></button></span>
+                            </div>
+                            <ul class=" xans-element- xans-product xans-product-listitem-10 xans-product-listitem xans-product-10 spec ">
+                                <li class=" xans-record-"> <span style=" font-size:12px;color:#555555;"><a href=" /product/brand.html?cate_no=10173 " class=" k ">JJOBI</a></span></li>
+                                <li class=" xans-record-"> <span style=" font-size:14px;color:#000000;font-weight:bold;">36,000원</span><span id=" span_product_tax_type_text " style=""> </span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class=" hot_item xans-record-">
+                        <div class=" thumbnail ">
+                            <p class=" sold_i " style=" position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                            <a href=" /product/쪼비박스-장난감살균기-2세대/55153/category/1/display/11 /" name=" anchorBoxName_55153 "><img src="/web/product/medium/202311/235b8e3df64d0b03ca660c5c016ea0e2.png " class=" listImage "/></a>
+                        </div>
+                        <div class=" description ">
+                            <div class=" name ">
+                                <a href=" /product/쪼비박스-장난감살균기-2세대/55153/category/1/display/11 /" class=""><span class=" title displaynone "><span style=" font-size:14px;color:#000000;">상품명</span> :</span> <span style=" font-size:14px;color:#000000;">쪼비박스 장난감살균기 (2세대)</span></a>
+                                <span class=" oLike likeButton likePrd likePrd_55153 "><button type=" button "><img src=" /web/upload/icon_202106250943322100.png "  class=" likePrdIcon " product_no=" 55153 " category_no=" 1 " icon_status=" off " alt=" 좋아요 등록 전 " /> <span class=" likePrdCount likePrdCount_55153 ">0</span></button></span>
+                            </div>
+                            <ul class=" xans-element- xans-product xans-product-listitem-10 xans-product-listitem xans-product-10 spec ">
+                                <li class=" xans-record-"> <span style=" font-size:12px;color:#555555;"><a href=" /product/brand.html?cate_no=10173 " class=" k ">JJOBI</a></span></li>
+                                <li class=" xans-record-"> <span style=" font-size:14px;color:#000000;font-weight:bold;">105,000원</span><span id=" span_product_tax_type_text " style=""> </span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class=" hot_item xans-record-">
+                        <div class=" thumbnail ">
+                            <p class=" sold_i " style=" position:absolute; left:50%; top:50%; z-index:95;transform: translate(-50%, -50%); width:100%;"></p>
+                            <a href=" /product/쪼비-휴대용쪽쪽이살균기-장난감살균기-세트/55154/category/1/display/11 /" name=" anchorBoxName_55154 "><img src="/web/product/medium/202311/3155ec24444ff3d1345332f082e5a884.png " class=" listImage "/></a>
+                        </div>
+                        <div class=" description ">
+                            <div class=" name ">
+                                <a href=" /product/쪼비-휴대용쪽쪽이살균기-장난감살균기-세트/55154/category/1/display/11 /" class=""><span class=" title displaynone "><span style=" font-size:14px;color:#000000;">상품명</span> :</span> <span style=" font-size:14px;color:#000000;">쪼비 휴대용쪽쪽이살균기 + 장난감살균기 세트</span></a>
+                                <span class=" oLike likeButton likePrd likePrd_55154 "><button type=" button "><img src=" /web/upload/icon_202106250943322100.png "  class=" likePrdIcon " product_no=" 55154 " category_no=" 1 " icon_status=" off " alt=" 좋아요 등록 전 " /> <span class=" likePrdCount likePrdCount_55154 ">0</span></button></span>
+                            </div>
+                            <ul class=" xans-element- xans-product xans-product-listitem-10 xans-product-listitem xans-product-10 spec ">
+                                <li class=" xans-record-"> <span style=" font-size:12px;color:#555555;"><a href=" /product/brand.html?cate_no=10173 " class=" k ">JJOBI</a></span></li>
+                                <li class=" xans-record-"> <span style=" font-size:14px;color:#000000;font-weight:bold;">135,000원</span><span id=" span_product_tax_type_text " style=""> </span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </li>
-
         </ul>
     </div>
+
+
+
+
+
+</div>
+
+
+
+
+
+<!-- 구형컨트롤러 -->
+
+
+
+
+
+<!--    <div id="carouselControls" class="carousel slide margin" data-ride="carousel">-->
+<!--        <div class="carousel-inner">-->
+<!--            <div class="carousel-item active item">-->
+<!--                <img class="d-block w-100 banner" src="https://user-images.githubusercontent.com/13268420/112147492-1ab76200-8c20-11eb-8649-3d2f282c3c02.png" alt="First slide">-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">-->
+<!--    <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">-->
+<!--        <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'"></p>-->
+<!--    </div>-->
+
+<!--    <div class="row">-->
+<!--        <th:block th:each="item, status: ${items.getContent()}">-->
+<!--            <div class="col-md-4 margin">-->
+<!--                <div class="card">-->
+<!--                    <a th:href="'/item/' +${item.id}" class="text-dark">-->
+<!--                        <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemNm}" height="400">-->
+<!--                        <div class="card-body">-->
+<!--                            <h4 class="card-title">[[${item.itemNm}]]</h4>-->
+<!--                            <p class="card-text">[[${item.itemDetail}]]</p>-->
+<!--                            <h3 class="card-title text-danger">[[${item.price}]]원</h3>-->
+<!--                        </div>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </th:block>-->
+<!--    </div>-->
+
+<!--    <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})" >-->
+<!--        <ul class="pagination justify-content-center">-->
+
+<!--            <li class="page-item" th:classappend="${items.number eq 0}?'disabled':''">-->
+<!--                <a th:href="@{'/' + '?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number-1}}" aria-label='Previous' class="page-link">-->
+<!--                    <span aria-hidden='true'>Previous</span>-->
+<!--                </a>-->
+<!--            </li>-->
+
+<!--            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${items.number eq page-1}?'active':''">-->
+<!--                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>-->
+<!--            </li>-->
+
+<!--            <li class="page-item" th:classappend="${items.number+1 ge items.totalPages}?'disabled':''">-->
+<!--                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number+1}}" aria-label='Next' class="page-link">-->
+<!--                    <span aria-hidden='true'>Next</span>-->
+<!--                </a>-->
+<!--            </li>-->
+
+<!--        </ul>-->
+<!--    </div>-->
 
 </div>

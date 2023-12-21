@@ -5,7 +5,8 @@ li{list-style:none;}
     position: relative;
     width: 100%;
     margin: 0 auto;
-    height: 660px;
+    /* 수정함 height: 660px;*/
+    height: 610px;
     overflow:hidden;
 }
 .slides{
@@ -93,7 +94,7 @@ li{list-style:none;}
 
 /** 231022 **/
 a.prev {
-    background: url(./web/upload/img/prev.png);
+    background: url(/web/upload/img/prev.png);
     background-size: 33px !important;
     filter: invert(1);
     background-color: #4445 !important;
@@ -101,7 +102,7 @@ a.prev {
 }
 
 a.next {
-    background: url(./web/upload/img/next.png);
+    background: url(/web/upload/img/next.png);
     background-size: 33px !important;
     filter: invert(1);
     background-color: #4445 !important;
