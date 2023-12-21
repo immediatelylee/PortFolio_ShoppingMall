@@ -1,10 +1,77 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<div class="footer" th:fragment="footer">
-    <footer class="page-footer font-small cyan darken-3">
-        <div class="footer-copyright text-center py-3">
-            2023 Shopping Mall WebSite
+<div th:fragment="footer">
+    <div id="footer">
+        <div class="foot_list">
+            <div class="container clearfix">
+                <ul class="pull-left company-menu">
+                    <li><a href="/">홈</a></li>
+                    <li><a href="/shopinfo/company.html">ABOUT US</a></li>
+                    <li><a href="/member/agreement.html">이용약관</a></li>
+                    <li><a href="/member/privacy.html"><strong>개인정보처리방침</strong></a></li>
+                    <li><a href="/shopinfo/guide.html">이용안내</a></li>
+                    <li><a href="/board/urgency/partnership.html">입점/제휴 문의</a></li>
+                </ul>
+            </div>
         </div>
-    </footer>
+        <div class="footer-bottom">
+            <div class="container clearfix">
+                <div class="cs-center pull-left">
+                    <img src="./web/upload/img/marymarket.png" style="width: 110px; height: 100px;">
+                    &nbsp;
+                </div>
+                <!-- 고객센터 -->
+                <div class="cs-center pull-left">
+                    <div class="box-title">
+                        <p>CS CENTER</p>
+                    </div>
+                    <div class="tel"><strong>7777-7777</strong></div>
+                    <div class="info">
+                        <p>평일&nbsp;09:00 -&nbsp;17:00</p>
+                        <p>(점심 12:00 - 13:00)</p>
+                        <p>토/일요일·공휴일 휴무</p>
+                    </div>
+                </div>
+                <!--// 고객센터 -->
+                <!-- 커뮤니티 -->
+                <div class="community pull-left">
+                    <div class="box-title">
+                        <p>COMMUNITY</p>
+                    </div>
+                    <ul class="list">
+                        <li><a href="/qna.html?board_no=3">고객센터</a></li>
+                        <li><a href="/board/free/list.html?board_no=1">공지사항</a></li>
+                        <li><a href="/shopinfo/guide.html">자주묻는질문</a></li>
+                        <li class="icon_list">
+                            <a href="https://www.instagram.com/karymarket_/" target="_blank"><img src="/web/upload/48_maypop/insta_icon.png" alt="" style="width:23px"></a>
+                            <a id="add-channel-button" href="javascript:addChannel()" style="display:none;"><img src="/web/upload/48_maypop/kakao_channel.png" alt="카카오톡 채널 추가하기 버튼" style="width:23px"></a>
+                            <a href="https://pf.kakao.com/_xawxfNj" target="_blank"><img src="/web/upload/48_maypop/kakao_channel.png" alt="카카오톡 채널 추가하기 버튼" style="width:23px"></a>
+                        </li>
+                        <li style="font-size: 13px;"><b>CS문의</b> cs@thekary.com</li>
+                        <!--li><a href="#">이벤트</a></li-->
+                    </ul>
+                </div>
+                <!--// 커뮤니티 -->
+                <!-- 회사정보 -->
+                <div class="company-info pull-left">
+                    <div class="box-title">
+                        <p>INFO</p>
+                    </div>
+                    <div class="info">
+                        <p>회사명 : (주)더마리&nbsp;&nbsp;&nbsp;대표 : 이마리,&nbsp;&nbsp;윤머리&nbsp;&nbsp;</p>
+                        <p>주소 : 서울특별시 용산구 이태원로 (한남동) &nbsp;&nbsp;&nbsp;</p>
+                        <p>이메일 : maryonline@themary.com&nbsp;&nbsp;&nbsp;</p>
+                        <p>통신판매업신고증 번호 : 제 2021-서울용산-1**4호</p>
+                        <p>사업자등록번호 : 12*-8*-03***&nbsp;&nbsp;&nbsp;<a href="javascript:;" onclick="window.open('http://www.ftc.go.kr/bizCommPop.do?wrkr_no=1288703548','communicationViewPopup','width=750,height=700,scrollbars=yes')">[사업자정보조회]</a></p>
+                    </div>
+                </div>
+                <!--// 회사정보 -->
+            </div>
+        </div>
+        <div class="copyright text-center">
+            <p>© 2018 - 2023 MARYMARKET. All RIGHT RESERVED.</p>
+        </div>
+        <!-- //foot_cont -->
+    </div>
 </div>
 </html>
