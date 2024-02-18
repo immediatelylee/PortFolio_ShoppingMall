@@ -22,6 +22,11 @@ public class Item extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String itemNm; //상품명
 
+//    추가
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
+
     @Column(name="price", nullable = false)
     private int price; //가격
 

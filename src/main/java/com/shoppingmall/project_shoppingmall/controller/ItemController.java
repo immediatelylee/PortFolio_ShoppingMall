@@ -19,10 +19,12 @@ import java.util.*;
 @Controller
 public class ItemController {
     private final ItemService itemService;
+    private final BrandService brandService;
 
     @GetMapping(value = "/admin/item/new")
     public String itemForm(Model model){
         model.addAttribute("itemFormDto", new ItemFormDto());
+        model.addAttribute("brandFormDto",new BrandFormDto());
         return "item/itemForm";
     }
 
@@ -54,10 +56,13 @@ public class ItemController {
 
         try {
             ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
+//            BrandFormDto brandFormDto = brandService.getBrand(brandId); // 수정이 필요함.
             model.addAttribute("itemFormDto", itemFormDto);
+//            model.addAttribute("brandFormDto",brandFormDto);
         } catch(EntityNotFoundException e){
             model.addAttribute("errorMessage", "존재하지 않는 상품 입니다.");
             model.addAttribute("itemFormDto", new ItemFormDto());
+            model.addAttribute("brandFormDto",new BrandFormDto());
             return "item/itemForm";
         }
 

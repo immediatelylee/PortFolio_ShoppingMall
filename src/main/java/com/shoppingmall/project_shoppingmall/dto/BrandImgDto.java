@@ -1,13 +1,9 @@
 package com.shoppingmall.project_shoppingmall.dto;
 
 import com.shoppingmall.project_shoppingmall.domain.*;
-import lombok.*;
 import org.modelmapper.*;
 
-@Getter
-@Setter
-public class ItemImgDto {
-
+public class BrandImgDto {
     private Long id;
 
     private String imgName;
@@ -16,11 +12,8 @@ public class ItemImgDto {
 
     private String imgUrl;
 
-    private String repImgYn;
-
-    public static ItemImgDto of(ItemImg itemImg) {
+    public static BrandImgDto of(BrandImg brandImg) {
         ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(itemImg,ItemImgDto.class);
+        return  modelMapper.map(brandImg,BrandImgDto.class);
     }
-
 }
