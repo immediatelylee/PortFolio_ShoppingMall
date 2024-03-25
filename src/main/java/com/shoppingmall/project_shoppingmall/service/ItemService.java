@@ -18,15 +18,13 @@ import java.util.*;
 public class ItemService {
 
     private final ItemRepository itemRepository;
-
     private final ItemImgService itemImgService;
-
     private final ItemImgRepository itemImgRepository;
 
     public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception{
 
         //상품 등록
-        Item item = itemFormDto.createItem();
+        Item item = itemFormDto.toItem();
         itemRepository.save(item);
 
         //이미지 등록

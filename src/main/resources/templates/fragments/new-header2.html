@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/main.css}">
     <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css}">
-<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+
     <title>Mary Market</title>
 </head>
 <body>
@@ -16,10 +16,10 @@
         <nav class="left-nav">
             <ul>
                 <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                    <a class="nav-link" href="/admin/item/new">상품 등록</a>
+                    <a class="nav-link" href="/admin/item/new">상품 관리</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                    <a class="nav-link" href="/admin/items">상품 관리</a>
+                    <a class="nav-link" href="/admin/brand/management">브랜드 관리</a>
                 </li>
             </ul>
         </nav>
@@ -205,7 +205,7 @@
                 </div>
                 <div class="logo_box">
                     <div class="hd_logo">
-                        <a href="/index.html"><img src="/web/upload/icon/marymarket_logo.png" alt=""></a>
+                        <a href="/main.html"><img src="/web/upload/icon/marymarket_logo.png" alt=""></a>
                         <div class="event_logo"></div>
                     </div>
                     <ul class="hd_menu">

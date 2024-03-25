@@ -13,7 +13,7 @@ spring:
   jpa:
     open-in-view: false
     defer-datasource-initialization: true
-    hibernate.ddl-auto: update
+    hibernate.ddl-auto: create
     show-sql: true
     properties:
       hibernate.format_sql: true
@@ -32,6 +32,7 @@ spring.servlet.multipart.maxFileSize: 20MB
 spring.servlet.multipart.maxRequestSize: 100MB
 #상품 이미지 업로드 경로
 itemImgLocation: C:/shop/item
+brandImgLocation: C:/shop/brand
 #리소스 업로드 경로
 uploadPath: file:///C:/shop/
 
