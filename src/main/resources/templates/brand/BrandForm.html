@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout2}">
+
+<th:block layout:fragment="script">
+
+    <script th:inline="javascript">
+
+        function updateSelectedLabel(e) {
+            // 현재 선택된 라벨 찾기
+            const currentSelectedLabel = document.querySelector(".gLabel.eSelected");
+
+            // 클릭된 라벨의 class 이름 변경
+            e.target.parentNode.classList.add("eSelected");
+
+            // 기존 선택된 라벨의 class 이름 변경
+            if (currentSelectedLabel) {
+                currentSelectedLabel.classList.remove("eSelected");
+            }
+
+            // 클릭된 라벨 내 input의 checked 속성 변경
+            const input = e.target.parentNode.querySelector("input");
+            input.setAttribute("checked", "checked");
+
+            // 선택되지 않은 다른 input의 checked 속성 제거
+            const otherInputs = document.querySelectorAll(".gLabel input:not(:checked)");
+            for (const otherInput of otherInputs) {
+                otherInput.removeAttribute("checked");
+            }
+        }
+
+        // 모든 라벨 내 input에 click 이벤트 리스너 등록
+        document.querySelectorAll(".gLabel input").forEach((input) => {
+            input.addEventListener("click", updateSelectedLabel);
+        });
+
+        function validateForm() {
+            // 브랜드명 입력 여부 확인
+            const brandName = document.getElementById("brandNm");
+            if (brandName.value === "") {
+                alert("브랜드명을 입력해주세요. (Please enter brand name.)");
+                return false;
+            }
+
+            // 모든 입력값 유효하면 폼 전송
+            alert("브랜드가 등록되었습니다.")
+            return true;
+
+        }
+
+
+    </script>
+</th:block>
+
+<div layout:fragment="content">
+    <form role="form" method="post" enctype="multipart/form-data" th:object="${brandFormDto}">
+    <div id="content">
+        <div class="headingArea">
+            <div class="mTitle">
+                <h1>브랜드 관리</h1>
+            </div>
+        </div>
+        <div class="section" id="QA_list1">
+            <div class="mBoard gSmall">
+                <form id="eSearchForm" method="POST">
+                    <table border="1" summary="">
+                        <caption>브랜드 검색</caption>
+                        <tbody>
+                        <tr>
+                            <th scope="row">브랜드 검색</th>
+                            <td>
+                                <select class="fSelect" id="eSearchKey" style="width:100px;">
+                                    <option value="brand_name">브랜드명</option>
+                                    <option value="brand_code">브랜드코드</option>
+                                </select>
+                                <input type="text" class="fText" id="eSearchValue" value="" style="width:400px;" fw-label="검색" fw-filter="isMaxByte[200]">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">사용여부</th>
+                            <td>
+                                <label class="gLabel eSelected"><input type="radio" name="use_brand" value="A" class="fChk" checked="checked"> 전체</label>
+                                <label class="gLabel"><input type="radio" name="use_brand" value="T" class="fChk"> 사용함</label>
+                                <label class="gLabel"><input type="radio" name="use_brand" value="F" class="fChk"> 사용안함</label>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="mButton gCenter">
+                <a href="#none" class="btnSearch" id="eSearch"><span>검색</span></a>
+            </div>
+        </div>
+        <div class="section" id="QA_list2">
+            <div class="mTitle">
+                <h2>브랜드 목록</h2>
+            </div>
+            <div class="mState">
+                <div class="gLeft">
+                    <p class="total">[총 <strong>1</strong>개]</p>
+                </div>
+                <div class="gRight">
+                    <select class="fSelect" id="eListLimitCount">
+                        <option value="10">10개씩보기</option>
+                        <option value="20" selected="selected">20개씩보기</option>
+                        <option value="30">30개씩보기</option>
+                        <option value="50">50개씩보기</option>
+                        <option value="100">100개씩보기</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mCtrl typeHeader">
+                <div class="gLeft">
+                    <a class="btnNormal eDelete" style="padding: 0;border-color: transparent " href="#none"><span><em class="icoDel"></em> 삭제</span></a>
+                </div>
+                <div class="gRight">
+                    <a class="btnCtrl" href="/admin/brand/brandadd"><span>브랜드 등록</span></a>
+                </div>
+            </div>
+            <div class="mBoard gCellSingle ">
+                <form id="eDeleteForm" method="POST" action="/exec/admin/shop1/product/salesbranddelete">
+                    <input type="hidden" name="62a9" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJtIjoiY2l2aWxsaWFuMSIsInMiOiIxMTAzOWIzYjc3ZjI3OTNlYTgwODdkMDc4OWJlZmVlZSIsInQiOjE3MDc5OTYwNDAsInIiOiJjaXZpbGxpYW4xLmNhZmUyNC5jb20ifQ.86XqLC4Am63X-MAk478QpP4qkNJ1h6KVMvv7ghi63xW6W29KTKZTzKHOn-k15h2UV6H274dAEhOn_AE9dVJF4Q">            <table border="1" summary="" class="eChkColor">
+                    <caption>브랜드 목록</caption>
+                    <colgroup>
+                        <col class="chk">
+                        <col style="width:50px">
+                        <col style="width:150px">
+                        <col style="width:auto">
+                        <col style="width:100px">
+                        <col class="date">
+                        <col style="width:100px">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th scope="col"><input type="checkbox" class="allChk"></th>
+                        <th scope="col">No</th>
+                        <th scope="col">브랜드코드</th>
+                        <th scope="col">
+                            <strong class="array " id="eBrandName">브랜드명<button type="button">오름차순 정렬</button></strong>
+                        </th>
+                        <th scope="col">사용여부</th>
+                        <th scope="col">
+                            <strong class="array descend" id="eBrandInsert">등록일자<button type="button">오름차순 정렬</button></strong>
+                        </th>
+                        <th scope="col">상품수</th>
+                    </tr>
+                    </thead>
+                    <tbody class="center">
+                    <tr th:each="brand : ${brands}" class="">
+                        <td><input type="checkbox" name="brand_code[]" value="B0000000" class="rowChk" disabled="disabled"></td>
+                        <td><th:block th:text="${brand.id}">1</th:block></td>
+                        <td class="txtCode"><a href="/disp/admin/shop1/Product/salesbrandregister?brand_code=B0000000" class="txtLink">B0000000</a></td>
+                        <td class="left"><a href="/disp/admin/shop1/Product/salesbrandregister?brand_code=B0000000" class="txtLink" th:text="${brand.brandNm}">자체브랜드</a></td>
+                        <td th:text="${brand.brandStatus}">사용함</td>
+                        <td>2024-02-15</td>
+                        <td class="right"><a href="/disp/admin/shop1/product/SalesPopupProduct?sales_type=brand&amp;sales_code=B0000000&amp;sales_name=자체브랜드" target="_blank" title="새창 열림" class="txtLink eShowChild">2</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+                </form>
+            </div>
+            <div class="mCtrl typeFooter">
+                <div class="gLeft">
+                    <a class="btnNormal eDelete" style="padding: 0;border-color: transparent " href="#none"><span><em class="icoDel"></em> 삭제</span></a>
+                </div>
+                <div class="gRight">
+                    <a class="btnCtrl" href="/admin/brand/brandadd"><span>브랜드 등록</span></a>
+                </div>
+            </div>
+            <div class="mPaginate">
+                <ol>
+                    <li><strong title="현재페이지">1</strong></li>
+                    <li><a href="">2</a>   </li>
+                </ol>
+            </div>
+        </div>
+</div>
+</html>
