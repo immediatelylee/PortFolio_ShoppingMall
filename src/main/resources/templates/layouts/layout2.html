@@ -9,9 +9,10 @@
     <!-- CSS only -->
     <link th:href="@{/css/main.css}" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/real_slide.css}">
+    <link rel="stylesheet" th:href="@{/css/management.css}">
     <script src="/js/mdpick.js" defer></script>
 
-    <th:block layout:fragment="script"></th:block>
+
     <th:block layout:fragment="css"></th:block>
 
 </head>
@@ -22,6 +23,7 @@
 <div layout:fragment="content" class="content"></div>
 
 <div th:replace="fragments/footer::footer"></div>
+<th:block layout:fragment="script"></th:block>
 
 </body>
 </html>
