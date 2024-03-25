@@ -19,8 +19,8 @@ import java.util.*;
 public class BrandService {
 
     private final BrandRepository brandRepository;
-    private final BrandImgRepository brandImgRepository;
-    private final BrandImgService brandImgService;
+
+
 
     public Long saveBrand(BrandFormDto brandFormDto) throws Exception {
         //브랜드 등록
@@ -39,21 +39,7 @@ public class BrandService {
         }
     }
 
-    // 상품 수정 페이지내용 출력
-    @Transactional(readOnly = true)
-    public BrandFormDto getBrandDtl(Long brandId){
-        List<BrandImg> brandImgList = brandImgRepository.findByBrandIdOrderByIdAsc(brandId);
-        List<BrandImgDto> brandImgDtoList = new ArrayList<>();
-        for (BrandImg brandImg : brandImgList) {
-            BrandImgDto brandImgDto = BrandImgDto.of(brandImg);
-            brandImgDtoList.add(brandImgDto);
-        }
 
-        Brand brand = brandRepository.findById(brandId)
-                .orElseThrow(EntityNotFoundException::new);
-        BrandFormDto brandFormDto = BrandFormDto.of(brand);
-        return brandFormDto;
-    }
 
     public Long updateBrand(BrandFormDto brandFormDto) throws Exception{
         //브랜드 수정
