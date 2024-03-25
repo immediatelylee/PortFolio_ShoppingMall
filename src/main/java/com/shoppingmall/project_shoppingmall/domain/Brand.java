@@ -17,39 +17,23 @@ public class Brand extends BaseEntity{
     @Column(name="brand_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 50)
     private String brandNm;
-    private String brandDescription;
 
-    public Brand(Long id, String brandNm, String brandDescription) {
-        this.id = id;
-        this.brandNm = brandNm;
-        this.brandDescription = brandDescription;
-    }
+    @Column(name = "brand_status")
+    private boolean brandStatus;
 
-    public static BrandSimpleDto fromBrand(Brand brand) {
-        if (brand == null) {
-            return null;
-        }
-        return new BrandSimpleDto(
-                brand.getId(),
-                brand.getBrandNm()
-        );
-    }
-    public static Brand toBrand(BrandSimpleDto brandSimpleDto) {
-        if (brandSimpleDto == null) {
-            return null;
-        }
-        return new Brand(
-                brandSimpleDto.getId(),
-                brandSimpleDto.getBrandNm(),
-                null
-        );
-    }
+//    public Brand(Long id, String brandNm, boolean isActive) {
+//        this.id = id;
+//        this.brandNm = brandNm;
+//        this.isActive = isActive;
+//    }
 
     public void updateBrand(BrandFormDto brandFormDto){
         this.id = brandFormDto.getId();
         this.brandNm = brandFormDto.getBrandNm();
-        this.brandDescription = brandFormDto.getBrandDescription();
+        this.brandStatus = brandFormDto.isBrandStatus();
     }
 
 }
