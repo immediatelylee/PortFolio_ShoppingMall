@@ -4,17 +4,18 @@ import com.shoppingmall.project_shoppingmall.domain.*;
 import lombok.*;
 import org.modelmapper.*;
 
+import javax.validation.constraints.*;
 import java.util.*;
 
 @Getter @Setter
 public class BrandFormDto {
 
     private Long id;
-    private String brandNm;
-    private String brandDescription;
 
-    private List<BrandImgDto> brandImgDtoList = new ArrayList<>();
-    private List<Long> brandImgIds = new ArrayList<>();
+    @NotBlank(message = "브랜드명은 필수 입력 값입니다.")
+    private String brandNm;
+
+    private boolean brandStatus;
 
     public Brand toBrand(){
         ModelMapper modelMapper = new ModelMapper();
