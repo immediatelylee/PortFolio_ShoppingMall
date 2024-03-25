@@ -22,20 +22,21 @@ public class BrandService {
     private final BrandImgRepository brandImgRepository;
     private final BrandImgService brandImgService;
 
-    public Long saveBrand(BrandFormDto brandFormDto, List<MultipartFile> brandImgFileList ) throws Exception {
+    public Long saveBrand(BrandFormDto brandFormDto) throws Exception {
         //브랜드 등록
         Brand brand = brandFormDto.toBrand();
         brandRepository.save(brand);
 
-        //브랜드 이미지 등록
-        for(int i=0;i<brandImgFileList.size();i++){
-            BrandImg brandImg = new BrandImg();
-            brandImg.setBrand(brand);
-
-            brandImgService.saveBrandImg(brandImg, brandImgFileList.get(i));
-        }
-
         return brand.getId();
+    }
+
+    public List<Brand> findAll(){
+        try {
+            return brandRepository.findAll();
+        } catch (Exception e) {
+            // 예외 처리 코드
+            throw new RuntimeException(e);
+        }
     }
 
     // 상품 수정 페이지내용 출력
@@ -51,22 +52,15 @@ public class BrandService {
         Brand brand = brandRepository.findById(brandId)
                 .orElseThrow(EntityNotFoundException::new);
         BrandFormDto brandFormDto = BrandFormDto.of(brand);
-        brandFormDto.setBrandImgDtoList(brandImgDtoList);
         return brandFormDto;
     }
 
-    public Long updateBrand(BrandFormDto brandFormDto, List<MultipartFile> brandImgFileList) throws Exception{
-        //상품 수정
+    public Long updateBrand(BrandFormDto brandFormDto) throws Exception{
+        //브랜드 수정
         Brand brand = brandRepository.findById(brandFormDto.getId())
                 .orElseThrow(EntityNotFoundException::new);
         brand.updateBrand(brandFormDto);
-        List<Long> brandImgIds = brandFormDto.getBrandImgIds();
 
-        //이미지 등록
-        for(int i=0;i<brandImgFileList.size();i++){
-            brandImgService.updateBrandImg(brandImgIds.get(i),
-                    brandImgFileList.get(i));
-        }
 
         return brand.getId();
     }
