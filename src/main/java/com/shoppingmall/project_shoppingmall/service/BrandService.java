@@ -39,8 +39,6 @@ public class BrandService {
         }
     }
 
-
-
     public Long updateBrand(BrandFormDto brandFormDto) throws Exception{
         //브랜드 수정
         Brand brand = brandRepository.findById(brandFormDto.getId())
@@ -49,6 +47,14 @@ public class BrandService {
 
 
         return brand.getId();
+    }
+
+    public void deleteBrands(List<Long> brandIds) {
+
+        List<Brand> brands = brandRepository.findAllById(brandIds);
+
+        brandRepository.deleteAll(brands);
+
     }
 
 //    @Transactional(readOnly = true)
