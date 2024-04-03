@@ -11,8 +11,10 @@ import org.springframework.ui.*;
 import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.*;
 import javax.validation.*;
 import java.util.*;
+import java.util.stream.*;
 
 @RequiredArgsConstructor
 @Controller
@@ -33,7 +35,6 @@ public class BrandController {
 
     @GetMapping("/admin/brand/brandadd")
     public String brandForm(@ModelAttribute("brandFormDto") BrandFormDto brandFormDto){
-//        model.addAttribute("brandFormDto",new BrandFormDto());
 
         return "brand/brandAdd";
     }
@@ -51,7 +52,7 @@ public class BrandController {
             brandService.saveBrand(brandFormDto);
 
             model.addAttribute("message", "브랜드가 등록되었습니다.");
-            return "brand/brandForm";
+            return "redirect:/admin/brand/management";
 
 
         } catch (Exception e){
@@ -64,6 +65,22 @@ public class BrandController {
     @GetMapping(value = "/admin/brand/management")
     public String brandmanage(Model model){
         model.addAttribute("brandFormDto",new BrandFormDto());
+        model.addAttribute("IdsTransferDto",new IdsTransferDto());  // retrun list
         return "brand/brandForm";
     }
+
+    @PostMapping("/admin/brand/deleteBrands")
+    public String deleteBrands(IdsTransferDto idsTransferDto){
+
+        List<Long> brandIds = idsTransferDto.getSelectedBrandIds();
+
+        // 브랜드 삭제
+        brandService.deleteBrands(brandIds);
+
+        // 브랜드 관리 페이지로 리다이렉션
+        return "redirect:/admin/brand/management";
+
+    }
+
+
 }
