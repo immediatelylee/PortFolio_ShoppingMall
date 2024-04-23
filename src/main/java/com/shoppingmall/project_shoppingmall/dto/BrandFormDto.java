@@ -17,6 +17,8 @@ public class BrandFormDto {
 
     private boolean brandStatus;
 
+    private String brandCode;
+
     public Brand toBrand(){
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(this, Brand.class);
