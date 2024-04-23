@@ -6,6 +6,26 @@
 <th:block layout:fragment="script">
 
     <script th:inline="javascript">
+        function countTableRows() {
+            const tbodySelector = 'tbody.center';
+
+            // 테이블 바디 요소 가져오기
+            const tableBody = document.querySelector(tbodySelector);
+
+            // 테이블 바디 내의 테이블 행 (<tr> 요소) 개수 계산
+            const rowCount = tableBody.querySelectorAll('tr').length;
+
+            const countElement = document.querySelector('.total strong');
+            countElement.textContent = rowCount;
+
+        }
+
+        window.addEventListener('load', function() {
+            countTableRows();
+            console.log(`테이블 행 개수: ${rowCount}`);
+
+        });
+
 
         function updateSelectedLabel(e) {
             // 현재 선택된 라벨 찾기
@@ -59,38 +79,6 @@
 
         }
 
-        // 쓰이지 않아서 주석처리 후에 삭제함.
-        // function updateSelectedBrandIds() {
-        //     const checkedBoxes = document.querySelectorAll('.rowChk:checked');
-        //     let brandIds = [];
-        //
-        //     // Build an array of selected brand IDs
-        //     for (const checkbox of checkedBoxes) {
-        //         brandIds.push(parseInt(checkbox.value, 10));
-        //
-        //     }
-        //     console.log(brandIds);
-        //
-        //     if (brandIds.length == 0) {
-        //         alert("삭제할 브랜드를 선택해주세요")
-        //         return false;
-        //     }
-        //
-        //
-        //     if (brandIds === null) {
-        //         console.error('brandIds element is null');
-        //         return;
-        //     }
-        //
-        //     // 폼 전송
-        //     alert("선택한 브랜드가 삭제 되었습니다.")
-        //     const TransferidList = document.getElementById('transferbrandIds2');
-        //     TransferidList.value = brandIds;
-        //
-        //     return true;
-        // }
-
-
     </script>
 </th:block>
 
@@ -104,26 +92,32 @@
         </div>
         <div class="section" id="QA_list1">
             <div class="mBoard gSmall">
-
+                <form id="search-form" th:action ="@{/admin/brand/management}" th:method="get">
                     <table border="1" summary="">
                         <caption>브랜드 검색</caption>
                         <tbody>
                         <tr>
                             <th scope="row">브랜드 검색</th>
+
                             <td>
-                                <select class="fSelect" id="eSearchKey" style="width:100px;">
-                                    <option value="brand_name">브랜드명</option>
-                                    <option value="brand_code">브랜드코드</option>
+
+                                <select class="fSelect" th:name="brandSearchType" id="brandSearchType" style="width:100px;">
+                                    <option th:each="B_Type : ${BrandSearchType}"
+                                            th:value="${B_Type}"
+                                            th:text="${B_Type.getDescription()}"
+                                            >
+                                    </option>
                                 </select>
-                                <input type="text" class="fText" id="eSearchValue" value="" style="width:400px;" fw-label="검색" fw-filter="isMaxByte[200]">
+                                <input type="text" class="fText" name="searchValue"  id="SearchValue" th:value="${param.searchValue}" style="width:400px;" fw-label="검색" fw-filter="isMaxByte[200]">
                             </td>
+
                         </tr>
                         <tr>
                             <th scope="row">사용여부</th>
                             <td>
-                                <label class="gLabel eSelected"><input type="radio" name="use_brand" value="A" class="fChk" checked="checked"> 전체</label>
-                                <label class="gLabel"><input type="radio" name="use_brand" value="T" class="fChk"> 사용함</label>
-                                <label class="gLabel"><input type="radio" name="use_brand" value="F" class="fChk"> 사용안함</label>
+                                <label class="gLabel eSelected"><input type="radio" name="searchStatus" th:value="A" class="fChk" checked="checked"> 전체</label>
+                                <label class="gLabel"><input type="radio" name="searchStatus" th:value="T" class="fChk"> 사용함</label>
+                                <label class="gLabel"><input type="radio" name="searchStatus" th:value="F" class="fChk"> 사용안함</label>
                             </td>
                         </tr>
                         </tbody>
@@ -131,8 +125,9 @@
 
             </div>
             <div class="mButton gCenter">
-                <a href="#none" class="btnSearch" id="eSearch"><span>검색</span></a>
+                <button type="submit" class="btnSearch" id="eSearch"><span>검색</span></button>
             </div>
+            </form>
         </div>
         <div class="section" id="QA_list2">
             <div class="mTitle">
@@ -140,7 +135,7 @@
             </div>
             <div class="mState">
                 <div class="gLeft">
-                    <p class="total">[총 <strong>1</strong>개]</p>
+                    <p class="total">[총 <strong text="${rowCount}"></strong>개]</p>
                 </div>
                 <div class="gRight">
                     <select class="fSelect" id="eListLimitCount">
@@ -152,6 +147,7 @@
                     </select>
                 </div>
             </div>
+            <form method="post" enctype="multipart/form-data" th:action="@{/admin/brand/deleteBrands}" th:object="${IdsTransferDto}">
             <div class="mCtrl typeHeader">
                 <div class="gLeft">
                     <button class="btnNormal eDelete" style="padding: 0;border-color: transparent " type="submit" ><span><em class="icoDel"></em> 삭제</span></button>
@@ -192,15 +188,15 @@
 
 
                     <tbody class="center">
-                    <form method="post" enctype="multipart/form-data" th:action="@{/admin/brand/deleteBrands}" th:object="${IdsTransferDto}">
-                    <th:block th:each="brand : ${brands}" class="">
+
+                    <th:block th:each="brand : ${searchBrands.content}" class="">
                     <tr>
                         <td>
                             <input type="checkbox" name="selectedBrandIds" th:value="${brand.id}" class="rowChk" >
                         </td>
                         <td><th:block th:text="${brand.id}">1</th:block></td>
-                        <td class="txtCode"><a href="" class="txtLink">B0000000</a></td>
-                        <td class="left"><a href="#" class="txtLink" th:text="${brand.brandNm}">자체브랜드</a></td>
+                        <td class="txtCode"><a th:href="@{/admin/brand/management/${brand.id}}" class="txtLink" th:text="${brand.brandCode}" >B0000000</a></td>
+                        <td class="left"><a th:href="@{/admin/brand/management/${brand.id}}" class="txtLink" th:text="${brand.brandNm}">자체브랜드</a></td>
                         <td th:text="${brand.brandStatus}">사용함</td>
                         <td>2024-02-15</td>
                         <td class="right"><a href="" target="_blank" title="새창 열림" class="txtLink eShowChild">2</a></td>
@@ -224,10 +220,17 @@
                     <a class="btnCtrl" href="/admin/brand/brandadd"><span>브랜드 등록</span></a>
                 </div>
             </div>
+
             <div class="mPaginate">
-                <ol>
-                    <li><strong title="현재페이지">1</strong></li>
-                    <li><a href="">2</a>   </li>
+                <ol th:each="pageNumber : ${paginationBarNumbers}">
+                    <li >
+                        <a
+                           th:href="@{/admin/brand/management(searchType=${param.searchType} ,searchValue=${param.searchValue},page=${pageNumber}  )}">
+                            <strong th:if="${pageNumber} == ${searchBrands.number}" th:text = "${pageNumber + 1}"></strong>
+                            <span th:if="${pageNumber} != ${searchBrands.number}" th:text = "${pageNumber + 1}"></span>
+                        </a>
+                    </li>
+
                 </ol>
             </div>
 
