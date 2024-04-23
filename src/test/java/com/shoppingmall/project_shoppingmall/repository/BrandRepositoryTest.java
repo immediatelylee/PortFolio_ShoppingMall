@@ -23,7 +23,7 @@ public class BrandRepositoryTest {
         Page<BrandFormDto> brands = brandRepository.findByBrandNmContaining(brandNmContaining, pageable).map(BrandFormDto::of);
 
         // 결과 검증
-        assertThat(brands.getContent()).hasSize(1); 
+        assertThat(brands.getContent()).hasSize(1);
         assertThat(brands.getContent().get(0).getBrandNm()).contains(brandNmContaining); // 첫 번째 브랜드 이름에 '테스트' 문자열이 포함되어 있는지 확인
     }
 
