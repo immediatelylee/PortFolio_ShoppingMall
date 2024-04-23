@@ -4,7 +4,7 @@ management.endpoints.web.exposure.include: "*"
 server.port: 9091
 
 #나중에 제거해야함
-server.servlet.session.timeout: 1800
+server.servlet.session.timeout: 180000
 
 
 spring:
