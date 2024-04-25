@@ -135,12 +135,11 @@
                         </tr>
                         </tbody>
                     </table>
-
-            </div>
+                </div>
             <div class="mButton gCenter">
                 <button type="submit" class="btnSearch" id="eSearch"><span>검색</span></button>
             </div>
-            </form>
+                    </form>
         </div>
         <div class="section" id="QA_list2">
             <div class="mTitle">
@@ -151,13 +150,13 @@
                     <p class="total">[총 <strong text="${rowCount}"></strong>개]</p>
                 </div>
                 <div class="gRight">
-                    <select class="fSelect" id="eListLimitCount">
-                        <option value="10">10개씩보기</option>
-                        <option value="20" selected="selected">20개씩보기</option>
-                        <option value="30">30개씩보기</option>
-                        <option value="50">50개씩보기</option>
-                        <option value="100">100개씩보기</option>
-                    </select>
+<!--                    <select class="fSelect" id="eListLimitCount">-->
+<!--                        <option value="10">10개씩보기</option>-->
+<!--                        <option value="20" selected="selected">20개씩보기</option>-->
+<!--                        <option value="30">30개씩보기</option>-->
+<!--                        <option value="50">50개씩보기</option>-->
+<!--                        <option value="100">100개씩보기</option>-->
+<!--                    </select>-->
                 </div>
             </div>
             <form method="post" enctype="multipart/form-data" th:action="@{/admin/brand/deleteBrands}" th:object="${IdsTransferDto}">
@@ -184,16 +183,24 @@
                         <col style="width:100px">
                     </colgroup>
                     <thead>
+
                     <tr>
                         <th scope="col"><input type="checkbox" id="allCheckBox" onclick="allChecked()"></th>
                         <th scope="col">No</th>
                         <th scope="col">브랜드코드</th>
                         <th scope="col">
-                            <strong class="array " id="eBrandName">브랜드명<button type="button">오름차순 정렬</button></strong>
+                            <strong class="array " id="eBrandName">브랜드명
+                                <a type="button" th:href="@{/admin/brand/management(brandSearchType=${param.brandSearchType},
+                                searchValue=${param.searchValue},
+                                searchStatus=${param.searchStatus},
+                                page=${pageNumber},
+                                sort='BrandNm')
+                                }">내림차순 정렬</a> </strong>
+
                         </th>
                         <th scope="col">사용여부</th>
                         <th scope="col">
-                            <strong class="array descend" id="eBrandInsert">등록일자<button type="button">오름차순 정렬</button></strong>
+                            <strong class="array descend" id="eBrandInsert">등록일자</strong>
                         </th>
                         <th scope="col">상품수</th>
                     </tr>
@@ -211,7 +218,7 @@
                         <td class="txtCode"><a th:href="@{/admin/brand/management/${brand.id}}" class="txtLink" th:text="${brand.brandCode}" >B0000000</a></td>
                         <td class="left"><a th:href="@{/admin/brand/management/${brand.id}}" class="txtLink" th:text="${brand.brandNm}">자체브랜드</a></td>
                         <td th:text="${brand.brandStatus}">사용함</td>
-                        <td>2024-02-15</td>
+                        <td th:text="${#temporals.format(brand.regTime,'yyyy-MM-dd')}"> 2024-02-15</td>
                         <td class="right"><a href="" target="_blank" title="새창 열림" class="txtLink eShowChild">2</a></td>
                     </tr>
                     </th:block>
@@ -224,7 +231,7 @@
 
 
 
-                    <button class="btnNormal eDelete" type="submit" style="padding: 0;border-color: transparent " ><span><em class="icoDel"></em> 삭제</span></button>
+                    <button class="btnNormal eDelete" type="submit" style="padding: 0;border-color: transparent " onclick="return validateSelectedBrands()" ><span><em class="icoDel"></em> 삭제</span></button>
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     </form>
 
@@ -238,7 +245,7 @@
                 <ol th:each="pageNumber : ${paginationBarNumbers}">
                     <li >
                         <a
-                           th:href="@{/admin/brand/management(searchType=${param.searchType} ,searchValue=${param.searchValue},page=${pageNumber}  )}">
+                           th:href="@{/admin/brand/management(brandSearchType=${param.brandSearchType} ,searchValue=${param.searchValue},searchStatus=${param.searchStatus} ,page=${pageNumber}  )}">
                             <strong th:if="${pageNumber} == ${searchBrands.number}" th:text = "${pageNumber + 1}"></strong>
                             <span th:if="${pageNumber} != ${searchBrands.number}" th:text = "${pageNumber + 1}"></span>
                         </a>
@@ -249,4 +256,5 @@
 
         </div>
 </div>
+
 </html>

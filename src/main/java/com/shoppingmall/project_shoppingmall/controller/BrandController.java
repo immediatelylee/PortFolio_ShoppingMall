@@ -13,6 +13,7 @@ import org.springframework.ui.*;
 import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.*;
 
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.validation.*;
@@ -65,17 +66,19 @@ public class BrandController {
     public String brandmanage(@RequestParam(required = false) BrandSearchType brandSearchType,
                               @RequestParam(required = false) String searchValue,
                               @RequestParam(required = false) String searchStatus,
-                              @PageableDefault(page = 0,size = 10) Pageable pageable,
+                              @PageableDefault(page = 0,size = 10 ,sort = "brandCode" ,direction = Sort.Direction.DESC) Pageable pageable,
                               Model model){
 
         Page<Brand> searchBrands = brandService.searchBrands(brandSearchType,searchValue,searchStatus,pageable).map(BrandFormDto::toBrand);
         List<Integer> barNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(),searchBrands.getTotalPages());
 
 
+
         model.addAttribute("paginationBarNumbers", barNumbers);
         model.addAttribute("BrandSearchType",brandSearchType.values());
         model.addAttribute("IdsTransferDto",new IdsTransferDto());  // retrun list
         model.addAttribute("searchBrands",searchBrands);
+
         return "brand/brandForm";
     }
 
