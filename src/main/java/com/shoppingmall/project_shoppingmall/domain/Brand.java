@@ -24,16 +24,14 @@ public class Brand extends BaseEntity{
     @Column(name = "brand_status")
     private boolean brandStatus;
 
-//    public Brand(Long id, String brandNm, boolean isActive) {
-//        this.id = id;
-//        this.brandNm = brandNm;
-//        this.isActive = isActive;
-//    }
+    @Column(name = "brand_code")
+    private String brandCode;
 
     public void updateBrand(BrandFormDto brandFormDto){
         this.id = brandFormDto.getId();
         this.brandNm = brandFormDto.getBrandNm();
         this.brandStatus = brandFormDto.isBrandStatus();
+        this.brandCode = brandFormDto.getBrandCode();
     }
 
 }

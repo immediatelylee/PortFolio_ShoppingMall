@@ -389,7 +389,7 @@ strong {
     font-weight: bold;
 }
 
-.mBoard .array button {
+.mBoard .array a {
     overflow: hidden;
     display: inline-block;
     width: 7px;

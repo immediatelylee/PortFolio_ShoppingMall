@@ -8,7 +8,7 @@ import javax.validation.constraints.*;
 import java.util.*;
 
 @Getter @Setter
-public class BrandFormDto {
+public class BrandFormDto extends BaseEntity{
 
     private Long id;
 
@@ -16,6 +16,8 @@ public class BrandFormDto {
     private String brandNm;
 
     private boolean brandStatus;
+
+    private String brandCode;
 
     public Brand toBrand(){
         ModelMapper modelMapper = new ModelMapper();

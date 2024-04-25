@@ -3,6 +3,8 @@ management.endpoints.web.exposure.include: "*"
 
 server.port: 9091
 
+#나중에 제거해야함
+server.servlet.session.timeout: 180000
 
 
 spring:
@@ -13,7 +15,7 @@ spring:
   jpa:
     open-in-view: false
     defer-datasource-initialization: true
-    hibernate.ddl-auto: create
+    hibernate.ddl-auto: validate
     show-sql: true
     properties:
       hibernate.format_sql: true
