@@ -6,6 +6,19 @@
 <th:block layout:fragment="script">
 
     <script th:inline="javascript">
+        function validateSelectedBrands() {
+            // 선택된 checkbox 개수를 가져옵니다.
+            const selectedBrands = document.querySelectorAll('input[name="selectedBrandIds"]:checked');
+
+            // 선택된 브랜드가 없으면 에러 메시지를 출력하고 submit을 막습니다.
+            if (selectedBrands.length === 0) {
+                alert("삭제할 브랜드를 선택하세요.");
+                return false;
+            }
+
+            // 선택된 브랜드가 있다면 정상적으로 submit을 진행합니다.
+            return true;
+        }
         function countTableRows() {
             const tbodySelector = 'tbody.center';
 
@@ -150,7 +163,7 @@
             <form method="post" enctype="multipart/form-data" th:action="@{/admin/brand/deleteBrands}" th:object="${IdsTransferDto}">
             <div class="mCtrl typeHeader">
                 <div class="gLeft">
-                    <button class="btnNormal eDelete" style="padding: 0;border-color: transparent " type="submit" ><span><em class="icoDel"></em> 삭제</span></button>
+                    <button class="btnNormal eDelete" style="padding: 0;border-color: transparent " onclick="return validateSelectedBrands()" type="submit" ><span><em class="icoDel"></em> 삭제</span></button>
                 </div>
                 <div class="gRight">
                     <a class="btnCtrl" href="/admin/brand/brandadd"><span>브랜드 등록</span></a>
