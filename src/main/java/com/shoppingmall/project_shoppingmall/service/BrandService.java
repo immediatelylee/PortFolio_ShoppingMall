@@ -68,17 +68,26 @@ public class BrandService {
 
     }
 
+    public BrandFormDto getBrand(Long brandId){
+        return brandRepository.findById(brandId)
+                .map(BrandFormDto::of)
+                .orElseThrow(() -> new EntityNotFoundException("브랜드가 없습니다 - brandId: " + brandId));
 
+    }
 
-    public Long updateBrand(BrandFormDto brandFormDto) throws Exception{
-        //브랜드 수정
+    public Long updateBrand(BrandFormDto brandFormDto){
         Brand brand = brandRepository.findById(brandFormDto.getId())
                 .orElseThrow(EntityNotFoundException::new);
-        brand.updateBrand(brandFormDto);
 
+        String brandNm = brandFormDto.getBrandNm();
+        Boolean brandStatus = brandFormDto.isBrandStatus();
+
+        brand.setBrandNm(brandNm);
+        brand.setBrandStatus(brandStatus);
 
         return brand.getId();
     }
+
 
     public void deleteBrands(List<Long> brandIds) {
 
