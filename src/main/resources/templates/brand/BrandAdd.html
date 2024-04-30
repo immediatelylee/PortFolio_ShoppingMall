@@ -121,8 +121,13 @@
                     </form>
 
     <div class="mButton gCenter">
-        <button th:formaction="@{/admin/brand/brandadd}" type="submit" class="my-button btn-primary">저장</button>
-        <a th:href="@{/admin/brand/management}" class="my-button btn-outline-secondary">취소</a>
+        <th:block th:if="${#strings.isEmpty(brandFormDto.id)}">
+            <button th:formaction="@{/admin/brand/brandadd}" type="submit" class="my-button btn-primary">저장</button>
+        </th:block>
+        <th:block th:unless="${#strings.isEmpty(brandFormDto.id)}">
+            <button th:formaction="@{'/admin/brand/management/' + ${brandFormDto.id}}" type="submit" class="my-button btn-primary">수정</button>
+        </th:block>
+            <a th:href="@{/admin/brand/management}" class="my-button btn-outline-secondary">취소</a>
     </div>
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 </div>
