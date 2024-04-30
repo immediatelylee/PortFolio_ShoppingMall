@@ -32,10 +32,6 @@ public class BrandController {
         return BrandStatus.values();
     }
 
-//    @ModelAttribute("brands")
-//    public Page<Brand> brandList(Pageable pageable) { return brandService.findAll(pageable);
-//    }
-
     @GetMapping("/admin/brand/brandadd")
     public String brandForm(@ModelAttribute("brandFormDto") BrandFormDto brandFormDto){
 
@@ -82,14 +78,28 @@ public class BrandController {
         return "brand/brandForm";
     }
 
-//    @GetMapping(value = "/admin/brand/management/{brandId}")
-//    public String brand(@PathVariable Long brandId,Model model){
-//        Brand brand = brandService.getBrand(brandId);
-//        model.addAttribute("brand",brand);
-//
-//
-//    return "brand/brandAdd";
-//    }
+    @GetMapping(value = "/admin/brand/management/{brandId}")
+    public String getBrand(@PathVariable Long brandId,Model model){
+        BrandFormDto brandFormDto = brandService.getBrand(brandId);
+        model.addAttribute("brandFormDto",brandFormDto);
+
+
+    return "brand/brandAdd";
+    }
+
+    @PostMapping(value = "/admin/brand/management/{brandId}")
+    public String updateBrand(@Valid BrandFormDto brandFormDto,BindingResult bindingResult,Model model) {
+        if(bindingResult.hasErrors()){
+            return "brand/brandForm";
+        }
+        try {
+            brandService.updateBrand(brandFormDto);
+        } catch (Exception e){
+            model.addAttribute("errorMessage","브랜드 수정중 에러가 발생하였습니다.");
+            return "brand/brandForm";
+        }
+        return "redirect:/admin/brand/management";
+    }
 
 
     @PostMapping("/admin/brand/deleteBrands")
