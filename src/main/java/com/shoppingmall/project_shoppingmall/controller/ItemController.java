@@ -21,6 +21,16 @@ public class ItemController {
     private final ItemService itemService;
     private final BrandService brandService;
 
+    @GetMapping(value = "/test")
+    public String test(Model model){
+        return "item/itemManagement";
+    }
+
+    @GetMapping(value = "/test1")
+    public String test1(Model model){
+        return "item/itemAdd";
+    }
+
     @GetMapping(value = "/admin/item/new")
     public String itemForm(Model model){
         model.addAttribute("itemFormDto", new ItemFormDto());

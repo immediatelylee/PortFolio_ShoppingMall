@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout3-item}">
+
+<th:block layout:fragment="script">
+
+</th:block>
+<div layout:fragment="content">
+    <div id="content">
+        <div class="headingArea">
+            <div class="mTitle">
+                <h1>간단 등록</h1>
+
+            </div>
+        </div>
+
+        <form id="eProductRegisterForm">
+
+            <div id="QA_register1" class="section">
+                <div class="mToggleBar eToggle selected">
+                    <h2>기본 정보</h2>
+                    <div class="ctrl">
+                        <label class="gLabel"><input type="checkbox"> 항상열기</label>
+                        <span><button type="button"><em>접기</em></button></span>
+                    </div>
+                </div>
+                <div class="toggleArea" style="display: block;">
+                    <div class="mBoard gSmall gDouble gGuide">
+                        <table border="1" summary="">
+                            <caption>간단 등록</caption>
+                            <tbody>
+                            <tr>
+                                <th scope="row">상품명 <strong class="icoRequired">필수</strong></th>
+                                <td>
+                                    <div class="gIcoShop">
+                                        <span class="icoShop" title="쇼핑몰별">쇼핑몰별</span>
+                                        <div class="overlapTip">
+                                            <input type="text" name="product_name" id="product_name" placeholder="예시) 플라워 미니 원피스, 원피스 1위상품" class="fText" fw-filter="isFill&amp;isMaxByte[250]" fw-label="상품명" style="width:340px;">
+                                            <div class="tip" style="display:none;">
+                                                <span class="icoReference">참고</span>
+                                                입력하신 상품명과 동일한 상품명이 있습니다.
+                                                <button type="button" class="close eClose">닫기</button>
+                                                <span class="edge"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">상품요약설명</th>
+                                <td>
+                                    <div class="gIcoShop">
+                                        <span class="icoShop" title="쇼핑몰별">쇼핑몰별</span>
+                                        <input type="text" class="fText" style="width:98%;" name="summary_desc" placeholder="예시) 주문폭주!! 페미닌한 원피스 Free, L, XL까지~~" value="" fw-filter="isMaxByte[120]" fw-label="상품요약설명">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">상품상세설명</th>
+                                <td>
+                                    <div class="gIcoShop">
+
+                                        <div class="mTab typeTab">
+                                            <ul class="tabs">
+                                                <li class="selected" id="eTabNnedit"><a href="#tabCont1_2" id="nnedit">상세설명 이미지 등록</a></li>
+
+                                            </ul>
+                                        </div>
+
+                                        <div id="tabCont1_2" class="tabCont" style="display: block;">
+                                            <div class="gEditor">
+                                                <a href="#none" class="btnNormal imageupload" imagekey="d_image"><span id="dImagButton"><em class="icoPlus"></em> 등록</span></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div id="QA_register2" class="section">
+                    <div class="mToggleBar eToggle selected">
+                        <h2>판매 정보</h2>
+                        <div class="ctrl">
+                            <label class="gLabel"><input type="checkbox"> 항상열기</label>
+                            <span><button type="button"><em>접기</em></button></span>
+                        </div>
+                    </div>
+                    <div class="toggleArea" style="display:block;">
+                        <div class="mBoard gSmall gGuide">
+                            <table border="1" summary="">
+                                <caption>판매 정보</caption>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">판매가 <strong class="icoRequired">필수</strong></th>
+                                    <td>
+                                        <div class="gIcoShop">
+                                            <span class="icoShop" title="쇼핑몰별">쇼핑몰별</span>
+                                            <input type="text" id="product_price" name="product_price[1]" class="fText ePrdPrice" shop_no="1" placeholder="예시) 38,000" fw-filter="isFill&amp;isPrice" fw-label="판매가" style="width:100px;"> 원                                                    </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="QA_register3" class="section">
+                    <div class="mToggleBar eToggle selected">
+                        <h2>표시 설정</h2>
+                        <div class="ctrl">
+                            <label class="gLabel"><input type="checkbox"> 항상열기</label>
+                            <span><button type="button"><em>접기</em></button></span>
+                        </div>
+                    </div>
+                    <div class="toggleArea" style="display:block;">
+                        <div class="mBoard gSmall gGuide">
+                            <table border="1" summary="">
+                                <caption>표시 설정</caption>
+                                <tbody>
+                                <tr>
+                                    <th scope="row" rowspan="2">표시상태설정</th>
+                                    <td>
+                                        <div class="gIcoShop">
+                                            <label class="gLabel"><input type="radio" name="is_display[1]" class="fChk" value="T"> 진열함</label>
+                                            <label class="gLabel eSelected"><input type="radio" name="is_display[1]" class="fChk" value="F" checked="checked"> 진열안함</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="gIcoShop">
+
+                                            <label class="gLabel"><input type="radio" name="selling_status[1]" class="fChk" value="T"> 판매함</label>
+                                            <label class="gLabel eSelected"><input type="radio" name="selling_status[1]" class="fChk" value="F" checked="checked"> 판매안함</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">상품분류선택</th>
+                                    <td>
+
+                                        <div class="mSearchSelect typeCategory gDouble">
+                                            <table border="1" summary="">
+                                                <caption>분류</caption>
+                                                <colgroup>
+                                                    <col style="width:25%" span="4">
+                                                </colgroup>
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col" class="center">대분류</th>
+                                                    <th scope="col" class="center">중분류</th>
+                                                    <th scope="col" class="center">소분류</th>
+                                                    <th scope="col" class="center">상세분류</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="_category_select_body">
+                                                <tr>
+                                                    <td>
+                                                        <div class="list ">
+                                                            <ul class="_category_1">
+                                                                <li class="">
+                                                                    (대분류) 미진열 &gt;                                                    <input type="hidden" class="_category_no" value="23" hashtag="">
+                                                                </li>
+
+                                                                <li class=" _next">
+                                                                    (대분류) Outerwear &gt;                                                    <input type="hidden" class="_category_no" value="24" hashtag="">
+                                                                </li>
+
+                                                                <li class=" _next">
+                                                                    (대분류) Tops &gt;                                                    <input type="hidden" class="_category_no" value="25" hashtag="">
+                                                                </li>
+
+                                                                <li class="">
+                                                                    (대분류) Dresses &gt;                                                    <input type="hidden" class="_category_no" value="26" hashtag="">
+                                                                </li>
+
+                                                                <li class=" _next">
+                                                                    (대분류) Bottoms &gt;                                                    <input type="hidden" class="_category_no" value="27" hashtag="">
+                                                                </li>
+
+                                                                <li class="">
+                                                                    (대분류) Accessories &gt;                                                    <input type="hidden" class="_category_no" value="28" hashtag="">
+                                                                </li>
+
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="list">
+                                                            <ul class="_category_2"></ul>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="list">
+                                                            <ul class="_category_3"></ul>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="list">
+                                                            <ul class="_category_4"></ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <p class="gDouble">
+                                            <span class="icoDot"></span>
+                                            <strong class="gWidth wPrdCategory">선택된 상품분류</strong>
+                                            <span class="_product_category_none">
+                                </span>
+                                            <span style="display:none;" class="_product_category_checked">
+                                    <input type="hidden" name="cagetory_no" class="_selected_category_no" disabled="disabled">
+                                    <span class="txtLight txtLess">TOP &gt; 티셔츠 &gt; 후디 &gt; 츄리닝 후디</span>
+                                    <a href="#none" class="btnNormal _remove_selected_category"><span><em class="icoDel"></em> 삭제</span></a>
+                                </span>
+                                            <input type="hidden" name="checked_category">
+                                        </p>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="QA_register5" class="section">
+                    <div class="mToggleBar eToggle selected">
+                        <h2>이미지 정보</h2>
+                        <div class="ctrl">
+                            <label class="gLabel"><input type="checkbox"> 항상열기</label>
+                            <span><button type="button"><em>접기</em></button></span>
+                        </div>
+                    </div>
+                    <div class="toggleArea" style="display:block;">
+                        <div class="mBoard gSmall gGuide">
+                            <table border="1" summary="">
+                                <caption>이미지 정보</caption>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">상품이미지등록</th>
+                                    <td>
+                                        <div class="gIcoShop">
+                                            <span class="icoShop" title="쇼핑몰별">쇼핑몰별</span>
+                                            <div class="gAddInfo">
+                                                <div class="gLeft">
+                                                    <span class="figure" id="eDetailImage"><a href="#none" style="cursor:default;"><img src="//img.echosting.cafe24.com/thumb/108x108_2.gif" width="108" height="108" alt=""></a></span>
+                                                    <span class="figure" id="eListImage" style="display:none;"><a href="#none" style="cursor:default;"><img src="//img.echosting.cafe24.com/thumb/108x108_2.gif" width="108" height="108" alt=""></a></span>
+                                                    <span class="figure" id="eTinyImage" style="display:none;"><a href="#none" style="cursor:default;"><img src="//img.echosting.cafe24.com/thumb/108x108_2.gif" width="108" height="108" alt=""></a></span>
+                                                    <span class="figure" id="eMainImage" style="display:none;"><a href="#none" style="cursor:default;"><img src="//img.echosting.cafe24.com/thumb/108x108_2.gif" width="108" height="108" alt=""></a></span>
+                                                    <span class="button">
+                                            <div id="dFlashImageArea" class="btnFlash"><span id="dFlashImageButton"></span></div>
+                                            <a href="#none" class="btnNormal imageupload" imagekey="d_image"><span id="dImagButton"><em class="icoPlus"></em> 등록</span></a>
+                                            <a href="#none" class="btnNormal btnImageDelete" style="display:none;"><span><em class="icoDel"></em> 삭제</span></a>
+                                        </span>
+                                                </div>
+                                                <div class="gAdd">
+                                                    <ul class="txtInfo register">
+                                                        <li class="light">권장이미지 : 500px * 500px / 5M 이하 / gif, png, jpg(jpeg)</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="mButton gCenter">
+                    <a href="#none" class="btnSubmit"><span>상품등록</span></a>
+                    <a href="#none" class="btnEm btnPreview" id="eProductPreview"><span>미리보기</span></a>
+                </div>
+                <input type="hidden" name="previewProduct" id="previewProduct"></form>
+
+    </div>
+</div>
+
+</html>
