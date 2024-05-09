@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout3-item}">
+
+<th:block layout:fragment="script">
+
+</th:block>
+<div layout:fragment="content">
+    <div id="content">
+        <div class="headingArea">
+            <div class="mTitle">
+                <h1>상품 목록</h1>
+
+            </div>
+        </div>
+        <div class="mBox typeAll pannel">
+            <ul class="state">
+                <li>
+                    <strong>전체</strong>
+                    <a href="#none" class="eCountSearch" sort_type="" status="A">2</a>건            </li>
+                <li>
+                    <strong>판매함</strong>
+                    <a href="#none" class="eCountSearch" sort_type="selling" status="T">2</a>건            </li>
+                <li>
+                    <strong>판매안함</strong>
+                    <a href="#none" class="eCountSearch" sort_type="selling" status="F">0</a>건            </li>
+                <li>
+                    <strong>진열함</strong>
+                    <a href="#none" class="eCountSearch" sort_type="display" status="T">2</a>건            </li>
+                <li>
+                    <strong>진열안함</strong>
+                    <a href="#none" class="eCountSearch" sort_type="display" status="F">0</a>건            </li>
+            </ul>
+            <div class="button">
+                <a class="btnSubmit eRegProduct" href="/disp/admin/shop1/product/productregister"><span>상품등록</span></a>
+            </div>
+        </div>
+
+        <form action="/disp/admin/shop1/product/productmanage" method="GET" name="eProductSearchForm" id="eProductSearchForm">
+
+            <div class="optionArea" id="QA_list1">
+                <div class="mCtrl typeHeader">
+
+                </div>
+                <div class="mOption" id="submitSearchBox">
+                    <table border="1" summary="">
+                        <caption>상품 검색</caption>
+                        <colgroup>
+                            <col style="width:154px;">
+                            <col style="width:auto;">
+                            <col style="width:154px;">
+                            <col style="width:auto;">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th scope="row">검색분류</th>
+                            <td colspan="3">
+                                <ul class="mForm typeVer" id="eSearchFormGeneral">
+                                    <li>
+                                        <select class="fSelect eSearch" name="eField[]">
+                                            <option value="product_name">상품명</option>
+                                            <option value="eng_product_name">영문상품명</option>
+                                            <option value="item_name">상품명(관리용)</option>
+                                            <option value="purchase_prd_name">공급사 상품명</option>
+                                            <option value="">--------------------</option>
+                                            <option value="product_no">상품번호</option>
+                                            <option value="product_code">상품코드</option>
+                                            <option value="ma_product_code">자체 상품코드</option>
+                                            <option value="item_code">품목코드</option>
+                                            <option value="admin_item_code">자체 품목코드</option>
+                                            <option value="">--------------------</option>
+                                            <option value="Manufacturer">제조사</option>
+                                            <option value="Supplier">공급사</option>
+                                            <option value="Brand">브랜드</option>
+                                            <option value="Trend">트렌드</option>
+                                            <option value="Classification">자체분류</option>
+                                            <option value="">--------------------</option>
+                                            <option value="model_name">모델명</option>
+                                            <option value="origin">원산지</option>
+                                            <option value="Condition">상품상태</option>
+                                            <option value="product_tag">상품 검색태그</option>
+                                            <option value="product_weight">상품 전체중량</option>
+                                            <option value="">--------------------</option>
+                                            <option value="pm_memo">메모</option>
+                                            <option value="ins_user">등록아이디</option>
+                                        </select>
+                                        <input type="text" class="fText eSearchText" style="width:500px;" value="" name="eValue[]">
+                                        <select data-placeholder="- 분류 선택 -" class="chzn-select-deselect eTrend  chzn-done" style="width:312px; display:none;" name="Trend[]" id="selXRG">
+                                            <option value=""></option>
+                                        </select><div id="selXRG_chzn" class="chzn-container chzn-container-single eSearchSelects" style="width: 312px; display: none;" title=""><a href="javascript:void(0)" class="chzn-single chzn-default" tabindex="-1"><span>- 분류 선택 -</span><div><b></b></div></a><div class="chzn-drop"><div class="chzn-search"><input type="text" autocomplete="off" style="display: none;"><input type="text" autocomplete="off"></div><ul class="chzn-results" style=""></ul></div></div>
+                                        <select data-placeholder="- 분류 선택 -" class="chzn-select-deselect eBrand  chzn-done" style="width:312px; display:none;" name="Brand[]" id="sel244">
+                                            <option value=""></option>
+                                        </select><div id="sel244_chzn" class="chzn-container chzn-container-single eSearchSelects" style="width: 312px; display: none;" title=""><a href="javascript:void(0)" class="chzn-single chzn-default" tabindex="-1"><span>- 분류 선택 -</span><div><b></b></div></a><div class="chzn-drop"><div class="chzn-search"><input type="text" autocomplete="off" style="display: none;"><input type="text" autocomplete="off"></div><ul class="chzn-results" style=""></ul></div></div>
+                                        <select data-placeholder="- 분류 선택 -" class="chzn-select-deselect eSupplier  chzn-done" style="width:312px; display:none;" name="Supplier[]" id="selBD2">
+                                            <option value=""></option>
+                                        </select><div id="selBD2_chzn" class="chzn-container chzn-container-single eSearchSelects" style="width: 312px; display: none;" title=""><a href="javascript:void(0)" class="chzn-single chzn-default" tabindex="-1"><span>- 분류 선택 -</span><div><b></b></div></a><div class="chzn-drop"><div class="chzn-search"><input type="text" autocomplete="off" style="display: none;"><input type="text" autocomplete="off"></div><ul class="chzn-results" style=""></ul></div></div>
+                                        <select data-placeholder="- 분류 선택 -" class="chzn-select-deselect eManufacturer  chzn-done" style="width:312px; display:none;" name="Manufacturer[]" id="selSQ3">
+                                            <option value=""></option>
+                                        </select><div id="selSQ3_chzn" class="chzn-container chzn-container-single eSearchSelects" style="width: 312px; display: none;" title=""><a href="javascript:void(0)" class="chzn-single chzn-default" tabindex="-1"><span>- 분류 선택 -</span><div><b></b></div></a><div class="chzn-drop"><div class="chzn-search"><input type="text" autocomplete="off" style="display: none;"><input type="text" autocomplete="off"></div><ul class="chzn-results" style=""></ul></div></div>
+                                        <select data-placeholder="- 분류 선택 -" class="chzn-select-deselect eClassification  chzn-done" style="width:312px; display:none;" name="Classification[]" id="selT74">
+                                            <option value=""></option>
+                                        </select><div id="selT74_chzn" class="chzn-container chzn-container-single eSearchSelects" style="width: 312px; display: none;" title=""><a href="javascript:void(0)" class="chzn-single chzn-default" tabindex="-1"><span>- 분류 선택 -</span><div><b></b></div></a><div class="chzn-drop"><div class="chzn-search"><input type="text" autocomplete="off" style="display: none;"><input type="text" autocomplete="off"></div><ul class="chzn-results" style=""></ul></div></div>
+                                        <select class="fSelect eSearchSelects eCondition" style="width:312px;display:none;" name="Condition[]">
+                                            <option value="N">신상품</option>
+                                            <option value="U">중고상품</option>
+                                            <option value="R">반품/재고/진열 상품</option>
+                                        </select>
+
+                                        <select data-placeholder="- 원산지 선택 -" class="chzn-select-deselect eGlobalorigin  chzn-done" style="width:312px; display:none;" name="Globalorigin[]" id="selCJ5">
+                                            <option value="" selected="selected">
+                                            </option>
+                                        </select><div id="selCJ5_chzn" class="chzn-container chzn-container-single eSearchSelects" style="width: 312px; display: none;" title=""><a href="javascript:void(0)" class="chzn-single chzn-default" tabindex="-1"><span>- 원산지 선택 -</span><div><b></b></div></a><div class="chzn-drop"><div class="chzn-search"><input type="text" autocomplete="off" style="display: none;"><input type="text" autocomplete="off"></div><ul class="chzn-results" style=""></ul></div></div>
+
+                                        <select class="fSelect eSearchSelects eSearchOrigin" id="origin_level1_0" index="0" name="origin_level1[]" style="display:none;">
+                                            <option value="F" selected="selected">국내</option>
+                                            <option value="T">국외</option>
+                                            <option value="E">기타</option>
+                                        </select>
+
+                                        <span class="eSearchSelects eSearchOrigin" id="origin_levelF_0" name="origin_levelF[]" style="display:none;">
+                                <select name="place_parent_no[F][]" id="origin_levelF2_0" level_type="F" class="fSelect eSearchOrigin">
+    <option value="" selected="selected"> - 국내선택 - </option>
+    <option value="009">서울특별시</option>
+    <option value="008">부산광역시</option>
+    <option value="006">대구광역시</option>
+    <option value="011">인천광역시</option>
+    <option value="005">광주광역시</option>
+    <option value="007">대전광역시</option>
+    <option value="010">울산광역시</option>
+    <option value="017">세종특별자치시</option>
+    <option value="002">경기도</option>
+    <option value="001">강원도</option>
+    <option value="016">충청북도</option>
+    <option value="015">충청남도</option>
+    <option value="013">전라북도</option>
+    <option value="012">전라남도</option>
+    <option value="004">경상북도</option>
+    <option value="003">경상남도</option>
+    <option value="014">제주특별자치도</option>
+    </select>                        </span>
+                                        <span class="eSearchSelects eSearchOrigin" id="origin_levelT_0" name="origin_levelT[]" style="display:none;">
+                                <select class="fSelect eSearchOrigin" id="origin_levelT2_0" name="place_parent_no[T][]" level_type="T">
+                                    <option value="">- 대륙선택 -</option>
+                                    <option value="100">아시아</option>
+                                    <option value="103">아메리카</option>
+                                    <option value="102">유럽</option>
+                                    <option value="104">오세아니아</option>
+                                    <option value="101">아프리카</option>
+
+                                </select>
+                            </span>
+
+                                        <span class="eSearchSelects eSearchOrigin" id="origin_level3_0" name="origin_level3[]" style="display:none;">
+                                <select class="fSelect eSearchOrigin" id="origin_levelT3_0" name="origin_place_no[]">
+                                    <option></option>
+                                </select>
+                            </span>
+                                        <span class="eSearchSelects eSearchOrigin" id="origin_levelE_0" name="origin_levelE[]" style="display:none;">
+                                <input type="text" class="fText eSearchOrigin" style="width:200px;" name="made_in[]" value="" id="eMadeIn_0">
+                            </span>
+
+                                        <a href="#none" class="btnIcon icoMinus" search-type="general"><span>삭제</span></a>
+                                        <a href="#none" class="btnIcon icoPlus" search-type="general" style=""><span>추가</span></a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">상품구분</th>
+                            <td colspan="3">
+                                <label class="gLabel eSelected"><input type="radio" class="fChk" name="product_type" value="all" checked="&quot;checked&quot;/"> 전체</label>
+                                <label class="gLabel"><input type="radio" class="fChk" name="product_type" value="basic"> 기본상품</label>
+                                <label class="gLabel"><input type="radio" class="fChk" name="product_type" value="set_complex"> 세트상품</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">상품분류</th>
+                            <td colspan="3">
+                                <div class="gSingle">
+                                    <select class="fSelect category eCategory" id="eCategory1" depth="1" name="categorys[]"> <option value="">- 대분류 선택 -</option> <option value="23">(대분류) 미진열</option> <option value="24">(대분류) Outerwear</option> <option value="25">(대분류) Tops</option> <option value="26">(대분류) Dresses</option> <option value="27">(대분류) Bottoms</option> <option value="28">(대분류) Accessories</option> </select> <select class="fSelect category eCategory" id="eCategory2" depth="2" name="categorys[]"> <option value="">- 중분류 선택 -</option> </select> <select class="fSelect category eCategory" id="eCategory3" depth="3" name="categorys[]"> <option value="">- 소분류 선택 -</option> </select> <select class="fSelect category eCategory" id="eCategory4" depth="4" name="categorys[]"> <option value="">- 상세분류 선택 -</option> </select> <input type="hidden" name="category" id="eHiddenCategory" value="0">                    <span class="gBreak">
+                            <label><input type="checkbox" class="fChk category_sort" name="sub_cate" value="T"> 하위분류 포함검색</label>
+                            <label><input type="checkbox" class="fChk category_sort" name="notincategory" value="T"> 분류 미등록상품 검색</label>
+                        </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">상품등록일</th>
+                            <td colspan="3">
+                                <select class="fSelect category" name="date">
+                                    <option value="regist">상품등록일</option>
+                                    <option value="modify">상품최종수정일</option>
+                                </select>
+                                <a href="#none" class="btnDate" period="0"><span>오늘</span></a>
+                                <a href="#none" class="btnDate" period="3"><span>3일</span></a>
+                                <a href="#none" class="btnDate" period="7"><span>7일</span></a>
+                                <a href="#none" class="btnDate" period="30"><span>1개월</span></a>
+                                <a href="#none" class="btnDate" period="90"><span>3개월</span></a>
+                                <a href="#none" class="btnDate" period="365"><span>1년</span></a>
+                                <a href="#none" class="btnDate selected" period="-1"><span>전체</span></a>
+                                <input type="text" id="pr_start_date" name="start_date" class="fText gDate" value="2023-05-02" disabled="disabled">
+                                <a href="javascript:;" id="start_date" class="btnIcon icoCal"><span>달력보기</span></a>
+                                ~
+                                <input type="text" id="pr_end_date" name="end_date" class="fText gDate" value="2024-05-02" disabled="disabled">
+                                <a href="javascript:;" id="end_date" class="btnIcon icoCal"><span>달력보기</span></a>
+                                <input type="hidden" name="date_type" value="-1">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">진열상태</th>
+                            <td>
+                                <label class="gSingleLabel eSelected"><input type="radio" class="fChk eDisplayStatus" name="display" value="A" checked="&quot;checked&quot;"> 전체</label>
+                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="display" value="T"> 진열함</label>
+                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="display" value="F"> 진열안함</label>
+                            </td>
+                            <th scope="row">판매상태</th>
+                            <td>
+                                <label class="gSingleLabel eSelected"><input type="radio" class="fChk eDisplayStatus" name="selling" value="A" checked="&quot;checked&quot;"> 전체</label>
+                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="selling" value="T"> 판매함</label>
+                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="selling" value="F"> 판매안함</label>
+                            </td>
+                        </tr>
+                        <tr style="display: none;">
+                            <th scope="row">마켓연동</th>
+                            <td colspan="3">
+                                <div class="mForm">
+                                    <label class="gLabel eSelected"><input type="radio" name="market_selecter" class="fChk _market_selecter" value="A" checked="checked"> 전체</label>
+                                    <label class="gLabel"><input type="radio" name="market_selecter" class="fChk _market_selecter" value="T"> 마켓연동함</label>
+                                    <label class="gLabel"><input type="radio" name="market_selecter" class="fChk _market_selecter" value="F"> 마켓연동안함</label>
+
+                                    <div class="addForm" id="ec-product-list-market-search" style="display:none;">
+                                        <select class="fSelect _market_search_type" name="market_search_type">
+                                            <option value="market">마켓별 검색</option>
+                                            <option value="account">계정별 검색</option>
+                                        </select>
+                                        <span class="_ma_market_wrap" style="display:none;">
+                    <label class="gLabel gSingleSide eSelected"><input type="checkbox" class="fChk _ma_market_all" checked="checked"> 전체</label>
+                    <p class="gSingle">
+                                    </p>
+                </span>
+                                        <span class="_ma_account_wrap" style="display:none;">
+                    <label class="gLabel gSingleSide eSelected"><input type="checkbox" class="fChk _ma_account_all" checked="checked"> 전체</label>
+                    <p class="gSingle">
+                                    </p>
+                </span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+                <div class="mButton gCenter">
+                    <a href="#none" class="btnSearch" id="eBtnSearch"><span>검색</span></a>
+                    <a href="#none" class="btnSearch reset" id="eSearchFormInit"><span>초기화</span></a>
+                </div>
+                <input type="hidden" name="page">
+            </div>
+
+            <div class="section" id="QA_list2">
+                <div class="mTitle">
+                    <h2>상품 목록</h2> <div class="cTip" code="PR.SM.PL.60"><div class="mTooltip ">
+                    <button type="button" class="icon eTip">도움말</button>
+                    <div class="tooltip" style="z-index : 1; width: 510px">
+                        <div class="content"></div>
+                        <button type="button" class="close eClose">닫기</button>
+                        <span class="edge"></span>
+                    </div>
+                </div>
+                </div>
+                </div>
+                <div class="mState">
+                    <div class="gLeft">
+                        <p class="total">[총 <strong>2</strong>개]</p>
+                    </div>
+                    <div class="gRight">
+                        <select class="fSelect nob-sel" name="orderby"><option value="regist_d">등록일 역순</option><option value="regist_a">등록일 순</option><option value="empty1" disabled="disabled">---------------</option><option value="modify_d">수정일 역순</option><option value="modify_a">수정일 순</option><option value="empty2" disabled="disabled">---------------</option><option value="name_d">상품명 역순</option><option value="name_a">상품명 순</option><option value="empty3" disabled="disabled">---------------</option><option value="price_d">판매가 역순</option><option value="price_a">판매가 순</option><option value="empty5" disabled="disabled">---------------</option><option value="buyprice_d">공급가 역순</option><option value="buyprice_a" class="sort">공급가 순</option><option value="empty6" disabled="disabled" class="sort">---------------</option><option value="sort_d" disabled="disabled" class="sort">진열 역순</option><option value="sort_a" disabled="disabled" class="sort">진열 순</option><option value="empty8" disabled="disabled">---------------</option><option value="basket_d">장바구니수 역순</option><option value="basket_a">장바구니수 순</option><option value="empty9" disabled="disabled">---------------</option><option value="hitcount_d">조회수 역순</option><option value="hitcount_a">조회수 순</option><option value="empty10" disabled="disabled">---------------</option><option value="likecount_d">좋아요 역순</option><option value="likecount_a">좋아요 순</option></select>
+                        <select class="fSelect" name="limit">
+                            <option value="10">10개씩보기</option>
+                            <option value="20" selected="selected">20개씩보기</option>
+                            <option value="30">30개씩보기</option>
+                            <option value="50">50개씩보기</option>
+                            <option value="100">100개씩보기</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mCtrl typeHeader setting">
+                    <!-- [Allinone mode] 유틸 버튼(진열함/판매함/복사/삭제/분류수정 등등) -->
+                    <div class="gTop">
+
+
+                        <a href="#none" class="btnNormal _manage_state" data-action-type="DS"><span>진열함</span></a>
+                        <a href="#none" class="btnNormal _manage_state" data-action-type="DN"><span>진열안함</span></a>
+                        <a href="#none" class="btnNormal _manage_state" data-action-type="SS"><span>판매함</span></a>
+                        <a href="#none" class="btnNormal _manage_state" data-action-type="SN"><span>판매안함</span></a>
+                        <a href="#layerCopy" class="btnNormal eModal _manage_copy"><span>복사</span></a>
+                        <a href="#none" class="btnNormal _manage_delete"><span><em class="icoDel"></em> 삭제</span></a>
+                        <a href="#none" target="_blank" title="새창 열림" class="btnNormal _manage_category"><span>분류수정<em class="icoLink"></em></span></a>
+                        <a href="#none" target="_blank" title="새창 열림" class="btnNormal _manage_main_display"><span>메인진열수정<em class="icoLink"></em></span></a>
+                        <a href="#none" title="새창 열림" class="btnNormal eExcelCreateRequestPopUp" target="_blank"><span><em class="icoXls"></em> 엑셀다운로드<em class="icoLink"></em></span></a>
+                    </div>
+                    <!-- 메인진열관리 / 분류별진열관리 / 상품등록 -->
+                    <div class="gBottom">
+                        <a href="#" class="btnNormal eShowInfoMainLinkButton"><span>메인진열관리</span></a>
+                        <a href="#" class="btnNormal eShowInfoCategoryLinkButton"><span>분류별진열관리</span></a>
+
+                        <a href="/disp/admin/shop1/product/productregister" class="btnCtrl eRegProduct"><span>상품등록</span></a>
+                    </div>
+
+
+                    <!-- 설정 버튼 -->
+                    <div class="gSetting">
+                        <div class="mOpen">
+                            <a href="#listSubject" class="btnSetting eOpenClick"><span>설정</span></a>
+                            <div id="listSubject" class="open">
+                                <strong>목록표시</strong>
+                                <div class="wrap">
+                                    <ul class="default">
+                                        <li>
+
+                                            <label class=" eSelected"><input type="checkbox" class="fChk eColumn" name="column[no]" value="T" checked="checked"> No</label>
+                                        </li>
+                                        <li>
+
+                                            <label class=" eSelected"><input type="checkbox" class="fChk eColumn" name="column[product_type]" value="T" checked="checked"> 상품구분</label>
+                                        </li>
+                                        <li>
+
+                                            <label class=" eSelected"><input type="checkbox" class="fChk eColumn" name="column[product_code]" value="T" checked="checked"> 상품코드</label>
+                                        </li>
+                                        <li>
+                                            <label class=" eSelected"><input type="checkbox" class="fChk eDefColumn" name="default_column[]" value="" checked="checked" disabled="disabled"> 상품명</label></li>
+                                        <li>
+                                            <label class=" eSelected"><input type="checkbox" class="fChk eDefColumn" name="default_column[shop_product_name]" value="T" checked="checked"> 상품명(상점별)</label></li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[product_custom]" value="T"> 소비자가</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[prd_price_org]" value="T"> 상품가</label>
+                                        </li>
+                                        <li>
+                                            <label class=" eSelected"><input type="checkbox" class="fChk eDefColumn" name="default_column[]" value="" checked="checked" disabled="disabled"> 판매가</label></li>
+                                        <li>
+                                            <label class=" eSelected"><input type="checkbox" class="fChk eDefColumn" name="default_column[sale_price]" value="T" checked="checked"> 할인가</label></li>
+                                        <li>
+                                            <label class=" eSelected"><input type="checkbox" class="fChk eDefColumn" name="default_column[mobile_sale_price]" value="T" checked="checked"> 모바일할인가</label></li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[plusapp_sale_price]" value="T"> 플러스앱할인가</label>
+                                        </li>
+                                        <li class="line">
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[product_eng_name]" value="T"> 영문상품명</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[item_name]" value="T"> 상품명(관리용)</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[purchase_prd_name]" value="T"> 공급사 상품명</label>
+                                        </li>
+                                        <li class="line">
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[category]" value="T"> 상품분류</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[ma_product_code]" value="T"> 자체 상품코드</label>
+                                        </li>
+                                        <li class="line">
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[display_status]" value="T"> 진열상태</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[selling_status]" value="T"> 판매상태</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[soldout_status]" value="T"> 품절상태</label>
+                                        </li>
+                                        <li class="line">
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[manufacurer]" value="T"> 제조사</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[supplier]" value="T"> 공급사</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[brand]" value="T"> 브랜드</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[trend]" value="T"> 트렌드</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[classification]" value="T"> 자체분류</label>
+                                        </li>
+                                        <li class="line">
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[product_buy]" value="T"> 공급가</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[origin]" value="T"> 원산지</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[model_name]" value="T"> 모델명</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[condition]" value="T"> 상품상태</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[product_tag]" value="T"> 상품 검색태그</label>
+                                        </li>
+                                        <li class="line">
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[use_soldout]" value="T"> 품절사용</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[item_count]" value="T"> 품목수</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[stockout_item_count]" value="T"> 품절품목수</label>
+                                        </li>
+                                        <li class="line">
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[wishlist_count]" value="T"> 관심상품수</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[basket_count]" value="T"> 장바구니수</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[like_count]" value="T"> 좋아요수</label>
+                                        </li>
+                                        <li class="line">
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[shipping_order_count]" value="T"> 배송중 갯수</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[delivery_count]" value="T"> 배송완료수</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[order_count]" value="T"> 결제수</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[hit_count]" value="T"> 조회수</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[buy_rate]" value="T"> 상품구매율(%)</label>
+                                        </li>
+                                        <li class="line">
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[ins_date]" value="T"> 상품등록일</label>
+                                        </li>
+                                        <li>
+
+                                            <label><input type="checkbox" class="fChk eColumn" name="column[memo]" value="T"> 메모</label>
+                                        </li>
+                                        <li>
+
+                                            <label class=" eSelected"><input type="checkbox" class="fChk eColumn" name="column[order_address]" value="T" checked="checked"> 바로구매 URL</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="footer">
+                                    <a href="#none" class="btnCtrl" id="eColumnApply" data-page="manage"><span>적용</span></a>
+                                    <a href="#none" class="btnNormal eClose"><span>닫기</span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mBoard typeList gScroll gCell">
+                    <!--
+                        항목 추가에따른 th, td 추가시 col도 같이 추가해주세요.
+                    -->
+                    <table border="1" summary="" class="eChkColor">
+                        <caption>상품 목록</caption>
+                        <colgroup>
+                            <col class="chk">
+                            <!-- 기본 -->
+                            <col style="width:50px">
+                            <col style="width:70px">
+                            <col style="width:140px">
+                            <col style="width:250px">
+                            <col style="width:100px">
+                            <col style="width:100px">
+                            <col style="width:100px">
+                            <col style="width:160px">
+                        </colgroup>
+                        <thead id="product-list-header">
+                        <tr>
+                            <th scope="col"><input type="checkbox" class="allChk"></th>
+                            <!-- 기본 -->
+                            <th scope="col" column-name="no">
+                                No                </th>
+                            <th scope="col" column-name="product_type">
+                                상품구분                </th>
+                            <th scope="col" column-name="product_code">
+                                상품코드                </th>
+                            <th scope="col" column-name="product_name">
+                                상품명                </th>
+                            <th scope="col" column-name="product_price">
+                                판매가                </th>
+                            <th scope="col" column-name="sale_price">
+                                할인가                </th>
+                            <th scope="col" column-name="mobile_sale_price">
+                                모바일<br>할인가                </th>
+                            <th scope="col" column-name="order_address">
+                                바로구매 URL <div class="cTip" code="PR.SM.PL.100"><div class="mTooltip gLarge">
+                                <button type="button" class="icon eTipScroll">도움말</button>
+                                <div class="tooltip" style="z-index : 1; ">
+                                    <div class="content"></div>
+                                    <button type="button" class="close eClose">닫기</button>
+                                    <span class="edge"></span>
+                                </div>
+                            </div>
+                            </div>                </th>
+                        </tr>
+                        </thead>
+                        <tbody class="center" id="product-list">
+                        <tr class="ec-product-manage-list" data-product-type="true" data-product-num="10" data-is-set-product="F">
+                            <td><input type="checkbox" class="rowChk _product_no" value="10" is_display="T" is_selling="T" is_funding_product="F" is_set_product="F" data-option-type="T"></td>
+                            <td>2</td>
+                            <td>기본상품</td>
+                            <td class="txtCode"><a href="/disp/admin/shop1/product/ProductRegister?product_no=10" target="_blank" title="새창 열림" class="txtLink eProductDetail _product_code" product_no="10">P000000J</a></td>
+                            <td>
+                                <div class="gGoods gMedium">
+                                    <div class="mOpen">
+                                        <span class="frame eOpenOver" find="gGoods"><img src="//img.echosting.cafe24.com/thumb/44x44.gif" width="44" height="44" alt=""></span>
+                                        <div class="open" style="top:20%;left:20%;width:145px;">
+                                            <div class="wrap">
+                                                <ul class="default">
+                                                    <li><a href="#none" class="eProductDetail" product_no="10">상품 상세보기</a></li>
+                                                    <li><a href="#none" class="eProductDisplayPopup" popup="T" url="https://civillian1.cafe24.com/product/detail.html?product_no=10" data-product-no="10">쇼핑몰화면 진열보기</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p><a href="/disp/admin/shop1/product/ProductRegister?product_no=10" target="_blank" title="새창 열림" class="txtLink eProductDetail ec-product-list-productname" product_no="10">샘플상품 2</a></p>
+
+                                </div>
+                            </td>
+                            <td class="right">10,000</td>
+                            <td class="right">
+                                <a href="#layerDcBenefit" class="eLayerClick txtLink eBenefitLayer" benefit-type="P" product-no="10">10,000</a>
+                            </td>
+                            <td class="right"><a href="#layerDcBenefit" class="eLayerClick  txtLink eBenefitLayer" benefit-type="M" product-no="10">10,000</a></td>
+                            <td>
+                                <input type="text" class="fText ec-product-list-orderaddress " style="width:100%;" data-product-no="10" value="https://civillian1.cafe24.com/surl/O/10" readonly="">
+
+
+                            </td>
+
+                        </tr>
+                        <tr class="ec-product-manage-list" data-product-type="true" data-product-num="9" data-is-set-product="F">
+                            <td><input type="checkbox" class="rowChk _product_no" value="9" is_display="T" is_selling="T" is_funding_product="F" is_set_product="F" data-option-type="T"></td>
+                            <td>1</td>
+                            <td>기본상품</td>
+                            <td class="txtCode"><a href="/disp/admin/shop1/product/ProductRegister?product_no=9" target="_blank" title="새창 열림" class="txtLink eProductDetail _product_code" product_no="9">P000000I</a></td>
+                            <td>
+                                <div class="gGoods gMedium">
+                                    <div class="mOpen">
+                                        <span class="frame eOpenOver" find="gGoods"><img src="//img.echosting.cafe24.com/thumb/44x44.gif" width="44" height="44" alt=""></span>
+                                        <div class="open" style="top:20%;left:20%;width:145px;">
+                                            <div class="wrap">
+                                                <ul class="default">
+                                                    <li><a href="#none" class="eProductDetail" product_no="9">상품 상세보기</a></li>
+                                                    <li><a href="#none" class="eProductDisplayPopup" popup="T" url="https://civillian1.cafe24.com/product/detail.html?product_no=9" data-product-no="9">쇼핑몰화면 진열보기</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p><a href="/disp/admin/shop1/product/ProductRegister?product_no=9" target="_blank" title="새창 열림" class="txtLink eProductDetail ec-product-list-productname" product_no="9">샘플상품 1</a></p>
+
+                                </div>
+                            </td>
+                            <td class="right">5,000</td>
+                            <td class="right">
+                                <a href="#layerDcBenefit" class="eLayerClick txtLink eBenefitLayer" benefit-type="P" product-no="9">5,000</a>
+                            </td>
+                            <td class="right"><a href="#layerDcBenefit" class="eLayerClick  txtLink eBenefitLayer" benefit-type="M" product-no="9">5,000</a></td>
+                            <td>
+                                <input type="text" class="fText ec-product-list-orderaddress " style="width:100%;" data-product-no="9" value="https://civillian1.cafe24.com/surl/O/9" readonly="">
+
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mCtrl typeFooter">
+                    <!-- [Allinone mode] 유틸 버튼(진열함/판매함/복사/삭제/분류수정 등등) -->
+                    <div class="gTop">
+                        <a href="#none" class="btnNormal _manage_state" data-action-type="DS"><span>진열함</span></a>
+                        <a href="#none" class="btnNormal _manage_state" data-action-type="DN"><span>진열안함</span></a>
+                        <a href="#none" class="btnNormal _manage_state" data-action-type="SS"><span>판매함</span></a>
+                        <a href="#none" class="btnNormal _manage_state" data-action-type="SN"><span>판매안함</span></a>
+                        <a href="#layerCopy" class="btnNormal eModal _manage_copy"><span>복사</span></a>
+                        <a href="#none" class="btnNormal _manage_delete"><span><em class="icoDel"></em> 삭제</span></a>
+                        <a href="#none" target="_blank" title="새창 열림" class="btnNormal _manage_category"><span>분류수정<em class="icoLink"></em></span></a>
+                        <a href="#none" target="_blank" title="새창 열림" class="btnNormal _manage_main_display"><span>메인진열수정<em class="icoLink"></em></span></a>
+
+                        <a href="#none" title="새창 열림" class="btnNormal eExcelCreateRequestPopUp"><span><em class="icoXls"></em> 엑셀다운로드<em class="icoLink"></em></span></a>
+                    </div>
+                    <div class="gBottom">
+                        <a href="#" class="btnNormal eShowInfoMainLinkButton"><span>메인진열관리</span></a>
+                        <a href="#" class="btnNormal eShowInfoCategoryLinkButton"><span>분류별진열관리</span></a>
+
+                        <a href="/disp/admin/shop1/product/productregister" class="btnCtrl eRegProduct"><span>상품등록</span></a>
+                    </div>
+
+
+
+
+                </div>
+                <div class="mPaginate">
+                    <ol>
+                        <li><strong title="현재페이지">1</strong></li>
+                    </ol>
+                </div>    </div>
+        </form>
+    </div>
+</div>
+
+</html>
