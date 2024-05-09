@@ -1,0 +1,41 @@
+.mBox.typeAll.pannel {
+    margin: 0 0 30px;
+}
+.mBox.typeAll.pannel .state {
+    float: left;
+    max-width: 800px;
+    padding: 10px 0 10px 10px;
+}
+.mBox.typeAll.pannel .state li:first-child {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+}
+.mBox.typeAll.pannel .state li {
+    float: left;
+    height: 12px;
+    margin: 0 0 0 19px;
+    padding: 0 0 0 20px;
+    line-height: 1.25;
+    border-left: 1px solid #b1b1b3;
+}
+.mBox.typeAll.pannel .state a {
+    margin: 0 0 0 5px;
+    color: #1d87d5;
+    font-weight: bold;
+    text-decoration: underline;
+    /* 추가 */
+    font-size: 15px;
+}
+.mBox.typeAll.pannel .button {
+    float: right;
+}
+
+.gTop.btnNormal _manage_state{
+    border: none;
+}
+
+.gSingle {
+    display: block;
+    margin-top: 5px !important;
+}

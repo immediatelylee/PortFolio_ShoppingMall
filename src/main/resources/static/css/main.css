@@ -1681,8 +1681,8 @@ div.ec-base-help ul li {
 [class^='btnNormal'],a[class^='btnNormal'] {
     display: inline-block;
     box-sizing: border-box;
-    padding: 3px 8px;
-    border: 1px solid #ccc;
+    /*padding: 3px 8px;*/
+    /*border: 1px solid #ccc;*/
     letter-spacing: 0.5px;
     font-size: 11px;
     line-height: 18px;
@@ -1711,7 +1711,7 @@ div.ec-base-help ul li {
     text-align: center;
     white-space: nowrap;
     color: #fff;
-    background-color: #333;
+    /*background-color: #333;*/
 }
 
 [class^='btnEm'],a[class^='btnEm'] {
@@ -1730,7 +1730,7 @@ div.ec-base-help ul li {
     text-align: center;
     white-space: nowrap;
     color: #fff;
-    background-color: #84868b;
+    /*background-color: #84868b;*/
 }
 
 [class^='btnBasic'],a[class^='btnBasic'] {
