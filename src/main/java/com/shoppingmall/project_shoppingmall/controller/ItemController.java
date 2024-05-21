@@ -1,9 +1,11 @@
 package com.shoppingmall.project_shoppingmall.controller;
 
+import com.shoppingmall.project_shoppingmall.constant.*;
 import com.shoppingmall.project_shoppingmall.domain.*;
 import com.shoppingmall.project_shoppingmall.dto.*;
 import com.shoppingmall.project_shoppingmall.service.*;
 import lombok.*;
+import lombok.experimental.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.*;
 import javax.persistence.*;
 import javax.validation.*;
 import java.util.*;
+import java.util.stream.*;
 
 @RequiredArgsConstructor
 @Controller
@@ -21,15 +24,48 @@ public class ItemController {
     private final ItemService itemService;
     private final BrandService brandService;
 
-    @GetMapping(value = "/test")
+    @ModelAttribute("ItemCategory")
+    public ItemCategory[] itemCategories(){
+        return ItemCategory.values();
+    }
+
+    @GetMapping(value = "/admin/item/management")
     public String test(Model model){
+        for (ItemCategory category : ItemCategory.values()) {
+            System.out.println((category.getTitle()+ " " + category.name() + " " +category.getDepth() ));
+
+            if (category.getParentItemCategory().isPresent()) {
+
+                if (category.getParentItemCategory().get().equals(ItemCategory.ROOT)) {
+                    System.out.println("parent ROOT");
+                    System.out.println("================================");
+
+                    for (ItemCategory childcate : category.getChildCategories()) {
+                        System.out.println("==child==");
+                        System.out.println(childcate.getTitle());
+                    }
+                } else  {
+                    continue;
+                }
+            }
+        }
+
         return "item/itemManagement";
     }
 
-    @GetMapping(value = "/test1")
+    @GetMapping(value = "/admin/item/itemadd")
     public String test1(Model model){
+        List<ItemCategory> depth1 = itemService.getCategoryBydepth(1L);
+        List<ItemCategory> depth2 = itemService.getCategoryBydepth(2L);
+        List<ItemCategory> depth3 = itemService.getCategoryBydepth(3L);
+
+        model.addAttribute("depth1",depth1);
+        model.addAttribute("depth2",depth2);
+        model.addAttribute("depth3",depth3);
+
         return "item/itemAdd";
     }
+
 
     @GetMapping(value = "/admin/item/new")
     public String itemForm(Model model){

@@ -1,5 +1,6 @@
 package com.shoppingmall.project_shoppingmall.service;
 
+import com.shoppingmall.project_shoppingmall.constant.*;
 import com.shoppingmall.project_shoppingmall.domain.*;
 import com.shoppingmall.project_shoppingmall.dto.*;
 import com.shoppingmall.project_shoppingmall.repository.*;
@@ -84,7 +85,16 @@ public class ItemService {
     public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
         return itemRepository.getMainItemPage(itemSearchDto, pageable);
     }
-
+    @Transactional(readOnly = true)
+    public List<ItemCategory> getCategoryBydepth(Long depth){
+            List<ItemCategory> categoriesWithDepth = new ArrayList<>();
+            for (ItemCategory category : ItemCategory.values()) {
+                if (category.getDepth().equals(depth)) {
+                    categoriesWithDepth.add(category);
+                }
+            }
+        return categoriesWithDepth;
+    }
 }
 
 

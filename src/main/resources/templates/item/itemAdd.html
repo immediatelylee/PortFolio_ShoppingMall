@@ -4,7 +4,228 @@
       layout:decorate="~{layouts/layout3-item}">
 
 <th:block layout:fragment="script">
+    <script th:inline="javascript">
+    function change_category(message,title) {
+        depthjudge = message.split('__')
+        console.log("flow test")
+        console.log(message)
+    let selDepth1;
+    let selDepth2;
+    let selDepth3;
+    if (depthjudge[0] == 'D_1' ) {
+        selDepth1 = title;
+    }
 
+    else if (depthjudge[0] == 'D_2A' || depthjudge[0] == 'D_2B' || depthjudge[0] == 'D_2C' ){
+        selDepth2 = title;
+        console.log("title test")
+        console.log(title)
+    }
+    // TODO 지금은 예외처리도 안한 스크립트이지만 나중에 더 좋은 방법이 있으면 개선할 것. selDepth3를 지정하는 데 너무나 많은 or문이 추가되기 때문에 else로 하였음.
+    else {
+        selDepth3 = title;
+    }
+    // 중분류,소분류 전체 hide()
+    function Depth2_andDepth3Hide(){
+        $("._A_childs , ._B_childs, ._C_childs, ._A_childs_0, ._A_childs_1, ._A_childs_2, ._A_childs_3, ._A_childs_4, ._A_childs_5, ._B_childs_0, ._B_childs_1, ._B_childs_2, ._B_childs_3, ._B_childs_4, ._C_childs_0, ._C_childs_1").hide();
+    }
+        switch (message) {
+        // depth1은 대분류
+            // 패션의류/잡화 클릭 했을 경우
+            case "D_1__0":
+                // 전부 hide()
+                Depth2_andDepth3Hide();
+                // 선택된 depth의 자식노드만 show
+                $("._A_childs").show();
+
+                $(".txtLight.txtLess.depth1").html(selDepth1 + ' > ')
+
+                $(".txtLight.txtLess.depth1").show();
+                $(".txtLight.txtLess.depth2").hide();
+                $(".txtLight.txtLess.depth3").hide();
+                $("._product_category_checked").show();
+                break;
+            // 식품 클릭시
+            case "D_1__1":
+                // 전부 hide()
+                Depth2_andDepth3Hide();
+                // 선택된 depth의 자식노드만 show
+                $("._B_childs").show();
+
+                $(".txtLight.txtLess.depth1").html(selDepth1 + ' > ')
+                $(".txtLight.txtLess.depth1").show();
+                $(".txtLight.txtLess.depth2").hide();
+                $(".txtLight.txtLess.depth3").hide();
+                $("._product_category_checked").show();
+                break;
+            // 가전/디지털 클릭시
+            case "D_1__2":
+                // 전부 hide()
+                Depth2_andDepth3Hide();
+                // 선택된 depth의 자식노드만 show
+                $("._C_childs").show();
+
+                $(".txtLight.txtLess.depth1").html(selDepth1 + ' > ')
+                $(".txtLight.txtLess.depth1").show();
+                $(".txtLight.txtLess.depth2").hide();
+                $(".txtLight.txtLess.depth3").hide();
+                $("._product_category_checked").show();
+                break;
+            // 패션의류/잡화 -> 남성
+            case "D_2A__0":
+                Depth2_andDepth3Hide()
+                $("._A_childs,._A_childs_0").show();
+
+                $(".txtLight.txtLess.depth2").html(selDepth2 + ' > ')
+                $(".txtLight.txtLess.depth2").show();
+                $(".txtLight.txtLess.depth3").hide();
+                break;
+            // 패션의류/잡화 여성
+            case "D_2A__1":
+                Depth2_andDepth3Hide();
+                $("._A_childs,._A_childs_1").show();
+
+                $(".txtLight.txtLess.depth2").html(selDepth2 + ' > ')
+                $(".txtLight.txtLess.depth2").show();
+                $(".txtLight.txtLess.depth3").hide();
+                break;
+            // 패션의류/잡화 남녀공용
+            case "D_2A__2":
+                Depth2_andDepth3Hide();
+                $("._A_childs,._A_childs_2").show();
+
+                $(".txtLight.txtLess.depth2").html(selDepth2 + ' > ')
+                $(".txtLight.txtLess.depth2").show();
+                $(".txtLight.txtLess.depth3").hide();
+                break;
+            // 패션의류/잡화 가방/잡화
+            case "D_2A__3":
+                Depth2_andDepth3Hide();
+                $("._A_childs,._A_childs_3").show();
+
+                $(".txtLight.txtLess.depth2").html(selDepth2 + ' > ')
+                $(".txtLight.txtLess.depth2").show();
+                $(".txtLight.txtLess.depth3").hide();
+                break;
+            // 패션의류/잡화 신발
+            case "D_2A__4":
+                Depth2_andDepth3Hide();
+                $("._A_childs,._A_childs_4").show();
+
+                $(".txtLight.txtLess.depth2").html(selDepth2 + ' > ')
+                $(".txtLight.txtLess.depth2").show();
+                $(".txtLight.txtLess.depth3").hide();
+                break;
+
+            // 패션의류/잡화 아동
+            case "D_2A__5":
+                Depth2_andDepth3Hide();
+                $("._A_childs,._A_childs_5").show();
+
+                $(".txtLight.txtLess.depth2").html(selDepth2 + ' > ')
+                $(".txtLight.txtLess.depth2").show();
+                $(".txtLight.txtLess.depth3").hide();
+                break;
+            // 식품의 모든 노드는 depth2밖에 없으므로 중분류가 끝이다.
+            case "D_2B__0":
+                Depth2_andDepth3Hide();
+                $("._B_childs,._B_childs_0").show();
+
+                $(".txtLight.txtLess.depth2").html(selDepth2 + ' > ')
+                $(".txtLight.txtLess.depth2").show();
+                $(".txtLight.txtLess.depth3").hide();
+                break;
+            case "D_2B__1":
+                Depth2_andDepth3Hide();
+                $("._B_childs,._B_childs_1").show();
+
+                $(".txtLight.txtLess.depth2").html(selDepth2 + ' > ')
+                $(".txtLight.txtLess.depth2").show();
+                $(".txtLight.txtLess.depth3").hide();
+                break;
+            case "D_2B__2":
+                Depth2_andDepth3Hide();
+                $("._B_childs,._B_childs_2").show();
+
+                $(".txtLight.txtLess.depth2").html(selDepth2 + ' > ')
+                $(".txtLight.txtLess.depth2").show();
+                $(".txtLight.txtLess.depth3").hide();
+                break;
+            case "D_2B__3":
+                Depth2_andDepth3Hide();
+                $("._B_childs,._B_childs_3").show();
+
+                $(".txtLight.txtLess.depth2").html(selDepth2 + ' > ')
+                $(".txtLight.txtLess.depth2").show();
+                $(".txtLight.txtLess.depth3").hide();
+                break;
+            case "D_2B__4":
+                Depth2_andDepth3Hide();
+                $("._B_childs,._B_childs_4").show();
+
+                $(".txtLight.txtLess.depth2").html(selDepth2 + ' > ')
+                $(".txtLight.txtLess.depth2").show();
+                $(".txtLight.txtLess.depth3").hide();
+                break;
+            case "D_2C__0":
+                Depth2_andDepth3Hide();
+                $("._C_childs,._C_childs_0").show();
+
+                $(".txtLight.txtLess.depth2").html(selDepth2 + ' > ')
+                $(".txtLight.txtLess.depth2").show();
+                $(".txtLight.txtLess.depth3").hide();
+                break;
+            // 컴퓨터/게임/SW는 자식이 없음.
+            case "D_2C__1":
+                Depth2_andDepth3Hide();
+                $("._C_childs,._C_childs_1").show();
+
+                $(".txtLight.txtLess.depth2").html(selDepth2 + ' > ')
+                $(".txtLight.txtLess.depth2").show();
+                $(".txtLight.txtLess.depth3").hide();
+                break;
+            //A0-5개 //A1-7개 //A2-2개 //A3-7개 //A4-5개 // B는 없고 C0만 2개
+            case "D_3A0__0":
+            case "D_3A0__1":
+            case "D_3A0__2":
+            case "D_3A0__3":
+            case "D_3A0__4":
+            case "D_3A1__0":
+            case "D_3A1__1":
+            case "D_3A1__2":
+            case "D_3A1__3":
+            case "D_3A1__4":
+            case "D_3A1__5":
+            case "D_3A1__6":
+            case "D_3A2__0":
+            case "D_3A2__1":
+            case "D_3A3__0":
+            case "D_3A3__1":
+            case "D_3A3__2":
+            case "D_3A3__3":
+            case "D_3A3__4":
+            case "D_3A3__5":
+            case "D_3A3__6":
+            case "D_3A4__0":
+            case "D_3A4__1":
+            case "D_3A4__2":
+            case "D_3A4__3":
+            case "D_3A4__4":
+            case "D_3A5__0":
+            case "D_3A5__1":
+            case "D_3C0__0":
+            case "D_3C0__1":
+                $(".txtLight.txtLess.depth3").html(selDepth3 + ' > ')
+                $(".txtLight.txtLess.depth3").show();
+
+                break;
+        }
+
+
+
+
+    }
+    </script>
 </th:block>
 <div layout:fragment="content">
     <div id="content">
@@ -70,7 +291,7 @@
 
                                         <div id="tabCont1_2" class="tabCont" style="display: block;">
                                             <div class="gEditor">
-                                                <a href="#none" class="btnNormal imageupload" imagekey="d_image"><span id="dImagButton"><em class="icoPlus"></em> 등록</span></a>
+                                                <a href="#none" class="btnNormal imageupload" imagekey="d_image"><span id="dImagButton1"><em class="icoPlus"></em> 등록</span></a>
                                             </div>
                                         </div>
                                     </div>
@@ -158,51 +379,135 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody class="_category_select_body">
+
+<!--                                                onclick은 카테고리 표시, 선택된 상품 분류에 대한 처리-->
                                                 <tr>
                                                     <td>
                                                         <div class="list ">
-                                                            <ul class="_category_1">
-                                                                <li class="">
-                                                                    (대분류) 미진열 &gt;                                                    <input type="hidden" class="_category_no" value="23" hashtag="">
-                                                                </li>
+                                                            <!--대분류-->
+                                                            <ul  class="_ABC" style="padding: 1px 11px 0px;">
+                                                                <th:block th:each = "category1 : ${depth1}">
+                                                                <li th:text ="${category1.title}" th:data-index="${category1Stat.index}" th:data-title="${category1.title}"
+                                                                    th:onclick="|javascript:change_category('D_1__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|"></li>
 
-                                                                <li class=" _next">
-                                                                    (대분류) Outerwear &gt;                                                    <input type="hidden" class="_category_no" value="24" hashtag="">
-                                                                </li>
+                                                                 </th:block>
+                                                            </ul>
 
-                                                                <li class=" _next">
-                                                                    (대분류) Tops &gt;                                                    <input type="hidden" class="_category_no" value="25" hashtag="">
-                                                                </li>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="list">
+                                                            <!--중분류-->
+                                                            <ul  class="_A_childs" style="display: none" >
+                                                                <th:block th:each = "category2A : ${depth1.get(0).getChildCategories()}">
+                                                                <li th:text="${category2A.title}" th:data-index="${category2AStat.index}" th:data-title="${category2A.title}"
+                                                                    th:onclick="|javascript:change_category('D_2A__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|")></li>
+                                                                </th:block>
+                                                            </ul>
+                                                            <!-- 식품의 자식은 모두 depth2.  depth3 소분류가 없음-->
+                                                            <ul class="_B_childs" style="display: none">
+                                                                <th:block th:each = "category2B : ${depth1.get(1).getChildCategories()}">
+                                                                    <li  th:text="${category2B.title}" th:data-index="${category2BStat.index}" th:data-title="${category2B.title}"
+                                                                         th:onclick="|javascript:change_category('D_2B__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|") ></li>
+                                                                </th:block>
+                                                            </ul>
+                                                            <ul class="_C_childs" style="display: none">
+                                                                <th:block th:each = "category2C : ${depth1.get(2).getChildCategories()}">
+                                                                    <li th:text="${category2C.title}" th:data-index="${category2CStat.index}" th:data-title="${category2C.title}"
+                                                                        th:onclick="|javascript:change_category('D_2C__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|") ></li>
+                                                                </th:block>
+                                                            </ul>
 
-                                                                <li class="">
-                                                                    (대분류) Dresses &gt;                                                    <input type="hidden" class="_category_no" value="26" hashtag="">
-                                                                </li>
-
-                                                                <li class=" _next">
-                                                                    (대분류) Bottoms &gt;                                                    <input type="hidden" class="_category_no" value="27" hashtag="">
-                                                                </li>
-
-                                                                <li class="">
-                                                                    (대분류) Accessories &gt;                                                    <input type="hidden" class="_category_no" value="28" hashtag="">
-                                                                </li>
-
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="list">
+                                                            <!--소분류-->
+                                                            <!-- MEN_T_SHIRT-->
+                                                            <ul class="_A_childs_0" style="display: none">
+                                                                <th:block th:each ="category3 : ${depth2.get(0).getChildCategories()}"  >
+                                                                    <li  th:text="${category3.title}" th:data-index="${category3Stat.index}" th:data-title="${category3.title}"
+                                                                         th:onclick="|javascript:change_category('D_3A0__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|")></li>
+                                                                </th:block>
+                                                            </ul>
+<!--                                                            // 여기하는중-->
+                                                            <ul class="_A_childs_1" style="display: none">
+                                                                <th:block th:each ="category3 : ${depth2.get(1).getChildCategories()}"  >
+                                                                    <li  th:text="${category3.title}" th:data-index="${category3Stat.index}" th:data-title="${category3.title}"
+                                                                         th:onclick="|javascript:change_category('D_3A1__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|")></li>
+                                                                </th:block>
+                                                            </ul>
+                                                            <ul class="_A_childs_2" style="display: none">
+                                                                <th:block th:each ="category3 : ${depth2.get(2).getChildCategories()}"  >
+                                                                    <li  th:text="${category3.title}" th:data-index="${category3Stat.index}" th:data-title="${category3.title}"
+                                                                         th:onclick="|javascript:change_category('D_3A2__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|")></li>
+                                                                </th:block>
+                                                            </ul>
+                                                            <ul class="_A_childs_3" style="display: none">
+                                                                <th:block th:each ="category3 : ${depth2.get(3).getChildCategories()}"  >
+                                                                    <li  th:text="${category3.title}" th:data-index="${category3Stat.index}" th:data-title="${category3.title}"
+                                                                         th:onclick="|javascript:change_category('D_3A3__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|")></li>
+                                                                </th:block>
+                                                            </ul>
+                                                            <ul class="_A_childs_4" style="display: none">
+                                                                <th:block th:each ="category3 : ${depth2.get(4).getChildCategories()}"  >
+                                                                    <li  th:text="${category3.title}" th:data-index="${category3Stat.index}" th:data-title="${category3.title}"
+                                                                         th:onclick="|javascript:change_category('D_3A4__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|")></li>
+                                                                </th:block>
+                                                            </ul>
+                                                            <ul class="_A_childs_5" style="display: none">
+                                                                <th:block th:each ="category3 : ${depth2.get(5).getChildCategories()}"  >
+                                                                    <li  th:text="${category3.title}" th:data-index="${category3Stat.index}" th:data-title="${category3.title}"
+                                                                         th:onclick="|javascript:change_category('D_3A5__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|")></li>
+                                                                </th:block>
+                                                            </ul>
+                                                            <ul class="_B_childs_0" style="display: none">
+                                                                <th:block th:each ="category3 : ${depth2.get(6).getChildCategories()}"  >
+                                                                    <li  th:text="${category3.title}" th:data-index="${category3Stat.index}" th:data-title="${category3.title}"
+                                                                         th:onclick="|javascript:change_category('D_3A1__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|")></li>
+                                                                </th:block>
+                                                            </ul>
+                                                            <ul class="_B_childs_1" style="display: none">
+                                                                <th:block th:each ="category3 : ${depth2.get(7).getChildCategories()}"  >
+                                                                    <li  th:text="${category3.title}" th:data-index="${category3Stat.index}" th:data-title="${category3.title}"
+                                                                         th:onclick="|javascript:change_category('D_3BB__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|")></li>
+                                                                </th:block>
+                                                            </ul>
+                                                            <ul class="_B_childs_2" style="display: none">
+                                                                <th:block th:each ="category3 : ${depth2.get(8).getChildCategories()}"  >
+                                                                    <li  th:text="${category3.title}" th:data-index="${category3Stat.index}" th:data-title="${category3.title}"
+                                                                         th:onclick="|javascript:change_category('D_3BC__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|")></li>
+                                                                </th:block>
+                                                            </ul>
+                                                            <ul class="_B_childs_3" style="display: none">
+                                                                <th:block th:each ="category3 : ${depth2.get(9).getChildCategories()}"  >
+                                                                    <li  th:text="${category3.title}" th:data-index="${category3Stat.index}" th:data-title="${category3.title}"
+                                                                         th:onclick="|javascript:change_category('D_3BD__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|")></li>
+                                                                </th:block>
+                                                            </ul>
+                                                            <ul class="_B_childs_4" style="display: none">
+                                                                <th:block th:each ="category3 : ${depth2.get(10).getChildCategories()}"  >
+                                                                    <li  th:text="${category3.title}" th:data-index="${category3Stat.index}" th:data-title="${category3.title}"
+                                                                         th:onclick="|javascript:change_category('D_3BE__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|")></li>
+                                                                </th:block>
+                                                            </ul>
+                                                            <ul class="_C_childs_0" style="display: none">
+                                                                <th:block th:each ="category3 : ${depth2.get(11).getChildCategories()}"  >
+                                                                    <li  th:text="${category3.title}" th:data-index="${category3Stat.index}" th:data-title="${category3.title}"
+                                                                         th:onclick="|javascript:change_category('D_3C0__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|")></li>
+                                                                </th:block>
+                                                            </ul>
+                                                            <ul class="_C_childs_1" style="display: none">
+                                                                <th:block th:each ="category3 : ${depth2.get(12).getChildCategories()}"  >
+                                                                    <li  th:text="${category3.title}" th:data-index="${category3Stat.index}" th:data-title="${category3.title}"
+                                                                         th:onclick="|javascript:change_category('D_3CB__'+this.getAttribute('data-index'),this.getAttribute('data-title'))|")></li>
+                                                                </th:block>
                                                             </ul>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <div class="list">
-                                                            <ul class="_category_2"></ul>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="list">
-                                                            <ul class="_category_3"></ul>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="list">
-                                                            <ul class="_category_4"></ul>
-                                                        </div>
+
+
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -215,7 +520,10 @@
                                 </span>
                                             <span style="display:none;" class="_product_category_checked">
                                     <input type="hidden" name="cagetory_no" class="_selected_category_no" disabled="disabled">
-                                    <span class="txtLight txtLess">TOP &gt; 티셔츠 &gt; 후디 &gt; 츄리닝 후디</span>
+                                    <span class="txtLight txtLess depth1" >test</span>
+                                                <span class="txtLight txtLess depth2" ></span>
+                                                <span class="txtLight txtLess depth3" ></span>
+
                                     <a href="#none" class="btnNormal _remove_selected_category"><span><em class="icoDel"></em> 삭제</span></a>
                                 </span>
                                             <input type="hidden" name="checked_category">
@@ -278,7 +586,8 @@
                     <a href="#none" class="btnSubmit"><span>상품등록</span></a>
                     <a href="#none" class="btnEm btnPreview" id="eProductPreview"><span>미리보기</span></a>
                 </div>
-                <input type="hidden" name="previewProduct" id="previewProduct"></form>
+                <input type="hidden" name="previewProduct" id="previewProduct">
+        </form>
 
     </div>
 </div>
