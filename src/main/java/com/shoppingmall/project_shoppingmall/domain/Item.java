@@ -40,12 +40,16 @@ public class Item extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus; //상품 판매 상태
 
+    @Enumerated(EnumType.STRING)
+    private ItemDisplayStatus itemDisplayStatus; // 상품 진열 상태
+
     public void updateItem(ItemFormDto itemFormDto){
         this.itemNm = itemFormDto.getItemNm();
         this.price = itemFormDto.getPrice();
         this.stockNumber = itemFormDto.getStockNumber();
         this.itemDetail = itemFormDto.getItemDetail();
         this.itemSellStatus = itemFormDto.getItemSellStatus();
+        this.itemDisplayStatus = itemFormDto.getItemDisplayStatus();
     }
 
     public void removeStock(int stockNumber){
