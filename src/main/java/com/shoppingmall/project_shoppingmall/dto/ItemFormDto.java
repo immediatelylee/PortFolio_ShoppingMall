@@ -30,6 +30,8 @@ public class ItemFormDto {
 
     private ItemSellStatus itemSellStatus;
 
+    private ItemDisplayStatus itemDisplayStatus;
+
     private List<ItemImgDto> itemImgDtoList = new ArrayList<>();
 
     private List<Long> itemImgIds = new ArrayList<>();
