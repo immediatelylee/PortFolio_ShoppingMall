@@ -28,13 +28,20 @@ public class ItemFormDto {
     @NotNull(message = "재고는 필수 입력 값입니다.")
     private Integer stockNumber;
 
+    @NotNull(message = "카테고리는 필수 입력값입니다.")
+    private String category;
+
     private ItemSellStatus itemSellStatus;
 
     private ItemDisplayStatus itemDisplayStatus;
 
     private List<ItemImgDto> itemImgDtoList = new ArrayList<>();
 
+    private List<ItemDetailImgDto> itemDetailImgDtoList = new ArrayList<>();
+
     private List<Long> itemImgIds = new ArrayList<>();
+
+    private List<Long> itemDetailImgIds = new ArrayList<>();
 
     public Item toItem(){
         ModelMapper modelMapper = new ModelMapper();
