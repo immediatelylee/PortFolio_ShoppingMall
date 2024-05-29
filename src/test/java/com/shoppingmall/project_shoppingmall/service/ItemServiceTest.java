@@ -32,6 +32,9 @@ class ItemServiceTest {
     @Autowired
     ItemImgRepository itemImgRepository;
 
+    @Autowired
+    ItemDetailImgRepository itemDetailImgRepository;
+
     List<MultipartFile> createMultipartFiles() throws Exception{
 
         List<MultipartFile> multipartFileList = new ArrayList<>();
@@ -59,8 +62,10 @@ class ItemServiceTest {
         itemFormDto.setStockNumber(100);
 
         List<MultipartFile> multipartFileList = createMultipartFiles();
-        Long itemId = itemService.saveItem(itemFormDto, multipartFileList);
+        List<MultipartFile> multipartDetailFileList = createMultipartFiles();
+        Long itemId = itemService.saveItem(itemFormDto, multipartFileList,multipartDetailFileList);
         List<ItemImg> itemImgList = itemImgRepository.findByItemIdOrderByIdAsc(itemId);
+        List<ItemDetailImg> itemDetailImgList = itemDetailImgRepository.findByItemIdOrderByIdAsc(itemId);
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(EntityNotFoundException::new);
@@ -71,6 +76,7 @@ class ItemServiceTest {
         assertEquals(itemFormDto.getPrice(), item.getPrice());
         assertEquals(itemFormDto.getStockNumber(), item.getStockNumber());
         assertEquals(multipartFileList.get(0).getOriginalFilename(), itemImgList.get(0).getOriImgName());
+        assertEquals(multipartFileList.get(0).getOriginalFilename(), itemDetailImgList.get(0).getOriImgName());
     }
 
 }
