@@ -1568,7 +1568,7 @@ html:lang(vi) .mSearchSelect button.selected span { background-position:35px -97
 .mCtrl .gBottom { margin:8px 0 0; padding:8px 0 0; border-top:1px solid #d9dadc; text-align:right; }
 .mCtrl .gBottom:after { content:""; display:block; clear:both; }
 /* mCtrl + setting */
-.mCtrl.setting { padding-right:33px; }
+.mCtrl.setting { padding-right:12px; }
 .mCtrl.setting .gSetting { position:absolute; right:0; top:0; bottom:0;width:33px; }
 .mCtrl.setting .gSetting .mOpen { display:block; width:100%; height:100%; }
 .mCtrl.setting .gSetting .mOpen strong { display:block; padding:16px 16px 0; text-align:left; }
@@ -3187,6 +3187,16 @@ html:lang(vi) .mSitemap .sitemap > li > strong { font-family:"Helvetica Neue",He
 .whaleBrowser .mBoard.gScroll::-webkit-scrollbar-thumb:hover,
 .whaleBrowser .mBoard.gScroll::-webkit-scrollbar-thumb:active { background:#aeaeae !important; }
 .whaleBrowser .mBoard.gScroll::-webkit-scrollbar-track { border-radius:10px; background:#f9f9f9 !important; }
+
+/* 아이콘 */
+.icoRequired{
+    display:inline-block; overflow:hidden; height:16px; margin:-2px 0 0 0; font-size:0; line-height:0; vertical-align:middle;
+    background:url('//img.echosting.cafe24.com/suio/ko_KR/sfix_icon_text.png') 0 0 no-repeat;
+    width: 21px;
+    height: 14px;
+    background-position: -450px -250px;
+}
+
 
 @media print {
     .section { margin-bottom:10px; }
