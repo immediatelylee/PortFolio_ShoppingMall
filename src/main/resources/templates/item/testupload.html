@@ -1,0 +1,24 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Upload Images</h2>
+<form method="post" action="/upload" enctype="multipart/form-data">
+    <input type="file" name="files" multiple>
+    <button type="submit">Upload</button>
+</form>
+
+<h2>Uploaded Images</h2>
+<div>
+    <ul>
+        <!-- 업로드된 이미지들을 표시하는 부분 -->
+        <li th:each="imageUrl : ${imageUrls}">
+            <img th:src="${imageUrl}" style="max-width: 300px; max-height: 300px;">
+        </li>
+    </ul>
+</div>
+</body>
+</html>
