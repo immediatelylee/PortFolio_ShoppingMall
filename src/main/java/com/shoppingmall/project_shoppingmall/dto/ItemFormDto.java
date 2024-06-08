@@ -35,6 +35,10 @@ public class ItemFormDto {
 
     private ItemDisplayStatus itemDisplayStatus;
 
+//    @NotNull(message = "카테고리는 필수 입력값입니다.")
+    private String category;
+    private String subcategory1;
+    private String subcategory2;
     private List<ItemImgDto> itemImgDtoList = new ArrayList<>();
 
     private List<ItemDetailImgDto> itemDetailImgDtoList = new ArrayList<>();
