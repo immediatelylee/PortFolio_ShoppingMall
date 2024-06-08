@@ -79,6 +79,12 @@ class ItemCategoryTest {
         System.out.println(ItemCategory.FOOD.getParentItemCategory());
     }
 
+    @Test
+    void test1(){
 
+        ItemCategory itemCategory = ItemCategory.titleOf("지갑");
+
+        System.out.println(itemCategory);
+    }
 
 }
