@@ -3,7 +3,6 @@ package com.shoppingmall.project_shoppingmall.dto;
 import com.shoppingmall.project_shoppingmall.constant.*;
 import com.shoppingmall.project_shoppingmall.domain.*;
 import lombok.*;
-import lombok.Setter;
 import org.modelmapper.ModelMapper;
 
 import javax.validation.constraints.NotBlank;
@@ -22,9 +21,6 @@ public class ItemFormDto {
     @NotNull(message = "가격은 필수 입력 값입니다.")
     private Integer price;
 
-    @NotBlank(message = "상품 상세는 필수 입력 값입니다.")
-    private String itemDetail;
-
     @NotNull(message = "재고는 필수 입력 값입니다.")
     private Integer stockNumber;
 
@@ -39,6 +35,7 @@ public class ItemFormDto {
     private String category;
     private String subcategory1;
     private String subcategory2;
+
     private List<ItemImgDto> itemImgDtoList = new ArrayList<>();
 
     private List<ItemDetailImgDto> itemDetailImgDtoList = new ArrayList<>();
@@ -46,6 +43,9 @@ public class ItemFormDto {
     private List<Long> itemImgIds = new ArrayList<>();
 
     private List<Long> itemDetailImgIds = new ArrayList<>();
+
+    private Long brandId;
+
 
     public Item toItem(){
         ModelMapper modelMapper = new ModelMapper();
