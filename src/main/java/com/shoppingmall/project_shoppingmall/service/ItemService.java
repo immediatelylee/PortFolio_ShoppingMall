@@ -5,6 +5,7 @@ import com.shoppingmall.project_shoppingmall.domain.*;
 import com.shoppingmall.project_shoppingmall.dto.*;
 import com.shoppingmall.project_shoppingmall.repository.*;
 import lombok.*;
+import org.modelmapper.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;

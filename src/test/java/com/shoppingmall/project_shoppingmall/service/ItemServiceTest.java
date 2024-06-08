@@ -50,6 +50,21 @@ class ItemServiceTest {
         return multipartFileList;
     }
 
+    List<MultipartFile> createMultipartFiles2() throws Exception{
+
+        List<MultipartFile> multipartFileList2 = new ArrayList<>();
+
+        for(int i=0;i<5;i++){
+            String path = "C:/shop/item/";
+            String imageName = "image" + i + "D"+ ".jpg";
+            MockMultipartFile multipartFile =
+                    new MockMultipartFile(path, imageName, "image/jpg", new byte[]{1,2,3,4});
+            multipartFileList2.add(multipartFile);
+        }
+
+        return multipartFileList2;
+    }
+
     @Test
     @DisplayName("상품 등록 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
@@ -69,6 +84,8 @@ class ItemServiceTest {
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(EntityNotFoundException::new);
+
+        System.out.println(item);
 
         assertEquals(itemFormDto.getItemNm(), item.getItemNm());
         assertEquals(itemFormDto.getItemSellStatus(), item.getItemSellStatus());
