@@ -6,6 +6,7 @@ import com.shoppingmall.project_shoppingmall.exception.*;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.*;
 
 @Entity
 @Table(name="item")
@@ -22,11 +23,6 @@ public class Item extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String itemNm; //상품명
 
-//    추가
-    @ManyToOne
-    @JoinColumn(name = "brand_id")
-    private Brand brand;
-
     @Column(name="price", nullable = false)
     private int price; //가격
 
@@ -42,6 +38,16 @@ public class Item extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ItemDisplayStatus itemDisplayStatus; // 상품 진열 상태
+
+    private String category;
+    private String subcategory1;
+    private String subcategory2;
+
+    //    추가
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
+
 
     public void updateItem(ItemFormDto itemFormDto){
         this.itemNm = itemFormDto.getItemNm();

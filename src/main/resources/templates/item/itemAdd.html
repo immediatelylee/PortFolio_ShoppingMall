@@ -5,6 +5,39 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+
+        function update_depth(){
+            console.log("depth_change_detect")
+
+            // 각 depth 요소 선택
+            var $depth1 = $(".txtLight.txtLess.depth1");
+            var $depth2 = $(".txtLight.txtLess.depth2");
+            var $depth3 = $(".txtLight.txtLess.depth3");
+
+            // if ($depth1.length === 0 ) {
+            //     alert("카테고리 값을 선택해야 합니다.");
+            //     return;
+            // }
+
+            var depth1 = $depth1.text().replace(' >', '');
+            var depth2 = $depth2.text().replace(' >', '');
+            var depth3 = $depth3.text().replace(' >', '');
+
+            // $("#category").val("ItemCategory." + depth3);  추후에 itemccategory의 enum형태로 변경시에 이방식으로 저장.
+            $("#category").val(depth1);
+            $("#subcategory1").val(depth2);
+            $("#subcategory2").val(depth3);
+
+            console.log($("#category").val())
+            console.log($("#subcategory1").val())
+            console.log($("#subcategory2").val())
+
+
+            console.log("depth flow test")
+            console.log(depth1)
+            console.log(depth2)
+            console.log(depth3)
+        }
     function change_category(message,title) {
         depthjudge = message.split('__')
         console.log("flow test")
@@ -13,16 +46,18 @@
     let selDepth2;
     let selDepth3;
     if (depthjudge[0] == 'D_1' ) {
+        console.log("title test-1")
         selDepth1 = title;
     }
 
     else if (depthjudge[0] == 'D_2A' || depthjudge[0] == 'D_2B' || depthjudge[0] == 'D_2C' ){
         selDepth2 = title;
-        console.log("title test")
-        console.log(title)
+        console.log("title test-2")
+        console.log(selDepth2)
     }
     // TODO 지금은 예외처리도 안한 스크립트이지만 나중에 더 좋은 방법이 있으면 개선할 것. selDepth3를 지정하는 데 너무나 많은 or문이 추가되기 때문에 else로 하였음.
     else {
+        console.log("title test-3")
         selDepth3 = title;
     }
     // 중분류,소분류 전체 hide()
@@ -231,19 +266,18 @@
     <div id="content">
         <div class="headingArea">
             <div class="mTitle">
-                <h1>간단 등록</h1>
+                <h1>상품 등록</h1>
 
             </div>
         </div>
 
-        <form id="eProductRegisterForm">
+        <form id="eProductRegisterForm" role="form" method="post" enctype="multipart/form-data"  th:object="${itemFormDto}" onsubmit="update_depth()" >
 
             <div id="QA_register1" class="section">
                 <div class="mToggleBar eToggle selected">
                     <h2>기본 정보</h2>
                     <div class="ctrl">
-                        <label class="gLabel"><input type="checkbox"> 항상열기</label>
-                        <span><button type="button"><em>접기</em></button></span>
+
                     </div>
                 </div>
                 <div class="toggleArea" style="display: block;">
@@ -255,13 +289,10 @@
                                 <th scope="row">상품명 <strong class="icoRequired">필수</strong></th>
                                 <td>
                                     <div class="gIcoShop">
-                                        <span class="icoShop" title="쇼핑몰별">쇼핑몰별</span>
+
                                         <div class="overlapTip">
-                                            <input type="text" name="product_name" id="product_name" placeholder="예시) 플라워 미니 원피스, 원피스 1위상품" class="fText" fw-filter="isFill&amp;isMaxByte[250]" fw-label="상품명" style="width:340px;">
-                                            <div class="tip" style="display:none;">
-                                                <span class="icoReference">참고</span>
-                                                입력하신 상품명과 동일한 상품명이 있습니다.
-                                                <button type="button" class="close eClose">닫기</button>
+                                            <input type="text" name="itemNm" th:field="*{itemNm}" id="product_name" placeholder="예시) 플라워 미니 원피스, 원피스 1위상품" class="fText" fw-filter="isFill&amp;isMaxByte[250]" fw-label="상품명" style="width:340px;">
+
                                                 <span class="edge"></span>
                                             </div>
                                         </div>
@@ -272,8 +303,8 @@
                                 <th scope="row">상품요약설명</th>
                                 <td>
                                     <div class="gIcoShop">
-                                        <span class="icoShop" title="쇼핑몰별">쇼핑몰별</span>
-                                        <input type="text" class="fText" style="width:98%;" name="summary_desc" placeholder="예시) 주문폭주!! 페미닌한 원피스 Free, L, XL까지~~" value="" fw-filter="isMaxByte[120]" fw-label="상품요약설명">
+
+                                        <input type="text" class="fText" th:field="*{itemDetail}" style="width:98%;" name="summary_desc" placeholder="예시) 주문폭주!! 페미닌한 원피스 Free, L, XL까지~~" value="" fw-filter="isMaxByte[120]" fw-label="상품요약설명">
                                     </div>
                                 </td>
                             </tr>
@@ -291,7 +322,7 @@
 
                                         <div id="tabCont1_2" class="tabCont" style="display: block;">
                                             <div class="gEditor">
-                                                <a href="#none" class="btnNormal imageupload" imagekey="d_image"><span id="dImagButton1"><em class="icoPlus"></em> 등록</span></a>
+                                                <input type="file" multiple name="itemDetailImgFile"  class="btnNormal imageupload" imagekey="d_image">
                                             </div>
                                         </div>
                                     </div>
@@ -307,8 +338,7 @@
                     <div class="mToggleBar eToggle selected">
                         <h2>판매 정보</h2>
                         <div class="ctrl">
-                            <label class="gLabel"><input type="checkbox"> 항상열기</label>
-                            <span><button type="button"><em>접기</em></button></span>
+
                         </div>
                     </div>
                     <div class="toggleArea" style="display:block;">
@@ -320,9 +350,32 @@
                                     <th scope="row">판매가 <strong class="icoRequired">필수</strong></th>
                                     <td>
                                         <div class="gIcoShop">
-                                            <span class="icoShop" title="쇼핑몰별">쇼핑몰별</span>
-                                            <input type="text" id="product_price" name="product_price[1]" class="fText ePrdPrice" shop_no="1" placeholder="예시) 38,000" fw-filter="isFill&amp;isPrice" fw-label="판매가" style="width:100px;"> 원                                                    </div>
+
+                                            <input type="text" th:field="*{price}" id="product_price" name="product_price[1]" class="fText ePrdPrice" shop_no="1" placeholder="예시) 38,000" fw-filter="isFill&amp;isPrice" fw-label="판매가" style="width:100px;"> 원                                                    </div>
                                     </td>
+                                </tr>
+                                <tr>
+                                    <th >상품 재고 </th>
+                                    <td>
+                                        <div>
+                                        <input type="text" th:field="*{stockNumber}"  name="stockNumber" class="fText ePrdPrice" shop_no="1" placeholder="예시) 1,000"  style="width:100px;"> 개
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>브랜드 </th>
+                                    <td>
+
+                                        <select class="fSelect" th:name="brandId" th:field="*{brandId}" id="brands" style="width:100px;">
+                                            <option th:each="brand : ${brands}"
+                                                    th:value="${brand.getId()}"
+                                                    th:text="${brand.getBrandNm()}"
+                                            >
+                                            </option>
+                                        </select>
+                                        <a href="#mLayerBrand" class="btnNormal eModal"><span>등록</span></a>
+                                    </td>
+
                                 </tr>
                                 </tbody>
                             </table>
@@ -332,10 +385,7 @@
                 <div id="QA_register3" class="section">
                     <div class="mToggleBar eToggle selected">
                         <h2>표시 설정</h2>
-                        <div class="ctrl">
-                            <label class="gLabel"><input type="checkbox"> 항상열기</label>
-                            <span><button type="button"><em>접기</em></button></span>
-                        </div>
+
                     </div>
                     <div class="toggleArea" style="display:block;">
                         <div class="mBoard gSmall gGuide">
@@ -346,17 +396,30 @@
                                     <th scope="row" rowspan="2">표시상태설정</th>
                                     <td>
                                         <div class="gIcoShop">
-                                            <label class="gLabel"><input type="radio" name="is_display[1]" class="fChk" value="T"> 진열함</label>
-                                            <label class="gLabel eSelected"><input type="radio" name="is_display[1]" class="fChk" value="F" checked="checked"> 진열안함</label>
+                                            <label class="gLabel">
+                                                <input type="radio" th:field="*{itemDisplayStatus}" th:value="DISPLAY"  class="form-check-input" name="itemDisplayStatus">
+<!--                                                <input type="radio" name="is_display[1]" class="fChk" value="T"> -->
+                                                진열함</label>
+                                            <label class="gLabel eSelected">
+                                                <input type="radio" th:field="*{itemDisplayStatus}" th:value="NOT_DISPLAY"  class="form-check-input" name="itemDisplayStatus">
+<!--                                                <input type="radio" name="is_display[1]" class="fChk" value="F" checked="checked">-->
+                                                진열안함</label>
                                         </div>
                                     </td>
                                 </tr>
+
                                 <tr>
                                     <td>
                                         <div class="gIcoShop">
 
-                                            <label class="gLabel"><input type="radio" name="selling_status[1]" class="fChk" value="T"> 판매함</label>
-                                            <label class="gLabel eSelected"><input type="radio" name="selling_status[1]" class="fChk" value="F" checked="checked"> 판매안함</label>
+                                            <label class="gLabel">
+                                                <input type="radio" th:field="*{itemSellStatus}" th:value="SELL"  class="form-check-input" name="itemSellStatus">
+<!--                                                <input type="radio" name="selling_status[1]" class="fChk" value="T">-->
+                                                판매함</label>
+                                            <label class="gLabel eSelected">
+                                                <input type="radio" th:field="*{itemSellStatus}" th:value="SOLD_OUT"  class="form-check-input" name="itemSellStatus">
+<!--                                                <input type="radio" name="selling_status[1]" class="fChk" value="F" checked="checked">-->
+                                                판매안함</label>
                                         </div>
                                     </td>
                                 </tr>
@@ -519,12 +582,15 @@
                                             <span class="_product_category_none">
                                 </span>
                                             <span style="display:none;" class="_product_category_checked">
-                                    <input type="hidden" name="cagetory_no" class="_selected_category_no" disabled="disabled">
+                                    <input type="hidden" th:name="category" id="category" th:field="*{category}" class="_selected_category_no" value="" >
+                                                <input type="hidden" th:name="subcategory1" id="subcategory1" th:field="*{subcategory1}" class="_selected_category_no" value="" >
+                                                <input type="hidden" th:name="subcategory2" id="subcategory2" th:field="*{subcategory2}" class="_selected_category_no" value="" >
                                     <span class="txtLight txtLess depth1" >test</span>
                                                 <span class="txtLight txtLess depth2" ></span>
                                                 <span class="txtLight txtLess depth3" ></span>
 
-                                    <a href="#none" class="btnNormal _remove_selected_category"><span><em class="icoDel"></em> 삭제</span></a>
+                                    <a href="#none" onclick="update_depth()" class="btnNormal _add_selected_category"><span> 등록</span></a>
+<!--                                                <em class="icoDel"></em>-->
                                 </span>
                                             <input type="hidden" name="checked_category">
                                         </p>
@@ -541,8 +607,7 @@
                     <div class="mToggleBar eToggle selected">
                         <h2>이미지 정보</h2>
                         <div class="ctrl">
-                            <label class="gLabel"><input type="checkbox"> 항상열기</label>
-                            <span><button type="button"><em>접기</em></button></span>
+
                         </div>
                     </div>
                     <div class="toggleArea" style="display:block;">
@@ -554,7 +619,7 @@
                                     <th scope="row">상품이미지등록</th>
                                     <td>
                                         <div class="gIcoShop">
-                                            <span class="icoShop" title="쇼핑몰별">쇼핑몰별</span>
+
                                             <div class="gAddInfo">
                                                 <div class="gLeft">
                                                     <span class="figure" id="eDetailImage"><a href="#none" style="cursor:default;"><img src="//img.echosting.cafe24.com/thumb/108x108_2.gif" width="108" height="108" alt=""></a></span>
@@ -563,8 +628,9 @@
                                                     <span class="figure" id="eMainImage" style="display:none;"><a href="#none" style="cursor:default;"><img src="//img.echosting.cafe24.com/thumb/108x108_2.gif" width="108" height="108" alt=""></a></span>
                                                     <span class="button">
                                             <div id="dFlashImageArea" class="btnFlash"><span id="dFlashImageButton"></span></div>
-                                            <a href="#none" class="btnNormal imageupload" imagekey="d_image"><span id="dImagButton"><em class="icoPlus"></em> 등록</span></a>
-                                            <a href="#none" class="btnNormal btnImageDelete" style="display:none;"><span><em class="icoDel"></em> 삭제</span></a>
+                                            <input type="file" multiple name="itemImgFile" class="btnNormal imageupload" imagekey="d_image">
+                                            <a href="#none" class="btnNormal btnImageDelete" style="display:none;"><span> 등록</span></a>
+<!--                                                        <em class="icoDel"></em>-->
                                         </span>
                                                 </div>
                                                 <div class="gAdd">
@@ -583,10 +649,18 @@
                     </div>
                 </div>
                 <div class="mButton gCenter">
-                    <a href="#none" class="btnSubmit"><span>상품등록</span></a>
-                    <a href="#none" class="btnEm btnPreview" id="eProductPreview"><span>미리보기</span></a>
+                    <th:block th:if="${#strings.isEmpty(itemFormDto.id)}">
+                        <button th:formaction="@{/admin/item/new}"  method="post" type="submit" class="my-button btn-primary">저장</button>
+                    </th:block>
+                    <th:block th:unless="${#strings.isEmpty(itemFormDto.id)}">
+                        <button th:formaction="@{'/admin/item/management/' + ${itemFormDto.id}}" type="submit" method="post" class="my-button btn-primary">수정</button>
+                    </th:block>
+                    <a th:href="@{/admin/item/itemmanagement}" class="my-button btn-outline-secondary">취소</a>
+<!--                    <a href="#none" class="btnSubmit"><span>상품등록</span></a>-->
+<!--                    <a href="#none" class="btnEm btnPreview" id="eProductPreview"><span>미리보기</span></a>-->
                 </div>
-                <input type="hidden" name="previewProduct" id="previewProduct">
+<!--                <input type="hidden" name="previewProduct" id="previewProduct">-->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
         </form>
 
     </div>

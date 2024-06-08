@@ -19,6 +19,7 @@ public class ItemImgService {
     private String itemImgLocation;
 
     private final ItemImgRepository itemImgRepository;
+    private final ItemDetailImgRepository itemDetailImgRepository;
 
     private final FileService fileService;
 
@@ -37,6 +38,22 @@ public class ItemImgService {
         //상품 이미지 정보 저장
         itemImg.updateItemImg(oriImgName, imgName, imgUrl);
         itemImgRepository.save(itemImg);
+    }
+    public void saveItemDetailImg(ItemDetailImg itemDetailImg , MultipartFile itemDetailFile) throws Exception {
+        String oriImgName = itemDetailFile.getOriginalFilename();
+        String imgName = "";
+        String imgUrl = "";
+
+        //파일 업로드
+        if (!StringUtils.isEmpty(oriImgName)) {
+            imgName = fileService.uploadFile(itemImgLocation, oriImgName,
+                    itemDetailFile.getBytes());
+            imgUrl = "/images/item/" + imgName;
+        }
+        itemDetailImg.updateItemDetailImg(oriImgName,imgName,imgUrl);
+        itemDetailImgRepository.save(itemDetailImg);
+
+
     }
 
     //상품 수정

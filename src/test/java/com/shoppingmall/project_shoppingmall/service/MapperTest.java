@@ -1,39 +1,34 @@
 package com.shoppingmall.project_shoppingmall.service;
 
+import com.shoppingmall.project_shoppingmall.config.*;
 import com.shoppingmall.project_shoppingmall.constant.*;
 import com.shoppingmall.project_shoppingmall.domain.*;
 import com.shoppingmall.project_shoppingmall.dto.*;
 import com.shoppingmall.project_shoppingmall.repository.*;
+import groovy.util.logging.*;
 import org.junit.jupiter.api.*;
+import org.modelmapper.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.context.*;
+import org.springframework.context.annotation.*;
 import org.springframework.mock.web.*;
-import org.springframework.security.test.context.support.*;
 import org.springframework.test.context.*;
-import org.springframework.transaction.annotation.*;
+import org.springframework.ui.*;
 import org.springframework.web.multipart.*;
 
-import javax.persistence.*;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 @SpringBootTest
-@Transactional
 @TestPropertySource(locations="classpath:application-test.properties")
-class ItemServiceTest {
-
-    @Autowired
-    ItemService itemService;
-
+@Slf4j
+public class MapperTest {
     @Autowired
     ItemRepository itemRepository;
 
     @Autowired
-    ItemImgRepository itemImgRepository;
-
-    @Autowired
-    ItemDetailImgRepository itemDetailImgRepository;
+    BrandRepository brandRepository;
 
     List<MultipartFile> createMultipartFiles() throws Exception{
 
@@ -65,35 +60,35 @@ class ItemServiceTest {
         return multipartFileList2;
     }
 
+
+    //
+    @DisplayName("ModelMapper Domain <-> Dto 변환 로그를 보기위한 테스트 항상 True가 출력된다.")
     @Test
-    @DisplayName("상품 등록 테스트")
-    @WithMockUser(username = "admin", roles = "ADMIN")
-    void saveItem() throws Exception {
+    public void modelMapper1() throws Exception{
+        // itemDTO을 생성하는 과정.  현재 등록된 아이템이 없기 떄문
+        ModelMapper modelMapper = new ModelMapper();
         ItemFormDto itemFormDto = new ItemFormDto();
+        BrandFormDto brandFormDto = new BrandFormDto();
         itemFormDto.setItemNm("테스트상품");
         itemFormDto.setItemSellStatus(ItemSellStatus.SELL);
         itemFormDto.setItemDetail("테스트 상품 입니다.");
         itemFormDto.setPrice(1000);
         itemFormDto.setStockNumber(100);
-
         List<MultipartFile> multipartFileList = createMultipartFiles();
-        List<MultipartFile> multipartDetailFileList = createMultipartFiles();
-        Long itemId = itemService.saveItem(itemFormDto, multipartFileList,multipartDetailFileList);
-        List<ItemImg> itemImgList = itemImgRepository.findByItemIdOrderByIdAsc(itemId);
-        List<ItemDetailImg> itemDetailImgList = itemDetailImgRepository.findByItemIdOrderByIdAsc(itemId);
+        List<MultipartFile> multipartDetailFileList = createMultipartFiles2();
+        itemFormDto.setBrandId(1L);
+        itemFormDto.setCategory("지갑");
 
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(EntityNotFoundException::new);
 
-        System.out.println(item);
-
-        assertEquals(itemFormDto.getItemNm(), item.getItemNm());
-        assertEquals(itemFormDto.getItemSellStatus(), item.getItemSellStatus());
-        assertEquals(itemFormDto.getItemDetail(), item.getItemDetail());
-        assertEquals(itemFormDto.getPrice(), item.getPrice());
-        assertEquals(itemFormDto.getStockNumber(), item.getStockNumber());
-        assertEquals(multipartFileList.get(0).getOriginalFilename(), itemImgList.get(0).getOriImgName());
-        assertEquals(multipartFileList.get(0).getOriginalFilename(), itemDetailImgList.get(0).getOriImgName());
+        Item item = modelMapper.map(itemFormDto,Item.class);
+        ItemFormDto itemFormDto1 = modelMapper.map(item,ItemFormDto.class);
+        // brandId가 정상적으로 매핑된다.
+        System.out.println("ItemFormDto -> Item");
+        System.out.println((item.toString()));
+        System.out.println("Item->ItemFormDto");
+        System.out.println((itemFormDto1.toString()));
     }
+
+
 
 }

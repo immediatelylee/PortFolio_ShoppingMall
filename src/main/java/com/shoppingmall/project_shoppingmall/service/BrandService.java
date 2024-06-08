@@ -105,6 +105,14 @@ public class BrandService {
             throw new RuntimeException(e);
         }
     }
+    public List<Brand> findAll() {
+        try {
+            return brandRepository.findAll();
+        } catch (Exception e){
+            // 예외 처리 코드
+            throw new RuntimeException(e);
+        }
+    }
 
     private String generateBrandCode() {
         // 2. 브랜드 코드 생성 로직

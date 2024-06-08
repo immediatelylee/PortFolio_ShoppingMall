@@ -5,6 +5,7 @@ import com.shoppingmall.project_shoppingmall.domain.*;
 import com.shoppingmall.project_shoppingmall.dto.*;
 import com.shoppingmall.project_shoppingmall.repository.*;
 import lombok.*;
+import org.modelmapper.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
@@ -22,7 +23,7 @@ public class ItemService {
     private final ItemImgService itemImgService;
     private final ItemImgRepository itemImgRepository;
 
-    public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception{
+    public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList,List<MultipartFile> itemDetailImgFileList) throws Exception{
 
         //상품 등록
         Item item = itemFormDto.toItem();
@@ -39,6 +40,15 @@ public class ItemService {
                 itemImg.setRepimgYn("N");
 
             itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
+        }
+        // 상세이미지 분할
+        for(int i=0;i<itemDetailImgFileList.size();i++){
+            ItemDetailImg itemDetailImg = new ItemDetailImg();
+            itemDetailImg.setItem(item);
+
+
+            itemImgService.saveItemDetailImg(itemDetailImg, itemDetailImgFileList.get(i));
+
         }
 
         return item.getId();

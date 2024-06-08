@@ -15,6 +15,7 @@ import org.springframework.web.multipart.*;
 
 import javax.persistence.*;
 import javax.validation.*;
+import java.io.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -28,6 +29,25 @@ public class ItemController {
     public ItemCategory[] itemCategories(){
         return ItemCategory.values();
     }
+
+//    private List<String> imageUrls = new ArrayList<>();
+//
+//    @GetMapping(value = "/d2")
+//    public String showUploadForm(Model model) {
+//        model.addAttribute("imageUrls", imageUrls);
+//        return "item/testupload";
+//    }
+//    @PostMapping("/d2")
+//    public String uploadImages(@RequestParam("files") MultipartFile[] files) throws IOException {
+//        for (MultipartFile file : files) {
+//            // 이미지를 저장하고, 저장된 이미지의 URL을 리스트에 추가하는 로직
+//            // 이 부분은 프로젝트에 맞게 실제 파일을 저장하고 그에 따른 URL을 생성하는 로직으로 변경되어야 합니다.
+//            String imageUrl = "/uploads/" + file.getOriginalFilename(); // 가정
+//            // 파일 저장 로직은 여기에 구현해야 합니다.
+//            imageUrls.add(imageUrl);
+//        }
+//        return "redirect:/";
+//    }
 
     @GetMapping(value = "/admin/item/management")
     public String test(Model model){
@@ -59,9 +79,15 @@ public class ItemController {
         List<ItemCategory> depth2 = itemService.getCategoryBydepth(2L);
         List<ItemCategory> depth3 = itemService.getCategoryBydepth(3L);
 
+        List<Brand> brands = brandService.findAll();
+
+
         model.addAttribute("depth1",depth1);
         model.addAttribute("depth2",depth2);
         model.addAttribute("depth3",depth3);
+        model.addAttribute("itemFormDto", new ItemFormDto());
+
+        model.addAttribute("brands",brands);
 
         return "item/itemAdd";
     }
@@ -71,44 +97,54 @@ public class ItemController {
     public String itemForm(Model model){
         model.addAttribute("itemFormDto", new ItemFormDto());
         model.addAttribute("brandFormDto",new BrandFormDto());
-        return "item/itemForm";
+        return "item/itemManagement";
     }
 
     @PostMapping(value = "/admin/item/new")
     public String itemNew(@Valid ItemFormDto itemFormDto, BindingResult bindingResult,
-                          Model model, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList){
+                          Model model, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,
+                          @RequestParam("itemDetailImgFile") List<MultipartFile> itemDetailImgFileList
+                          ){
 
         if(bindingResult.hasErrors()){
-            return "item/itemForm";
+            System.out.println("error1");
+            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+            for(FieldError error : fieldErrors) {
+                System.out.println("Field: " + error.getField());
+                System.out.println("Message: " + error.getDefaultMessage());
+            }
+
+            return "item/itemManagement";
         }
 
         if(itemImgFileList.get(0).isEmpty() && itemFormDto.getId() == null){
             model.addAttribute("errorMessage", "첫번째 상품 이미지는 필수 입력 값 입니다.");
-            return "item/itemForm";
+            System.out.println("error2");
+            return "item/itemManagement";
         }
 
         try {
-            itemService.saveItem(itemFormDto, itemImgFileList);
+            itemService.saveItem(itemFormDto, itemImgFileList,itemDetailImgFileList);
         } catch (Exception e){
             model.addAttribute("errorMessage", "상품 등록 중 에러가 발생하였습니다.");
-            return "item/itemForm";
+            System.out.println("error3");
+            return "item/itemManagement";
         }
 
-        return "redirect:/";
+        return "redirect:/admin/item/management";
     }
 
-    @GetMapping(value = "/admin/item/{itemId}")
+    @GetMapping(value = "/admin/item/management/{itemId}")
     public String itemDtl(@PathVariable("itemId") Long itemId, Model model){
 
         try {
             ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
-//            BrandFormDto brandFormDto = brandService.getBrand(brandId); // 수정이 필요함.
+
             model.addAttribute("itemFormDto", itemFormDto);
-//            model.addAttribute("brandFormDto",brandFormDto);
+
         } catch(EntityNotFoundException e){
             model.addAttribute("errorMessage", "존재하지 않는 상품 입니다.");
-            model.addAttribute("itemFormDto", new ItemFormDto());
-            model.addAttribute("brandFormDto",new BrandFormDto());
+
             return "item/itemForm";
         }
 

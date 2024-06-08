@@ -1,7 +1,13 @@
 package com.shoppingmall.project_shoppingmall.domain;
 
+import lombok.*;
+
 import javax.persistence.*;
 
+@Entity
+@Table(name="item_detail_img")
+@Getter
+@Setter
 public class ItemDetailImg extends BaseEntity {
     @Id
     @Column(name="item_detail_img_id")
