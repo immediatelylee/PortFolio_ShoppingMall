@@ -115,4 +115,13 @@ public enum ItemCategory {
         return depth;
     }
 
+
+    public static ItemCategory titleOf(String title) {
+        for (ItemCategory Ltitle : ItemCategory.values()) {
+            if (Ltitle.getTitle().equals(title)){
+                return Ltitle;
+            }
+        }
+        return null;
+    }
 }
