@@ -79,10 +79,15 @@ public class ItemController {
         List<ItemCategory> depth2 = itemService.getCategoryBydepth(2L);
         List<ItemCategory> depth3 = itemService.getCategoryBydepth(3L);
 
+        List<Brand> brands = brandService.findAll();
+
+
         model.addAttribute("depth1",depth1);
         model.addAttribute("depth2",depth2);
         model.addAttribute("depth3",depth3);
         model.addAttribute("itemFormDto", new ItemFormDto());
+
+        model.addAttribute("brands",brands);
 
         return "item/itemAdd";
     }
@@ -98,7 +103,8 @@ public class ItemController {
     @PostMapping(value = "/admin/item/new")
     public String itemNew(@Valid ItemFormDto itemFormDto, BindingResult bindingResult,
                           Model model, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,
-                          @RequestParam("itemDetailImgFile") List<MultipartFile> itemDetailImgFileList){
+                          @RequestParam("itemDetailImgFile") List<MultipartFile> itemDetailImgFileList
+                          ){
 
         if(bindingResult.hasErrors()){
             System.out.println("error1");
