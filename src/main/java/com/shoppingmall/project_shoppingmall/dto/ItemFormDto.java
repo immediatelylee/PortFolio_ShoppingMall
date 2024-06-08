@@ -2,7 +2,7 @@ package com.shoppingmall.project_shoppingmall.dto;
 
 import com.shoppingmall.project_shoppingmall.constant.*;
 import com.shoppingmall.project_shoppingmall.domain.*;
-import lombok.Getter;
+import lombok.*;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
 
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class ItemFormDto {
 
     private Long id;
