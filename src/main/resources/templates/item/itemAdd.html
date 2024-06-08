@@ -5,34 +5,34 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
-        function depth_change(){
-            // 변수 선언 및 초기화
-            var depth1 = "";
-            var depth2 = "";
-            var depth3 = "";
+
+        function update_depth(){
+            console.log("depth_change_detect")
 
             // 각 depth 요소 선택
             var $depth1 = $(".txtLight.txtLess.depth1");
             var $depth2 = $(".txtLight.txtLess.depth2");
             var $depth3 = $(".txtLight.txtLess.depth3");
 
-            // 기존 hidden input 선택
-            var $hiddenInput = $("#cagetory_result"); // hidden input의 ID를 사용하여 선택
+            // if ($depth1.length === 0 ) {
+            //     alert("카테고리 값을 선택해야 합니다.");
+            //     return;
+            // }
 
-            // depth1 값 변경 감지 및 저장
-            $depth1.on("change", function() {
-                depth1 = $(this).text();
-            });
+            var depth1 = $depth1.text().replace(' >', '');
+            var depth2 = $depth2.text().replace(' >', '');
+            var depth3 = $depth3.text().replace(' >', '');
 
-            // depth2 값 변경 감지 및 저장
-            $depth2.on("change", function() {
-                depth2 = $(this).text();
-            });
+            // $("#category").val("ItemCategory." + depth3);  추후에 itemccategory의 enum형태로 변경시에 이방식으로 저장.
+            $("#category").val(depth1);
+            $("#subcategory1").val(depth2);
+            $("#subcategory2").val(depth3);
 
-            // depth3 값 변경 감지 및 저장
-            $depth3.on("change", function() {
-                depth3 = $(this).text();
-            });
+            console.log($("#category").val())
+            console.log($("#subcategory1").val())
+            console.log($("#subcategory2").val())
+
+
             console.log("depth flow test")
             console.log(depth1)
             console.log(depth2)
@@ -46,16 +46,18 @@
     let selDepth2;
     let selDepth3;
     if (depthjudge[0] == 'D_1' ) {
+        console.log("title test-1")
         selDepth1 = title;
     }
 
     else if (depthjudge[0] == 'D_2A' || depthjudge[0] == 'D_2B' || depthjudge[0] == 'D_2C' ){
         selDepth2 = title;
-        console.log("title test")
-        console.log(title)
+        console.log("title test-2")
+        console.log(selDepth2)
     }
     // TODO 지금은 예외처리도 안한 스크립트이지만 나중에 더 좋은 방법이 있으면 개선할 것. selDepth3를 지정하는 데 너무나 많은 or문이 추가되기 때문에 else로 하였음.
     else {
+        console.log("title test-3")
         selDepth3 = title;
     }
     // 중분류,소분류 전체 hide()
@@ -269,7 +271,7 @@
             </div>
         </div>
 
-        <form id="eProductRegisterForm" role="form" method="post" enctype="multipart/form-data"  th:object="${itemFormDto}" >
+        <form id="eProductRegisterForm" role="form" method="post" enctype="multipart/form-data"  th:object="${itemFormDto}" onsubmit="update_depth()" >
 
             <div id="QA_register1" class="section">
                 <div class="mToggleBar eToggle selected">
@@ -359,6 +361,21 @@
                                         <input type="text" th:field="*{stockNumber}"  name="stockNumber" class="fText ePrdPrice" shop_no="1" placeholder="예시) 1,000"  style="width:100px;"> 개
                                         </div>
                                     </td>
+                                </tr>
+                                <tr>
+                                    <th>브랜드 </th>
+                                    <td>
+
+                                        <select class="fSelect" th:name="brandId" th:field="*{brandId}" id="brands" style="width:100px;">
+                                            <option th:each="brand : ${brands}"
+                                                    th:value="${brand.getId()}"
+                                                    th:text="${brand.getBrandNm()}"
+                                            >
+                                            </option>
+                                        </select>
+                                        <a href="#mLayerBrand" class="btnNormal eModal"><span>등록</span></a>
+                                    </td>
+
                                 </tr>
                                 </tbody>
                             </table>
@@ -565,12 +582,15 @@
                                             <span class="_product_category_none">
                                 </span>
                                             <span style="display:none;" class="_product_category_checked">
-                                    <input type="hidden" name="cagetory_result" id="cagetory_result" th:field="*{category}" class="_selected_category_no" >
+                                    <input type="hidden" th:name="category" id="category" th:field="*{category}" class="_selected_category_no" value="" >
+                                                <input type="hidden" th:name="subcategory1" id="subcategory1" th:field="*{subcategory1}" class="_selected_category_no" value="" >
+                                                <input type="hidden" th:name="subcategory2" id="subcategory2" th:field="*{subcategory2}" class="_selected_category_no" value="" >
                                     <span class="txtLight txtLess depth1" >test</span>
                                                 <span class="txtLight txtLess depth2" ></span>
                                                 <span class="txtLight txtLess depth3" ></span>
 
-                                    <a href="#none" class="btnNormal _remove_selected_category"><span><em class="icoDel"></em> 삭제</span></a>
+                                    <a href="#none" onclick="update_depth()" class="btnNormal _add_selected_category"><span> 등록</span></a>
+<!--                                                <em class="icoDel"></em>-->
                                 </span>
                                             <input type="hidden" name="checked_category">
                                         </p>
@@ -609,7 +629,8 @@
                                                     <span class="button">
                                             <div id="dFlashImageArea" class="btnFlash"><span id="dFlashImageButton"></span></div>
                                             <input type="file" multiple name="itemImgFile" class="btnNormal imageupload" imagekey="d_image">
-                                            <a href="#none" class="btnNormal btnImageDelete" style="display:none;"><span><em class="icoDel"></em> 삭제</span></a>
+                                            <a href="#none" class="btnNormal btnImageDelete" style="display:none;"><span> 등록</span></a>
+<!--                                                        <em class="icoDel"></em>-->
                                         </span>
                                                 </div>
                                                 <div class="gAdd">
@@ -629,7 +650,7 @@
                 </div>
                 <div class="mButton gCenter">
                     <th:block th:if="${#strings.isEmpty(itemFormDto.id)}">
-                        <button th:formaction="@{/admin/item/new}" method="post" type="submit" class="my-button btn-primary">저장</button>
+                        <button th:formaction="@{/admin/item/new}"  method="post" type="submit" class="my-button btn-primary">저장</button>
                     </th:block>
                     <th:block th:unless="${#strings.isEmpty(itemFormDto.id)}">
                         <button th:formaction="@{'/admin/item/management/' + ${itemFormDto.id}}" type="submit" method="post" class="my-button btn-primary">수정</button>
