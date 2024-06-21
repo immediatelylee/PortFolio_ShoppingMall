@@ -13,6 +13,7 @@ import org.springframework.web.multipart.*;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.*;
 
 @Service
 @Transactional
@@ -22,11 +23,25 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final ItemImgService itemImgService;
     private final ItemImgRepository itemImgRepository;
+    private final ItemDetailImgRepository itemDetailImgRepository;
+
+//    public Map<String, Long> getProductCounts() {
+//        Map<String, Long> counts = new HashMap<>();
+//        counts.put("all", itemRepository.count());
+//        counts.put("sellingTrue", itemRepository.countByStatus("T"));
+//        counts.put("sellingFalse", itemRepository.countByStatus("F"));
+//        counts.put("displayTrue", itemRepository.countByDisplayStatus("T"));
+//        counts.put("displayFalse", itemRepository.countByDisplayStatus("F"));
+//        return counts;
+//    }
+
 
     public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList,List<MultipartFile> itemDetailImgFileList) throws Exception{
 
         //상품 등록
+        String itemCode = generateItemCode();
         Item item = itemFormDto.toItem();
+        item.setItemCode(itemCode);
         itemRepository.save(item);
 
         //이미지 등록
@@ -53,6 +68,37 @@ public class ItemService {
 
         return item.getId();
     }
+
+    @Transactional(readOnly = true)
+    public Page<ItemFormDto> searchItems(ItemSearchType itemSearchType,String searchValue,String searchStatus ,Pageable pageable) {
+        Page<Item> items;
+        if (searchValue == null || searchValue.isBlank()) {
+            items = itemRepository.findAll(pageable);
+            return itemRepository.findAll(pageable).map(ItemFormDto::of);
+        }
+        else{
+//            switch (itemSearchType) {
+//                case ITEM_NM:
+//                    if (searchStatus.equals())
+            }
+
+            // 검색 로직을 여기에 추가
+            // items = itemRepository.searchItems(itemSearchType, searchValue, searchStatus, pageable);
+            return null; // 실제 검색 로직을 여기에 추가해야 합니다.
+        }
+
+//        return items.map(item -> {
+//            List<ItemImg> itemImgs = itemImgRepository.findByItemIdOrderByIdAsc(item.getId());
+//            List<ItemImgDto> itemImgDtoList = itemImgs.stream()
+//                    .map(ItemImgDto::of)
+//                    .collect(Collectors.toList());
+//            ItemFormDto itemFormDto = ItemFormDto.of(item);
+//            itemFormDto.setItemImgDtoList(itemImgDtoList);
+//            return itemFormDto;
+//        });
+
+//    }
+
 
     @Transactional
     public void updateItemStatus(List<Long> itemIds, String actionType) {
@@ -190,6 +236,50 @@ public class ItemService {
             }
         return categoriesWithDepth;
     }
+// 아이템 관리 header부분의 count
+
+    public Long getTotalItemCount() {
+        return itemRepository.countAllItems();
+    }
+
+    public Long getItemsOnSaleCount() {
+        return itemRepository.countItemsBySellStatus(ItemSellStatus.SELL);
+    }
+
+    public Long getItemsSoldOutCount() {
+        return itemRepository.countItemsBySellStatus(ItemSellStatus.SOLD_OUT);
+    }
+
+    public Long getItemsDisplayedCount() {
+        return itemRepository.countItemsByDisplayStatus(ItemDisplayStatus.DISPLAY);
+    }
+
+    public Long getItemsNotDisplayedCount() {
+        return itemRepository.countItemsByDisplayStatus(ItemDisplayStatus.NOT_DISPLAY);
+    }
+
+    public List<Item> getItemsOnSale() {
+        return itemRepository.findItemsBySellStatus(ItemSellStatus.SELL);
+    }
+
+    public List<Item> getItemsSoldOut() {
+        return itemRepository.findItemsBySellStatus(ItemSellStatus.SOLD_OUT);
+    }
+
+    public List<Item> getItemsDisplayed() {
+        return itemRepository.findItemsByDisplayStatus(ItemDisplayStatus.DISPLAY);
+    }
+
+    public List<Item> getItemsNotDisplayed() {
+        return itemRepository.findItemsByDisplayStatus(ItemDisplayStatus.NOT_DISPLAY);
+    }
+
+    private String generateItemCode() {
+        // 2. 상품 코드 생성 로직
+        //I + 7자리 숫자
+        return "I" + String.format("%07d", itemRepository.count() + 1);
+    }
+
 }
 
 

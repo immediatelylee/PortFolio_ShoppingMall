@@ -4,6 +4,41 @@
       layout:decorate="~{layouts/layout3-item}">
 
 <th:block layout:fragment="script">
+    <script>
+    function allChecked() {
+        const $allCheckBox = $('#allCheckBox');
+        const $rowCheckboxes = $('.rowChk');
+
+        // 전체 체크박스 선택 여부 확인
+        const isChecked = $allCheckBox.prop('checked');
+
+        // 전체 체크박스가 선택된 경우 모든 체크박스 선택
+        if (isChecked) {
+            $rowCheckboxes.prop('checked', true);
+        }
+
+        // 전체 체크박스가 선택 해제된 경우 모든 체크박스 선택 해제
+        else {
+            $rowCheckboxes.prop('checked', false);
+        }
+    }
+    function countTableRows() {
+        const tbodySelector = 'tbody.center';
+
+        // 테이블 바디 요소 가져오기
+        const tableBody = document.querySelector(tbodySelector);
+
+        // 테이블 바디 내의 테이블 행 (<tr> 요소) 개수 계산
+        const rowCount = tableBody.querySelectorAll('tr').length;
+
+        const countElement = document.querySelector('.total strong');
+        countElement.textContent = rowCount;
+
+    }
+    window.addEventListener('load', function() {
+        countTableRows();
+
+    });
 
     function submitForm(dataActionType) {
         console.log("submitForm start");
@@ -67,26 +102,26 @@
             <ul class="state">
                 <li>
                     <strong>전체</strong>
-                    <a href="#none" class="eCountSearch" sort_type="" status="A">2</a>건            </li>
+                    <a th:href="@{/admin/item/management}" class="eCountSearch" sort_type="" status="A" th:text="${totalItemCount}"></a>건            </li>
                 <li>
                     <strong>판매함</strong>
-                    <a href="#none" class="eCountSearch" sort_type="selling" status="T">2</a>건            </li>
+                    <a th:href="@{/admin/item/management(sellStatus='SELL')}" class="eCountSearch" sort_type="selling" status="T" th:text="${onSaleItemCount}"></a>건            </li>
                 <li>
                     <strong>판매안함</strong>
-                    <a href="#none" class="eCountSearch" sort_type="selling" status="F">0</a>건            </li>
+                    <a th:href="@{/admin/item/management(sellStatus='SOLD_OUT')}" class="eCountSearch" sort_type="selling" status="F" th:text="${soldOutItemCount}"></a>건            </li>
                 <li>
                     <strong>진열함</strong>
-                    <a href="#none" class="eCountSearch" sort_type="display" status="T">2</a>건            </li>
+                    <a th:href="@{/admin/item/management(displayStatus='DISPLAY')}" class="eCountSearch" sort_type="display" status="T" th:text="${displayedItemCount}"></a>건            </li>
                 <li>
                     <strong>진열안함</strong>
-                    <a href="#none" class="eCountSearch" sort_type="display" status="F">0</a>건            </li>
+                    <a th:href="@{/admin/item/management(displayStatus='NOT_DISPLAY')}" class="eCountSearch" sort_type="display" status="F" th:text="${notDisplayedItemCount}"></a>건            </li>
             </ul>
             <div class="button">
                 <a class="btnSubmit eRegProduct" href="/admin/item/itemadd"><span>상품등록</span></a>
             </div>
         </div>
 
-        <form action="/disp/admin/shop1/product/productmanage" method="GET" name="eProductSearchForm" id="eProductSearchForm">
+        <form action="/admin/item/management" method="GET" name="eProductSearchForm" id="eProductSearchForm">
 
             <div class="optionArea" id="QA_list1">
                 <div class="mCtrl typeHeader">
@@ -109,14 +144,9 @@
                                     <li>
                                         <select class="fSelect eSearch" name="eField[]">
                                             <option value="product_name">상품명</option>
-                                            <option value="">--------------------</option>
-                                            <option value="product_no">상품번호</option>
                                             <option value="product_code">상품코드</option>
                                             <option value="">--------------------</option>
                                             <option value="Brand">브랜드</option>
-                                            <option value="Classification">자체분류</option>
-                                            <option value="">--------------------</option>
-                                            <option value="model_name">모델명</option>
                                         </select>
                                         <input type="text" class="fText eSearchText" style="width:500px;" value="" name="eValue[]">
                                         <select data-placeholder="- 분류 선택 -" class="chzn-select-deselect eTrend  chzn-done" style="width:312px; display:none;" name="Trend[]" id="selXRG">
@@ -175,33 +205,7 @@
                                 <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="selling" value="F"> 판매안함</label>
                             </td>
                         </tr>
-                        <tr style="display: none;">
-                            <th scope="row">마켓연동</th>
-                            <td colspan="3">
-                                <div class="mForm">
-                                    <label class="gLabel eSelected"><input type="radio" name="market_selecter" class="fChk _market_selecter" value="A" checked="checked"> 전체</label>
-                                    <label class="gLabel"><input type="radio" name="market_selecter" class="fChk _market_selecter" value="T"> 마켓연동함</label>
-                                    <label class="gLabel"><input type="radio" name="market_selecter" class="fChk _market_selecter" value="F"> 마켓연동안함</label>
 
-                                    <div class="addForm" id="ec-product-list-market-search" style="display:none;">
-                                        <select class="fSelect _market_search_type" name="market_search_type">
-                                            <option value="market">마켓별 검색</option>
-                                            <option value="account">계정별 검색</option>
-                                        </select>
-                                        <span class="_ma_market_wrap" style="display:none;">
-                    <label class="gLabel gSingleSide eSelected"><input type="checkbox" class="fChk _ma_market_all" checked="checked"> 전체</label>
-                    <p class="gSingle">
-                                    </p>
-                </span>
-                                        <span class="_ma_account_wrap" style="display:none;">
-                    <label class="gLabel gSingleSide eSelected"><input type="checkbox" class="fChk _ma_account_all" checked="checked"> 전체</label>
-                    <p class="gSingle">
-                                    </p>
-                </span>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -214,6 +218,7 @@
                 </div>
                 <input type="hidden" name="page">
             </div>
+        </form>
 
             <div class="section" id="QA_list2">
                 <div class="mTitle">
@@ -229,7 +234,7 @@
                 </div>
                 <div class="mState">
                     <div class="gLeft">
-                        <p class="total">[총 <strong>2</strong>개]</p>
+                        <p class="total">[총 <strong text="${rowCount}">2</strong>개]</p>
                     </div>
                     <div class="gRight">
                         <select class="fSelect nob-sel" name="orderby"><option value="regist_d">등록일 역순</option><option value="regist_a">등록일 순</option><option value="empty1" disabled="disabled">---------------</option><option value="modify_d">수정일 역순</option><option value="modify_a">수정일 순</option><option value="empty2" disabled="disabled">---------------</option><option value="name_d">상품명 역순</option><option value="name_a">상품명 순</option><option value="empty3" disabled="disabled">---------------</option><option value="price_d">판매가 역순</option><option value="price_a">판매가 순</option><option value="empty5" disabled="disabled">---------------</option><option value="buyprice_d">공급가 역순</option><option value="buyprice_a" class="sort">공급가 순</option><option value="empty6" disabled="disabled" class="sort">---------------</option><option value="sort_d" disabled="disabled" class="sort">진열 역순</option><option value="sort_a" disabled="disabled" class="sort">진열 순</option><option value="empty8" disabled="disabled">---------------</option><option value="basket_d">장바구니수 역순</option><option value="basket_a">장바구니수 순</option><option value="empty9" disabled="disabled">---------------</option><option value="hitcount_d">조회수 역순</option><option value="hitcount_a">조회수 순</option><option value="empty10" disabled="disabled">---------------</option><option value="likecount_d">좋아요 역순</option><option value="likecount_a">좋아요 순</option></select>

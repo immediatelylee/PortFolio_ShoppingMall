@@ -21,6 +21,55 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
+    @Override
+    public Long countAllItems() {
+        QItem item = QItem.item;
+        return queryFactory
+                .select(item.count())
+                .from(item)
+                .fetchOne();
+    }
+
+    @Override
+    public Long countItemsBySellStatus(ItemSellStatus sellStatus) {
+        QItem item = QItem.item;
+        return queryFactory
+                .select(item.count())
+                .from(item)
+                .where(item.itemSellStatus.eq(sellStatus))
+                .fetchOne();
+    }
+
+    @Override
+    public Long countItemsByDisplayStatus(ItemDisplayStatus displayStatus) {
+        QItem item = QItem.item;
+        return queryFactory
+                .select(item.count())
+                .from(item)
+                .where(item.itemDisplayStatus.eq(displayStatus))
+                .fetchOne();
+    }
+
+    @Override
+    public List<Item> findItemsBySellStatus(ItemSellStatus sellStatus) {
+        QItem item = QItem.item;
+        return queryFactory
+                .selectFrom(item)
+                .where(item.itemSellStatus.eq(sellStatus))
+                .fetch();
+    }
+
+
+    @Override
+    public List<Item> findItemsByDisplayStatus(ItemDisplayStatus displayStatus) {
+        QItem item = QItem.item;
+        return queryFactory
+                .selectFrom(item)
+                .where(item.itemDisplayStatus.eq(displayStatus))
+                .fetch();
+    }
+
+
     private BooleanExpression searchSellStatusEq(ItemSellStatus searchSellStatus) {
         return searchSellStatus == null ? null : QItem.item.itemSellStatus.eq(searchSellStatus);
     }

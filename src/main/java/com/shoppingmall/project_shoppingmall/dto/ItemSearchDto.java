@@ -11,6 +11,8 @@ public class ItemSearchDto {
 
     private ItemSellStatus searchSellStatus;
 
+    private ItemDisplayStatus searchDisplayStatus;
+
     private String searchBy;
 
     private String searchQuery = "";
