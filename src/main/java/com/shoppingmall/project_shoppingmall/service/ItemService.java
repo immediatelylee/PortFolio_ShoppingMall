@@ -54,6 +54,42 @@ public class ItemService {
         return item.getId();
     }
 
+    @Transactional
+    public void updateItemStatus(List<Long> itemIds, String actionType) {
+        List<Item> items = itemRepository.findByIdIn(itemIds);
+
+
+        if (actionType.equals("DELETE")){
+            deleteItems(itemIds);
+            return;
+
+        }
+
+            for (Item item : items) {
+                switch (actionType) {
+                    case "DS":
+                        item.setItemDisplayStatus(ItemDisplayStatus.DISPLAY);
+                        break;
+                    case "DN":
+                        item.setItemDisplayStatus(ItemDisplayStatus.NOT_DISPLAY);
+                        break;
+                    case "SS":
+                        item.setItemSellStatus(ItemSellStatus.SELL);
+                        break;
+                    case "SN":
+                        item.setItemSellStatus(ItemSellStatus.SOLD_OUT);
+                        break;
+
+                }
+            }
+            // 삭제하지 않은 아이템만 저장
+            if (!items.isEmpty()) {
+                itemRepository.saveAll(items);
+            }
+        }
+
+
+
 // 상품 수정
     @Transactional(readOnly = true)
     public ItemFormDto getItemDtl(Long itemId){
@@ -85,6 +121,55 @@ public class ItemService {
 
         return item.getId();
     }
+
+    // 상품관리 탭의 기능 진열함,진열안함,판매함,판매안함,삭제 에 관련 기능.
+
+    public void deleteItems(List<Long> itemIds) {
+        for (Long itemId : itemIds) {
+            List<ItemImg> itemImgs = itemImgRepository.findByItemId(itemId);
+            itemImgRepository.deleteAll(itemImgs);
+
+            List<ItemDetailImg> itemDetailImgs = itemDetailImgRepository.findByItemId(itemId);
+            itemDetailImgRepository.deleteAll(itemDetailImgs);
+
+            itemRepository.deleteById(itemId);
+        }
+    }
+
+    public void displayItems(List<Long> itemIds) {
+        List<Item> items = itemRepository.findByIdIn(itemIds);
+        for (Item item : items) {
+            item.setItemDisplayStatus(ItemDisplayStatus.DISPLAY);
+        }
+        itemRepository.saveAll(items);
+    }
+
+    public void hideItems(List<Long> itemIds) {
+        List<Item> items = itemRepository.findByIdIn(itemIds);
+        for (Item item : items) {
+            item.setItemDisplayStatus(ItemDisplayStatus.NOT_DISPLAY);
+        }
+        itemRepository.saveAll(items);
+    }
+
+    public void sellItems(List<Long> itemIds) {
+        List<Item> items = itemRepository.findByIdIn(itemIds);
+        for (Item item : items) {
+            item.setItemSellStatus(ItemSellStatus.SELL);
+        }
+        itemRepository.saveAll(items);
+    }
+
+    public void stopSellingItems(List<Long> itemIds) {
+        List<Item> items = itemRepository.findByIdIn(itemIds);
+        for (Item item : items) {
+            item.setItemSellStatus(ItemSellStatus.SOLD_OUT);
+        }
+        itemRepository.saveAll(items);
+    }
+
+
+
 
     @Transactional(readOnly = true)
     public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable){

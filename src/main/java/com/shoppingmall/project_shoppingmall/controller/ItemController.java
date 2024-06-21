@@ -30,18 +30,18 @@ public class ItemController {
         return ItemCategory.values();
     }
 
-//    private List<String> imageUrls = new ArrayList<>();
-//
-//    @GetMapping(value = "/d2")
-//    public String showUploadForm(Model model) {
-//        model.addAttribute("imageUrls", imageUrls);
-//        return "item/testupload";
-//    }
-//    @PostMapping("/d2")
-//    public String uploadImages(@RequestParam("files") MultipartFile[] files) throws IOException {
-//        for (MultipartFile file : files) {
-//            // 이미지를 저장하고, 저장된 이미지의 URL을 리스트에 추가하는 로직
-//            // 이 부분은 프로젝트에 맞게 실제 파일을 저장하고 그에 따른 URL을 생성하는 로직으로 변경되어야 합니다.
+
+    @PostMapping("/admin/item/multiaction")
+    public String updateMultipleItems(@Valid IdsTransferDto idsTransferDto,
+                                      RedirectAttributes redirectAttributes) {
+
+        List<Long> itemIds = idsTransferDto.getSelectedIds();
+        String actionType = idsTransferDto.getDataActionType();
+        itemService.updateItemStatus(itemIds, actionType);
+        redirectAttributes.addFlashAttribute("message", "상품 상태가 업데이트되었습니다.");
+        return "redirect:/admin/item/management";
+    }
+
 //            String imageUrl = "/uploads/" + file.getOriginalFilename(); // 가정
 //            // 파일 저장 로직은 여기에 구현해야 합니다.
 //            imageUrls.add(imageUrl);

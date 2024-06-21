@@ -27,6 +27,8 @@ public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredi
 
     List<Item> findByBrand_BrandNm(String brandNm);
 
+    List<Item> findByIdIn(List<Long> itemIds);
+
 
 }
 
