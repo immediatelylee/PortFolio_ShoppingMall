@@ -70,21 +70,70 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ItemFormDto> searchItems(ItemSearchType itemSearchType,String searchValue,String searchStatus ,Pageable pageable) {
+    public Page<ItemFormDto> searchItems(ItemSearchType itemSearchType,String searchValue,String searchDateType ,String sellStatus ,String displayStatus,Pageable pageable) {
         Page<Item> items;
-        if (searchValue == null || searchValue.isBlank()) {
-            items = itemRepository.findAll(pageable);
-            return itemRepository.findAll(pageable).map(ItemFormDto::of);
+        if (searchValue == null || searchValue.isEmpty()) {
+            if ("SELL".equals(sellStatus)) {
+                items = itemRepository.findBySellStatus(ItemSellStatus.SELL,pageable);
+            } else if ("SOLD_OUT".equals(sellStatus)) {
+                items = itemRepository.findBySellStatus(ItemSellStatus.SOLD_OUT,pageable);
+            } else if ("DISPLAY".equals(displayStatus)) {
+                items = itemRepository.findByDisplayStatus(ItemDisplayStatus.DISPLAY,pageable);
+            } else if ("NOT_DISPLAY".equals(displayStatus)) {
+                items = itemRepository.findByDisplayStatus(ItemDisplayStatus.NOT_DISPLAY,pageable);
+            } else {
+                items = itemRepository.findAll(pageable);
+            }
+            // Item 객체 리스트를 ItemFormDto 객체 리스트로 변환
+            List<ItemFormDto> itemFormDtos = items.stream()
+                    .map(item -> ItemFormDto.of(item))
+                    .collect(Collectors.toList());
+            // 각 ItemFormDto에 대해 ThumbnailUrl 설정
+            itemFormDtos.forEach(itemFormDto -> {
+                String thumbnailUrl = itemThumbnailRepository.findThumbnailUrlByItemId(itemFormDto.getId());
+                itemFormDto.setThumbnailImgUrl(thumbnailUrl);
+            });
+            return new PageImpl<>(itemFormDtos, pageable, items.getTotalElements());
         }
+
+
         else{
-//            switch (itemSearchType) {
-//                case ITEM_NM:
-//                    if (searchStatus.equals())
+            ItemSearchDto itemSearchDto = new ItemSearchDto();
+            itemSearchDto.setSearchBy((itemSearchType));
+
+            itemSearchDto.setSearchQuery(searchValue);
+            itemSearchDto.setSearchDateType(searchDateType);
+
+
+            if ("A".equals(sellStatus)){
+            } else if ("T".equals(sellStatus)){
+                itemSearchDto.setSearchSellStatus((ItemSellStatus.SELL));
+            } else if ("F".equals(sellStatus)){
+//                (sellStatus == "F") 를 예상함.
+                itemSearchDto.setSearchSellStatus((ItemSellStatus.SOLD_OUT));
+            } else {
+                System.out.println("==========sellStatus error ===============");
+                return null;}
+
+
+            if ("A".equals(displayStatus)){
+            } else if("T".equals(displayStatus)){
+                itemSearchDto.setSearchDisplayStatus((ItemDisplayStatus.DISPLAY));
+            }else if("F".equals(displayStatus)){
+                itemSearchDto.setSearchDisplayStatus((ItemDisplayStatus.NOT_DISPLAY));
+            }
+            else{
+                System.out.println("==========displayStatus error ===============");
+                return null;
             }
 
-            // 검색 로직을 여기에 추가
-            // items = itemRepository.searchItems(itemSearchType, searchValue, searchStatus, pageable);
-            return null; // 실제 검색 로직을 여기에 추가해야 합니다.
+
+            return itemRepository.getMainItemPage(itemSearchDto, pageable);
+//            return null; // 임시
+            }
+
+
+
         }
 
 //        return items.map(item -> {
