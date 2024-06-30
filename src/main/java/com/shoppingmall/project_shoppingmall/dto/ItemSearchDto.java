@@ -13,7 +13,7 @@ public class ItemSearchDto {
 
     private ItemDisplayStatus searchDisplayStatus;
 
-    private String searchBy;
+    private ItemSearchType searchBy;
 
     private String searchQuery = "";
 
