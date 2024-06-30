@@ -317,7 +317,9 @@
                                 <td  th:text="${item.id}"1></td>
                                 <td class="txtCode"><a th:href="@{'/admin/item/management/' + ${item.id}}" class="txtLink" th:text="${item.itemCode}" >I0000001</a></td>
 
-                                <td class="left"><a th:href="@{'/admin/item/management/' + ${item.id}}" class="txtLink" th:text="${item.itemNm}">상품명</a></td>
+                                <td class="left">
+                                    <img th:src="@{${item.thumbnailImgUrl}}" width="44" height="44"> <a th:href="@{'/admin/item/management/' + ${item.id}}" class="txtLink" th:text="${item.itemNm}" >상품명</a>
+                                </td>
                                 <td th:text="${item.itemSellStatus == T(com.shoppingmall.project_shoppingmall.constant.ItemSellStatus).SELL ? '판매중' : '품절'}" style="font-weight: bold">판매중</td>
                                 <td th:text="${item.itemDisplayStatus == T(com.shoppingmall.project_shoppingmall.constant.ItemDisplayStatus).DISPLAY ? '진열함' : '진열안함'}"style="font-weight: bold" >진열중</tdth>
                                 <td th:text="${item.price}"></td>

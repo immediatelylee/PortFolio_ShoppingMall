@@ -46,6 +46,8 @@ public class ItemFormDto {
 
     private Long brandId;
 
+    // 썸네일 이미지 URL
+    private String thumbnailImgUrl;
 
     public Item toItem(){
         ModelMapper modelMapper = new ModelMapper();
@@ -55,6 +57,14 @@ public class ItemFormDto {
     public static ItemFormDto of(Item item){
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(item,ItemFormDto.class);
+    }
+    public static ItemFormDto addThumbnail(Item item,String thumbnailImgUrl){
+        ModelMapper modelMapper = new ModelMapper();
+        ItemFormDto itemFormDto = modelMapper.map(item,ItemFormDto.class);
+
+        itemFormDto.setThumbnailImgUrl(thumbnailImgUrl);
+        return itemFormDto;
+
     }
 
 }
