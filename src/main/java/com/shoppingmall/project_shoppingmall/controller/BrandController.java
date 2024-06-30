@@ -105,7 +105,7 @@ public class BrandController {
     @PostMapping("/admin/brand/deleteBrands")
     public String deleteBrands(IdsTransferDto idsTransferDto){
 
-        List<Long> brandIds = idsTransferDto.getSelectedBrandIds();
+        List<Long> brandIds = idsTransferDto.getSelectedIds();
 
         // 브랜드 삭제
         brandService.deleteBrands(brandIds);
