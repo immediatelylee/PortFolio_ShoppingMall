@@ -89,6 +89,47 @@
 
     }
     $(document).ready(function() {
+        // a 태그 클릭 이벤트 처리
+        function handleDateButtonClick(event) {
+            event.preventDefault();
+            var value = $(this).data('value');
+
+            // select 요소의 option 값 변경
+            $('#searchDateTypeSelect option').val(value);
+
+            // 선택한 a 태그에 'selected' 클래스 추가 및 다른 태그에서 제거
+            $('.btnDate').removeClass('selected');
+            $(this).addClass('selected');
+
+            // 변경된 값 로그 출력 (디버깅용)
+            console.log("Option value changed to: ", value);
+        }
+
+        // 이벤트 바인딩
+        $('.btnDate').on('click', handleDateButtonClick);
+
+        // 페이지 로드 시 선택된 날짜 유형 설정
+        function setSelectedDateType() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var dateType = urlParams.get('date_type');
+
+            if (dateType) {
+                $('#searchDateTypeSelect option').val(dateType);
+
+                $('.btnDate').each(function() {
+                    if ($(this).data('value') === dateType) {
+                        $(this).addClass('selected');
+                    } else {
+                        $(this).removeClass('selected');
+                    }
+                });
+            }
+        }
+
+        // 초기 설정
+        setSelectedDateType();
+    });
+    $(document).ready(function() {
         $('#mainCategory').change(function() {
             let mainCategory = $(this).val();
             $('#subCategory').empty().append('<option value="">- 중분류 선택 -</option>');
@@ -178,16 +219,16 @@
                             <td colspan="3">
                                 <ul class="mForm typeVer" id="eSearchFormGeneral">
                                     <li>
-                                        <select class="fSelect eSearch" name="eField[]">
-                                            <option value="product_name">상품명</option>
-                                            <option value="product_code">상품코드</option>
-                                            <option value="">--------------------</option>
-                                            <option value="Brand">브랜드</option>
+                                        <select class="fSelect eSearch" th:name="itemSearchType" id="itemSearchType">
+                                            <option th:each="S_Type : ${ItemSearchType}"
+                                                    th:value="${S_Type}"
+                                                    th:text="${S_Type.getDescription()}">
+                                            </option>
+
                                         </select>
-                                        <input type="text" class="fText eSearchText" style="width:500px;" value="" name="eValue[]">
-                                        <select data-placeholder="- 분류 선택 -" class="chzn-select-deselect eTrend  chzn-done" style="width:312px; display:none;" name="Trend[]" id="selXRG">
-                                            <option value=""></option>
-                                        </select><div id="selXRG_chzn" class="chzn-container chzn-container-single eSearchSelects" style="width: 312px; display: none;" title=""><a href="javascript:void(0)" class="chzn-single chzn-default" tabindex="-1"><span>- 분류 선택 -</span><div><b></b></div></a><div class="chzn-drop"><div class="chzn-search"><input type="text" autocomplete="off" style="display: none;"><input type="text" autocomplete="off"></div><ul class="chzn-results" style=""></ul></div></div>
+                                        <input type="text" class="fText eSearchText" style="width:500px;" value="" name="searchValue">
+
+
 
                                     </li>
                                 </ul>
@@ -213,43 +254,47 @@
                                     <select class="fSelect category eCategory" id="subSubCategory" >
                                         <option value="">- 소분류 선택 -</option>
                                     </select>
+
+<!--                                    <select class="fSelect category eCategory" id="eCategory1" depth="1" name="categorys[]"> <option value="">- 대분류 선택 -</option> <option value="23">(대분류) 미진열</option> <option value="24">(대분류) Outerwear</option> <option value="25">(대분류) Tops</option> <option value="26">(대분류) Dresses</option> <option value="27">(대분류) Bottoms</option> <option value="28">(대분류) Accessories</option> </select> <select class="fSelect category eCategory" id="eCategory2" depth="2" name="categorys[]"> <option value="">- 중분류 선택 -</option> </select> <select class="fSelect category eCategory" id="eCategory3" depth="3" name="categorys[]"> <option value="">- 소분류 선택 -</option> </select> <select class="fSelect category eCategory" id="eCategory4" depth="4" name="categorys[]"> <option value="">- 상세분류 선택 -</option> </select> <input type="hidden" name="category" id="eHiddenCategory" value="0">                    <span class="gBreak">-->
+
+<!--                        </span>-->
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row">상품등록일</th>
                             <td colspan="3">
-                                <select class="fSelect category" name="date">
-                                    <option value="regist">상품등록일</option>
-                                    <option value="modify">상품최종수정일</option>
+                                <select class="fSelect category" name="searchDateType" id="searchDateTypeSelect">
+                                    <option value="all">상품등록일</option>
                                 </select>
-                                <a href="#none" class="btnDate" period="0"><span>오늘</span></a>
-                                <a href="#none" class="btnDate" period="3"><span>3일</span></a>
-                                <a href="#none" class="btnDate" period="7"><span>7일</span></a>
-                                <a href="#none" class="btnDate" period="30"><span>1개월</span></a>
-                                <a href="#none" class="btnDate" period="90"><span>3개월</span></a>
-                                <a href="#none" class="btnDate" period="365"><span>1년</span></a>
-                                <a href="#none" class="btnDate selected" period="-1"><span>전체</span></a>
-                                <input type="text" id="pr_start_date" name="start_date" class="fText gDate" value="2023-05-02" disabled="disabled">
-                                <a href="javascript:;" id="start_date" class="btnIcon icoCal"><span>달력보기</span></a>
-                                ~
-                                <input type="text" id="pr_end_date" name="end_date" class="fText gDate" value="2024-05-02" disabled="disabled">
-                                <a href="javascript:;" id="end_date" class="btnIcon icoCal"><span>달력보기</span></a>
-                                <input type="hidden" name="date_type" value="-1">
+                                <a href="#none" class="btnDate" data-value="1d"><span>오늘</span></a>
+                                <a href="#none" class="btnDate" data-value="1w"><span>일주일</span></a>
+                                <a href="#none" class="btnDate" data-value="7d"><span>7일</span></a>
+                                <a href="#none" class="btnDate" data-value="1m"><span>1개월</span></a>
+                                <a href="#none" class="btnDate" data-value="6m"><span>6개월</span></a>
+                                <a href="#none" class="btnDate" data-value="1y"><span>1년</span></a>
+                                <a href="#none" class="btnDate selected" data-value="all"><span>전체</span></a>
+
+<!--                                <input type="text" id="pr_start_date" name="start_date" class="fText gDate" value="2023-05-02" disabled="disabled">-->
+<!--                                <a href="javascript:;" id="start_date" class="btnIcon icoCal"><span>달력보기</span></a>-->
+<!--                                ~-->
+<!--                                <input type="text" id="pr_end_date" name="end_date" class="fText gDate" value="2024-05-02" disabled="disabled">-->
+<!--                                <a href="javascript:;" id="end_date" class="btnIcon icoCal"><span>달력보기</span></a>-->
+<!--                                <input type="hidden" name="date_type" value="-1">-->
                             </td>
                         </tr>
                         <tr>
                             <th scope="row">진열상태</th>
                             <td>
-                                <label class="gSingleLabel eSelected"><input type="radio" class="fChk eDisplayStatus" name="display" value="A" checked="&quot;checked&quot;"> 전체</label>
-                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="display" value="T"> 진열함</label>
-                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="display" value="F"> 진열안함</label>
+                                <label class="gSingleLabel eSelected"><input type="radio" class="fChk eDisplayStatus" name="displayStatus" value="A" checked="&quot;checked&quot;"> 전체</label>
+                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="displayStatus" value="T"> 진열함</label>
+                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="displayStatus" value="F"> 진열안함</label>
                             </td>
                             <th scope="row">판매상태</th>
                             <td>
-                                <label class="gSingleLabel eSelected"><input type="radio" class="fChk eDisplayStatus" name="selling" value="A" checked="&quot;checked&quot;"> 전체</label>
-                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="selling" value="T"> 판매함</label>
-                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="selling" value="F"> 판매안함</label>
+                                <label class="gSingleLabel eSelected"><input type="radio" class="fChk eDisplayStatus" name="sellStatus" value="A" checked="&quot;checked&quot;"> 전체</label>
+                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="sellStatus" value="T"> 판매함</label>
+                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="sellStatus" value="F"> 판매안함</label>
                             </td>
                         </tr>
 
@@ -260,10 +305,10 @@
 
 
                 <div class="mButton gCenter">
-                    <a href="#none" class="btnSearch" id="eBtnSearch"><span>검색</span></a>
-                    <a href="#none" class="btnSearch reset" id="eSearchFormInit"><span>초기화</span></a>
+                    <button type="submit"  class="btnSearch" id="eBtnSearch"><span>검색</span></button>
+                    <a href="/admin/item/management" class="btnSearch reset" id="eSearchFormInit"><span>초기화</span></a>
                 </div>
-                <input type="hidden" name="page">
+
             </div>
         </form>
 

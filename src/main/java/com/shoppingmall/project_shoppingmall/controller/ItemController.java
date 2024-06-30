@@ -7,11 +7,14 @@ import com.shoppingmall.project_shoppingmall.service.*;
 import lombok.*;
 import lombok.experimental.*;
 import org.springframework.data.domain.*;
+import org.springframework.data.web.*;
+import org.springframework.http.*;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.*;
+import org.springframework.web.servlet.mvc.support.*;
 
 import javax.persistence.*;
 import javax.validation.*;
@@ -24,11 +27,14 @@ import java.util.stream.*;
 public class ItemController {
     private final ItemService itemService;
     private final BrandService brandService;
+    private final PaginationService paginationService;
 
     @ModelAttribute("ItemCategory")
     public ItemCategory[] itemCategories(){
         return ItemCategory.values();
     }
+
+
 
 
     @PostMapping("/admin/item/multiaction")
@@ -42,31 +48,25 @@ public class ItemController {
         return "redirect:/admin/item/management";
     }
 
-//            String imageUrl = "/uploads/" + file.getOriginalFilename(); // 가정
-//            // 파일 저장 로직은 여기에 구현해야 합니다.
-//            imageUrls.add(imageUrl);
-//        }
-//        return "redirect:/";
-//    }
 
     @GetMapping(value = "/admin/item/management")
-    public String test(Model model){
-        for (ItemCategory category : ItemCategory.values()) {
-            System.out.println((category.getTitle()+ " " + category.name() + " " +category.getDepth() ));
+    public String ItemManagement(@RequestParam(required = false) ItemSearchType itemSearchType,
+                                 @RequestParam(required = false) String searchValue,
+                                 @RequestParam(required = false) String searchDateType,
+                                 @RequestParam(required = false) String sellStatus,
+                                 @RequestParam(required = false) String displayStatus,
+                                 @RequestParam(required = false) String mainCategory,
+                                 @RequestParam(required = false) String subCategory,
+                                 @RequestParam(required = false) String subSubCategory,
+                                 @PageableDefault(page = 0,size = 10 ,sort = "id" ,direction = Sort.Direction.DESC) Pageable pageable,
+                                 Model model){
+//        ItemSearchDto itemSearchDto = new
+//        Page<MainItemDto> searchItems = itemService.getMainItemPage();
+//        Page<Item> searchItems = itemService.searchItems(itemSearchType,searchValue,searchStatus,pageable).map(ItemFormDto::toItem);
+        Page<ItemFormDto> searchItems = itemService.searchItems(itemSearchType,searchValue,searchDateType,sellStatus,displayStatus,mainCategory,subCategory,subSubCategory,pageable);
+        List<Integer> barNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(),searchItems.getTotalPages());
 
-            if (category.getParentItemCategory().isPresent()) {
 
-                if (category.getParentItemCategory().get().equals(ItemCategory.ROOT)) {
-                    System.out.println("parent ROOT");
-                    System.out.println("================================");
-
-                    for (ItemCategory childcate : category.getChildCategories()) {
-                        System.out.println("==child==");
-                        System.out.println(childcate.getTitle());
-                    }
-                } else  {
-                    continue;
-                }
         // 카운트 데이터 조회
         Long totalItemCount = itemService.getTotalItemCount();
         Long onSaleItemCount = itemService.getItemsOnSaleCount();
@@ -74,11 +74,17 @@ public class ItemController {
         Long displayedItemCount = itemService.getItemsDisplayedCount();
         Long notDisplayedItemCount = itemService.getItemsNotDisplayedCount();
 
+
+        model.addAttribute("ItemSearchType",itemSearchType.values());
+        model.addAttribute("paginationBarNumbers", barNumbers);
+        model.addAttribute("searchItems",searchItems);
         model.addAttribute("totalItemCount", totalItemCount);
         model.addAttribute("onSaleItemCount", onSaleItemCount);
         model.addAttribute("soldOutItemCount", soldOutItemCount);
         model.addAttribute("displayedItemCount", displayedItemCount);
         model.addAttribute("notDisplayedItemCount", notDisplayedItemCount);
+        model.addAttribute("IdsTransferDto",new IdsTransferDto());
+
         model.addAttribute("categories", Arrays.stream(ItemCategory.values())
                 .filter(category -> category.getParentItemCategory().isPresent() &&
                         category.getParentItemCategory().get() == ItemCategory.ROOT)
@@ -94,7 +100,7 @@ public class ItemController {
     }
 
     @GetMapping(value = "/admin/item/itemadd")
-    public String test1(Model model){
+    public String itemAdd(Model model){
         List<ItemCategory> depth1 = itemService.getCategoryBydepth(1L);
         List<ItemCategory> depth2 = itemService.getCategoryBydepth(2L);
         List<ItemCategory> depth3 = itemService.getCategoryBydepth(3L);
@@ -108,6 +114,9 @@ public class ItemController {
         model.addAttribute("itemFormDto", new ItemFormDto());
 
         model.addAttribute("brands",brands);
+        System.out.println(depth1);
+        System.out.println(depth2);
+        System.out.println(depth3);
 
         return "item/itemAdd";
     }
@@ -193,18 +202,18 @@ public class ItemController {
         return "redirect:/";
     }
 
-    @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
-    public String itemManage(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
-
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3);
-        Page<Item> items = itemService.getAdminItemPage(itemSearchDto, pageable);
-
-        model.addAttribute("items", items);
-        model.addAttribute("itemSearchDto", itemSearchDto);
-        model.addAttribute("maxPage", 5);
-
-        return "item/itemMng";
-    }
+//    @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
+//    public String itemManage(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
+//
+//        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3);
+//        Page<Item> items = itemService.getAdminItemPage(itemSearchDto, pageable);
+//
+//        model.addAttribute("items", items);
+//        model.addAttribute("itemSearchDto", itemSearchDto);
+//        model.addAttribute("maxPage", 5);
+//
+//        return "item/itemMng";
+//    }
 
 //    @GetMapping(value = "/item/{itemId}")
 //    public String itemDtl(Model model, @PathVariable("itemId") Long itemId){

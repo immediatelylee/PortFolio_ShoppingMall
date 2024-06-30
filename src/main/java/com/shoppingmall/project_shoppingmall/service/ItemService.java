@@ -76,7 +76,7 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ItemFormDto> searchItems(ItemSearchType itemSearchType,String searchValue,String searchDateType ,String sellStatus ,String displayStatus,Pageable pageable) {
+    public Page<ItemFormDto> searchItems(ItemSearchType itemSearchType,String searchValue,String searchDateType ,String sellStatus ,String displayStatus,String mainCategory,String subCategory,String subSubCategory,Pageable pageable) {
         Page<Item> items;
         if (searchValue == null || searchValue.isEmpty()) {
             if ("SELL".equals(sellStatus)) {
@@ -96,18 +96,28 @@ public class ItemService {
             }
 
             // Item 객체 리스트를 ItemFormDto 객체 리스트로 변환
-            List<ItemFormDto> itemFormDtos = items.stream()
-                    .map(item -> ItemFormDto.of(item))
-                    .collect(Collectors.toList());
-            // 각 ItemFormDto에 대해 ThumbnailUrl 설정
-            itemFormDtos.forEach(itemFormDto -> {
-                String thumbnailUrl = itemThumbnailRepository.findThumbnailUrlByItemId(itemFormDto.getId());
-                itemFormDto.setThumbnailImgUrl(thumbnailUrl);
+//            List<ItemFormDto> itemFormDtos = items.stream()
+//                    .map(item -> ItemFormDto.of(item))
+//                    .collect(Collectors.toList());
+//            // 각 ItemFormDto에 대해 ThumbnailUrl 설정
+//            itemFormDtos.forEach(itemFormDto -> {
+//                String thumbnailUrl = itemThumbnailRepository.findThumbnailUrlByItemId(itemFormDto.getId());
+//                itemFormDto.setThumbnailImgUrl(thumbnailUrl);
+//            });
+//            return new PageImpl<>(itemFormDtos, pageable, items.getTotalElements());
+
+            // Page<Item> 객체를 Page<ItemFormDto> 객체로 변환하면서 썸네일 URL 설정
+            Page<ItemFormDto> itemFormDtoPage = items.map(item -> {
+                ItemFormDto dto = ItemFormDto.of(item);
+                String thumbnailUrl = itemThumbnailRepository.findThumbnailUrlByItemId(item.getId());
+                dto.setThumbnailImgUrl(thumbnailUrl);
+                return dto;
             });
-            return new PageImpl<>(itemFormDtos, pageable, items.getTotalElements());
+
+            return itemFormDtoPage;
+
+
         }
-
-
         else{
             ItemSearchDto itemSearchDto = new ItemSearchDto();
             itemSearchDto.setSearchBy((itemSearchType));
@@ -280,15 +290,15 @@ public class ItemService {
 
 
 
-    @Transactional(readOnly = true)
-    public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
-        return itemRepository.getAdminItemPage(itemSearchDto, pageable);
-    }
+//    @Transactional(readOnly = true)
+//    public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
+//        return itemRepository.getAdminItemPage(itemSearchDto, pageable);
+//    }
 
-    @Transactional(readOnly = true)
-    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
-        return itemRepository.getMainItemPage(itemSearchDto, pageable);
-    }
+//    @Transactional(readOnly = true)
+//    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
+//        return itemRepository.getMainItemPage(itemSearchDto, pageable);
+//    }
     @Transactional(readOnly = true)
     public List<ItemCategory> getCategoryBydepth(Long depth){
             List<ItemCategory> categoriesWithDepth = new ArrayList<>();

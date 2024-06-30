@@ -1,9 +1,11 @@
 package com.shoppingmall.project_shoppingmall.dto;
 
+import com.querydsl.core.annotations.*;
 import com.shoppingmall.project_shoppingmall.constant.*;
 import com.shoppingmall.project_shoppingmall.domain.*;
 import lombok.*;
 import org.modelmapper.ModelMapper;
+import org.springframework.ui.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -70,4 +72,21 @@ public class ItemFormDto {
 
     }
 
+    // 기본 생성자 추가
+    public ItemFormDto() {}
+
+    @QueryProjection
+    public ItemFormDto(Long id,String itemCode,String itemNm, ItemDisplayStatus itemDisplayStatus, ItemSellStatus itemSellStatus, String thumbnailImgUrl, Integer price
+                        ,String mainCategory,String subCategory,String subSubCategory) {
+        this.id = id;
+        this.itemCode =itemCode;
+        this.itemNm = itemNm;
+        this.itemDisplayStatus = itemDisplayStatus;
+        this.itemSellStatus = itemSellStatus;
+        this.thumbnailImgUrl = thumbnailImgUrl;
+        this.price = price;
+        this.mainCategory = mainCategory;
+        this.subCategory = subCategory;
+        this.subSubCategory = subSubCategory;
+    }
 }
