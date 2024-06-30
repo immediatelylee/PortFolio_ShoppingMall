@@ -80,16 +80,21 @@ public class ItemService {
         Page<Item> items;
         if (searchValue == null || searchValue.isEmpty()) {
             if ("SELL".equals(sellStatus)) {
-                items = itemRepository.findBySellStatus(ItemSellStatus.SELL,pageable);
+                items = itemRepository.findByitemSellStatus(ItemSellStatus.SELL,pageable);
+//                items = itemRepository.findBySellStatus(ItemSellStatus.SELL);
             } else if ("SOLD_OUT".equals(sellStatus)) {
-                items = itemRepository.findBySellStatus(ItemSellStatus.SOLD_OUT,pageable);
+                items = itemRepository.findByitemSellStatus(ItemSellStatus.SOLD_OUT,pageable);
+//                items = itemRepository.findBySellStatus(ItemSellStatus.SOLD_OUT);
             } else if ("DISPLAY".equals(displayStatus)) {
-                items = itemRepository.findByDisplayStatus(ItemDisplayStatus.DISPLAY,pageable);
+                items = itemRepository.findByitemDisplayStatus(ItemDisplayStatus.DISPLAY,pageable);
+//                items = itemRepository.findByDisplayStatus(ItemDisplayStatus.DISPLAY);
             } else if ("NOT_DISPLAY".equals(displayStatus)) {
-                items = itemRepository.findByDisplayStatus(ItemDisplayStatus.NOT_DISPLAY,pageable);
+                items = itemRepository.findByitemDisplayStatus(ItemDisplayStatus.NOT_DISPLAY,pageable);
+//                items = itemRepository.findByDisplayStatus(ItemDisplayStatus.NOT_DISPLAY);
             } else {
                 items = itemRepository.findAll(pageable);
             }
+
             // Item 객체 리스트를 ItemFormDto 객체 리스트로 변환
             List<ItemFormDto> itemFormDtos = items.stream()
                     .map(item -> ItemFormDto.of(item))

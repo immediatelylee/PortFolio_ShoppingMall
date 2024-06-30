@@ -67,8 +67,18 @@ public class ItemController {
                 } else  {
                     continue;
                 }
-            }
-        }
+        // 카운트 데이터 조회
+        Long totalItemCount = itemService.getTotalItemCount();
+        Long onSaleItemCount = itemService.getItemsOnSaleCount();
+        Long soldOutItemCount = itemService.getItemsSoldOutCount();
+        Long displayedItemCount = itemService.getItemsDisplayedCount();
+        Long notDisplayedItemCount = itemService.getItemsNotDisplayedCount();
+
+        model.addAttribute("totalItemCount", totalItemCount);
+        model.addAttribute("onSaleItemCount", onSaleItemCount);
+        model.addAttribute("soldOutItemCount", soldOutItemCount);
+        model.addAttribute("displayedItemCount", displayedItemCount);
+        model.addAttribute("notDisplayedItemCount", notDisplayedItemCount);
 
         return "item/itemManagement";
     }
