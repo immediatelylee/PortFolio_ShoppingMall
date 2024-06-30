@@ -206,7 +206,7 @@
                     <th:block th:each="brand : ${searchBrands.content}" class="">
                     <tr>
                         <td>
-                            <input type="checkbox" name="selectedBrandIds" th:value="${brand.id}" class="rowChk" >
+                            <input type="checkbox" name="selectedIds" th:value="${brand.id}" class="rowChk" >
                         </td>
                         <td><th:block th:text="${brand.id}">1</th:block></td>
                         <td class="txtCode"><a th:href="@{'/admin/brand/management/' + ${brand.id}}" class="txtLink" th:text="${brand.brandCode}" >B0000000</a></td>
