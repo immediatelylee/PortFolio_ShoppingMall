@@ -24,6 +24,7 @@ public class ItemService {
     private final ItemImgService itemImgService;
     private final ItemImgRepository itemImgRepository;
     private final ItemDetailImgRepository itemDetailImgRepository;
+    private final ItemThumbnailRepository itemThumbnailRepository;
 
 //    public Map<String, Long> getProductCounts() {
 //        Map<String, Long> counts = new HashMap<>();
@@ -49,12 +50,17 @@ public class ItemService {
             ItemImg itemImg = new ItemImg();
             itemImg.setItem(item);
 
-            if(i == 0)
+            if(i == 0) {
                 itemImg.setRepimgYn("Y");
-            else
+                ItemThumbnail itemThumbnail = new ItemThumbnail();
+                itemThumbnail.setItem(item);
+                itemImgService.saveItemThumbnail(itemThumbnail, itemImgFileList.get(i));
+                itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
+            }else {
                 itemImg.setRepimgYn("N");
 
-            itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
+                itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
+            }
         }
         // 상세이미지 분할
         for(int i=0;i<itemDetailImgFileList.size();i++){
