@@ -42,9 +42,9 @@ public class Item extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ItemDisplayStatus itemDisplayStatus; // 상품 진열 상태
 
-    private String category;
-    private String subcategory1;
-    private String subcategory2;
+    private String mainCategory;
+    private String subCategory;
+    private String subSubCategory;
 
     //    추가
     @ManyToOne

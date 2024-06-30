@@ -79,6 +79,16 @@ public class ItemController {
         model.addAttribute("soldOutItemCount", soldOutItemCount);
         model.addAttribute("displayedItemCount", displayedItemCount);
         model.addAttribute("notDisplayedItemCount", notDisplayedItemCount);
+        model.addAttribute("categories", Arrays.stream(ItemCategory.values())
+                .filter(category -> category.getParentItemCategory().isPresent() &&
+                        category.getParentItemCategory().get() == ItemCategory.ROOT)
+                .collect(Collectors.toList()));
+        System.out.println("===============================================");
+        System.out.println(Arrays.stream(ItemCategory.values())
+                .filter(category -> category.getParentItemCategory().isPresent() &&
+                        category.getParentItemCategory().get() == ItemCategory.ROOT)
+                .collect(Collectors.toList()));
+
 
         return "item/itemManagement";
     }

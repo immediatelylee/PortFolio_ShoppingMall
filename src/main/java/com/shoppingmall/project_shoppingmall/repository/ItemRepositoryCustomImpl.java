@@ -9,6 +9,8 @@ import com.shoppingmall.project_shoppingmall.dto.*;
 import org.springframework.data.domain.*;
 import org.thymeleaf.util.*;
 
+
+
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -67,6 +69,27 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .selectFrom(item)
                 .where(item.itemDisplayStatus.eq(displayStatus))
                 .fetch();
+    }
+
+    public static BooleanExpression mainCategoryEq(String mainCategory) {
+        if (!org.springframework.util.StringUtils.hasText(mainCategory)) {
+            return null;
+        }
+        return QItem.item.mainCategory.eq(mainCategory);
+    }
+
+    public static BooleanExpression subCategoryEq(String subCategory) {
+        if (!org.springframework.util.StringUtils.hasText(subCategory)) {
+            return null;
+        }
+        return QItem.item.subCategory.eq(subCategory);
+    }
+
+    public static BooleanExpression subSubCategoryEq(String subSubCategory) {
+        if (!org.springframework.util.StringUtils.hasText(subSubCategory)) {
+            return null;
+        }
+        return QItem.item.subSubCategory.eq(subSubCategory);
     }
 
 

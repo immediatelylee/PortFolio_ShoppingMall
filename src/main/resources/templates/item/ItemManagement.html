@@ -88,6 +88,42 @@
         $('form').submit();
 
     }
+    $(document).ready(function() {
+        $('#mainCategory').change(function() {
+            let mainCategory = $(this).val();
+            $('#subCategory').empty().append('<option value="">- 중분류 선택 -</option>');
+            $('#subSubCategory').empty().append('<option value="">- 소분류 선택 -</option>');
+            if (mainCategory) {
+                $.ajax({
+                    url: '/api/categories/children',
+                    data: { parentTitle: mainCategory },
+                    success: function(data) {
+                        console.log(data);  // 받은 데이터 형식을 확인하기 위한 로그 출력
+                        data.forEach(function(category) {
+                            $('#subCategory').append('<option value="' + category + '">' + category + '</option>');
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#subCategory').change(function() {
+            let subCategory = $(this).val();
+            $('#subSubCategory').empty().append('<option value="">선택</option>');
+            if (subCategory) {
+                $.ajax({
+                    url: '/api/categories/children',
+                    data: { parentTitle: subCategory },
+                    success: function(data) {
+                        console.log('SubSubcategories:', data);  // 데이터 형식을 확인하기 위한 로그 출력
+                        data.forEach(function(category) {
+                            $('#subSubCategory').append('<option value="' + category + '">' + category + '</option>');
+                        });
+                    }
+                });
+            }
+        });
+    });
     </script>
 </th:block>
 <div layout:fragment="content">
@@ -162,10 +198,21 @@
                             <th scope="row">상품분류</th>
                             <td colspan="3">
                                 <div class="gSingle">
-                                    <select class="fSelect category eCategory" id="eCategory1" depth="1" name="categorys[]"> <option value="">- 대분류 선택 -</option> <option value="23">(대분류) 미진열</option> <option value="24">(대분류) Outerwear</option> <option value="25">(대분류) Tops</option> <option value="26">(대분류) Dresses</option> <option value="27">(대분류) Bottoms</option> <option value="28">(대분류) Accessories</option> </select> <select class="fSelect category eCategory" id="eCategory2" depth="2" name="categorys[]"> <option value="">- 중분류 선택 -</option> </select> <select class="fSelect category eCategory" id="eCategory3" depth="3" name="categorys[]"> <option value="">- 소분류 선택 -</option> </select> <select class="fSelect category eCategory" id="eCategory4" depth="4" name="categorys[]"> <option value="">- 상세분류 선택 -</option> </select> <input type="hidden" name="category" id="eHiddenCategory" value="0">                    <span class="gBreak">
-                            <label><input type="checkbox" class="fChk category_sort" name="sub_cate" value="T"> 하위분류 포함검색</label>
-                            <label><input type="checkbox" class="fChk category_sort" name="notincategory" value="T"> 분류 미등록상품 검색</label>
-                        </span>
+
+                                    <select class="fSelect category eCategory" id="mainCategory" name="mainCategory">
+                                        <option value="">- 대분류 선택 -</option>
+                                        <option th:each="category : ${categories}" th:value="${category.title}" th:text="${category.title}"></option>
+                                    </select>
+
+
+                                    <select class="fSelect category eCategory" id="subCategory" name="subCategory">
+                                        <option value="">- 중분류 선택 -</option>
+                                    </select>
+
+
+                                    <select class="fSelect category eCategory" id="subSubCategory" >
+                                        <option value="">- 소분류 선택 -</option>
+                                    </select>
                                 </div>
                             </td>
                         </tr>

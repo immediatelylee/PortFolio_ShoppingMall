@@ -114,6 +114,9 @@ public class ItemService {
 
             itemSearchDto.setSearchQuery(searchValue);
             itemSearchDto.setSearchDateType(searchDateType);
+            itemSearchDto.setMainCategory(mainCategory);
+            itemSearchDto.setSubCategory(subCategory);
+            itemSearchDto.setSubSubCategory(subSubCategory);
 
 
             if ("A".equals(sellStatus)){
