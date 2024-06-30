@@ -6,10 +6,12 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.context.*;
 import org.springframework.data.domain.*;
+import org.springframework.test.context.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@TestPropertySource(locations="classpath:application-test.properties")
 public class BrandRepositoryTest {
 
     @Autowired
