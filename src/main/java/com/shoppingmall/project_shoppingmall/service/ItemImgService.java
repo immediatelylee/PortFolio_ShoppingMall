@@ -20,6 +20,7 @@ public class ItemImgService {
 
     private final ItemImgRepository itemImgRepository;
     private final ItemDetailImgRepository itemDetailImgRepository;
+    private final ItemThumbnailRepository itemThumbnailRepository;
 
     private final FileService fileService;
 
@@ -39,6 +40,23 @@ public class ItemImgService {
         itemImg.updateItemImg(oriImgName, imgName, imgUrl);
         itemImgRepository.save(itemImg);
     }
+    public void saveItemThumbnail(ItemThumbnail itemThumbnail,MultipartFile itemImgFile) throws Exception {
+        String oriImgName = itemImgFile.getOriginalFilename();
+        String imgName = "";
+        String imgUrl = "";
+
+        //파일 업로드
+        if (!StringUtils.isEmpty(oriImgName)) {
+            imgName = fileService.createThumbnail(itemImgLocation, oriImgName,
+                    itemImgFile.getBytes());
+            imgUrl = "/images/item/" + imgName;
+        }
+        itemThumbnail.updateItemImg(oriImgName,imgName,imgUrl);
+        itemThumbnailRepository.save(itemThumbnail);
+    }
+
+
+
     public void saveItemDetailImg(ItemDetailImg itemDetailImg , MultipartFile itemDetailFile) throws Exception {
         String oriImgName = itemDetailFile.getOriginalFilename();
         String imgName = "";

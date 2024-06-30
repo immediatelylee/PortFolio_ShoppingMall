@@ -7,4 +7,5 @@ import java.util.*;
 
 public interface ItemDetailImgRepository extends JpaRepository<ItemDetailImg, Long> {
     List<ItemDetailImg> findByItemIdOrderByIdAsc(Long itemId);
+    List<ItemDetailImg> findByItemId(Long itemId);
 }

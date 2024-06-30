@@ -1,5 +1,7 @@
 package com.shoppingmall.project_shoppingmall.constant;
 
+import com.fasterxml.jackson.annotation.*;
+
 import java.util.*;
 import java.util.stream.*;
 
@@ -55,7 +57,9 @@ public enum ItemCategory {
     // 카테고리 이름
     private final String title;
 
+
     // 부모 카테고리
+    @JsonIgnore
     private final ItemCategory parentItemCategory;
 
     // 자식카테고리
