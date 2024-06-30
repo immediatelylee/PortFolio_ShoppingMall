@@ -18,7 +18,10 @@ public class Item extends BaseEntity {
     @Id
     @Column(name="item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;       //상품 코드
+    private Long id;       //상품 id
+
+    @Column(name = "item_code")
+    private String itemCode;
 
     @Column(nullable = false, length = 50)
     private String itemNm; //상품명
