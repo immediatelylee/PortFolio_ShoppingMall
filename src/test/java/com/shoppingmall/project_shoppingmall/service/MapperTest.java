@@ -77,7 +77,7 @@ public class MapperTest {
         List<MultipartFile> multipartFileList = createMultipartFiles();
         List<MultipartFile> multipartDetailFileList = createMultipartFiles2();
         itemFormDto.setBrandId(1L);
-        itemFormDto.setCategory("지갑");
+        itemFormDto.setMainCategory("지갑");
 
 
         Item item = modelMapper.map(itemFormDto,Item.class);
