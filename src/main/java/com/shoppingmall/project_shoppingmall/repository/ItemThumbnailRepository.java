@@ -12,6 +12,7 @@ public interface ItemThumbnailRepository extends JpaRepository<ItemThumbnail, Lo
     @Query("SELECT it.imgUrl FROM ItemThumbnail it WHERE it.item.id = :itemId")
     String findThumbnailUrlByItemId(@Param("itemId") Long itemId);
 
+    List<ItemThumbnail> findByItemIdOrderByIdAsc(Long itemId);
 
 //    String findImgurlByItemId(Long itemId);
 
