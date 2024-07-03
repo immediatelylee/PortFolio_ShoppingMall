@@ -26,7 +26,7 @@ public class ItemThumbnail {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    public void updateItemImg(String oriImgName, String imgName, String imgUrl){
+    public void updateItemThumbnail(String oriImgName, String imgName, String imgUrl){
         this.oriImgName = oriImgName;
         this.imgName = imgName;
         this.imgUrl = imgUrl;

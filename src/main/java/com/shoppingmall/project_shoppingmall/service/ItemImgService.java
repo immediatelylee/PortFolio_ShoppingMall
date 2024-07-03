@@ -51,7 +51,7 @@ public class ItemImgService {
                     itemImgFile.getBytes());
             imgUrl = "/images/item/" + imgName;
         }
-        itemThumbnail.updateItemImg(oriImgName,imgName,imgUrl);
+        itemThumbnail.updateItemThumbnail(oriImgName,imgName,imgUrl);
         itemThumbnailRepository.save(itemThumbnail);
     }
 
@@ -86,11 +86,57 @@ public class ItemImgService {
                         savedItemImg.getImgName());
             }
 
+
+
             String oriImgName = itemImgFile.getOriginalFilename();
             String imgName = fileService.uploadFile(itemImgLocation, oriImgName, itemImgFile.getBytes());
             String imgUrl = "/images/item/" + imgName;
             savedItemImg.updateItemImg(oriImgName, imgName, imgUrl);
+
+            itemImgRepository.save(savedItemImg);// 변경사항 저장
         }
 
     }
+
+    public void updateItemDetailImg(Long itemDetailImgId, MultipartFile itemDetailImgFile) throws Exception {
+        if (!itemDetailImgFile.isEmpty()) {
+            ItemDetailImg savedItemDetailImg = itemDetailImgRepository.findById(itemDetailImgId)
+                    .orElseThrow(EntityNotFoundException::new);
+
+            //기존 이미지 파일 삭제
+            if (!StringUtils.isEmpty(savedItemDetailImg.getImgName())) {
+                fileService.deleteFile(itemImgLocation + "/" +
+                        savedItemDetailImg.getImgName());
+            }
+
+            String oriImgName = itemDetailImgFile.getOriginalFilename();
+            String imgName = fileService.uploadFile(itemImgLocation, oriImgName, itemDetailImgFile.getBytes());
+            String imgUrl = "/images/item/" + imgName;
+            savedItemDetailImg.updateItemDetailImg(oriImgName, imgName, imgUrl);
+
+            itemDetailImgRepository.save(savedItemDetailImg);
+        }
+
+    }
+    public void updateItemThumbnail(Long itemThumbnailId, MultipartFile itemThumbnailFile) throws Exception {
+        if (!itemThumbnailFile.isEmpty()) {
+            ItemThumbnail savedItemThumbnail = itemThumbnailRepository.findById(itemThumbnailId)
+                    .orElseThrow(EntityNotFoundException::new);
+
+            //기존 이미지 파일 삭제
+            if (!StringUtils.isEmpty(savedItemThumbnail.getImgName())) {
+                fileService.deleteFile(itemImgLocation + "/" +
+                        savedItemThumbnail.getImgName());
+            }
+
+            String oriImgName = itemThumbnailFile.getOriginalFilename();
+            String imgName = fileService.createThumbnail(itemImgLocation, oriImgName, itemThumbnailFile.getBytes());
+            String imgUrl = "/images/item/" + imgName;
+            savedItemThumbnail.updateItemThumbnail(oriImgName, imgName, imgUrl);
+
+            itemThumbnailRepository.save(savedItemThumbnail);
+        }
+
+    }
+
 }

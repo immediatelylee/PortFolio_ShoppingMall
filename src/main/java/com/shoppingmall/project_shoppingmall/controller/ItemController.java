@@ -161,37 +161,60 @@ public class ItemController {
         try {
             ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
 
+            List<ItemCategory> depth1 = itemService.getCategoryBydepth(1L);
+            List<ItemCategory> depth2 = itemService.getCategoryBydepth(2L);
+            List<ItemCategory> depth3 = itemService.getCategoryBydepth(3L);
+
+            List<Brand> brands = brandService.findAll();
+
             model.addAttribute("itemFormDto", itemFormDto);
+            model.addAttribute("depth1",depth1);
+            model.addAttribute("depth2",depth2);
+            model.addAttribute("depth3",depth3);
+
+
+            model.addAttribute("brands",brands);
+            System.out.println(depth1);
 
         } catch(EntityNotFoundException e){
             model.addAttribute("errorMessage", "존재하지 않는 상품 입니다.");
 
-            return "item/itemForm";
+            return "item/itemManagement";
         }
 
-        return "item/itemForm";
+        return "item/itemAdd";
     }
 
-    @PostMapping(value = "/admin/item/{itemId}")
-    public String itemUpdate(@Valid ItemFormDto itemFormDto, BindingResult bindingResult,
-                             @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList, Model model){
+    @PostMapping(value = "/admin/item/management/{itemId}")
+    public String itemUpdate(@PathVariable("itemId") Long itemId, @Valid ItemFormDto itemFormDto, BindingResult bindingResult,
+                             @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,
+                             @RequestParam("itemDetailImgFile") List<MultipartFile> itemDetailImgFileList,
+                             Model model){
         if(bindingResult.hasErrors()){
-            return "item/itemForm";
+            return "item/itemManagement";
         }
 
         if(itemImgFileList.get(0).isEmpty() && itemFormDto.getId() == null){
             model.addAttribute("errorMessage", "첫번째 상품 이미지는 필수 입력 값 입니다.");
-            return "item/itemForm";
+            return "item/itemManagement";
         }
 
         try {
-            itemService.updateItem(itemFormDto, itemImgFileList);
+            // URL 패스의 itemId를 itemFormDto에 설정
+            itemFormDto.setId(itemId);
+            itemFormDto.setItemCode(itemService.findItemCodeById(itemId));
+
+            // itemImgFileList의 첫 번째 이미지를 썸네일로 사용
+            List<MultipartFile> itemThumbnailFileList = new ArrayList<>();
+            itemThumbnailFileList.add(itemImgFileList.get(0));
+
+            itemService.updateItem(itemFormDto, itemImgFileList,itemDetailImgFileList);
         } catch (Exception e){
             model.addAttribute("errorMessage", "상품 수정 중 에러가 발생하였습니다.");
-            return "item/itemForm";
+            return "item/itemManagement";
         }
 
-        return "redirect:/";
+        return "redirect:/admin/item/management";
     }
 
 //    @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
