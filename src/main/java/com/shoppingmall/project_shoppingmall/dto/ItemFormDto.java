@@ -45,9 +45,7 @@ public class ItemFormDto {
 
     private List<ItemDetailImgDto> itemDetailImgDtoList = new ArrayList<>();
 
-    private List<Long> itemImgIds = new ArrayList<>();
-
-    private List<Long> itemDetailImgIds = new ArrayList<>();
+    private List<ItemThumbnailDto> itemThumbnailDtoList = new ArrayList<>();
 
     private Long brandId;
 

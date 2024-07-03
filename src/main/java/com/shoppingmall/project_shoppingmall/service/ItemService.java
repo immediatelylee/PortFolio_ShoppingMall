@@ -26,17 +26,8 @@ public class ItemService {
     private final ItemDetailImgRepository itemDetailImgRepository;
     private final ItemThumbnailRepository itemThumbnailRepository;
 
-//    public Map<String, Long> getProductCounts() {
-//        Map<String, Long> counts = new HashMap<>();
-//        counts.put("all", itemRepository.count());
-//        counts.put("sellingTrue", itemRepository.countByStatus("T"));
-//        counts.put("sellingFalse", itemRepository.countByStatus("F"));
-//        counts.put("displayTrue", itemRepository.countByDisplayStatus("T"));
-//        counts.put("displayFalse", itemRepository.countByDisplayStatus("F"));
-//        return counts;
-//    }
 
-
+    public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList, List<MultipartFile> itemDetailImgFileList) throws Exception {
     public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList,List<MultipartFile> itemDetailImgFileList) throws Exception{
 
         //상품 등록

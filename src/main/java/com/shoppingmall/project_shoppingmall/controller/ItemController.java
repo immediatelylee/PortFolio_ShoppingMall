@@ -60,9 +60,7 @@ public class ItemController {
                                  @RequestParam(required = false) String subSubCategory,
                                  @PageableDefault(page = 0,size = 10 ,sort = "id" ,direction = Sort.Direction.DESC) Pageable pageable,
                                  Model model){
-//        ItemSearchDto itemSearchDto = new
-//        Page<MainItemDto> searchItems = itemService.getMainItemPage();
-//        Page<Item> searchItems = itemService.searchItems(itemSearchType,searchValue,searchStatus,pageable).map(ItemFormDto::toItem);
+
         Page<ItemFormDto> searchItems = itemService.searchItems(itemSearchType,searchValue,searchDateType,sellStatus,displayStatus,mainCategory,subCategory,subSubCategory,pageable);
         List<Integer> barNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(),searchItems.getTotalPages());
 
@@ -122,12 +120,6 @@ public class ItemController {
     }
 
 
-    @GetMapping(value = "/admin/item/new")
-    public String itemForm(Model model){
-        model.addAttribute("itemFormDto", new ItemFormDto());
-        model.addAttribute("brandFormDto",new BrandFormDto());
-        return "item/itemManagement";
-    }
 
     @PostMapping(value = "/admin/item/new")
     public String itemNew(@Valid ItemFormDto itemFormDto, BindingResult bindingResult,

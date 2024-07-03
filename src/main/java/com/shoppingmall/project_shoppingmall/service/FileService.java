@@ -47,22 +47,5 @@ public class FileService {
         return thumbnailFilename;
     }
 
-//    public void processImageFiles(String uploadPath, List<String> originalFileNames, List<byte[]> fileDataList) throws Exception {
-//        if (originalFileNames.size() != fileDataList.size()) {
-//            throw new IllegalArgumentException("파일 이름과 데이터 리스트의 크기가 일치하지 않습니다.");
-//        }
-//
-//        for (int i = 0; i < originalFileNames.size(); i++) {
-//            String originalFileName = originalFileNames.get(i);
-//            byte[] fileData = fileDataList.get(i);
-//
-//            if (i == 0) { // 첫 번째 이미지를 대표 이미지로 설정
-//                String savedFileName = uploadFile(uploadPath, originalFileName, fileData);
-//                createThumbnail(uploadPath, savedFileName, fileData);
-//            } else {
-//                uploadFile(uploadPath, originalFileName, fileData);
-//            }
-//        }
-//    }
 
 }
