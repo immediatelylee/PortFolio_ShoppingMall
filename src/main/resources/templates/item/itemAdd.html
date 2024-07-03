@@ -254,6 +254,33 @@
         }
     }
 
+        $(document).ready(function() {
+            // 페이지 로드 시, hidden input의 값을 가져와서 depth 요소에 설정
+            var mainCategory = $("#mainCategory").val();
+            var subCategory = $("#subCategory").val();
+            var subSubCategory = $("#subSubCategory").val();
+
+            var hasValues = false;
+
+            if (mainCategory) {
+                $(".txtLight.txtLess.depth1").text(mainCategory + " >");
+                hasValues = true;
+            }
+            if (subCategory) {
+                $(".txtLight.txtLess.depth2").text(subCategory + " >");
+                hasValues = true;
+            }
+            if (subSubCategory) {
+                $(".txtLight.txtLess.depth3").text(subSubCategory);
+                hasValues = true;
+            }
+
+            // hidden input에 값이 있으면 display:none 속성을 제거
+            if (hasValues) {
+                $("._product_category_checked").removeAttr("style");
+            }
+        });
+
     </script>
 </th:block>
 <div layout:fragment="content">
@@ -585,7 +612,7 @@
                                                 <span class="txtLight txtLess depth3" ></span>
 
                                     <a href="#none" onclick="update_depth()" class="btnNormal _add_selected_category"><span> 등록</span></a>
-<!--                                                <em class="icoDel"></em>-->
+
                                 </span>
                                             <input type="hidden" name="checked_category">
                                         </p>
