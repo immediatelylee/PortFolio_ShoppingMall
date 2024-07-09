@@ -242,5 +242,12 @@ public class ItemController {
         model.addAttribute("item", itemFormDto);
         return "item/new_itemDtl";
     }
+
+    @GetMapping(value = "/admin/item/test/{itemId}")
+    public String itemDetail(Model model,@PathVariable("itemId") Long itemId){
+        ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
+        model.addAttribute("item", itemFormDto);
+        return "item/itemDetail";
+    }
 }
 
