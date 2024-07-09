@@ -47,6 +47,9 @@ public class ItemFormDto {
 
     private List<ItemThumbnailDto> itemThumbnailDtoList = new ArrayList<>();
 
+    private String color;
+    private Integer size;
+
     private Long brandId;
 
     // 썸네일 이미지 URL

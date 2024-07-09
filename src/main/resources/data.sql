@@ -8,25 +8,25 @@ VALUES(1,null,null,'admin@example.com','admin@example.com','B0000001','brand1',t
 INSERT INTO brand (brand_id, reg_time, update_time, created_by, modified_by, brand_code, brand_nm, brand_status)
 VALUES(2,null,null,'admin@example.com','admin@example.com','B0000002','brand2',true);
 INSERT  INTO  item (item_id, reg_time, update_time, created_by, modified_by, main_category,item_code , item_detail, item_display_status, item_nm, item_sell_status, price, stock_number,sub_category,sub_sub_category, brand_id)
-VALUES(1,'2024-06-15 16:35:15.352965','2024-06-15 16:35:15.352965','admin@example.com','admin@example.com','패션의류/잡화','I0000001' ,1,'NOT_DISPLAY',1,'SOLD_OUT',1,1,'남성' ,'티셔츠' ,1)
-,(2,'2024-06-15 16:36:11.467419','2024-06-15 16:36:11.467419','admin@example.com','admin@example.com','패션의류/잡화','I0000002',2,'NOT_DISPLAY',2,'SOLD_OUT',1,1,'남성','스웻셔츠/후드' ,1)
-,(3,'2024-06-28 13:33:41.084926','2024-06-28 13:33:41.084926','admin@example.com','admin@example.com','패션의류/잡화','I0000003','red','NOT_DISPLAY',2,'SOLD_OUT',43000,100,'남성','티셔츠' ,1);
+VALUES(1,'2024-06-15 16:35:15.352965','2024-06-15 16:35:15.352965','admin@example.com','admin@example.com','패션의류/잡화','I0000001' ,1,'NOT_DISPLAY','Enfant_CLASSIC_LOGO_KNIT_PULLOVER','SOLD_OUT',1,1,'남성' ,'티셔츠' ,1)
+,(2,'2024-06-15 16:36:11.467419','2024-06-15 16:36:11.467419','admin@example.com','admin@example.com','패션의류/잡화','I0000002',2,'NOT_DISPLAY','Enfant_mari_bear_embroidery_hoodie','SOLD_OUT',1,1,'남성','스웻셔츠/후드' ,1)
+,(3,'2024-06-28 13:33:41.084926','2024-06-28 13:33:41.084926','admin@example.com','admin@example.com','패션의류/잡화','I0000003','red','NOT_DISPLAY','Enfant_CLASSIC_LOGO_KNIT_PULLOVER_red','SOLD_OUT',43000,100,'남성','티셔츠' ,1);
 
 
 
 
 INSERT  INTO item_detail_img(item_detail_img_id, reg_time, update_time, created_by, modified_by, img_name, img_url, ori_img_name, item_id)
-VALUES (1,'2024-06-27 11:44:04.214402','2024-06-27 11:44:04.214402','admin@example.com','admin@example.com','3e2ab645-85c8-452c-b1f0-6be59ced1a03.jpg','/images/item/sample_datail/3e2ab645-85c8-452c-b1f0-6be59ced1a03.jpg','d1.jpg',1)
-,(2,'2024-06-27 11:44:04.222382','2024-06-27 11:44:04.222382','admin@example.com','admin@example.com','50087d0d-9b73-4a12-a3cf-4a4473abdae1.jpg','/images/item/sample_datail/50087d0d-9b73-4a12-a3cf-4a4473abdae1.jpg','d2.jpg',1)
-,(3,'2024-06-27 11:44:04.228368','2024-06-27 11:44:04.228368','admin@example.com','admin@example.com','883a8630-6dfd-41d6-9c60-d02b3fbd8ac2.jpg','/images/item/sample_datail/883a8630-6dfd-41d6-9c60-d02b3fbd8ac2.jpg','d3.jpg',1)
-,(4,'2024-06-27 11:45:29.951826','2024-06-27 11:45:29.951826','admin@example.com','admin@example.com','3c7b7c76-392c-4f68-a7a8-efcda16e99f7.jpg','/images/item/sample_datail/3c7b7c76-392c-4f68-a7a8-efcda16e99f7.jpg','d1.jpg',2)
-,(5,'2024-06-27 11:45:29.960806','2024-06-27 11:45:29.960806','admin@example.com','admin@example.com','84b194f8-25dc-4821-8fb8-8b0f2be87ee4.jpg','/images/item/sample_datail/84b194f8-25dc-4821-8fb8-8b0f2be87ee4.jpg','d2.jpg',2)
-,(6,'2024-06-27 11:45:29.970776','2024-06-27 11:45:29.970776','admin@example.com','admin@example.com','7079cf8d-2d31-4366-bc55-b99fed5707a4.jpg','/images/item/sample_datail/7079cf8d-2d31-4366-bc55-b99fed5707a4.jpg','d3.jpg',2)
-,(7,'2024-06-27 11:45:29.977757','2024-06-27 11:45:29.977757','admin@example.com','admin@example.com','eda86019-8bc4-4d74-b9d1-135c2687690c.jpg','/images/item/sample_datail/eda86019-8bc4-4d74-b9d1-135c2687690c.jpg','d4.jpg',2)
-,(8,'2024-06-28 13:33:41.551666','2024-06-28 13:33:41.551666','admin@example.com','admin@example.com','b7028431-1902-4511-ac87-3d44d0e44877.jpg','/images/item/sample_datail/b7028431-1902-4511-ac87-3d44d0e44877.jpg','d1.jpg',3)
-,(9,'2024-06-28 13:33:41.565630','2024-06-28 13:33:41.565630','admin@example.com','admin@example.com','311c071d-80a1-4127-acaf-f4c4de3ad7a5.jpg','/images/item/sample_datail/311c071d-80a1-4127-acaf-f4c4de3ad7a5.jpg','d2.jpg',3)
-,(10,'2024-06-28 13:33:41.584577','2024-06-28 13:33:41.584577','admin@example.com','admin@example.com','99c2b187-091a-4de8-8ec5-413df60931d5.jpg','/images/item/sample_datail/99c2b187-091a-4de8-8ec5-413df60931d5.jpg','d3.jpg',3)
-,(11,'2024-06-28 13:33:41.591559','2024-06-28 13:33:41.591559','admin@example.com','admin@example.com','beba5ea5-9aef-4b6f-9d04-c7fd7e051bd1.jpg','/images/item/sample_datail/beba5ea5-9aef-4b6f-9d04-c7fd7e051bd1.jpg','d4.jpg',3);
+VALUES (1,'2024-06-27 11:44:04.214402','2024-06-27 11:44:04.214402','admin@example.com','admin@example.com','3e2ab645-85c8-452c-b1f0-6be59ced1a03.jpg','/images/item/sample_detail/3e2ab645-85c8-452c-b1f0-6be59ced1a03.jpg','d1.jpg',1)
+,(2,'2024-06-27 11:44:04.222382','2024-06-27 11:44:04.222382','admin@example.com','admin@example.com','50087d0d-9b73-4a12-a3cf-4a4473abdae1.jpg','/images/item/sample_detail/50087d0d-9b73-4a12-a3cf-4a4473abdae1.jpg','d2.jpg',1)
+,(3,'2024-06-27 11:44:04.228368','2024-06-27 11:44:04.228368','admin@example.com','admin@example.com','883a8630-6dfd-41d6-9c60-d02b3fbd8ac2.jpg','/images/item/sample_detail/883a8630-6dfd-41d6-9c60-d02b3fbd8ac2.jpg','d3.jpg',1)
+,(4,'2024-06-27 11:45:29.951826','2024-06-27 11:45:29.951826','admin@example.com','admin@example.com','3c7b7c76-392c-4f68-a7a8-efcda16e99f7.jpg','/images/item/sample_detail/3c7b7c76-392c-4f68-a7a8-efcda16e99f7.jpg','d1.jpg',2)
+,(5,'2024-06-27 11:45:29.960806','2024-06-27 11:45:29.960806','admin@example.com','admin@example.com','84b194f8-25dc-4821-8fb8-8b0f2be87ee4.jpg','/images/item/sample_detail/84b194f8-25dc-4821-8fb8-8b0f2be87ee4.jpg','d2.jpg',2)
+,(6,'2024-06-27 11:45:29.970776','2024-06-27 11:45:29.970776','admin@example.com','admin@example.com','7079cf8d-2d31-4366-bc55-b99fed5707a4.jpg','/images/item/sample_detail/7079cf8d-2d31-4366-bc55-b99fed5707a4.jpg','d3.jpg',2)
+,(7,'2024-06-27 11:45:29.977757','2024-06-27 11:45:29.977757','admin@example.com','admin@example.com','eda86019-8bc4-4d74-b9d1-135c2687690c.jpg','/images/item/sample_detail/eda86019-8bc4-4d74-b9d1-135c2687690c.jpg','d4.jpg',2)
+,(8,'2024-06-28 13:33:41.551666','2024-06-28 13:33:41.551666','admin@example.com','admin@example.com','b7028431-1902-4511-ac87-3d44d0e44877.jpg','/images/item/sample_detail/b7028431-1902-4511-ac87-3d44d0e44877.jpg','d1.jpg',3)
+,(9,'2024-06-28 13:33:41.565630','2024-06-28 13:33:41.565630','admin@example.com','admin@example.com','311c071d-80a1-4127-acaf-f4c4de3ad7a5.jpg','/images/item/sample_detail/311c071d-80a1-4127-acaf-f4c4de3ad7a5.jpg','d2.jpg',3)
+,(10,'2024-06-28 13:33:41.584577','2024-06-28 13:33:41.584577','admin@example.com','admin@example.com','99c2b187-091a-4de8-8ec5-413df60931d5.jpg','/images/item/sample_detail/99c2b187-091a-4de8-8ec5-413df60931d5.jpg','d3.jpg',3)
+,(11,'2024-06-28 13:33:41.591559','2024-06-28 13:33:41.591559','admin@example.com','admin@example.com','beba5ea5-9aef-4b6f-9d04-c7fd7e051bd1.jpg','/images/item/sample_detail/beba5ea5-9aef-4b6f-9d04-c7fd7e051bd1.jpg','d4.jpg',3);
 
 INSERT INTO item_img(item_img_id, reg_time, update_time, created_by, modified_by, img_name, img_url, ori_img_name, repimg_yn, item_id)
 VALUES(1,'2024-06-27 11:44:04.196450','2024-06-27 11:44:04.196450','admin@example.com','admin@example.com','d25f7e52-d299-462c-89a8-42dbe2c056cf.jpg','/images/item/sample_img/d25f7e52-d299-462c-89a8-42dbe2c056cf.jpg','enfant_CLASSIC_LOGO_KNIT_PULLOVER_front.jpg','Y',1)

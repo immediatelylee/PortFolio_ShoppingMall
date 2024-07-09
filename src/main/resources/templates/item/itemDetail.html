@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout4-itemdetail}">
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            // 옵션 선택에 따른 tbody 표시
+            $('#colorOption, #sizeOption').on('change', function() {
+                if ($('#colorOption').val() !== '*' && $('#sizeOption').val() !== '*') {
+                    $('tbody.option_products').removeAttr('style');
+                }
+            });
+
+            // 수량 증가
+            $(document).on('click', '#option_box1_up', function() {
+                updateQuantity(1);
+                console.log("upclick");
+            });
+
+            // 수량 감소
+            $(document).on('click', '#option_box1_down', function() {
+                updateQuantity(-1);
+                console.log("downclick");
+            });
+
+            // 수량 입력 필드 변경
+            $(document).on('change', '#option_box1_quantity', function() {
+                updatePriceAndTotal();
+                console.log("quantity changed");
+            });
+
+            // 수량 및 가격 업데이트 함수
+            function updateQuantity(change) {
+                var quantityInput = $('#option_box1_quantity');
+                var currentQuantity = parseInt(quantityInput.val());
+                var newQuantity = currentQuantity + change;
+
+                if (newQuantity > 0) {
+                    quantityInput.val(newQuantity);
+                    updatePriceAndTotal();
+                }
+            }
+
+            function updatePriceAndTotal() {
+                var pricePerItem = parseInt($('.option_box_price').val());
+                var quantity = parseInt($('#option_box1_quantity').val());
+                if (isNaN(quantity) || quantity < 1) {
+                    quantity = 1;
+                    $('#option_box1_quantity').val(quantity);
+                }
+                var totalPrice = pricePerItem * quantity;
+
+                // 가격 업데이트
+                $('#option_box1_price .ec-front-product-item-price').text('₩' + totalPrice.toLocaleString());
+
+                // 총 가격 및 총 수량 업데이트
+                $('.total em').text(totalPrice.toLocaleString());
+                $('.total').html('<strong><em>' + totalPrice.toLocaleString() + '</em></strong> (' + quantity + '개)');
+            }
+
+            // 옵션 초기화 및 tbody 숨김
+            $(document).on('click', '.option_box_del', function() {
+                resetOptions();
+            });
+
+            function resetOptions() {
+                $('#colorOption').val('*').trigger('change');
+                $('#sizeOption').val('*').trigger('change');
+                $('#option_box1_quantity').val(1);
+                updatePriceAndTotal();
+                $('tbody.option_products').css('display', 'none');
+                console.log("reset options");
+            }
+
+
+        // $(document).ready(function() {
+        //     // 옵션 선택에 따른 tbody 표시
+        //     $('#colorOption, #sizeOption').change(function() {
+        //         if ($('#colorOption').val() !== '*' && $('#sizeOption').val() !== '*') {
+        //             $('tbody.option_products').removeAttr('style');
+        //         }
+        //     });
+        //
+        //     // 수량 증가
+        //     $(document).on('click', '#option_box1_up', function() {
+        //         updateQuantity(1);
+        //         console.log("upclick");
+        //     });
+        //
+        //     // 수량 감소
+        //     $(document).on('click', '#option_box1_down', function() {
+        //         updateQuantity(-1);
+        //         console.log("downclick");
+        //     });
+        //
+        //     // 수량 입력 필드 변경
+        //     $('#option_box1_quantity').on('change', function() {
+        //         updatePriceAndTotal();
+        //         console.log("quantity changed");
+        //     });
+        //
+        //     // 수량 및 가격 업데이트 함수
+        //     function updateQuantity(change) {
+        //         var quantityInput = $('#option_box1_quantity');
+        //         var currentQuantity = parseInt(quantityInput.val());
+        //         var newQuantity = currentQuantity + change;
+        //
+        //         if (newQuantity > 0) {
+        //             quantityInput.val(newQuantity);
+        //             updatePriceAndTotal();
+        //         }
+        //     }
+        //
+        //     function updatePriceAndTotal() {
+        //         var pricePerItem = parseInt($('.option_box_price').val());
+        //         var quantity = parseInt($('#option_box1_quantity').val());
+        //         if (isNaN(quantity) || quantity < 1) {
+        //             quantity = 1;
+        //             $('#option_box1_quantity').val(quantity);
+        //         }
+        //         var totalPrice = pricePerItem * quantity;
+        //
+        //         // 가격 업데이트
+        //         $('#option_box1_price .ec-front-product-item-price').text('₩' + totalPrice.toLocaleString());
+        //
+        //         // 총 가격 및 총 수량 업데이트
+        //         $('.total em').text(totalPrice.toLocaleString());
+        //         $('.total').html('<strong><em>' + totalPrice.toLocaleString() + '</em></strong> (' + quantity + '개)');
+        //     }
+        });
+    </script>
+</th:block>
+
+
+<div layout:fragment="content">
+<div class="shop_wrap">
+    <div class="shop_list"></div>
+
+    <div class="shop_main">
+        <div class="xans-element- xans-product xans-product-detail ">
+            <div class="headingArea">
+                <!-- 공급사 바로가기버튼 영역 -->
+                <div class="supply displaynone">
+                    <span></span>
+                    <a href="#none" onclick=""><img src="" alt="공급사 바로가기"></a>
+                </div>
+                <!-- //공급사 바로가기버튼 영역 -->
+            </div>
+            <div class="detailArea">
+                <div class="xans-element- xans-product xans-product-image imgArea ">
+                    <div class="keyImg">
+                        <div class="thumbnail">
+                            <a href="/product/image_zoom2.html?product_no=8978&amp;cate_no=45&amp;display_group=1" alt="P0000NHI" onclick="window.open(this.href, 'image_zoom2', 'toolbar=no,scrollbars=auto,resizable=yes,width=450,height=693,left=0,top=0', this);return false;">
+
+                               <img th:src="@{${item.itemImgDtoList[0].imgUrl}}">
+                            </a>
+                            <div id="zoom_wrap"></div>
+                        </div>
+                    </div>
+                    <div class="xans-element- xans-product xans-product-addimage listImg">
+                        <ul>
+                            <li style="display: none;" class="xans-record-">
+                                <img src="//bebedepino.com/web/product/small/202405/056166ed3dd77a14de17ee8a47ded646.jpg" class="ThumbImage" alt="">
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="color displaynone">
+                    </div>
+                    <div style="display:none" class="xans-element- xans-product xans-product-action ec-base-button gColumn "><a href="#none" class="btnNormal sizeM" onclick="recommend_mail_pop('8978', '45', '1')">추천메일 보내기</a>
+                        <a href="#none" class="btnNormal sizeM displaynone" onclick="">상품조르기</a>
+                        <a href="/board/inquiry/write.html" class="btnNormal sizeM displaynone">대량구매문의</a>
+                    </div>
+                    <div class="likeButton displaynone">
+                        <button type="button"><span class="title">좋아요</span><span class="count"></span></button>
+                    </div>
+                </div>
+                <div class="infoArea">
+                    <div class="xans-element- xans-product xans-product-detaildesign">
+                        <!--
+                            출력 갯수 지정 변수, 없으면 설정된 전체가 나옵니다.
+                            count = 10
+                            -->
+                        <table border="1" summary="">
+                            <caption> 기본 정보</caption>
+                            <tbody>
+                            <tr class=" xans-record-">
+                                <th scope="row" style="vertical-align: middle;">
+                                    <span style="font-size:14px;color:#555555;font-weight:bold;">Name</span>
+                                </th>
+                                <td style="vertical-align: middle;">
+                                    <span style="font-size:14px;color:#555555;font-weight:bold;vertical-align: middle; "th:text="${item.itemNm}">상품명</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="vertical-align: middle;">
+                                    <span style="font-size:14px;color:#555555;vertical-align: middle;">Code</span>
+                                </th>
+                                <td style="vertical-align: middle;">
+                                    <span style="font-size:14px;color:#555555;vertical-align: middle;"th:text="${item.itemCode}">상품코드</span>
+                                </td>
+                            </tr>
+                            <tr class=" xans-record-">
+                                <th scope="row" style="vertical-align: middle;">
+                                    <span style="font-size:12px;color:#555555;">Price</span>
+                                </th>
+                                <td style="vertical-align: middle;">
+                                    <span style="font-size:12px;color:#555555;"><strong id="span_product_price_text" th:text="${item.price}" >₩43,000</strong><input id="product_price" name="product_price" value="" type="hidden"></span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <table border="1" summary="">
+                        <caption>SNS 상품홍보</caption>
+                        <tbody>
+                        <tr class="displaynone">
+                            <th scope="row">SNS 상품홍보</th>
+                            <td class="social">
+                                <ul class="xans-element- xans-product xans-product-customsns ">
+                                    <li></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p class="displaynone"><img src="//img.echosting.cafe24.com/skin/base_ko_KR/product/txt_naver.gif" alt="개인결제창을 통한 결제 시 네이버 마일리지 적립 및 사용이 가능합니다."></p>
+                    <table border="1" summary="" class="xans-element- xans-product xans-product-option xans-record-">
+                        <caption>상품 옵션</caption>
+                        <tbody></tbody>
+                        <tbody class="xans-element- xans-product xans-product-option xans-record-" >
+                        <tr>
+                            <th scope="row">Color</th>
+                            <td>
+                                <select option_product_no="8978" option_select_element="ec-option-select-finder" option_sort_no="1" option_type="T" item_listing_type="S" option_title="Color" product_type="product_option" product_option_area="product_option_8978_0" name="option1" id="colorOption" class="ProductOption0" option_style="select" required="true">
+                                    <option value="*" selected="" link_image="">- [필수] 옵션을 선택해 주세요 -</option>
+                                    <option value="**" disabled="" link_image="">-------------------</option>
+                                    <option value="Ivory" link_image="">Ivory</option>
+                                </select>
+                                <p class="value"></p>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tbody class="xans-element- xans-product xans-product-option xans-record-">
+                        <tr>
+                            <th scope="row">Size</th>
+                            <td>
+                                <select option_product_no="8978" option_select_element="ec-option-select-finder" option_sort_no="2" option_type="T" item_listing_type="S" option_title="Size" product_type="product_option" product_option_area="product_option_8978_0" name="option2" id="sizeOption" class="ProductOption0" option_style="select" required="true">
+                                    <option value="*" selected="" link_image="">- [필수] 옵션을 선택해 주세요 -</option>
+                                    <option value="**" disabled="" link_image="">-------------------</option>
+                                    <option value="free">free </option>
+                                </select>
+                                <p class="value"></p>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        <tr class="displaynone" id="">
+                            <td colspan="2" class="selectButton"><a href="#none" class="btnSubmit sizeS" onclick="">옵션선택</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="guideArea">
+                        <p class="info  none">(최소주문수량 1개 이상<span class="displaynone"> / 최대주문수량 0개 이하</span>)</p>
+                        <span class="sizeGuide displaynone"><a href="#none" class="size_guide_info" product_no="8978">사이즈 가이드</a></span>
+                    </div>
+                    <div id="totalProductss" class="">
+                        <table border="1" summary="">
+                            <caption>상품 목록</caption>
+                            <colgroup>
+                                <col style="width:284px;">
+                                <col style="width:80px;">
+                                <col style="width:110px;">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th scope="col">상품명</th>
+                                <th scope="col">상품수</th>
+                                <th scope="col">가격</th>
+                            </tr>
+                            </thead>
+
+                            <!-- 옵션선택 또는 세트상품 선택시 상품이 추가되는 영역입니다. 쇼핑몰 화면에는 아래와 같은 마크업구조로 표시됩니다. 삭제시 기능이 정상동작 하지 않습니다. -->
+                            <tbody class="option_products" style="display: none">
+
+                            <tr class="option_product " data-option-index="1" target-key="8978">
+                                <td>
+                                    <input type="hidden" class="option_box_id" id="option_box1_id" value="P0000NHI000B" name="item_code[]" data-item-add-option="" data-item-reserved="N" data-option-id="000B" data-option-index="1">
+                                    <p class="product" th:utext="${item.itemNm} +' <br> ' + ${item.itemCode}" >올오버체리아쿠아슈즈<br>BP42AS463<br> -   </p>
+                                    <span>Ivory/160</span>
+<!--                                    TODO:나중에 옵션도 실제 적용할수 있도록-->
+                                </td>
+                                <td>
+                                    <span class="quantity" style="width:65px;">
+                                        <input type="text" id="option_box1_quantity" name="quantity_opt[]" class="quantity_opt eProductQuantityClass" value="1" product-no="8978">
+                                        <a href="#none" class="up eProductQuantityUpClass" data-target="option_box1_up">
+                                        <img src="//img.echosting.cafe24.com/design/skin/default/product/btn_count_up.gif" id="option_box1_up" class="option_box_up" alt="수량증가">
+                                        </a>
+                                        <a href="#none" class="down eProductQuantityDownClass" data-target="option_box1_down">
+                                        <img src="//img.echosting.cafe24.com/design/skin/default/product/btn_count_down.gif" id="option_box1_down" class="option_box_down" alt="수량감소">
+                                    </a>
+                                    </span>
+                                    <a href="#none" class="delete">
+                                    <img src="//img.echosting.cafe24.com/design/skin/default/product/btn_price_delete.gif" alt="삭제" id="option_box1_del" class="option_box_del"></a>
+                                </td>
+                                <td class="right"><span id="option_box1_price">
+                                    <input type="hidden" class="option_box_price" th:value="${item.price}" product-no="8978" item_code="P0000NHI000B">
+                                    <span class="ec-front-product-item-price" code="P0000NHI000B" product-no="8978" th:text="${item.price}">₩43,000</span>
+                                </span>
+                                </td>
+                            </tr>
+
+
+                            </tbody>
+                            <!-- // 옵션선택 또는 세트상품 선택시 상품이 추가되는 영역입니다. 쇼핑몰 화면에는 아래와 같은 마크업구조로 표시됩니다. 삭제시 기능이 정상동작 하지 않습니다. -->
+                        </table>
+                    </div>
+                    <div id="totalPrice" class="totalPrice">
+                        <strong>TOTAL : <span class="total"><strong><em>0</em></strong> (0개)</span>
+                        </strong>
+                    </div>
+                    <p class="ec-base-help txt11 displaynone EC-price-warning">할인가가 적용된 최종 결제예정금액은 주문 시 확인할 수 있습니다.</p>
+                    <div class="xans-element- xans-product xans-product-action ">
+                        <div class=" gColumn">
+                            <a href="#none" class="btnNormalDetail sizeL " onclick="product_submit(1, '/exec/front/order/basket/', this)" style="padding:20px 0;
+                                border-radius: 0px;
+                                border: 0px;
+                                font-weight: 600;
+                                margin: 0 0 5px 0;
+                                background: #ee3f24;
+                                font-family: 'Montserrat','Noto Sans','Malgun Gothic','Nanum Gothic',Verdana,Dotum,AppleGothic,sans-serif;
+                                color: #fff;
+                                width: 100%;font-size:15px;
+                                height: 55px;
+                                letter-spacing: 1.9px;">
+                                <span id="btnBuy">상품구매하기</span>
+                                <span id="btnReserve" class="displaynone">예약주문</span>
+                            </a>
+                            <a id="cartBtn" href="#none" class="btnNormalDetail sizeL " onclick="product_submit(2, '/exec/front/order/basket/', this)" alt="구입하기" style="
+                                left: 0;
+                                border-radius: 0px;
+                                font-weight: 600;
+                                font-family: 'Montserrat','Noto Sans','Malgun Gothic','Nanum Gothic',Verdana,Dotum,AppleGothic,sans-serif;
+                                width: 49.5%;
+                                height: 50px;line-height: 22px;
+                                letter-spacing: 1.9px;   -webkit-box-sizing: border-box;
+                                -moz-box-sizing: border-box;
+                                box-sizing: border-box;
+                                font-size:15px;
+                                background: #222;  display:inline-block;
+                                color: #fff;
+                                border: 1px solid #222;">장바구니</a>
+                            <a id="wishBtn" href="#none" onclick="add_wishlist(this, true);" class="btnNormal sizeL " style="
+                                float:right;         display:inline-block;     line-height: 22px;                                                                                                   border-radius: 0px;
+                                font-weight: 600;   -webkit-box-sizing: border-box;
+                                -moz-box-sizing: border-box;
+                                box-sizing: border-box;
+                                border: 1px solid #ddd;
+                                font-family: 'Montserrat','Noto Sans','Malgun Gothic','Nanum Gothic',Verdana,Dotum,AppleGothic,sans-serif;
+                                width: 49.5%;
+                                height: 50px;font-size:15px;
+                                letter-spacing: 1.7px;
+                                "><img src="/web/upload/48_maypop/m_wishicon.png" style="width:20px; margin:-1px 2px 0 0"> 위시리스트</a>
+                            <span class="   displaynone sf-hidden" style="width:100%; padding:20px 0;text-align:center; display:block;margin:0 0 9px 0; background:#aaa; color:#fff">SOLD OUT</span>
+                        </div>
+
+                        <!-- 네이버 체크아웃 구매 버튼 -->
+                        <div id="NaverChk_Button">
+                            <div id="NC_ID_1720083399851831" class="npay_storebtn_bx npay_type_A_2">
+                                <div id="NPAY_BUTTON_BOX_ID" class="npay_button_box ">
+                                    <div class="npay_button">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- //네이버 체크아웃 구매 버튼 -->
+                    </div>
+                </div>
+            </div>
+            <!-- 공급사:판매사정보 -->
+            <div class="supplyInfo displaynone">
+            </div>
+            <!-- //공급사:판매사정보 -->
+            <div class="eventArea displaynone">
+                <h3><span>이벤트</span></h3>
+                <div class="event"></div>
+            </div>
+        </div>
+        <div id="prdRelated" class="xans-element- xans-product xans-product-relation ec-base-tab grid5 xans-record-">
+            <div class="relation">
+                <h3>RECOMMEND PRODUCTS</h3>
+                <div class="xans-element- xans-product xans-product-relationlist">
+                    <ul class="prdList">
+                        <li class="item xans-record-">
+                            <div class="box">
+                                <a href="/product/올오버체리프릴수영모자bp42ah464/8881/category/29/display/1/"><img src="//bebedepino.com/web/product/medium/202404/628b61fd90a085633a4e9fbc213ed630.jpg" alt="올오버체리프릴수영모자BP42AH464" class="thumb"></a>
+                                <p><a href="/product/올오버체리프릴수영모자bp42ah464/8881/category/29/display/1/">올오버체리프릴수영모자<br>BP42AH464</a></p>
+                                <p style="position:absolute;top:50%;left: 50%; z-index:99;transform: translate(-50%,-50%);width: 100%; "></p>
+                                <ul>
+                                    <li><strong class="">₩36,000</strong></li>
+                                    <li class="salePrice displaynone">₩36,000</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="item xans-record-">
+                            <div class="box">
+                                <a href="/product/올오버체리수영복세트bp42aw464/8877/category/29/display/1/"><img src="//bebedepino.com/web/product/medium/202404/ecaaec8948cb7ab3426ec20aa97af6b7.jpg" alt="올오버체리수영복세트BP42AW464" class="thumb"></a>
+                                <p><a href="/product/올오버체리수영복세트bp42aw464/8877/category/29/display/1/">올오버체리수영복세트<br>BP42AW464</a></p>
+                                <p style="position:absolute;top:50%;left: 50%; z-index:99;transform: translate(-50%,-50%);width: 100%; "></p>
+                                <ul>
+                                    <li><strong class="">₩73,000</strong></li>
+                                    <li class="salePrice displaynone">₩73,000</li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <style>
+            .detail_tab_area a {
+                background: none;
+                padding: 0;
+                color: #333;
+                padding: 15px 0px;
+                display: inline-block;
+                font-size: 14px;
+                text-align: center;
+                letter-spacing: 1px;
+                border: 1px solid #ddd;  border-bottom: 2px solid #333;
+                margin:0 -0.5px;
+                width:33.33%
+            }
+            .detail_tab_area { display:inline-block; width:100%;
+                margin: 0px auto 40px;
+                padding: 55px 0 0;
+                text-align: center;
+                font-size: 0;
+            }
+            .detail_tab_area a.on {
+                color: #333;
+                font-weight:bold;  border: 2px solid #333;   background:#fff;
+            }
+            .d_notice  { clear:both; width:100% }
+            .d_notice ul { width:90%;margin:20px auto 0}
+            .d_notice ul li { width:25%; float:left; text-align:center;}
+            .d_notice ul li a { font-size:12px; color:#888 }
+            .d_notice ul li img { display:block; margin:0 auto; width:50px}
+            .d_notice ul li a span { font-size:15px; font-weight:600; color:#222; display:block;  padding:0 0 10px 0 ; letter-spacing:1.0px;}
+        </style>
+        <!-- cre.ma / 타겟 상품 추천 위젯 / 스크립트를 수정할 경우 연락주세요 (support@cre.ma) -->
+        <div class="crema-target-product-recommendation-detail-page" data-campaign-id="22"></div>
+        <div class="detail_tab_area cboth">
+            <!-- Enliple Insite shopDetail start -->
+            <script type="text/javascript">(function(m,b,r,i,s){m.mbris=m.mbris||function(){(m.mbris.q=m.mbris.q||[]).push(arguments)};i=b.createElement(r);i.async=!0;i.defer=!0;i.src="https://cdn.megadata.co.kr/dist/prod/enp_mbris.min.js";0<b.querySelectorAll("script[src*=enp_mbris]").length&&m.ENP_MBRIS_INVOKE?m.ENP_MBRIS_INVOKE():(s=b.getElementsByTagName(r)[0],s.parentNode.insertBefore(i,s))})(window,document,"script");mbris("202008241171818628_bebedepino_2_01,202008241171818628_bebedepino_2_02");</script><!-- 광고 노출 영역 -->
+            <div id="mbris_detail_section" style="display: none !important; position: relative;"></div>
+            <!-- Enliple Insite shopDetail end -->
+            <!-- Enliple Insite shopDetail Together start -->
+            <script type="text/javascript">(function(m,b,r,i,s){m.mbris=m.mbris||function(){(m.mbris.q=m.mbris.q||[]).push(arguments)};i=b.createElement(r);i.async=!0;i.defer=!0;i.src="https://cdn.megadata.co.kr/dist/prod/enp_mbris.min.js";0<b.querySelectorAll("script[src*=enp_mbris]").length&&m.ENP_MBRIS_INVOKE?m.ENP_MBRIS_INVOKE():(s=b.getElementsByTagName(r)[0],s.parentNode.insertBefore(i,s))})(window,document,"script");mbris("202012353110928735_bebedepino_4_01,202012353110928737_bebedepino_4_02");</script><!-- 광고 노출 영역 -->
+            <div id="mbris_ar_detail_section" style="display: none !important; position: relative;"></div>
+            <!-- Enliple Insite shopDetail Together end -->
+            <a href="#prdDetail" class="on">상품설명</a>
+            <a href="#prdInfo">배송/교환/환불
+            </a>
+            <a href="#prdReview">상품 후기</a>
+        </div>
+        <!-- //detail_tab_area -->
+        <div class="d_notice">
+            <ul>
+                <li><a href="/member/login.html"><img src="/web/upload/img/d_icon1.png" alt="">
+                    &nbsp;<span>신규회원 쿠폰</span>
+                    가입축하쿠폰<br>3,000원지급
+                </a>
+                </li>
+                <li style="border-left:1px solid #ececec;border-right:1px solid #ececec;"><a href="/faq.html?board_no=1002"><img src="/web/upload/img/d_icon2.png" alt="">
+                    &nbsp;<span>구매/리뷰 적립금</span>
+                    구매 및 리뷰작성 <br>
+                    적립금 지급안내
+                </a>
+                </li>
+                <li style="border-left:1px solid #ececec;border-right:1px solid #ececec;"><a href="#none"><img src="/web/upload/img/d_icon4.png" alt="">
+                    &nbsp;<span>5만원 이상 무료배송</span>
+                    5만원 이상 결제시 <br>
+                    무료배송
+                </a>
+                </li>
+                <li><a href="/faq.html?board_no=1002"><img src="/web/upload/img/d_icon3.png" alt="">
+                    &nbsp;<span>자주하는 질문</span>
+                    배송/교환/반품 외<br>자주묻는 질문과 답 안내
+                </a>
+                </li>
+            </ul>
+        </div>
+        <div class="xans-element- xans-product xans-product-additional">
+            <div id="prdDetail" class="ec-base-tab grid5 ">
+                <!-- cre.ma / 소셜 위젯 / 스크립트를 수정할 경우 연락주세요 (support@cre.ma)-->
+                <div class="crema-product-reviews crema-applied" data-product-code="8978" data-widget-id="30" data-install-method="hardcoded" data-applied-widgets="[&quot;.crema-product-reviews&quot;]" style=""><iframe id="crema-product-reviews-1" src="https://review9.cre.ma/bebedepino.com/products/reviews?product_code=8978&amp;iframe_id=crema-product-reviews-1&amp;widget_id=30&amp;widget_style=&amp;app=0&amp;parent_url=https%3A%2F%2Fbebedepino.com%2Fproduct%2F%25EC%2598%25AC%25EC%2598%25A4%25EB%25B2%2584%25EC%25B2%25B4%25EB%25A6%25AC%25EC%2595%2584%25EC%25BF%25A0%25EC%2595%2584%25EC%258A%2588%25EC%25A6%2588bp42as463%2F8978%2Fcategory%2F45%2Fdisplay%2F1%2F&amp;nonmember_token=&amp;secure_device_token=V2a01ca4475a78fbf86257c7ba4949655ffcd3614a760332e687ebf5c7be0f9f549bbebd0ad3019d46580e8171e0781bd9&amp;iframe=1&amp;install_method=hardcoded" height="0" width="100%" scrolling="no" allowtransparency="true" frameborder="0" name="crema-product-reviews-1-1720083400203" style="display: block; visibility: visible; height: 20px;"></iframe></div>
+                <div class="cont">
+                    <div class="thekary-product-information" data-thekary-private-code="BP42AS463" data-thekary-product-name="All over cherry stripe aqua shoes">
+                        <div style="width: 100%; margin: 0 auto; padding: 20px 10px; font-family: 'Helvetica Neue', Helvetica, Arial, 'Apple SD Gothic Neo', 'NanumBarunGothic', 'Malgun Gothic', sans-serif; letter-spacing: -0.0125em; text-align: left; box-sizing: border-box;">
+                            <div id="thekary-product-images" style="width: 100%; margin: 0 auto 60px;" >
+
+                                <th:block th:each="itemImg : ${item.itemDetailImgDtoList}">
+                                    <img th:src="@{${itemImg.imgUrl}}" style="width: 100% !important; height: auto; margin: 0 auto 120px;">
+
+                                </th:block>
+
+                            </div>
+            </div>
+            <div id="prdQnA" class="ec-base-tab grid5 none">
+                <div class="board">
+                    <h3>Q&amp;A</h3>
+                    <p class="desc">I'LL GIVE ANSWERS TO ALL QUESTIONS.</p>
+                    <p class="nodata">게시물이 없습니다</p>
+                    <p class="ec-base-button typeBorder">
+                        <span class="gRight">
+                        <a href="/board/product/write.html?board_no=6&amp;product_no=8978&amp;cate_no=45&amp;display_group=1" class="btnSubmit">WRITE</a>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <!-- cre.ma / 상품 리뷰 / 스크립트를 수정할 경우 연락주세요 (support@cre.ma) -->
+            <a name="prdReview"></a>
+            <div data-product-code="8978" style="margin-top: 32px; margin-bottom: 32px;width: 1100px; margin: 0 auto;" class="crema-product-reviews  crema-applied" data-install-method="hardcoded" data-applied-widgets="[&quot;.crema-product-reviews&quot;]"><iframe id="crema-product-reviews-2" src="https://review9.cre.ma/bebedepino.com/products/reviews?product_code=8978&amp;iframe_id=crema-product-reviews-2&amp;widget_style=&amp;app=0&amp;parent_url=https%3A%2F%2Fbebedepino.com%2Fproduct%2F%25EC%2598%25AC%25EC%2598%25A4%25EB%25B2%2584%25EC%25B2%25B4%25EB%25A6%25AC%25EC%2595%2584%25EC%25BF%25A0%25EC%2595%2584%25EC%258A%2588%25EC%25A6%2588bp42as463%2F8978%2Fcategory%2F45%2Fdisplay%2F1%2F&amp;nonmember_token=&amp;secure_device_token=V2a01ca4475a78fbf86257c7ba4949655ffcd3614a760332e687ebf5c7be0f9f549bbebd0ad3019d46580e8171e0781bd9&amp;iframe=1&amp;install_method=hardcoded" height="0" width="100%" scrolling="no" allowtransparency="true" frameborder="0" name="crema-product-reviews-2-1720083400212" style="display: block; visibility: visible; height: 781px;"></iframe></div>
+        </div>
+    </div>
+</div>
+</div>
+    </div>
+</div>
+</div>

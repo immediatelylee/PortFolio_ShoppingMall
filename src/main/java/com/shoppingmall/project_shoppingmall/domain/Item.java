@@ -46,6 +46,9 @@ public class Item extends BaseEntity {
     private String subCategory;
     private String subSubCategory;
 
+    private String color;
+    private Integer size;
+
     //    추가
     @ManyToOne
     @JoinColumn(name = "brand_id")
@@ -54,11 +57,18 @@ public class Item extends BaseEntity {
 
     public void updateItem(ItemFormDto itemFormDto){
         this.itemNm = itemFormDto.getItemNm();
+        this.itemCode = itemFormDto.getItemCode();
         this.price = itemFormDto.getPrice();
         this.stockNumber = itemFormDto.getStockNumber();
         this.itemDetail = itemFormDto.getItemDetail();
         this.itemSellStatus = itemFormDto.getItemSellStatus();
         this.itemDisplayStatus = itemFormDto.getItemDisplayStatus();
+        this.mainCategory = itemFormDto.getMainCategory();
+        this.subCategory = itemFormDto.getSubCategory();
+        this.subSubCategory = itemFormDto.getSubSubCategory();
+
+        this.color = itemFormDto.getColor();
+        this.size = itemFormDto.getSize();
     }
 
     public void removeStock(int stockNumber){

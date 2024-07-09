@@ -4035,11 +4035,11 @@ html {
 .xans-product-detail .infoArea th {
     padding: 10px
 }
-
-.xans-product-detail .infoArea td {
-    padding: 0px;
-    line-height: 1.5em;
-}
+/*240708*/
+/*.xans-product-detail .infoArea td {*/
+/*    padding: 0px;*/
+/*    line-height: 1.5em;*/
+/*}*/
 
 #totalProducts thead th {
     padding: 0 !important
