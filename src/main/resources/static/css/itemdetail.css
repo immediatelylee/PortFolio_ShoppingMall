@@ -1,0 +1,506 @@
+html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td, img {
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+.shop_wrap {
+    padding: 40px 0 0 0;
+}
+.shop_wrap {
+    clear: both;
+    display: block;
+    margin: -67px auto;
+    width: 90%;
+}
+.shop_list {
+    width: 11%;
+    margin-right: 1%;
+}
+
+.shop_list, .shop_main {
+    float: left;
+}
+
+.shop_main {
+    width: 88%;
+}
+.shop_list, .shop_main {
+    float: left;
+}
+
+.xans-product-detail {
+    position: relative;
+    margin: 0 auto;
+    padding: 30px 0 0 0;
+}
+
+.xans-product-detail .headingArea {
+    position: relative;
+    padding: 0 0 10px;
+    margin: 0 0 15px;
+    line-height: 24px;
+}
+.sf-hidden {
+    display: none!important;
+}
+
+
+.xans-product-detail .detailArea {
+    padding: 0 0 0 800px;
+}
+
+.xans-product-detail .imgArea {
+    float: left;
+    width: 646px;
+    margin: 0 0 0 -646px;
+}
+
+.xans-product-detail .infoArea {
+    width: 490px;
+}
+
+.xans-product-detail .infoArea table {
+    border: 0;
+    font-size: 12px;
+    margin: 10px 0 0;
+}
+
+table {
+    width: 100%;
+    border: 0;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+.xans-product-detail .infoArea .xans-product-option tr:first-child th, .xans-product-detail .infoArea .xans-product-option .xans-product-fileoption th {
+    padding-top: 14px;
+    border-top: 1px solid #e8e8e8;
+}
+
+.xans-product-detail .infoArea .xans-product-option tr:first-child td, .xans-product-detail .infoArea .xans-product-option .xans-product-fileoption td {
+    padding-top: 10px;
+    border-top: 1px solid #e8e8e8;
+}
+
+.xans-product-detail .infoArea .xans-product-option tr td {
+    padding: 4px 10px 4px 0;
+}
+
+
+.xans-product-detail .infoArea .xans-product-option tr th {
+    vertical-align: top;
+}
+
+
+.xans-product-detail .infoArea .xans-product-action a {
+    width: 100%;
+    display: block;
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    color: #222;
+    letter-spacing: 1.0px;
+}
+
+.xans-product-detail .infoArea th {
+    font-weight: normal;
+    color: #353535;
+    width: 115px;
+    padding: 7px 0 8px 9px;
+    text-align: left;
+    vertical-align: middle;
+}
+.xans-product-detail .infoArea select {
+    width: 100%;
+    height: 24px;
+    font-size: 12px;
+    color: #353535;
+}
+select {
+    text-rendering: auto;
+    color: fieldtext;
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    appearance: auto;
+    box-sizing: border-box;
+    align-items: center;
+    -webkit-rtl-ordering: logical;
+    background-color: field;
+    cursor: default;
+    margin: 0em;
+    white-space: pre;
+    border-width: 1px;
+    border-style: solid;
+    border-color: light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+    border-image: initial;
+    border-radius: 0px;
+}
+option {
+    font-weight: normal;
+    display: block;
+    min-height: 1.2em;
+    padding: 0px 2px 1px;
+    white-space: nowrap;
+}
+option:disabled {
+    color: light-dark(graytext, rgb(170, 170, 170));
+}
+select {
+    border: 1px solid #d5d5d5;
+}
+input, select {
+    font-family: "돋움",Dotum;
+    vertical-align: middle;
+}
+
+.xans-product-detail .infoArea select {
+    width: 100%;
+    height: 24px;
+    font-size: 12px;
+    color: #353535;
+}
+
+.xans-product-detail .infoArea .xans-product-option .value {
+    color: #767479;
+    word-break: break-all;
+}
+
+.xans-product-detail .infoArea .guideArea {
+    overflow: hidden;
+    margin: 5px 0 0;
+    padding: 8px 11px 0;
+    border-top: 1px solid #e8e8e8;
+}
+
+.xans-product-detail .infoArea .xans-product-action a:hover {
+    width: 100%;
+    display: block;
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    border: 1px solid #ee3f24;
+}
+
+#totalProductss {
+    margin: 21px 0 0;
+}
+#totalProductss table {
+    margin: 0;
+}
+
+table {
+    width: 100%;
+    border: 0;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+
+.totalPrice {
+    margin: 10px 0 20px 0;
+    padding: 0px;
+    color: #353535;
+    vertical-align: middle;
+    background: #fff;
+}
+
+.totalPrice .total {
+    color: #000;
+}
+
+.totalPrice .total em {
+    font-style: normal;
+    font-size: 12px;
+}
+
+.xans-product-detail .infoArea .xans-product-action {
+    padding: 0px 0 10px;
+}
+
+[class^="btn"].sizeL {
+    padding: 14px 16px;
+    min-width: 80px;
+}
+/*btnNormal중복으로 수정*/
+a[class^="btnNormalDetail"] {
+    box-sizing: border-box;
+    line-height: 14px;
+    text-decoration: none;
+    vertical-align: middle;
+    word-spacing: -0.5px;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #fff;
+}
+
+.xans-product-detail .infoArea img {
+    vertical-align: middle;
+}
+
+.shop_wrap img {
+    max-width: 100%;
+    height: auto!important;
+}
+
+img {
+    border: none;
+    vertical-align: top;
+}
+
+img {
+    overflow-clip-margin: content-box;
+    overflow: clip;
+}
+
+.ec-base-tab {
+    position: relative;
+}
+
+.xans-product-relation .relation {
+    padding: 129px 0 50px;
+    color: #8f8f91;
+    line-height: 1.8em;
+}
+
+.xans-product-relation .relation h3 {
+    padding: 0 0 10px 0;
+    color: #222;
+    font-size: 12px;
+    border-bottom: 1px solid #e9e9e9;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 1.3px;
+}
+
+.xans-product-relation .relation ul.prdList {
+    display: table;
+    width: 100%;
+    min-width: 756px;
+    margin: 8px 0 0;
+    text-align: center;
+    padding: 0 0 20px 0;
+    font-size: 0;
+    line-height: 0;
+    border-bottom: 1px solid #e9e9e9;
+}
+
+.xans-product-relation .relation ul.prdList li.item {
+    width: 20%;
+    text-align: center;
+}
+
+.xans-product-relation .relation ul.prdList li.item {
+    display: inline-block;
+    margin: 20px 0;
+    color: #757575;
+    vertical-align: top;
+}
+
+.xans-product-relation .relation ul.prdList li.item .box {
+    width: 95%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.xans-product-relation .relation ul.prdList li.item .box {
+    position: relative;
+    font-size: 12px;
+    line-height: 18px;
+}
+
+.xans-product-relation .relation ul.prdList img {
+    vertical-align: middle;
+}
+
+.xans-product-detail .imgArea .keyImg img {
+    max-width: 500px;
+    cursor: pointer;
+}
+.prdList {
+    z-index: 99;
+}
+
+.detail_tab_area {
+    display: inline-block;
+    width: 100%;
+    margin: 0px auto 40px;
+    padding: 55px 0 0;
+    text-align: center;
+    font-size: 0;
+}
+
+
+.detail_tab_area a.on {
+    color: #333;
+    font-weight: bold;
+    border: 2px solid #333;
+    background: #fff;
+}
+
+.detail_tab_area a {
+    background: none;
+    color: #333;
+    padding: 15px 0px;
+    display: inline-block;
+    font-size: 14px;
+    text-align: center;
+    letter-spacing: 1px;
+    border: 1px solid #ddd;
+    border-bottom: 2px solid #333;
+    margin: 0-0.5px;
+    width: 33.33%;
+}
+
+.d_notice {
+    clear: both;
+    width: 100%;
+}
+
+.d_notice ul {
+    width: 90%;
+    margin: 20px auto 0;
+}
+
+
+#prdDetail .cont {
+    width: 900px;
+    margin: 0 auto;
+}
+
+.xans-product-additional .cont {
+    padding: 27px 10px 46px 9px;
+    color: #353535;
+    line-height: 18px;
+}
+
+#prdInfo {
+    width: 880px;
+    border-top: 1px solid #d7d5d6;
+    padding: 60px 0 0 0;
+    margin: -10px auto;
+    font-size: 14px;
+    line-height: 24px!important;
+}
+
+.xans-product-additional {
+    clear: both;
+    padding: 100px 0;
+}
+
+#totalProductss tbody tr:first-child td {
+    border-top: 1px solid #9a9ba0;
+}
+#totalProductss tbody tr td:first-child {
+    padding-left: 4px;
+}
+#totalProductss tbody td {
+    padding: 9px 0;
+    border-top: 1px solid #ebebeb;
+    color: #353535;
+    line-height: 18px;
+    vertical-align: middle;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+.xans-product-detail .infoArea td {
+    padding: 7px 6px 8px 0;
+    vertical-align: middle;
+}
+#totalProductss tbody td p {
+    padding: 0 10px 0 0;
+    font-weight: bold;
+    line-height: 21px;
+}
+#totalProductss tbody td p.product span {
+    font-weight: normal;
+    color: #757575;
+    line-height: 18px;
+}
+#totalProductss tbody td .quantity {
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    vertical-align: top;
+}
+#totalProductss tbody.option_products tr td .quantity input, #totalProductss tbody.add_products tr td .quantity input {
+    height: 19px;
+    line-height: 19px;
+}
+#totalProductss tbody td .quantity input {
+    width: 22px;
+    height: 23px;
+    padding: 0 2px 0 3px;
+    line-height: 23px;
+    border: 1px solid #d4d8d9;
+    border-radius: 3px 0 0 3px;
+}
+.xans-product-detail .infoArea td input[type=text] {
+    width: 80%;
+}
+
+#totalProductss tbody td .quantity .up {
+    position: absolute;
+    left: 28px;
+    top: -5px;
+}
+#totalProductss tbody td img {
+    vertical-align: middle;
+}
+#totalProductss tbody.option_products tr td .quantity .down, #totalProductss tbody.add_products tr td .quantity .down {
+    bottom: -3px !important;
+    top: auto;
+}
+#totalProductss tbody td .quantity .down {
+    position: absolute;
+    left: 28px;
+    top: 6px;
+}
+
+#totalProductss table .right {
+    padding-right: 9px;
+    font-weight: bold;
+    color: #000;
+    text-align: right;
+}
+input, select, textarea {
+    font-size: 100%;
+    font-family: "돋움",Dotum;
+    color: #353535;
+    vertical-align: middle;
+}
+
+#totalProductss thead th {
+    height: 0;
+    padding: 0;
+    font-size: 0;
+    line-height: 0;
+}
+#totalProductss tbody tr:first-child td {
+    border-top: 1px solid #9a9ba0;
+}
+#totalProductss tbody tr td:first-child {
+    padding-left: 4px;
+}
+#totalProductss tbody.option_products tr td .quantity input, #totalProductss tbody.add_products tr td .quantity input {
+    height: 19px;
+    line-height: 19px;
+}
+
+
+/* cart */
+
+#wrap {
+    width: 100%;
+    margin: 140px auto 0;
+}
