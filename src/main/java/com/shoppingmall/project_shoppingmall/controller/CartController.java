@@ -19,8 +19,18 @@ public class CartController {
 
     private final CartService cartService;
 
+//    @PostMapping(value = "/cart1")
+//    public ResponseEntity<String> addToCart(@RequestBody CartItemDto cartItemDto) {
+//        // 서비스 로직 수행 (예: 장바구니에 항목 추가)
+//        Long itemId = cartItemDto.getItemId();
+//        int count = cartItemDto.getCount();
+//
+//        // 로직 수행 후 응답
+//        return ResponseEntity.ok("상품을 장바구니에 담았습니다.");
+//    }
+
     @PostMapping(value = "/cart")
-    public @ResponseBody ResponseEntity order(@RequestBody @Valid CartItemDto cartItemDto, BindingResult bindingResult, Principal principal){
+    public @ResponseBody ResponseEntity cart(@RequestBody @Valid CartItemDto cartItemDto, BindingResult bindingResult, Principal principal){
 
         if(bindingResult.hasErrors()){
             StringBuilder sb = new StringBuilder();
