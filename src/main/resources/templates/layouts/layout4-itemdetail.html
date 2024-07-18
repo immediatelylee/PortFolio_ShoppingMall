@@ -13,7 +13,8 @@
     <link rel="stylesheet" th:href="@{/css/su.css}">
     <link rel="stylesheet" th:href="@{/css/itemdetail.css}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <th:block layout:fragment="css"></th:block>
 

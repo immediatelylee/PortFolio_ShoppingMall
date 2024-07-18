@@ -5,7 +5,100 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        function order(){
+            console.log("start_order")
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            var url = "/order";
+            var paramData = {
+                itemId : $("#itemId").val(),
+                count : $("#count").val()
+            };
+
+            var param = JSON.stringify(paramData);
+
+            $.ajax({
+                url      : url,
+                type     : "POST",
+                contentType : "application/json",
+                data     : param,
+                beforeSend : function(xhr){
+                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                    xhr.setRequestHeader(header, token);
+                },
+                dataType : "json",
+                cache   : false,
+                success  : function(result, status){
+                    alert("주문이 완료 되었습니다.");
+                    location.href='/';
+                },
+                error : function(jqXHR, status, error){
+
+                    //
+                    if(jqXHR.status == '401'){
+                        alert('로그인 후 이용해주세요');
+                        location.href='/members/login';
+                    } else{
+                        alert(jqXHR.responseText);
+                    }
+
+                }
+            });
+        }
+        function addCart(){
+            console.log("addCart Start")
+            console.log("=================")
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            console.log("CSRF Token:", token); // 디버그 메시지 추가
+            console.log("CSRF Header:", header); // 디버그 메시지 추가
+
+
+            var url = "/cart";
+            var paramData = {
+                itemId : $(".itemIdInput").val(),
+                count : $("#option_box1_quantity").val()
+
+            };
+            console.log(paramData)
+
+            var param = JSON.stringify(paramData);
+
+            $.ajax({
+                url      : url,
+                type     : "POST",
+                contentType : "application/json",
+                data     : param,
+                beforeSend : function(xhr){
+                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                    xhr.setRequestHeader(header, token);
+                },
+                dataType : "json",
+                cache   : false,
+                success  : function(result, status){
+                    alert("상품을 장바구니에 담았습니다.");
+                    location.href='/';
+                },
+                error : function(jqXHR, status, error){
+
+                    if(jqXHR.status == '401'){
+                        alert('로그인 후 이용해주세요');
+                        location.href='/members/login';
+                    } else{
+                        alert(jqXHR.responseText);
+                    }
+
+                }
+            });
+        }
         $(document).ready(function() {
+            // 초기 가격에 ₩ 추가
+            var initialPrice = $(".ec-front-product-item-price").text();
+            if (!initialPrice.startsWith('₩')) {
+                $(".ec-front-product-item-price").text('₩' + initialPrice);
+            }
             // 옵션 선택에 따른 tbody 표시
             $('#colorOption, #sizeOption').on('change', function() {
                 if ($('#colorOption').val() !== '*' && $('#sizeOption').val() !== '*') {
@@ -39,7 +132,7 @@
 
                 if (newQuantity > 0) {
                     quantityInput.val(newQuantity);
-                    updatePriceAndTotal();
+                    updatePriceAndTotal(); // 가격 업데이트 함수 호출
                 }
             }
 
@@ -56,14 +149,18 @@
                 $('#option_box1_price .ec-front-product-item-price').text('₩' + totalPrice.toLocaleString());
 
                 // 총 가격 및 총 수량 업데이트
-                $('.total em').text(totalPrice.toLocaleString());
-                $('.total').html('<strong><em>' + totalPrice.toLocaleString() + '</em></strong> (' + quantity + '개)');
+                $('.total em').text('₩' + totalPrice.toLocaleString());
+                $('.total').html('<strong><em>' + '₩' + totalPrice.toLocaleString() + '</em></strong> (' + quantity + '개)');
+
+                // input 태그의 value 속성 업데이트
+                $('#option_box1_quantity').attr('value', quantity);
             }
 
             // 옵션 초기화 및 tbody 숨김
             $(document).on('click', '.option_box_del', function() {
                 resetOptions();
             });
+
 
             function resetOptions() {
                 $('#colorOption').val('*').trigger('change');
@@ -75,60 +172,8 @@
             }
 
 
-        // $(document).ready(function() {
-        //     // 옵션 선택에 따른 tbody 표시
-        //     $('#colorOption, #sizeOption').change(function() {
-        //         if ($('#colorOption').val() !== '*' && $('#sizeOption').val() !== '*') {
-        //             $('tbody.option_products').removeAttr('style');
-        //         }
-        //     });
-        //
-        //     // 수량 증가
-        //     $(document).on('click', '#option_box1_up', function() {
-        //         updateQuantity(1);
-        //         console.log("upclick");
-        //     });
-        //
-        //     // 수량 감소
-        //     $(document).on('click', '#option_box1_down', function() {
-        //         updateQuantity(-1);
-        //         console.log("downclick");
-        //     });
-        //
-        //     // 수량 입력 필드 변경
-        //     $('#option_box1_quantity').on('change', function() {
-        //         updatePriceAndTotal();
-        //         console.log("quantity changed");
-        //     });
-        //
-        //     // 수량 및 가격 업데이트 함수
-        //     function updateQuantity(change) {
-        //         var quantityInput = $('#option_box1_quantity');
-        //         var currentQuantity = parseInt(quantityInput.val());
-        //         var newQuantity = currentQuantity + change;
-        //
-        //         if (newQuantity > 0) {
-        //             quantityInput.val(newQuantity);
-        //             updatePriceAndTotal();
-        //         }
-        //     }
-        //
-        //     function updatePriceAndTotal() {
-        //         var pricePerItem = parseInt($('.option_box_price').val());
-        //         var quantity = parseInt($('#option_box1_quantity').val());
-        //         if (isNaN(quantity) || quantity < 1) {
-        //             quantity = 1;
-        //             $('#option_box1_quantity').val(quantity);
-        //         }
-        //         var totalPrice = pricePerItem * quantity;
-        //
-        //         // 가격 업데이트
-        //         $('#option_box1_price .ec-front-product-item-price').text('₩' + totalPrice.toLocaleString());
-        //
-        //         // 총 가격 및 총 수량 업데이트
-        //         $('.total em').text(totalPrice.toLocaleString());
-        //         $('.total').html('<strong><em>' + totalPrice.toLocaleString() + '</em></strong> (' + quantity + '개)');
-        //     }
+
+
         });
     </script>
 </th:block>
@@ -140,13 +185,9 @@
 
     <div class="shop_main">
         <div class="xans-element- xans-product xans-product-detail ">
+<!--            itemId를 받기위해 value를 여기서 받음.-->
             <div class="headingArea">
-                <!-- 공급사 바로가기버튼 영역 -->
-                <div class="supply displaynone">
-                    <span></span>
-                    <a href="#none" onclick=""><img src="" alt="공급사 바로가기"></a>
-                </div>
-                <!-- //공급사 바로가기버튼 영역 -->
+                <input hidden class="itemIdInput" type="text" th:value="${item.id}">
             </div>
             <div class="detailArea">
                 <div class="xans-element- xans-product xans-product-image imgArea ">
@@ -165,15 +206,6 @@
                                 <img src="//bebedepino.com/web/product/small/202405/056166ed3dd77a14de17ee8a47ded646.jpg" class="ThumbImage" alt="">
                             </li>
                         </ul>
-                    </div>
-                    <div class="color displaynone">
-                    </div>
-                    <div style="display:none" class="xans-element- xans-product xans-product-action ec-base-button gColumn "><a href="#none" class="btnNormal sizeM" onclick="recommend_mail_pop('8978', '45', '1')">추천메일 보내기</a>
-                        <a href="#none" class="btnNormal sizeM displaynone" onclick="">상품조르기</a>
-                        <a href="/board/inquiry/write.html" class="btnNormal sizeM displaynone">대량구매문의</a>
-                    </div>
-                    <div class="likeButton displaynone">
-                        <button type="button"><span class="title">좋아요</span><span class="count"></span></button>
                     </div>
                 </div>
                 <div class="infoArea">
@@ -206,7 +238,7 @@
                                     <span style="font-size:12px;color:#555555;">Price</span>
                                 </th>
                                 <td style="vertical-align: middle;">
-                                    <span style="font-size:12px;color:#555555;"><strong id="span_product_price_text" th:text="${item.price}" >₩43,000</strong><input id="product_price" name="product_price" value="" type="hidden"></span>
+                                    <span style="font-size:12px;color:#555555;"><strong id="span_product_price_text" th:text="'₩' + ${item.price}" >₩43,000</strong><input id="product_price" name="product_price" value="" type="hidden"></span>
                                 </td>
                             </tr>
                             </tbody>
@@ -215,14 +247,7 @@
                     <table border="1" summary="">
                         <caption>SNS 상품홍보</caption>
                         <tbody>
-                        <tr class="displaynone">
-                            <th scope="row">SNS 상품홍보</th>
-                            <td class="social">
-                                <ul class="xans-element- xans-product xans-product-customsns ">
-                                    <li></li>
-                                </ul>
-                            </td>
-                        </tr>
+
                         </tbody>
                     </table>
                     <p class="displaynone"><img src="//img.echosting.cafe24.com/skin/base_ko_KR/product/txt_naver.gif" alt="개인결제창을 통한 결제 시 네이버 마일리지 적립 및 사용이 가능합니다."></p>
@@ -287,7 +312,7 @@
                             <tr class="option_product " data-option-index="1" target-key="8978">
                                 <td>
                                     <input type="hidden" class="option_box_id" id="option_box1_id" value="P0000NHI000B" name="item_code[]" data-item-add-option="" data-item-reserved="N" data-option-id="000B" data-option-index="1">
-                                    <p class="product" th:utext="${item.itemNm} +' <br> ' + ${item.itemCode}" >올오버체리아쿠아슈즈<br>BP42AS463<br> -   </p>
+                                    <p class="product" th:utext="${item.itemNm} +' <br> ' + ${item.itemCode}" >상품명<br>상품코드<br> -   </p>
                                     <span>Ivory/160</span>
 <!--                                    TODO:나중에 옵션도 실제 적용할수 있도록-->
                                 </td>
@@ -317,7 +342,7 @@
                         </table>
                     </div>
                     <div id="totalPrice" class="totalPrice">
-                        <strong>TOTAL : <span class="total"><strong><em>0</em></strong> (0개)</span>
+                        <strong>TOTAL : <span class="total"><strong><em th:text="'₩' + ${item.price}"></em></strong> (1개)</span>
                         </strong>
                     </div>
                     <p class="ec-base-help txt11 displaynone EC-price-warning">할인가가 적용된 최종 결제예정금액은 주문 시 확인할 수 있습니다.</p>
@@ -337,7 +362,7 @@
                                 <span id="btnBuy">상품구매하기</span>
                                 <span id="btnReserve" class="displaynone">예약주문</span>
                             </a>
-                            <a id="cartBtn" href="#none" class="btnNormalDetail sizeL " onclick="product_submit(2, '/exec/front/order/basket/', this)" alt="구입하기" style="
+                            <a id="cartBtn" class="btnNormalDetail sizeL " onclick="addCart()"  style="
                                 left: 0;
                                 border-radius: 0px;
                                 font-weight: 600;
@@ -351,7 +376,7 @@
                                 background: #222;  display:inline-block;
                                 color: #fff;
                                 border: 1px solid #222;">장바구니</a>
-                            <a id="wishBtn" href="#none" onclick="add_wishlist(this, true);" class="btnNormal sizeL " style="
+                            <button id="wishBtn" href="#none" onclick="add_wishlist(this, true);" class="btnNormal sizeL " style="
                                 float:right;         display:inline-block;     line-height: 22px;                                                                                                   border-radius: 0px;
                                 font-weight: 600;   -webkit-box-sizing: border-box;
                                 -moz-box-sizing: border-box;
@@ -361,7 +386,8 @@
                                 width: 49.5%;
                                 height: 50px;font-size:15px;
                                 letter-spacing: 1.7px;
-                                "><img src="/web/upload/48_maypop/m_wishicon.png" style="width:20px; margin:-1px 2px 0 0"> 위시리스트</a>
+                                ">
+                                <img src="/web/upload/48_maypop/m_wishicon.png" style="width:20px; margin:-1px 2px 0 0"> 위시리스트</button>
                             <span class="   displaynone sf-hidden" style="width:100%; padding:20px 0;text-align:center; display:block;margin:0 0 9px 0; background:#aaa; color:#fff">SOLD OUT</span>
                         </div>
 
