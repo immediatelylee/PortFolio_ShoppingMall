@@ -52,7 +52,11 @@
 
             // 배송비 텍스트 업데이트
             var finalTotal = total;
-            if (total > 50000) {
+            if (total === 0){
+                $('.normal_normal_ship_fee').text(0);
+                $('.total_delv_price_front').text(0);
+            }
+            else if (total > 50000) {
                 $('.ship').text('무료');
                 $('.normal_normal_ship_fee').text(0);
                 $('.total_delv_price_front').text(0);
@@ -110,6 +114,42 @@
                 updateTotalAndShipping();
             });
         });
+
+        function deleteSelectedItems() {
+            // 선택된 체크박스의 값을 수집합니다.
+            var selectedItems = [];
+            $('[name="basket_product_normal_type_normal"]:checked').each(function() {
+                selectedItems.push($(this).val());
+                console.log(selectedItems)
+            });
+
+            if (selectedItems.length === 0) {
+                alert("삭제할 상품을 선택하세요.");
+                return;
+            }
+
+            var csrfToken = $('meta[name="_csrf"]').attr('content');
+            var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+            // AJAX를 사용하여 서버에 삭제 요청을 보냅니다.
+            $.ajax({
+                url: '/cart/deleteItems',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(selectedItems),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function(response) {
+                    alert("선택된 상품이 삭제되었습니다.");
+                    // 페이지를 새로고침하여 변경 사항을 반영합니다.
+                    location.reload();
+                },
+                error: function(error) {
+                    alert("상품 삭제에 실패했습니다.");
+                }
+            });
+        }
 
     </script>
 </th:block>
@@ -249,7 +289,13 @@
                                     <td class="button">
                                         <a href="javascript:;" class="btnNormal-cart" style="padding: 5px 8px;border: 1px solid #ececec;width: 90px;margin: 1px 0" onclick="Basket.orderBasketItem(0);">order</a>
                                         <a href="javascript:;" class="btnNormal-cart" style="padding: 5px 8px;border: 1px solid #ececec;width: 90px;margin: 1px 0" onclick="BasketNew.moveWish(0);">wish list</a>
-                                        <a href="javascript:;" class="btnNormal-cart" style="padding: 5px 8px;border: 1px solid #ececec;width: 90px;margin: 1px 0" onclick="Basket.deleteBasketItem(0);"><i class="icoDelete"></i> delete</a>
+                                        <form th:action="@{'/cart/delete/' + ${cartitem.cartItemId}}" method="post" style="display:inline;">
+                                            <input type="hidden" name="_method" value="delete">
+                                            <button type="submit" class="btnNormal-cart" style="padding: 5px 8px; border: 1px solid #ececec; width: 90px; margin: 1px 0;">
+                                                <i class="icoDelete"></i> delete
+                                            </button>
+                                        </form>
+
                                     </td>
                                 </tr>
                             </th:block>
@@ -268,7 +314,7 @@
                     </div>
                     <div class="xans-element- xans-order xans-order-selectorder ec-base-button "><span class="gLeft">
 <strong class="text">선택상품을</strong>
-<a href="#none" class="btnNormal" onclick="Basket.deleteBasket()" style="
+<a class="btnNormal" onclick="deleteSelectedItems()" style="
    display: inline-block;
    box-sizing: border-box;
    padding: 5px 8px;

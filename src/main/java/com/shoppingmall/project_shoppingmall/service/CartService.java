@@ -87,6 +87,15 @@ public class CartService {
                 .orElseThrow(EntityNotFoundException::new);
         cartItemRepository.delete(cartItem);
     }
+
+    public void deleteCartItems(List<Long> cartItemIds){
+        List<CartItem> cartItems = cartItemRepository.findAllById(cartItemIds);
+
+        cartItemRepository.deleteAll(cartItems);
+    }
+
+
+
     // 장바구니 주문
     public Long orderCartItem(List<CartOrderDto> cartOrderDtoList, String email){
         List<OrderDto> orderDtoList = new ArrayList<>();
