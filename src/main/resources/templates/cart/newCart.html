@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout5-cart}">
+
+
+<th:block layout:fragment="script">
+    <script>
+        function updateQuantityAndSubTotal(change, index) {
+            console.log("update start")
+            // 수량 업데이트
+            var quantityInput = $('.quantity_' + index);
+            var currentQuantity = parseInt(quantityInput.val());
+            var newQuantity = currentQuantity + change;
+            quantityInput.val(newQuantity);
+
+            // 가격 추출
+            var pricePerUnitText = $('.product_price_s_' + index).text();
+            var pricePerUnit = parseInt(pricePerUnitText.replace(/[^0-9]/g, ''));
+
+            // 소계 계산
+            var subtotal = newQuantity * pricePerUnit;
+
+            // 소계 업데이트
+            $('.sum_price_front_' + index).text(subtotal.toLocaleString());
+
+            // 총계 및 배송비 업데이트
+            updateTotalAndShipping();
+        }
+
+        function updateTotalAndShipping() {
+            var total = 0;
+
+            // 선택된 항목의 소계를 더해 총계를 계산
+            $('[name="basket_product_normal_type_normal"]:checked').each(function() {
+                console.log("checkbox check");
+                var index = $(this).data('index');
+                var subtotalText = $('.sum_price_front_' + index).text();
+                var subtotal = parseInt(subtotalText.replace(/[^0-9]/g, ''));
+                total += subtotal;
+
+                console.log(subtotalText);
+                console.log(subtotal);
+                console.log(total);
+                console.log(index);
+            });
+
+            // 총계를 업데이트
+            $('.strong_total').text('₩' + total.toLocaleString());
+            // 전체상품주문 위 총 상품금액 표시
+            $('.total_product_price_display_front').text(total.toLocaleString());
+
+            // 배송비 텍스트 업데이트
+            var finalTotal = total;
+            if (total === 0){
+                $('.normal_normal_ship_fee').text(0);
+                $('.total_delv_price_front').text(0);
+            }
+            else if (total > 50000) {
+                $('.ship').text('무료');
+                $('.normal_normal_ship_fee').text(0);
+                $('.total_delv_price_front').text(0);
+
+            } else {
+                $('.ship').text('₩2,500');
+                $('.normal_normal_ship_fee').text(2500)
+                $('.total_delv_price_front').text(2500);
+                finalTotal += 2500;
+            }
+            console.log("finalTotal")
+            console.log(finalTotal)
+
+            // 최종 총계를 업데이트
+            $('#normal_normal_ship_fee_sum').text(finalTotal.toLocaleString());
+            $('#total_order_price_front').text(finalTotal.toLocaleString());
+        }
+
+
+        function initializeSubtotals() {
+            console.log("initialize Start")
+            $('[class^="quantity_"]').each(function() {
+                var index = $(this).attr('class').split('_')[1];
+                var quantity = parseInt($(this).val());
+
+                console.log("initializeSubtotals")
+                console.log(index);
+                console.log(quantity);
+
+                // 가격 추출
+                var pricePerUnitText = $('.product_price_s_' + index).text();
+                var pricePerUnit = parseInt(pricePerUnitText.replace(/[^0-9]/g, ''));
+
+                console.log("priceperunit")
+                console.log(pricePerUnit);
+                console.log(pricePerUnitText);
+
+                // 소계 계산
+                var subtotal = quantity * pricePerUnit;
+                console.log(subtotal)
+
+                // 소계 업데이트
+                $('.sum_price_front_' + index).text(subtotal.toLocaleString());
+            });
+
+            // 총계 및 배송비 업데이트
+            updateTotalAndShipping();
+        }
+
+        $(document).ready(function() {
+            initializeSubtotals();
+
+            // 체크박스 상태 변경 시 총계 및 배송비 업데이트
+            $('[name="basket_product_normal_type_normal"]').change(function() {
+                updateTotalAndShipping();
+            });
+        });
+
+        function deleteSelectedItems() {
+            // 선택된 체크박스의 값을 수집합니다.
+            var selectedItems = [];
+            $('[name="basket_product_normal_type_normal"]:checked').each(function() {
+                selectedItems.push($(this).val());
+                console.log(selectedItems)
+            });
+
+            if (selectedItems.length === 0) {
+                alert("삭제할 상품을 선택하세요.");
+                return;
+            }
+
+            var csrfToken = $('meta[name="_csrf"]').attr('content');
+            var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+            // AJAX를 사용하여 서버에 삭제 요청을 보냅니다.
+            $.ajax({
+                url: '/cart/deleteItems',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(selectedItems),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function(response) {
+                    alert("선택된 상품이 삭제되었습니다.");
+                    // 페이지를 새로고침하여 변경 사항을 반영합니다.
+                    location.reload();
+                },
+                error: function(error) {
+                    alert("상품 삭제에 실패했습니다.");
+                }
+            });
+        }
+
+    </script>
+</th:block>
+
+<div layout:fragment="content">
+    <div class="wrap">
+        <div id="container">
+            <div id="contents" data-aos="fade-in" class="aos-init aos-animate">
+
+                <style>
+                    .ec-base-table thead th { padding:18px 0; border-top:1px solid #bbb;border-bottom:1px solid #bbb;font-size:11px; color:#222; vertical-align:middle; font-weight:normal;  letter-spacing:0.5px; }
+                    .total  { width:90%; margin:0 auto}
+                    .total thead th  { padding:0px 0; border-top:1px solid #fff;border-bottom:1px solid #ececec;font-size:11px; }
+                    .total thead th strong {font-weight:400 }
+
+                    /* 230113 MAY-POP.COM */
+                    .xans-order-totalorder { width: 90%; margin: 10px auto 40px !important; display: -webkit-box; display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; }
+                    .xans-order-totalorder > a { -webkit-box-flex: 1; -ms-flex: 1; flex: 1; width: 31.333%; margin: 0 0 0 1%; border: 1px solid #dcdcdc; border-radius: 2px; font-size: 13px; line-height: 50px; text-align: center; background: #fff; box-sizing: border-box; }
+                    .xans-order-totalorder > a:first-child { margin: 0; }
+                    .xans-order-totalorder > a.buyAll { background-color: #e53d2f; border-color: #e53d2f; color: #fff; }
+                </style>
+
+                <div class="path">
+                    <span>현재 위치</span>
+                    <ol><li><a href="/">홈</a></li>
+                        <li title="현재 위치"><strong>장바구니</strong></li>
+                    </ol></div>
+
+                <div class="titleArea">
+                    <h2>CART</h2>
+                </div>
+
+                <div class="xans-element- xans-order xans-order-basketpackage "><p class="orderStep"><img src="//img.echosting.cafe24.com/skin/base_ko_KR/order/img_order_step1.gif" alt="01 장바구니"></p>
+                    <div class="xans-element- xans-order xans-order-tabinfo ec-base-tab typeLight none "><ul class="menu">
+                        <li class="selected "><a href="/order/basket.html">국내배송 (1)</a></li>
+                        <li class=" "><a href="/order/basket.html?delvtype=B">해외배송 (0)</a></li>
+                    </ul>
+                        <p class="right displaynone">장바구니에 담긴 상품은 7일 동안 보관됩니다.</p>
+                    </div>
+                    <div class="orderListArea ec-base-table typeList gBorder">
+                        <div style="display:none" class="xans-element- xans-order xans-order-normtitle title "><h3>일반상품 (1)</h3>
+                        </div>
+
+                        <table border="1" summary="" class="xans-element- xans-order xans-order-normnormal xans-record-"><caption>기본배송</caption>
+                            <colgroup>
+                                <col style="width:27px">
+                                <col style="width:92px">
+                                <col style="width:auto">
+                                <col style="width:98px">
+                                <col style="width:75px">
+                                <col style="width:98px">
+                                <col style="width:98px">
+                                <col style="width:85px">
+                                <col style="width:98px">
+                                <col style="width:110px">
+                            </colgroup>
+                            <thead><tr>
+                                <th scope="col"><input type="checkbox" onclick="Basket.setCheckBasketList('basket_product_normal_type_normal', this);"></th>
+                                <th scope="col">IMAGE</th>
+                                <th scope="col">PRODUCT</th>
+                                <th scope="col">PRICE</th>
+                                <th scope="col">QTY</th>
+                                <th scope="col" class="mileage">MILEAGE</th>
+                                <th scope="col">DELIVERY</th>
+                                <th scope="col">SHIP</th>
+                                <th scope="col">SUBTOTAL</th>
+                                <th scope="col">SELECT</th>
+                            </tr></thead>
+                            <tfoot class="center"><tr>
+                                <td colspan="10">
+                                    <span class="gLeft">[기본배송]</span> 상품구매금액 <strong class="strong_total">43,000 </strong> + 배송비 <span class="normal_normal_ship_fee">2,500</span></span> = 합계 : <strong class="txtEm gIndent10">₩<span id="normal_normal_ship_fee_sum" class="txt18">초기값</span></strong>
+
+                                </td>
+                            </tr></tfoot>
+                            <tbody class="xans-element- xans-order xans-order-list center">
+
+                            <th:block th:each="cartitem,iterStat : ${cartItems}">
+                                <tr class="xans-record-">
+                                    <td>
+                                        <input type="checkbox" name="basket_product_normal_type_normal" th:value="${cartitem.cartItemId}" th:data-index="${iterStat.index}" checked>
+                                    </td>
+                                    <td class="thumb gClearLine">
+                                        <a href="상품위치 등록해야함.">
+                                            <img th:src="@{${cartitem.imgUrl}}" style="max-width: 80px">
+                                        </a>
+                                    </td>
+                                    <td class="left gClearLine">
+                                        <strong class="name">
+                                            <a href="상품위치 등록해야함." th:utext="${cartitem.itemNm} + ' <br> ' + ${cartitem.itemCode}">상품명<br>상품코드</a>
+                                        </strong>
+
+                                        <ul class="xans-element- xans-order xans-order-optionall option">
+                                            <li class="xans-record-">
+                                                <span class="">
+                            <!-- <a href="#none" onclick="Basket.showOptionChangeLayer('option_modify_layer_0', $(this))" style="padding: 5px 8px;border: 1px solid #ececec" class="btnNormal gBlank5 ">옵션변경</a> -->
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td class="right">
+                                        <div class="product_price">
+                                            <strong th:class="'product_price_s_'+${iterStat.index}" th:text="'₩' + ${#numbers.formatInteger(cartitem.price, 0, 'COMMA')}">₩초기값</strong>
+                                        </div>
+                                        <div id="product_sale_price_div0" class="displaynone">
+                                            <strong>₩<span id="product_sale_price_front0">43,000</span></strong>
+                                            <p class="displaynone"></p>
+                                        </div>
+                                    </td>
+                                    <td>
+                <span>
+                    <span class="ec-base-qty">
+                        <input th:class="'quantity_' + ${iterStat.index}" name="quantity_name" size="2" th:value="${cartitem.count}" type="text">
+                        <a th:onclick="updateQuantityAndSubTotal(1, [[${iterStat.index}]])">
+                            <img src="//img.echosting.cafe24.com/skin/base/common/btn_quantity_up.gif" alt="수량증가" class="up">
+                        </a>
+                        <a th:onclick="updateQuantityAndSubTotal(-1, [[${iterStat.index}]])">
+                            <img src="//img.echosting.cafe24.com/skin/base/common/btn_quantity_down.gif" alt="수량감소" class="down">
+                        </a>
+                    </span>
+                    <a href="javascript:;" class="btnNormal gBlank5" onclick="Basket.modifyQuantity()">변경</a>
+                </span>
+                                        <span class="displaynone">1</span>
+                                    </td>
+                                    <td>
+                                        <span id="product_mileage0" class="txtInfo">-</span>
+                                    </td>
+                                    <td>
+                                        <div class="txtInfo">기본배송<br></div>
+                                    </td>
+                                    <td  rowspan="1" class="">
+                                        <p class="ship">₩2,500<span class="displaynone"><br></span><br></p>
+                                    </td>
+                                    <td class="right">
+                                        <strong>₩<span th:class="'sum_price_front_' + ${iterStat.index}">초기값</span></strong>
+                                        <div class="displaynone"></div>
+                                    </td>
+                                    <td class="button">
+                                        <a href="javascript:;" class="btnNormal-cart" style="padding: 5px 8px;border: 1px solid #ececec;width: 90px;margin: 1px 0" onclick="Basket.orderBasketItem(0);">order</a>
+                                        <a href="javascript:;" class="btnNormal-cart" style="padding: 5px 8px;border: 1px solid #ececec;width: 90px;margin: 1px 0" onclick="BasketNew.moveWish(0);">wish list</a>
+                                        <form th:action="@{'/cart/delete/' + ${cartitem.cartItemId}}" method="post" style="display:inline;">
+                                            <input type="hidden" name="_method" value="delete">
+                                            <button type="submit" class="btnNormal-cart" style="padding: 5px 8px; border: 1px solid #ececec; width: 90px; margin: 1px 0;">
+                                                <i class="icoDelete"></i> delete
+                                            </button>
+                                        </form>
+
+                                    </td>
+                                </tr>
+                            </th:block>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="orderListArea ec-base-table typeList gBorder">
+
+
+                    </div>
+                    <div class="xans-element- xans-order xans-order-basketpriceinfoguide  "><p class="info displaynone">할인 적용 금액은 주문서작성의 결제예정금액에서 확인 가능합니다.</p>
+                        <p class="info displaynone">결제예정금액은 배송비가 포함된 금액이므로 주문서작성에서 확인 가능합니다.</p>
+                        <p class="info displaynone">추가증정 이벤트 상품의 옵션 및 수량 변경은 상품상세에서 가능합니다.</p>
+                    </div>
+                    <div class="xans-element- xans-order xans-order-selectorder ec-base-button "><span class="gLeft">
+<strong class="text">선택상품을</strong>
+<a class="btnNormal" onclick="deleteSelectedItems()" style="
+   display: inline-block;
+   box-sizing: border-box;
+   padding: 5px 8px;
+   border: 1px solid #ececec;
+   letter-spacing: 0.5px;
+   font-size: 12px;
+   line-height: 14px;
+   font-weight: normal;
+   text-decoration: none;
+   vertical-align: middle;
+   word-spacing: -0.5px;
+   text-align: center;
+   white-space: nowrap;
+   color: #222;
+   background-color: #fff"
+   >
+    <i class="icoDelete"></i> 삭제하기</a>
+
+</span>
+                        <span class="gRight">
+
+<a href="#none" class="btnNormal" onclick="Basket.emptyBasket()" style="background:#222; color:#fff;padding: 5px 8px;border: 1px solid #ececec">장바구니비우기</a>
+<a href="#none" class="btnNormal" onclick="Basket.estimatePrint(this)" style="padding: 5px 8px;border: 1px solid #ececec" link="/estimate/userform.html">견적서출력</a>
+</span>
+                    </div>
+                    <!-- 총 주문금액 : 국내배송상품 -->
+                    <div class="xans-element- xans-order xans-order-totalsummary ec-base-table typeList gBorder total  "><table border="1" summary="">
+                        <caption>총 주문금액</caption>
+                        <colgroup>
+                            <col style="width:17%;">
+                            <col style="width:17%;" class="displaynone">
+                            <col style="width:19%;">
+                            <col style="width:17%;" class="displaynone">
+                            <col style="width:auto;">
+                        </colgroup>
+                        <thead><tr>
+                            <th scope="col"><strong>총 상품금액</strong></th>
+                            <th scope="col" class="displaynone"><strong>총 부가세</strong></th>
+                            <th scope="col"><strong>총 배송비</strong></th>
+                            <th scope="col" id="total_benefit_price_title_area" class="displaynone">
+                                <strong>총 할인금액</strong> <a href="#none" class="btnNormal" onclick="OrderLayer.onDiv('order_layer_benefit', event);">내역보기</a>
+                            </th>
+                            <th scope="col"><strong>결제예정금액</strong></th>
+                        </tr></thead>
+                        <tbody class="center"><tr>
+                            <td><div class="box ">₩<span class=""><span class="total_product_price_display_front">43,000</span></span><span class=" displaynone"><span class="total_product_price_display_back"></span></span>
+                            </div></td>
+                            <td class="displaynone"><div class="box ">₩<span class=""><span class="total_product_vat_price_front">0</span></span> <span class=" displaynone"><span class="total_product_vat_price_back"></span></span>
+                            </div></td>
+                            <td>
+                                <div class="box shipping ">
+                                    + ₩<span id="total_delv_price_front" class=""><span class="total_delv_price_front">2,500</span></span> <span class=" displaynone"><span class="total_delv_price_back"></span></span>
+                                    <div class="shippingArea displaynone">(<span></span>
+                                        <div class="shippingFee">
+                                            <a href="#none" class="btnNormal" >자세히</a>)
+                                                <a href="#none" class="btnClose">
+                                                    <img src="//img.echosting.cafe24.com/skin/base/common/btn_close_tip.gif" alt="닫기"></a>
+                                                <span class="edge"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td id="total_benefit_price_area" class="displaynone"><div class="box ">
+                                <strong class="">- </strong><strong>₩<span id="total_product_discount_price_front" class="">0</span></strong> <span class=" displaynone"></span>
+                            </div></td>
+                            <td><div class="box txtEm ">
+                                <strong class="">= </strong><strong>₩<span id="total_order_price_front" class="">45,500</span></strong> <span class="txt14 displaynone"></span>
+                            </div></td>
+                        </tr></tbody>
+                    </table>
+
+                    </div>
+                    <!-- 총 주문금액 : 해외배송상품 -->
+                    <div class="xans-element- xans-order xans-order-totaloversea ec-base-table typeList gBorder total displaynone "><table border="1" summary="">
+                        <caption>총 주문금액</caption>
+                        <colgroup>
+                            <col style="width:23%;">
+                            <col style="width:21%;" class="displaynone">
+                            <col style="width:21%;" class="displaynone">
+                            <col style="width:auto">
+                        </colgroup>
+                        <thead><tr>
+                            <th scope="col"><span>총 상품금액</span></th>
+                            <th scope="col" class="displaynone"><strong>총 부가세</strong></th>
+                            <th scope="col" id="oversea_total_benefit_price_title_area" class="displaynone">총 할인금액 <a href="#none" class="btnNormal" onclick="OrderLayer.onDiv('order_layer_benefit', event);">내역보기</a>
+                            </th>
+                            <th scope="col">총 합계</th>
+                        </tr></thead>
+                        <tbody class="center"><tr>
+                            <td><div class="box txt16">
+                                <strong>₩<span class="txt23"><span class="total_product_price_display_front">43,000</span></span></strong> <span class="txt14 displaynone"><span class="total_product_price_display_back"></span></span>
+                            </div></td>
+                            <td class="displaynone"><div class="box txt16">
+                                <strong>₩<span class="txt23"><span class="total_product_vat_price_front">0</span></span></strong> <span class="txt14 displaynone"><span class="total_product_vat_price_back"></span></span>
+                            </div></td>
+                            <td id="oversea_total_benefit_price_area" class="displaynone"><div class="box txt16">
+                                <strong>- ₩<span id="oversea_total_product_discount_price_front" class="txt23">0</span></strong> <span class="txt14 displaynone"></span>
+                            </div></td>
+                            <td><div class="box txtEm txt16">
+                                <strong class="txt23">= </strong><strong>₩<span id="oversea_total_order_price_front" class="txt23">45,500</span></strong> <span class="txt14 displaynone"></span>
+                            </div></td>
+                        </tr></tbody>
+                    </table>
+                        <div  class="totalDetail ec-base-layer">
+                            <div class="header">
+                                <h3>총 할인금액 상세내역</h3>
+                            </div>
+                            <div class="content">
+                                <p id="mTotalOverseaBenefitPrice" class="txtEm txt16"><strong>₩0</strong></p>
+
+                            </div>
+                            <a href="#none" class="close" onclick="OrderLayer.offDiv('order_layer_benefit');"><img src="//img.echosting.cafe24.com/skin/base/common/btn_close.gif" alt="닫기"></a>
+                        </div>
+                    </div>
+                    <div class="xans-element- xans-order xans-order-totalorder ec-base-button justify"><a href="#none" onclick="Basket.orderAll(this)" link-order="/order/orderform.html?basket_type=all_buy" link-login="/member/login.html" class=" buyAll ">전체상품주문</a>
+                        <a href="#none" onclick="Basket.orderSelectBasket(this)" link-order="/order/orderform.html?basket_type=all_buy" link-login="/member/login.html" class="buySelect ">선택상품주문</a><a href="/" class="keepGoing">쇼핑계속하기</a>
+                        <div style="width:100%;height:1px;background:transparent;">
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="xans-element- xans-myshop xans-myshop-wishlist ec-base-table typeList  xans-record-"><!--
+$login_page = /member/login.html
+$count = 5
+$mode = basket
+-->
+                    <div class="title">
+                        <h3>관심상품</h3>
+                    </div>
+                    <table border="1" summary="">
+                        <caption>관심상품 목록</caption>
+                        <colgroup>
+                            <col style="width:92px">
+                            <col style="width:auto">
+                            <col style="width:105px">
+                            <col style="width:100px">
+                            <col style="width:100px">
+                            <col style="width:85px">
+                            <col style="width:105px">
+                            <col style="width:110px">
+                        </colgroup>
+                        <thead><tr>
+                            <th scope="col">이미지</th>
+                            <th scope="col">상품정보</th>
+                            <th scope="col">판매가</th>
+                            <th scope="col" class="mileage">적립금</th>
+                            <th scope="col">배송구분</th>
+                            <th scope="col">배송비</th>
+                            <th scope="col">합계</th>
+                            <th scope="col">선택</th>
+                        </tr></thead><tbody class="xans-element- xans-myshop xans-myshop-wishlistitem center"><tr class="xans-record-">
+                        <td class="thumb">
+                            <a href="/product/detail.html?product_no=8978&amp;cate_no=29&amp;display_group=">
+                                <img src="//bebedepino.com/web/product/medium/202405/6503fc92f592e248b8dfc9d136e63023.jpg" alt="" style="max-width: 80px">
+                            </a>
+                        </td>
+                        <td class="left">
+                            <strong class="name"><a href="/product/올오버체리아쿠아슈즈bp42as463/8978/category/29/" class="ec-product-name">올오버체리아쿠아슈즈<br>BP42AS463</a></strong>
+                            <ul class="xans-element- xans-myshop xans-myshop-optionall option"><li class="xans-record-">
+                                <strong class="displaynone"></strong> <span class="displaynone">(개)</span><br>
+<!--                                <a href="#none" style="padding: 5px 8px;border: 1px solid #ececec" onclick="NewWishlist.showOptionChangeLayer('wishlist_option_modify_layer_0')" class="btnNormal gBlank5 ">옵션변경</a>-->
+                            </li>
+                            </ul>
+                        </td>
+                        <td class="price right"><strong>₩43,000</strong></td>
+                        <td><span class="txtInfo">-</span></td>
+                        <td><div class="txtInfo">기본배송<br></div></td>
+                        <td>
+                            <span class="">₩2,500<br></span> 조건</td>
+                        <td class="price right">₩45,500</td>
+                        <td class="button">
+                            <a href="#none" style="width: 90px;height: 22px;margin: 1px 0;padding: 0px 0px 20px 1px;border: 1px solid transparent;background-color: #333;vertical-align: middle;/* text-align: center; */" onclick="CAPP_SHOP_NEW_PRODUCT_OPTIONSELECT.selectOptionCommon(8978,  29, 'wishlist', '')" class="btnSubmit ">주문</a>
+                            <a href="#none" style="width: 90px;margin: 1px 0;padding: 5px 8px;border: 1px solid #ececec" onclick="CAPP_SHOP_NEW_PRODUCT_OPTIONSELECT.selectOptionCommon(8978,  29, 'wishlist', '')" class="btnNormal ">장바구니</a>
+                            <a href="#none" style="width: 90px;margin: 1px 0;padding: 5px 8px;border: 1px solid #ececec" class="btnNormal btn_wishlist_del" rel="8978||||"><i class="icoDelete"></i> 삭제</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                    </table>
+                    <p class="message displaynone">관심상품 내역이 없습니다.</p>
+                </div>
+
+                <div class="xans-element- xans-myshop xans-myshop-wishlistpaging ec-base-paginate">
+                    <!-- $mode = basket -->
+                    <a href="#none" class="first"><img src="/web/upload/img/bt_first.png" alt="첫 페이지"></a>
+                    <a href=""><img src="/web/upload/img/bt_prev.png" alt="이전 페이지"></a>
+                    <ol>
+                        <li class="xans-record-"><a href="?page=1" class="this">1</a></li>
+                    </ol>
+                    <a href="#none"><img src="/web/upload/img/bt_next.png" alt="다음 페이지"></a>
+                    <a href="#none" class="last"><img src="/web/upload/img/bt_last.png" alt="마지막 페이지"></a>
+                </div>
+
+                <div id="ec-basketOptionModifyLayer" class="optionModify ec-base-layer" style="display:none;">
+                    <div class="header">
+                        <h3>옵션변경</h3>
+                    </div>
+                    <div class="content">
+                        <ul class="prdInfo"><li class="ec-basketOptionModifyLayer-productName">{$product_name}</li>
+                            <li class="ec-basketOptionModifyLayer-optionStr">{$layer_option_str}</li>
+                        </ul><div class="prdModify">
+                        <h4>상품옵션</h4>
+                        <ul><li class="ec-basketOptionModifyLayer-options" style="display:none;"><span>{$option_name}</span> {$form.option_value}</li>
+                            <li class="ec-basketOptionModifyLayer-addOptions" style="display:none;"><span>{$option_name}</span> {$form.option_value}</li>
+                        </ul></div>
+                    </div>
+                    <div class="ec-base-button">
+                        <a href="#none" class="btnSubmitFix sizeS ec-basketOptionModifyLayer-add">추가</a>
+                        <a href="#none" class="btnNormalFix sizeS ec-basketOptionModifyLayer-modify">변경</a>
+                    </div>
+                    <a href="#none" class="close" onclick="$('#ec-basketOptionModifyLayer').hide();"><img src="//img.echosting.cafe24.com/skin/base/common/btn_close.gif" alt="닫기"></a>
+                </div>
+
+
+
+                <!-- Enliple Tracker Start -->
+                <script type="text/javascript">
+                    (function(a,g,e,n,t){a.enp=a.enp||function(){(a.enp.q=a.enp.q||[]).push(arguments)};n=g.createElement(e);n.async=!0;n.defer=!0;n.src="https://cdn.megadata.co.kr/dist/prod/enp_tracker_cafe24_smart.min.js";t=g.getElementsByTagName(e)[0];t.parentNode.insertBefore(n,t)})(window,document,"script");
+                    enp('create', 'conversion', 'bebedepino', { device: 'W', paySys: 'naverPay' });
+                </script>
+                <!-- Enliple Tracker End -->
+            </div>
+        </div>
+    </div>
+</div>
+</html>
