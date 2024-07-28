@@ -26,20 +26,20 @@
         <nav>
             <ul>
                 <li class="nav-item" sec:authorize="isAnonymous()">
-                    <a class="nav-link" href="/members/login">LOGIN</a>
+                    <a class="nav-link" href="/members/login" style="font-family: sans-serif">LOGIN</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/members/logout">LOGOUT</a>
+                    <a class="nav-link" href="/members/logout" style="font-family: sans-serif">LOGOUT</a>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="/members/new">JOIN</a></li>
+                <li class="nav-item"><a class="nav-link" href="/members/new" style="font-family: sans-serif">JOIN</a></li>
                 <li class="nav-item" >
-                    <a class="nav-link" th:href="@{/orders}" sec:authorize="isAuthenticated()">ORDER</a>
-                    <a class="nav-link" href="/members/login" sec:authorize="isAnonymous()">ORDER</a>
+                    <a class="nav-link" th:href="@{/order}" sec:authorize="isAuthenticated()" style="font-family: sans-serif">ORDER</a>
+                    <a class="nav-link" href="/members/login" sec:authorize="isAnonymous()" style="font-family: sans-serif">ORDER</a>
 
                 </li>
                 <li class="nav-item" >
-                    <a class="nav-link" th:href="@{/cart}" sec:authorize="isAuthenticated()">CART</a>
-                    <a class="nav-link" href="/members/login" sec:authorize="isAnonymous()">CART</a>
+                    <a class="nav-link" th:href="@{/cart}" sec:authorize="isAuthenticated()" style="font-family: sans-serif">CART</a>
+                    <a class="nav-link" href="/members/login" sec:authorize="isAnonymous()" style="font-family: sans-serif">CART</a>
                 </li>
             </ul>
         </nav>
@@ -209,11 +209,11 @@
                         <div class="event_logo"></div>
                     </div>
                     <ul class="hd_menu">
-                        <li><a href="/marypick.html">마리픽</a></li>
-                        <li><a href="/product/list.html?cate_no=8126">베스트</a></li>
-                        <li><a href="/product/new.html?cate_no=8125">신상품</a></li>
-                        <li><a href="/brand.html">브랜드</a></li>
-                        <li><a href="/event.html">이벤트</a></li>
+                        <li><a href="/marypick.html" style="font-family: sans-serif">마리픽</a></li>
+                        <li><a href="/product/list.html?cate_no=8126" style="font-family: sans-serif">베스트</a></li>
+                        <li><a href="/product/new.html?cate_no=8125" style="font-family: sans-serif">신상품</a></li>
+                        <li><a href="/brand.html" style="font-family: sans-serif">브랜드</a></li>
+                        <li><a href="/event.html" style="font-family: sans-serif">이벤트</a></li>
                     </ul>
                 </div>
             </div>
