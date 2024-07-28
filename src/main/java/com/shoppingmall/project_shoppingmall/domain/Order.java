@@ -4,6 +4,7 @@ import com.shoppingmall.project_shoppingmall.constant.*;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
+import java.math.*;
 import java.time.LocalDateTime;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus; //주문상태
 
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL
             , orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems = new ArrayList<>();
@@ -35,8 +37,8 @@ public class Order extends BaseEntity {
         orderItems.add(orderItem);
         orderItem.setOrder(this);
     }
-
     public static Order createOrder(Member member, List<OrderItem> orderItemList) {
+
         Order order = new Order();
         order.setMember(member);
 

@@ -7,7 +7,7 @@
 <th:block layout:fragment="script">
     <script>
         function updateQuantityAndSubTotal(change, index) {
-            console.log("update start")
+
             // 수량 업데이트
             var quantityInput = $('.quantity_' + index);
             var currentQuantity = parseInt(quantityInput.val());
@@ -33,16 +33,12 @@
 
             // 선택된 항목의 소계를 더해 총계를 계산
             $('[name="basket_product_normal_type_normal"]:checked').each(function() {
-                console.log("checkbox check");
+
                 var index = $(this).data('index');
                 var subtotalText = $('.sum_price_front_' + index).text();
                 var subtotal = parseInt(subtotalText.replace(/[^0-9]/g, ''));
                 total += subtotal;
 
-                console.log(subtotalText);
-                console.log(subtotal);
-                console.log(total);
-                console.log(index);
             });
 
             // 총계를 업데이트
@@ -67,8 +63,6 @@
                 $('.total_delv_price_front').text(2500);
                 finalTotal += 2500;
             }
-            console.log("finalTotal")
-            console.log(finalTotal)
 
             // 최종 총계를 업데이트
             $('#normal_normal_ship_fee_sum').text(finalTotal.toLocaleString());
@@ -77,26 +71,21 @@
 
 
         function initializeSubtotals() {
-            console.log("initialize Start")
+
             $('[class^="quantity_"]').each(function() {
                 var index = $(this).attr('class').split('_')[1];
                 var quantity = parseInt($(this).val());
 
-                console.log("initializeSubtotals")
-                console.log(index);
-                console.log(quantity);
 
                 // 가격 추출
                 var pricePerUnitText = $('.product_price_s_' + index).text();
                 var pricePerUnit = parseInt(pricePerUnitText.replace(/[^0-9]/g, ''));
 
-                console.log("priceperunit")
-                console.log(pricePerUnit);
-                console.log(pricePerUnitText);
 
                 // 소계 계산
                 var subtotal = quantity * pricePerUnit;
                 console.log(subtotal)
+
 
                 // 소계 업데이트
                 $('.sum_price_front_' + index).text(subtotal.toLocaleString());
@@ -120,7 +109,7 @@
             var selectedItems = [];
             $('[name="basket_product_normal_type_normal"]:checked').each(function() {
                 selectedItems.push($(this).val());
-                console.log(selectedItems)
+
             });
 
             if (selectedItems.length === 0) {
@@ -150,6 +139,130 @@
                 }
             });
         }
+//체크박스에 선택된 상품들을 조회하여 주문을 넣는 스크립트
+        function collectCheckedItems() {
+            let checkedItems = [];
+            $('input[name="basket_product_normal_type_normal"]:checked').each(function() {
+                let itemId = $(this).val();
+                let count = $('.quantity_' + itemId).val();
+                checkedItems.push({ cartItemId: Number(itemId), count: Number(count) });
+            });
+            return checkedItems;
+        }
+
+        function orderCheckedItems() {
+            let checkedItems = collectCheckedItems();
+            console.log(checkedItems);
+            if (checkedItems.length === 0) {
+                alert("Please select at least one item to order.");
+                return;
+            }
+
+            var csrfToken = $('meta[name="_csrf"]').attr('content');
+            var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+            // AJAX를 사용하여 서버에 주문 요청을 보냅니다.
+            $.ajax({
+                url: '/cart/order',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ items: checkedItems }),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function(response) {
+                    window.location.href = '/order/selected';
+                },
+                error: function(error) {
+                    alert("주문 처리 중 오류가 발생했습니다.");
+                    console.log(error);
+                }
+            });
+        }
+
+// 각 row에 있는 order버튼을 눌렀을때 해당 row의 아이템만 order로 전송할수 있게함.
+
+        function orderSingleItems(cartItemId) {
+            let count = $('.quantity_' + cartItemId).val();
+            let checkedSingleItem = [{ cartItemId: Number(cartItemId), count: Number(count) }];
+
+            console.log(checkedSingleItem)
+
+
+            var csrfToken = $('meta[name="_csrf"]').attr('content');
+            var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+            // AJAX를 사용하여 서버에 주문 요청을 보냅니다.
+            $.ajax({
+                url: '/cart/order',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ items: checkedSingleItem }),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function(response) {
+                    window.location.href = '/order/selected';
+                },
+                error: function(error) {
+                    alert("주문 처리 중 오류가 발생했습니다.");
+                    console.log(error);
+                }
+            });
+        }
+
+
+        // 수정전
+        // function collectCheckedItems() {
+        //     let checkedItems = [];
+        //     $('input[name="basket_product_normal_type_normal"]:checked').each(function() {
+        //         checkedItems.push($(this).val());
+        //     });
+        //     return checkedItems;
+        // }
+        //
+        // function orderCheckedItems() {
+        //     let checkedItems = collectCheckedItems();
+        //     console.log(checkedItems)
+        //     if (checkedItems.length === 0) {
+        //         alert("Please select at least one item to order.");
+        //         return;
+        //     }
+        //
+        //     var csrfToken = $('meta[name="_csrf"]').attr('content');
+        //     var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+        //
+        //     // 선택된 항목의 ID만 추출하고 숫자로 변환
+        //     let itemIds = checkedItems.map(item => Number(item));
+        //     console.log(itemIds); // 예: [2]
+        //
+        //     // AJAX를 사용하여 서버에 주문 요청을 보냅니다.
+        //     // 선택상품id를 보내는것은 /order_id_save 입니다.
+        //     // post로 보내서 다시 /order로 보내는데 이때 RedirectAttribute를 사용해서 cartItemId를 사용합니다.
+        //     $.ajax({
+        //         url: '/order_id_save',
+        //         type: 'POST',
+        //         contentType: 'application/json',
+        //         data: JSON.stringify(itemIds),
+        //         beforeSend: function(xhr) {
+        //             xhr.setRequestHeader(csrfHeader, csrfToken);
+        //         },
+        //         success: function(response) {
+        //             // 서버에서 /order/selected로 리다이렉트 처리
+        //             window.location.href = '/order/selected';
+        //         },
+        //         error: function(error) {
+        //             alert("주문 처리 중 오류가 발생했습니다.");
+        //             console.log(error);
+        //         }
+        //     });
+        // }
+
+        // $('#orderButton').on('click', function() {
+        //     orderCheckedItems();
+        // });
+
+
 
     </script>
 </th:block>
@@ -182,11 +295,15 @@
                     <h2>CART</h2>
                 </div>
 
-                <div class="xans-element- xans-order xans-order-basketpackage "><p class="orderStep"><img src="//img.echosting.cafe24.com/skin/base_ko_KR/order/img_order_step1.gif" alt="01 장바구니"></p>
-                    <div class="xans-element- xans-order xans-order-tabinfo ec-base-tab typeLight none "><ul class="menu">
+                <div class="xans-element- xans-order xans-order-basketpackage ">
+                    <p class="orderStep">
+                        <img src="//img.echosting.cafe24.com/skin/base_ko_KR/order/img_order_step1.gif" alt="01 장바구니">
+                    </p>
+                    <div class="xans-element- xans-order xans-order-tabinfo ec-base-tab typeLight none ">
+                        <ul class="menu">
                         <li class="selected "><a href="/order/basket.html">국내배송 (1)</a></li>
                         <li class=" "><a href="/order/basket.html?delvtype=B">해외배송 (0)</a></li>
-                    </ul>
+                        </ul>
                         <p class="right displaynone">장바구니에 담긴 상품은 7일 동안 보관됩니다.</p>
                     </div>
                     <div class="orderListArea ec-base-table typeList gBorder">
@@ -207,7 +324,7 @@
                                 <col style="width:110px">
                             </colgroup>
                             <thead><tr>
-                                <th scope="col"><input type="checkbox" onclick="Basket.setCheckBasketList('basket_product_normal_type_normal', this);"></th>
+                                <th scope="col"><input type="checkbox"></th>
                                 <th scope="col">IMAGE</th>
                                 <th scope="col">PRODUCT</th>
                                 <th scope="col">PRICE</th>
@@ -224,12 +341,13 @@
 
                                 </td>
                             </tr></tfoot>
+
                             <tbody class="xans-element- xans-order xans-order-list center">
 
                             <th:block th:each="cartitem,iterStat : ${cartItems}">
                                 <tr class="xans-record-">
                                     <td>
-                                        <input type="checkbox" name="basket_product_normal_type_normal" th:value="${cartitem.cartItemId}" th:data-index="${iterStat.index}" checked>
+                                        <input type="checkbox" name="basket_product_normal_type_normal" th:value="${cartitem.cartItemId}" th:data-index="${cartitem.cartItemId}" checked>
                                     </td>
                                     <td class="thumb gClearLine">
                                         <a href="상품위치 등록해야함.">
@@ -244,14 +362,14 @@
                                         <ul class="xans-element- xans-order xans-order-optionall option">
                                             <li class="xans-record-">
                                                 <span class="">
-                            <!-- <a href="#none" onclick="Basket.showOptionChangeLayer('option_modify_layer_0', $(this))" style="padding: 5px 8px;border: 1px solid #ececec" class="btnNormal gBlank5 ">옵션변경</a> -->
+
                                                 </span>
                                             </li>
                                         </ul>
                                     </td>
                                     <td class="right">
                                         <div class="product_price">
-                                            <strong th:class="'product_price_s_'+${iterStat.index}" th:text="'₩' + ${#numbers.formatInteger(cartitem.price, 0, 'COMMA')}">₩초기값</strong>
+                                            <strong th:class="'product_price_s_'+${cartitem.cartItemId}" th:text="'₩' + ${#numbers.formatInteger(cartitem.price, 0, 'COMMA')}">₩초기값</strong>
                                         </div>
                                         <div id="product_sale_price_div0" class="displaynone">
                                             <strong>₩<span id="product_sale_price_front0">43,000</span></strong>
@@ -261,11 +379,11 @@
                                     <td>
                 <span>
                     <span class="ec-base-qty">
-                        <input th:class="'quantity_' + ${iterStat.index}" name="quantity_name" size="2" th:value="${cartitem.count}" type="text">
-                        <a th:onclick="updateQuantityAndSubTotal(1, [[${iterStat.index}]])">
+                        <input th:class="'quantity_' + ${cartitem.cartItemId}" name="quantity_name" size="2" th:value="${cartitem.count}" type="text">
+                        <a th:onclick="updateQuantityAndSubTotal(1, [[${cartitem.cartItemId}]])">
                             <img src="//img.echosting.cafe24.com/skin/base/common/btn_quantity_up.gif" alt="수량증가" class="up">
                         </a>
-                        <a th:onclick="updateQuantityAndSubTotal(-1, [[${iterStat.index}]])">
+                        <a th:onclick="updateQuantityAndSubTotal(-1, [[${cartitem.cartItemId}]])">
                             <img src="//img.echosting.cafe24.com/skin/base/common/btn_quantity_down.gif" alt="수량감소" class="down">
                         </a>
                     </span>
@@ -283,12 +401,17 @@
                                         <p class="ship">₩2,500<span class="displaynone"><br></span><br></p>
                                     </td>
                                     <td class="right">
-                                        <strong>₩<span th:class="'sum_price_front_' + ${iterStat.index}">초기값</span></strong>
+                                        <strong>₩<span th:class="'sum_price_front_' + ${cartitem.cartItemId}">초기값</span></strong>
                                         <div class="displaynone"></div>
                                     </td>
                                     <td class="button">
-                                        <a href="javascript:;" class="btnNormal-cart" style="padding: 5px 8px;border: 1px solid #ececec;width: 90px;margin: 1px 0" onclick="Basket.orderBasketItem(0);">order</a>
-                                        <a href="javascript:;" class="btnNormal-cart" style="padding: 5px 8px;border: 1px solid #ececec;width: 90px;margin: 1px 0" onclick="BasketNew.moveWish(0);">wish list</a>
+
+                                        <button type="button" th:onclick="orderSingleItems([[${cartitem.cartItemId}]])" class="btnNormal-cart" style="padding: 5px 8px;border: 1px solid #ececec;width: 90px;margin: 1px 0" >order</button>
+
+                                        <form th:action="@{'/cart/wish/' + ${cartitem.cartItemId}}" >
+                                            <input type="hidden" name="selectedIds" th:value="${cartitem.cartItemId}">
+                                        <button onclick="orderSingleItems([[${cartitem.cartItemId}]])" class="btnNormal-cart" style="padding: 5px 8px;border: 1px solid #ececec;width: 90px;margin: 1px 0" >wish list</button>
+                                        </form>
                                         <form th:action="@{'/cart/delete/' + ${cartitem.cartItemId}}" method="post" style="display:inline;">
                                             <input type="hidden" name="_method" value="delete">
                                             <button type="submit" class="btnNormal-cart" style="padding: 5px 8px; border: 1px solid #ececec; width: 90px; margin: 1px 0;">
@@ -430,8 +553,49 @@
                             <a href="#none" class="close" onclick="OrderLayer.offDiv('order_layer_benefit');"><img src="//img.echosting.cafe24.com/skin/base/common/btn_close.gif" alt="닫기"></a>
                         </div>
                     </div>
-                    <div class="xans-element- xans-order xans-order-totalorder ec-base-button justify"><a href="#none" onclick="Basket.orderAll(this)" link-order="/order/orderform.html?basket_type=all_buy" link-login="/member/login.html" class=" buyAll ">전체상품주문</a>
-                        <a href="#none" onclick="Basket.orderSelectBasket(this)" link-order="/order/orderform.html?basket_type=all_buy" link-login="/member/login.html" class="buySelect ">선택상품주문</a><a href="/" class="keepGoing">쇼핑계속하기</a>
+                    <div class="xans-element- xans-order xans-order-totalorder ec-base-button justify">
+                        <button href="#none" onclick="Basket.orderAll(this)" link-order="/order/orderform.html?basket_type=all_buy" link-login="/member/login.html" class=" buyAll "
+                           style="background-color: #e53d2f;
+                                    border-color: #e53d2f;
+                                    color: #fff;
+                                    -webkit-box-flex: 1;
+                                    -ms-flex: 1;
+                                    flex: 1;
+                                    width: 31.333%;
+                                    margin: 0 0 0 1%;
+                                    border: 1px solid #dcdcdc;
+                                    border-radius: 2px;
+                                    font-size: 13px;
+                                    line-height: 50px;
+                                    text-align: center;
+
+                                    box-sizing: border-box;">전체상품주문</button>
+                        <button onclick="orderCheckedItems()" class="buySelect "
+                        style="     -webkit-box-flex: 1;
+                                    -ms-flex: 1;
+                                    flex: 1;
+                                    width: 31.333%;
+                                    margin: 0 0 0 1%;
+                                    border: 1px solid #dcdcdc;
+                                    border-radius: 2px;
+                                    font-size: 13px;
+                                    line-height: 50px;
+                                    text-align: center;
+                                    background: #fff;
+                                    box-sizing: border-box;">선택상품주문</button>
+                        <button href="/" class="keepGoing"
+                                style="-webkit-box-flex: 1;
+                                    -ms-flex: 1;
+                                    flex: 1;
+                                    width: 31.333%;
+                                    margin: 0 0 0 1%;
+                                    border: 1px solid #dcdcdc;
+                                    border-radius: 2px;
+                                    font-size: 13px;
+                                    line-height: 50px;
+                                    text-align: center;
+                                    background: #fff;
+                                    box-sizing: border-box;"                           >쇼핑계속하기</button>
                         <div style="width:100%;height:1px;background:transparent;">
 
                         </div>

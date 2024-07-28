@@ -469,7 +469,30 @@ caption {
     padding: 10px 0;
     text-align: center;
 }
-
+/*추가*/
+.xans-order-totalorder > button.buyAll {
+    background-color: #e53d2f;
+    border-color: #e53d2f;
+    color: #fff;
+}
+.xans-order-totalorder > button:first-child {
+    margin: 0;
+}
+.xans-order-totalorder > button {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    width: 31.333%;
+    margin: 0 0 0 1%;
+    border: 1px solid #dcdcdc;
+    border-radius: 2px;
+    font-size: 13px;
+    line-height: 50px;
+    text-align: center;
+    background: #fff;
+    box-sizing: border-box;
+}
+/* 추가*/
 .xans-order-totalorder > a.buyAll {
     background-color: #e53d2f;
     border-color: #e53d2f;

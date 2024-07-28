@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
 
+import java.security.*;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -37,5 +39,21 @@ public class MemberService implements UserDetailsService {
                 .password(member.getPassword())
                 .roles(member.getRole().toString())
                 .build();
+    }
+    public Member getCurrentMember(Principal principal) {
+        String email = principal.getName();
+        return memberRepository.findByEmail(email);
+    }
+
+    public String getMemberAddressByPrincipal(Principal principal){
+        if (principal != null){
+            String email = principal.getName();
+            Member member = memberRepository.findByEmail(email);
+            if (member != null){
+                return member.getAddress();
+            }
+
+        }
+        return null;
     }
 }

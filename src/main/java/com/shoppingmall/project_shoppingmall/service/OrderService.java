@@ -1,5 +1,6 @@
 package com.shoppingmall.project_shoppingmall.service;
 
+import com.shoppingmall.project_shoppingmall.constant.*;
 import com.shoppingmall.project_shoppingmall.domain.*;
 import com.shoppingmall.project_shoppingmall.dto.*;
 import com.shoppingmall.project_shoppingmall.repository.*;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.*;
 import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.*;
+import javax.servlet.http.*;
+import java.security.*;
 import java.util.*;
 
 @Service
@@ -27,6 +30,8 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     private final ItemImgRepository itemImgRepository;
+    private final MemberService memberService;
+//    private final CartService cartService;
 
     public Long order(OrderDto orderDto, String email){
 
@@ -43,6 +48,47 @@ public class OrderService {
 
         return order.getId();
     }
+
+//    public Order createOrder(List<Long> cartItemIds, Principal principal) {
+//        Member member =memberService.getCurrentMember(principal);
+//
+//
+//        List<CartItem> cartItems;
+//        if (cartItemIds == null || cartItemIds.isEmpty()) {
+//            cartItems = cartService.getCartItems(); // 모든 장바구니 아이템
+//        } else {
+//            cartItems = cartService.getCartItemsByIds(cartItemIds); // 선택된 장바구니 아이템
+//        }
+//
+//        if (cartItems.isEmpty()) {
+//            throw new IllegalStateException("장바구니가 비어 있습니다.");
+//        }
+//
+//        List<OrderItem> orderItems = new ArrayList<>();
+//        for (CartItem cartItem : cartItems) {
+//            OrderItem orderItem = OrderItem.createOrderItem(cartItem.getItem(), cartItem.getCount());
+//            orderItems.add(orderItem);
+//        }
+//
+//        // 새로운 주문 생성
+//        Order order = Order.createOrder(member, orderItems, OrderStatus.ORDER);
+//        orderRepository.save(order);
+//
+//        return order;
+//    }
+
+//    public void completeOrder(Long orderId) {
+//        Order order = orderRepository.findById(orderId)
+//                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+//
+//        // 주문 완료 처리
+//        for (OrderItem orderItem : order.getOrderItems()) {
+//            CartItem cartItem = cartService.findCartItemByItemId(orderItem.getItem().getId());
+//            if (cartItem != null) {
+//                cartService.removeItem(cartItem.getId());
+//            }
+//        }
+//    }
 
     @Transactional(readOnly = true)
     public Page<OrderHistDto> getOrderList(String email, Pageable pageable) {
@@ -110,5 +156,39 @@ public class OrderService {
         return order.getId();
     }
 
+    // 아예 새로 만듬 . 세션을 이용하여 /cart -> /order저장.
+
+    public Order createOrUpdateOrder(List<OrderItem> orderItems, Principal principal, HttpSession session) {
+        Member member = memberRepository.findByEmail(principal.getName());
+
+
+        Order order = (Order) session.getAttribute("order");
+        if (order == null || order.getOrderStatus() == OrderStatus.DONE) {
+            order = Order.createOrder(member, orderItems);
+        } else {
+            order.getOrderItems().clear();
+            for (OrderItem item : orderItems) {
+                order.addOrderItem(item);
+            }
+        }
+        order.setOrderStatus(OrderStatus.ORDER);
+        session.setAttribute("order", order);
+        return order;
+    }
+
+    public Order completeOrder(Principal principal, HttpSession session) {
+        Order order = (Order) session.getAttribute("order");
+        if (order == null || order.getOrderStatus() == OrderStatus.DONE) {
+            throw new IllegalStateException("No active order to complete.");
+        }
+        order.setOrderStatus(OrderStatus.DONE);
+        orderRepository.save(order);
+        session.removeAttribute("order");
+        return order;
+    }
+
+    public Order getCurrentOrder(HttpSession session) {
+        return (Order) session.getAttribute("order");
+    }
 }
 

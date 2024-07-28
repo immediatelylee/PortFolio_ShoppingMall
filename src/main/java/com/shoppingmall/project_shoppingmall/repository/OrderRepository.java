@@ -1,5 +1,6 @@
 package com.shoppingmall.project_shoppingmall.repository;
 
+import com.shoppingmall.project_shoppingmall.constant.*;
 import com.shoppingmall.project_shoppingmall.domain.*;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.*;
@@ -19,4 +20,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "where o.member.email = :email"
     )
     Long countOrder(@Param("email") String email);
+    Order findByMemberAndOrderStatus(Member member, OrderStatus orderStatus);
 }

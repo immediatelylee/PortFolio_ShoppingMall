@@ -2607,59 +2607,7 @@ a.btnLink:after {
     background: #383838;
 }
 
-@font-face {
-    font-family: 'Pretendard-Thin';
-    src: url('/static/web/upload/48_maypop/font/Pretendard-Thin.otf') format('truetype');
-    font-weight: 100;
-}
 
-@font-face {
-    font-family: 'Pretendard-ExtraLight';
-    src: url('/static/web/upload/48_maypop/font/Pretendard-ExtraLight.otf') format('truetype');
-    font-weight: 200;
-}
-
-@font-face {
-    font-family: 'Pretendard-Light';
-    src: url('/static/web/upload/48_maypop/font/Pretendard-Light.otf') format('truetype');
-    font-weight: 300;
-}
-
-@font-face {
-    font-family: 'Pretendard-Regular';
-    src: url('/static/web/upload/48_maypop/font/Pretendard-Regular.otf') format('truetype');
-    font-weight: 400;
-}
-
-@font-face {
-    font-family: 'Pretendard-Medium';
-    src: url('/static/web/upload/48_maypop/font/Pretendard-Medium.otf') format('truetype');
-    font-weight: 500;
-}
-
-@font-face {
-    font-family: 'Pretendard-SemiBold';
-    src: url('/static/web/upload/48_maypop/font/Pretendard-SemiBold.otf') format('truetype');
-    font-weight: 600;
-}
-
-@font-face {
-    font-family: 'Pretendard-Bold';
-    src: url('/static/web/upload/48_maypop/font/Pretendard-Bold.otf') format('truetype');
-    font-weight: 700;
-}
-
-@font-face {
-    font-family: 'Pretendard-ExtraBold';
-    src: url('/static/web/upload/48_maypop/font/Pretendard-ExtraBold.otf') format('truetype');
-    font-weight: 800;
-}
-
-@font-face {
-    font-family: 'Pretendard-Black';
-    src: url('/static/web/upload/48_maypop/font/Pretendard-Black.otf') format('truetype');
-    font-weight: 900;
-}
 
 @font-face {
     font-family: 'Nanum Gothic';
@@ -4655,7 +4603,7 @@ h1,h3 {
     justify-content: space-between;
     align-items: center;
     height: 40px;
-    font-family: 'Pretendard-Regular';
+    font-family: 'sans-serif';
 
 }
 

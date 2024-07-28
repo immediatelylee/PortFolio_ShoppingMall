@@ -10,9 +10,11 @@ import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.*;
 
+import javax.servlet.http.*;
 import javax.validation.*;
 import java.security.*;
 import java.util.*;
+import java.util.stream.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,7 +22,7 @@ public class CartController {
 
     private final CartService cartService;
 
-
+    //itemdetail (ajax)-> cart  (장바구니 버튼 클릭 -> 장바구니에 담기)
     @PostMapping(value = "/cart")
     public @ResponseBody ResponseEntity cart(@RequestBody @Valid CartItemDto cartItemDto, BindingResult bindingResult, Principal principal){
 
@@ -47,12 +49,14 @@ public class CartController {
         return new ResponseEntity<Long>(cartItemId, HttpStatus.OK);
     }
 
+    //사용자정보 이용 카트의 전체 상품정보 로드
     @GetMapping(value = "/cart")
-    public String orderHist(Principal principal, Model model){
+    public String newCart(Principal principal, Model model){
         List<CartDetailDto> cartDetailList = cartService.getCartList(principal.getName());
         model.addAttribute("cartItems", cartDetailList);
         return "cart/newCart";
     }
+
 
 
     @PostMapping("/cart/delete/{cartItemId}")
@@ -80,23 +84,47 @@ public class CartController {
         return "redirect:/cart";
     }
 
-    // 주문
-    @PostMapping(value = "/cart/orders")
-    public @ResponseBody ResponseEntity orderCartItem(@RequestBody CartOrderDto cartOrderDto, Principal principal){
 
-    List<CartOrderDto> cartOrderDtoList = cartOrderDto.getCartOrderDtoList();
 
-    if(cartOrderDtoList == null || cartOrderDtoList.size() == 0){
-        return new ResponseEntity<String>("주문할 상품을 선택해주세요", HttpStatus.FORBIDDEN);
-    }
+    //새로만듬.  newCart.html 선택상품주문 ajax에서 /order/selected가기전 전처리과정
+    // cartItemId 와 count를 받아서 이전 cart의 count와 확인 상이하다면 수정하고 order로 보내기
+    // 세션에 상품 정보와 count를 넣음.
+    @PostMapping("/cart/order")
+    public String orderCartItems(@RequestBody OrderRequestDto orderRequestDto,HttpSession session,Principal principal){
+        List<Long> cartItemIds = orderRequestDto.getItems().stream()
+                .map(CartItemOrderDto::getCartItemId)
+                .collect(Collectors.toList());
 
-    for (CartOrderDto cartOrder : cartOrderDtoList) {
-        if(!cartService.validateCartItem(cartOrder.getCartItemId(), principal.getName())){
-            return new ResponseEntity<String>("주문 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        List<CartDetailDto> cartItems = cartService.getCartListByIds(principal.getName(), cartItemIds);
+
+        Map<Long, Integer> viewCountMap = orderRequestDto.getItems().stream()
+                .collect(Collectors.toMap(CartItemOrderDto::getCartItemId, CartItemOrderDto::getCount));
+
+        for (CartDetailDto cartItem : cartItems) {
+            Integer viewCount = viewCountMap.get(cartItem.getCartItemId()); // get(key) -> value를 출력하므로 count를 출력한다.
+            if (viewCount != null && cartItem.getCount() != viewCount) {
+                cartItem.setCount(viewCount);
+                cartService.updateCartItemCount(cartItem.getCartItemId(), viewCount);
+                System.out.println("test==========================");
+                System.out.println("count다른 부분 수정");
+            }
         }
-    }
 
-    Long orderId = cartService.orderCartItem(cartOrderDtoList, principal.getName());
-    return new ResponseEntity<Long>(orderId, HttpStatus.OK);
+        int totalProductPrice = cartItems.stream()
+                .mapToInt(item -> item.getPrice() * item.getCount())
+                .sum();
+
+        int deliveryFee = (totalProductPrice == 0 || totalProductPrice > 50000) ? 0 : 2500;
+        int totalPayPrice = totalProductPrice + deliveryFee;
+
+        // 세션에 저장
+        session.setAttribute("cartItems", cartItems);
+        session.setAttribute("totalProductPrice", totalProductPrice);
+        session.setAttribute("deliveryFee", deliveryFee);
+        session.setAttribute("totalPayPrice", totalPayPrice);
+
+
+
+        return "redirect:/order/selected";
     }
 }

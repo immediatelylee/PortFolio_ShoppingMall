@@ -41,43 +41,34 @@
     });
 
     function submitForm(dataActionType) {
-        console.log("submitForm start");
+
 
         const actionTypeElement = $('#dataActionType')[0];
         const idsElement = $('input[name="selectedIds"]')[0];
 
         if (!actionTypeElement || !idsElement) {
-            console.error('Required form elements not found.');
+
             return;
         }
 
         const selectedIds = [];
         $('input[name="selectedIds"]:checked').each(function() {
-            console.log("inside loop==")
-            console.log($(this).val())
+
             selectedIds.push(parseInt($(this).val()));
         });
-        console.log("outside==")
-        console.log("Selected IDs: ", selectedIds);
-        console.log("Selected IDs: ", typeof(selectedIds[0]))
-        console.log("Selected IDs: ", typeof(selectedIds[1]))
+
 
         // 값 설정 전 로그 출력
-        console.log("Data Action Type: ", dataActionType);
-        console.log("Selected IDs: ", selectedIds.join(','));
+
 
         $(actionTypeElement).val(dataActionType);
-        console.log("actiontest")
-        console.log($(actionTypeElement).val())
+
         $(idsElement).val(selectedIds);
-        console.log("idsElementtest")
-        console.log($(idsElement).val())
 
-        // 값 설정 후 로그 출력
-        console.log("Action Type Element Value: ", $(actionTypeElement).val());
-        console.log("IDs Element Value: ", $(idsElement).val());
 
-        console.log("IDs TypeCheck")
+
+
+
         // 각 원소의 타입 출력
         selectedIds.forEach((id, index) => {
             console.log(`Type of selectedIds[${index}]: `, typeof(id));

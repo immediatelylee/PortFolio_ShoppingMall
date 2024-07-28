@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout6-order}">
+
+<th:block layout:fragment="script"></th:block>
+<div layout:fragment="content" style="background-color: white">
+
+    <div id="body" style="width: 1020px;margin: 0 auto 20px;">
+        <div class="middle">
+            <div class="ordTitle" style="height: 70px;overflow: hidden;border-bottom: 3px solid #777;">
+                <h3 class="title" style="float: left;margin-top: 5px;padding-left: 0;line-height: 70px;font-size: 30px;
+    color: #111;">주문/결제</h3>
+
+            </div>
+            <div data-component="real-name-verification"></div>
+            <div data-component="customer">
+                <div class="customer__root">
+                    <h2 class="customer__h2">
+                        구매자정보
+                    </h2>
+                    <table class="customer__table">
+                        <tbody>
+                        <tr>
+                            <td class="customer__col customer__col--1" >
+                                이름
+                            </td>
+                            <td class="customer__col customer__col--2" th:text="${UserInfo.name}">
+                                john
+                            </td>
+                        </tr>
+                        <tr data-component="customer-realname-auth"></tr>
+                        <tr>
+                            <td class="customer__col customer__col--1">
+                                이메일
+                            </td>
+                            <td class="customer__col customer__col--2" th:text="${UserInfo.email}">
+                                immediatelylee@github.com
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="customer__col customer__col--1">
+                                휴대폰 번호
+                            </td>
+                            <td class="customer__col customer__col--2">
+                                <div data-component="customer-phone">
+                                    <div class="customer-phone__root">
+                                        <div data-component="customer-phone-form-tel">
+                                            <form data-customer-phone--form-tel="">
+                                                <div>
+                                                    <input type="tel" class="customer-phone__input-tel " data-customer-phone--input-tel="" th:value="${UserInfo.phone}" style="    height: 22px;
+                                                            padding: 0 0 0 5px;
+                                                            border: 1px solid #ddd;
+                                                            font-size: 12px;
+                                                            color: #333;">
+                                                    <button type="submit" data-customer-phone--submit-tel="" style="
+                                                                padding: 4px 8px;
+                                                                border: 1px solid #999;
+                                                                color: #333;
+                                                                border-radius: 2px;
+                                                                box-shadow: 0 -2px 0 rgba(0,0,0,.1) inset;
+                                                                font-size: 11px;
+                                                            ">
+                                                        수정
+                                                    </button>
+                                                    <span class="customer-phone__tel-desc">쿠폰/티켓정보는 구매한 분의 번호로 전송됩니다.</span>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div data-component="customer-phone-noties">
+                                            <p class="customer-phone__noti ">
+                                                * 인증 번호를 못 받았다면, 스팸 설정을 확인해 주세요.
+                                            </p>
+                                        </div>
+                                        <div data-component="customer-phone-form-auth"></div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div data-component="deliveryAddress">
+                <h2 class="delivery-address__caption-header">
+                    받는사람정보
+                    <button class="delivery-address__popup-list-button" type="button" data-delivery-address__popup-list-button="" style="    padding: 4px 8px;
+                        border: 1px solid #999;
+                        color: #333;
+                        border-radius: 2px;
+                        box-shadow: 0 -2px 0 rgba(0,0,0,.1) inset;
+                        font-size: 11px;">
+                        배송지변경
+                    </button>
+                </h2>
+                <table class="delivery-address">
+                    <tbody>
+                    <tr>
+                        <th class="delivery-address__th">이름</th>
+                        <td class="delivery-address__td delivery-address__td--name delivery-address__td-rocket-fresh-mvp2">
+                            <span class="delivery-address__name" id="delivery-address__name-panel" th:text="${UserInfo.name}">홍길동</span>
+                            <span class="delivery-address__type-label">기본배송지</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="delivery-address__th">배송주소</th>
+                        <td class="delivery-address__td" th:text="${UserInfo.address}">
+                            서울시 신사동 123-4
+
+                            <div id="blocked-address-error-message" class="blocked-address-section" data-delivery-address__blocked-message="">
+                                <span class="blocked-address__attention-icon">!</span>
+                                <p class="blocked-address__error-message">배송이 불가능한 주소입니다. 다른 배송지를 입력하거나 선택해주세요.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="delivery-address__th delivery-address__th--no-line">연락처</th>
+                        <td class="delivery-address__td delivery-address__td--no-line" id="delivery-address__phone-panel" th:text="${UserInfo.phone}">
+                            010
+                            -
+                            123
+                            -
+                            4567
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div data-delivery-address__related-table="">
+                <div data-component="deliveryRequestMessage">
+                    <div class="delivery-request-message__container" data-delivery-request-message__container="">
+                        <table class="delivery-request-message">
+                            <tbody>
+                            <tr>
+                                <th class="delivery-request-message__th">
+                                    <span>배송 요청사항</span>
+                                </th>
+                                <td class="delivery-request-message__td delivery-request-message__td--name">
+                                            <span class="delivery-request-message__type-label delivery-request-message__type-label--select" data-delivery-request-message__type-label="">
+                                            택배함 (경비실 옆에 택배함 )
+                                            </span>
+                                    <span class="delivery-request-message__dawn-type-label" data-delivery-request-message__dawn-type-label="">
+                                            </span>
+                                    <button class="delivery-request-message__popup-list-button" type="button" data-delivery-request-message__popup-list-button="">
+                                        변경
+                                    </button>
+                                    <div class="delivery-request-message__covid-nudge-container"></div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div data-ajax-view="box">
+                <div data-delivery-info="rocket">
+                    <div class="bundle-info__retail " data-component="bundleInfo-retail">
+                        <div data-bundle-info__simple-warning-message-box__wrapper=""></div>
+                        <div class="bundle-info__pdd-group-title">배송</div>
+                        <div class="bundle-info__pdd-group-box">
+                            <div class="bundle-info__expected-delivery-date-box">
+                                    <span class="bundle-info__expected-delivery-info">
+                                    <span class="bundle-info__expected-delivery-date ">
+                                    <strong data-bundle-info__cdm-pdd="">내일(월) 7/22</strong>
+                                    <span class="bundle-info__expected-delivery-date-suffix bundle-info__expected-delivery-date-suffix--colored" data-bundle-info__cdm-guarantee="">도착 예정</span>
+                                    </span>
+
+                                    </span>
+                            </div>
+                            <div class="bundle-info__item-list ">
+                                <div class="bundle-info__vendor-item-box  " th:each="cartItem : ${cartItems}">
+                                    <div class="bundle-info__vendor-item">
+                                        <p style="
+                                                border-bottom: 0;
+                                            " th:text="${cartItem.itemNm}">
+                                            <span></span>
+                                            <span class="bundle-info__vendor-item__offer-condition" ></span>
+
+                                        </p>
+                                    </div>
+
+                                    <div class="bundle-info__item-description bundle-info__vendor-item-description--last" th:utext="'수량 ' + ${cartItem.count} + '개 / ' + (${totalProductPrice > 50000} ? '<span>무료배송</span>' : '<span>배송비 2,500원</span>')">
+                                        수량 1개 / <span>무료배송</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-delivery-info="rocketInstall"></div>
+                <div data-delivery-info="jikguInstall"></div>
+                <div data-delivery-info="body">
+                    <div class="bundle-info__retail"></div>
+                </div>
+                <div data-delivery-info="freebie"></div>
+            </div>
+            <div id="pay-price-section" class="order-section orderBox mb10 multiple-coupon">
+                <h2 class="checkout__h2">
+                    결제정보
+                </h2>
+                <div id="creditCardBenefitPopup" class="card-benefit-popup" style="display: none">
+                    <div class="card-benefit-popup__header">
+                        <strong class="card-benefit-popup__header-title">카드 혜택</strong>
+                        <span class="card-benefit-popup__header-close">닫기</span>
+                    </div>
+                    <div id="creditCardBenefitContent" class="card-benefit-popup__content"></div>
+                </div>
+                <table class="pay-price" style="border-top: 2px solid #cecece;">
+                    <caption>결제 정보 설정으로 할인쿠폰과 쿠팡캐시의 내용을 수정 할 수 있습니다.</caption>
+                    <colgroup>
+                        <col width="144">
+                        <col>
+                    </colgroup>
+                    <tbody>
+                    <tr class="payOrder-wrap">
+                        <th class="wrap-title" scope="row">
+                            총상품가격
+
+                        </th>
+                        <td>
+                            <div class="payOrder">
+                                <strong class="price">
+                                    <span id="totalPriceDisp" class="use-calculation-for-totalprice" th:text="${#numbers.formatInteger(totalProductPrice, 0, 'COMMA')}" ></span><span class="unit">원</span>
+                                </strong>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th class="wrap-title" scope="row">배송비</th>
+                        <td class="delivery-total-price">
+                            <style>
+                                .sku-bundlelist .delivery-type-selections {
+                                    display: none;
+                                    width: 100%;
+                                    font-size: 12px;
+                                    border-top: 1px solid #d0d0d0;
+                                }
+                                .sku-bundlelist .delivery-type-selection {
+                                    float: none;
+                                    padding: 8px 10px;
+                                    border-bottom: 1px solid #d0d0d0;
+                                    position: relative;
+                                    z-index: 1500;
+                                    background-color: #ffffff;
+                                }
+                                .sku-bundlelist .delivery-type-selection .expl {
+                                    color: #888;
+                                }
+                                .sku-bundlelist .delivery-sku-info {
+                                    font-size: 12px;
+                                    color: #333;
+                                    padding-bottom: 10px;
+                                }
+                                .order-bundlelist-wrapper .delivery-sku-info {
+                                    display: none;
+                                }
+                                .order-bundlelist-items .order-bundlelist-item, .baseBox.orderResult .order-bundlelist-item {
+                                    color: #333;
+                                }
+                                .cart-bundlelist .delivery-info {
+                                    font-weight: normal;
+                                }
+                                .order-bundlelist .delivery-info {
+                                    font-weight: normal;
+                                }
+                                .sku-bundlelist .order-bundlelist-header {
+                                    border-bottom: none;
+                                }
+                                .delivery-info .delivery-notification-wrap .delivery-additional-message {
+                                    font-weight: normal;
+                                }
+                                .delivery-sku-info.explain {
+                                    display: none;
+                                    line-height: 15px;
+                                    font-size: 11px;
+                                    margin: 5px 5px 5px 10px;
+                                    color: #878787;
+                                }
+                                .page-pc .delivery-price-info-wrap {
+                                    display: none;
+                                    letter-spacing: -1px;
+                                }
+                                .page-pc .delivery-price-info-wrap,
+                                .page-pc .delivery-price-info-wrap span {
+                                    color: #999;
+                                }
+                                .page-pc .delivery-price-info-wrap .delivery-sku-price-value,
+                                .page-pc .delivery-price-info-wrap .delivery-flash-price,
+                                .page-pc .delivery-price-info-wrap .won {
+                                    color: #009a5e;
+                                }
+                                .page-pc .delivery-COD-paraenthese-first,
+                                .page-pc .delivery-COD-paraenthese-last,
+                                .page-pc .delivery-COD-message {
+                                    display: none;
+                                    color: #999;
+                                }
+                            </style>
+                            <div class="payDelivery">
+                                <strong class="price">
+                                    <span id="deliveryPriceDisp" class="delivery-total-price-value use-calculation-for-totalprice" th:text="${#numbers.formatInteger(deliveryFee, 0, 'COMMA')}" >0</span><span class="unit">원</span>
+                                </strong>
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="wrap-title">총결제금액</th>
+                        <td>
+                            <div class="payPrice">
+                                <strong class="price">
+                                    <span id="totalPayPriceDisp" th:text="${#numbers.formatInteger(totalPayPrice, 0, 'COMMA')}"></span>
+                                    <span class="unit">원</span>
+                                </strong>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="paySel" class="payType-wrap">
+                        <th class="wrap-title">결제방법</th>
+                        <td class="inputWrap payType">
+                            <div id="payBox" class="pay-box">
+                                <div class="pay-type-selector" data-controller="PayTypeSelector" data-controller-data="{
+                                            &quot;orderPayTypeSelectors&quot; : [{&quot;payType&quot;:&quot;ROCKET_BALANCE&quot;,&quot;save&quot;:false,&quot;hide&quot;:false,&quot;notifications&quot;:[],&quot;disabledReasons&quot;:[],&quot;detailReason&quot;:{},&quot;commonLimitNotifications&quot;:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],&quot;order&quot;:1},{&quot;payType&quot;:&quot;ROCKET_BANK&quot;,&quot;save&quot;:false,&quot;hide&quot;:false,&quot;notifications&quot;:[],&quot;disabledReasons&quot;:[],&quot;detailReason&quot;:{},&quot;commonLimitNotifications&quot;:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],&quot;order&quot;:1},{&quot;payType&quot;:&quot;ROCKET_CARD&quot;,&quot;save&quot;:true,&quot;hide&quot;:false,&quot;notifications&quot;:[],&quot;disabledReasons&quot;:[],&quot;detailReason&quot;:{},&quot;commonLimitNotifications&quot;:[null,null,null,null,null,null,null,null,null,null,null,null,null,null],&quot;order&quot;:1},{&quot;payType&quot;:&quot;CARD&quot;,&quot;save&quot;:true,&quot;hide&quot;:false,&quot;notifications&quot;:[],&quot;disabledReasons&quot;:[],&quot;detailReason&quot;:{},&quot;commonLimitNotifications&quot;:[null,null,null,null,null,null,null,null,null,null,null,null,null],&quot;order&quot;:2},{&quot;payType&quot;:&quot;PHONE&quot;,&quot;save&quot;:false,&quot;hide&quot;:false,&quot;notifications&quot;:[],&quot;disabledReasons&quot;:[],&quot;detailReason&quot;:{},&quot;commonLimitNotifications&quot;:[null,null,null,null],&quot;order&quot;:3},{&quot;payType&quot;:&quot;VIRTUALACCOUNT&quot;,&quot;save&quot;:false,&quot;hide&quot;:false,&quot;notifications&quot;:[],&quot;disabledReasons&quot;:[],&quot;detailReason&quot;:{},&quot;commonLimitNotifications&quot;:[null,null,null,null,null,null,null,null,null,null,null,null,null],&quot;order&quot;:4}],
+                                            &quot;savedPrevPaymentPayType&quot; : &quot;ROCKET_CARD&quot;,
+                                            &quot;isVirtualAccountAvailable&quot; : true,
+                                            &quot;moneyBalance&quot; : 0,
+                                            &quot;corporateCard&quot;: false,
+                                            &quot;hasCcidPromotion&quot;: true
+                                            }">
+                                    <div id="payTypeInfoList" class="balloon-wrap" style="display: none;"></div>
+                                    <div class="type-selector-list-wrapper">
+                                        <ul id="payTypeList" class="type-selector-list">
+                                            <li id="rocketPayBox" class="type-selector-li">
+                                                <input class="type-selector-radio" type="radio" name="payType" id="payType8" value="ROCKET_BANK">
+                                                <label class="type-selector-label type-selector-label--bank" for="payType8" style="font-weight: normal;">
+                                                    <span class="type-selector-label__text">계좌이체</span>
+                                                </label>
+                                            </li>
+                                            <li id="rocketPayCardBox" class="type-selector-li selected-pay-type">
+                                                <input class="type-selector-radio" type="radio" name="payType" id="payType10" value="ROCKET_CARD">
+                                                <label class="type-selector-label type-selector-label--card" for="payType10" style="font-weight: bold;">
+                                                    <span class="type-selector-label__text">신용/체크카드</span>
+                                                </label>
+                                            </li>
+                                            <li id="cardPayBox" class="type-selector-li">
+                                                <input class="type-selector-radio" type="radio" name="payType" id="payType1" value="CARD">
+                                                <label class="type-selector-label" for="payType1" style="font-weight: normal;">
+                                                    <span class="type-selector-label__text">법인카드</span>
+                                                </label>
+                                            </li>
+                                            <li id="phonePayBox" class="type-selector-li">
+                                                <input class="type-selector-radio" type="radio" name="payType" id="payType6" value="PHONE">
+                                                <label class="type-selector-label" for="payType6" style="font-weight: normal;">
+                                                    <span class="type-selector-label__text">휴대폰</span>
+                                                </label>
+                                            </li>
+                                            <li id="virtualAccountPayBox" class="type-selector-li">
+                                                <input class="type-selector-radio" type="radio" name="payType" id="payType7" value="VIRTUALACCOUNT">
+                                                <label class="type-selector-label" for="payType7" style="font-weight: normal;">
+                                                    <span class="type-selector-label__text">무통장입금(가상계좌)</span>
+                                                </label>
+                                            </li>
+                                        </ul>
+                                        <p class="validate-message" style="display: none;"></p>
+                                    </div>
+                                </div>
+                                <div id="payTypeContent" class="pay-box-contents">
+                                    <div class="phonePayBox pay-box-content">
+                                        <h3 class="title">휴대폰</h3>
+                                        <div class="cellphone-payment pay-type-content" data-controller="CellphonePayment" data-controller-data="{
+                                                    }">
+                                            <ul class="pay-type-sections">
+                                                <li class="pay-type-section last-section" data-pay-type-section="cellphone">
+                                                    <label for="cellphoneTelecom" class="payment-cellphone__line-title">통신사 종류</label>
+                                                    <div class="payment-cellphone__line-data">
+                                                        <select name="cellphoneTelecom" id="cellphoneTelecom" class="payment-cellphone__select">
+                                                            <option value="" selected="">선택</option>
+                                                            <option value="SKT" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">SKT</option>
+                                                            <option value="KT" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">KT</option>
+                                                            <option value="CJH" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">헬로모바일</option>
+                                                            <option value="KCT" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">KCT</option>
+                                                        </select>
+                                                        <p class="payment-cellphone__validate-message">통신사 정보를 추가해주세요</p>
+                                                        <p class="payment-cellphone__validate-message--invalid limit-pay-price-message" style="display: none;">50만원 초과 결제 시, 휴대폰 결제가 불가합니다.</p>
+                                                    </div>
+                                                    <p class="pay-box__deactivated-payment-notice" id="phonePayTypeLimitMsg"></p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="virtualAccountPayBox pay-box-content">
+                                        <h3 class="title">무통장입금(가상계좌)</h3>
+                                        <div class="virtual-account-payment pay-type-content" data-controller="vaPayment" data-controller-data="{
+                                                    &quot;savedBankKcpCode&quot; : &quot;&quot;
+                                                    }">
+                                            <p class="validate-message" style="display: none;"></p>
+                                            <ul class="pay-type-sections">
+                                                <li class="deposit-bank-wrap pay-type-section">
+                                                    <label for="depositBank" class="line-title">입금은행</label>
+                                                    <div class="line-data">
+                                                        <select id="depositBank" class="" name="depositBank">
+                                                            <option value="" selected="" data-limitmsg="">선택</option>
+                                                            <option value="NH" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">농협은행</option>
+                                                            <option value="KB" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">국민은행</option>
+                                                            <option value="SHINHAN" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">신한은행</option>
+                                                            <option value="WOORI" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">우리은행</option>
+                                                            <option value="HANA" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">KEB하나은행</option>
+                                                            <option value="IBK" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">기업은행</option>
+                                                            <option value="DAEGU" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">대구은행</option>
+                                                            <option value="BUSAN" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">부산은행</option>
+                                                            <option value="POST_OFFICE" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">우체국</option>
+                                                            <option value="KYONGNAM" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">경남은행</option>
+                                                            <option value="KWANGJU" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">광주은행</option>
+                                                            <option value="SC" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">SC제일은행</option>
+                                                            <option value="SUHYUB" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false">수협은행</option>
+                                                        </select>
+                                                        <p class="validate-message" style="display: none;"></p>
+                                                        <p class="pay-box__deactivated-payment-notice" id="virtualAccountPayTypeLimitMsg"></p>
+                                                    </div>
+                                                </li>
+                                                <li class="payBox-section  pay-type-section">
+                                                    <span class="line-title">입금기한</span>
+                                                    <div class="line-data">
+                                                        <span class="depositDueTxt">2024년 07월 22일 13시 02분까지</span>
+                                                    </div>
+                                                </li>
+                                                <li class="pay-type-explain">
+                                                    <p class="cash-receipt-explain">* 현금으로 결제한 모든 금액은 우리은행과 채무지급보증계약을 체결하여 고객님의 안전거래를 보장하고 있습니다.</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <dl class="virtual-account-payment-explain">
+                                            <dt>무통장입금 시 유의사항</dt>
+                                            <dd>입금완료 후 상품품절로 인해 자동취소된 상품은 환불 처리해 드립니다.</dd>
+                                            <dd>무통장입금 결제 시 부분취소가 불가하며 전체취소 후 다시 주문하시기 바랍니다.</dd>
+                                            <dd>은행 이체 수수료가 발생될 수 있습니다. 입금시 수수료를 확인해주세요.</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="rocketPayBalanceBox pay-box-content">
+                                        <h3 class="title">쿠팡 간편결제(쿠페이 머니)</h3>
+                                        <script type="text/javascript">
+                                            var fromServerState = window.fromServerState || {};
+                                            fromServerState.unifiedMoney = {
+                                                unifiedMoney: true,
+                                                basicAutoTopUpAccountId: null,
+                                                memberBankAccountList: [],
+                                                registrableBankAccountList: [{"name":"카카오뱅크","code":"KAKAO","onMaintenance":false},{"name":"농협은행","code":"NH","onMaintenance":false},{"name":"국민은행","code":"KB","onMaintenance":false},{"name":"신한은행","code":"SHINHAN","onMaintenance":false},{"name":"우리은행","code":"WOORI","onMaintenance":false},{"name":"기업은행","code":"IBK","onMaintenance":false},{"name":"하나은행","code":"HANA","onMaintenance":false},{"name":"새마을금고","code":"KFCC","onMaintenance":false},{"name":"우체국","code":"POST_OFFICE","onMaintenance":false},{"name":"SC제일은행","code":"SC","onMaintenance":false},{"name":"대구은행","code":"DAEGU","onMaintenance":false},{"name":"부산은행","code":"BUSAN","onMaintenance":false},{"name":"경남은행","code":"KYONGNAM","onMaintenance":false},{"name":"광주은행","code":"KWANGJU","onMaintenance":false},{"name":"신협","code":"SHINHYUP","onMaintenance":false},{"name":"수협은행","code":"SUHYUB","onMaintenance":false},{"name":"산업은행","code":"KDB","onMaintenance":false},{"name":"전북은행","code":"JB","onMaintenance":false},{"name":"제주은행","code":"JEJU","onMaintenance":false},{"name":"씨티은행","code":"CITI","onMaintenance":false},{"name":"케이뱅크","code":"KBANK","onMaintenance":false},{"name":"토스뱅크","code":"TOSSBANK","onMaintenance":false}],
+                                                balanceAmount : 0,
+                                                accumulationAmount: 100000,
+                                                accumulationAmountStr: "10만원",
+                                                limitNotifications: {
+                                                    payTypeInfos: [{"bankCode":"KAKAO","limitNotification":null,"pcLimitNotification":"","identifier":"KAKAO","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"NH","limitNotification":null,"pcLimitNotification":"","identifier":"NH","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"KB","limitNotification":null,"pcLimitNotification":"","identifier":"KB","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"SHINHAN","limitNotification":null,"pcLimitNotification":"","identifier":"SHINHAN","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"WOORI","limitNotification":null,"pcLimitNotification":"","identifier":"WOORI","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"IBK","limitNotification":null,"pcLimitNotification":"","identifier":"IBK","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"HANA","limitNotification":null,"pcLimitNotification":"","identifier":"HANA","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"KFCC","limitNotification":null,"pcLimitNotification":"","identifier":"KFCC","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"POST_OFFICE","limitNotification":null,"pcLimitNotification":"","identifier":"POST_OFFICE","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"SC","limitNotification":null,"pcLimitNotification":"","identifier":"SC","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"DAEGU","limitNotification":null,"pcLimitNotification":"","identifier":"DAEGU","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"BUSAN","limitNotification":null,"pcLimitNotification":"","identifier":"BUSAN","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"KYONGNAM","limitNotification":null,"pcLimitNotification":"","identifier":"KYONGNAM","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"KWANGJU","limitNotification":null,"pcLimitNotification":"","identifier":"KWANGJU","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"SHINHYUP","limitNotification":null,"pcLimitNotification":"","identifier":"SHINHYUP","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"SUHYUB","limitNotification":null,"pcLimitNotification":"","identifier":"SUHYUB","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"KDB","limitNotification":null,"pcLimitNotification":"","identifier":"KDB","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"JB","limitNotification":null,"pcLimitNotification":"","identifier":"JB","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"JEJU","limitNotification":null,"pcLimitNotification":"","identifier":"JEJU","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"CITI","limitNotification":null,"pcLimitNotification":"","identifier":"CITI","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"KBANK","limitNotification":null,"pcLimitNotification":"","identifier":"KBANK","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"TOSSBANK","limitNotification":null,"pcLimitNotification":"","identifier":"TOSSBANK","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false}],
+                                                    commonLimitNotifications: []
+                                                },
+                                                paymentAbTest: {"6593":"A","7573":"A","48663":"A"}
+                                            };
+                                        </script>
+                                        <div class="rocketpay-payment pay-type-content" data-controller="UnifiedMoney" data-node="pay-typeContent">
+                                            <ul class="pay-type-sections">
+                                                <!-- common -->
+                                                <li class="pay-type-section" data-node="balance-title-row">
+                                                    <div class="line-title" style="letter-spacing:-1px;" data-node="balance-title">잔액</div>
+                                                    <div class="line-data">
+                                                        <strong>0원</strong>
+                                                    </div>
+                                                </li>
+                                                <!-- balance sufficient case -->
+                                                <li class="pay-type-section last-section balance-sufficient">
+                                                    <div class="line-note" data-node="balance-sufficient-message">* 잔액이 부족할 경우, 결제 진행 시에 충전됩니다.</div>
+                                                </li>
+                                                <!-- balance insufficient case -->
+                                                <li data-node="acc-row" class="pay-type-section balance-insufficient" style="display:none;">
+                                                    <div class="line-title">충전</div>
+                                                    <div class="line-data">
+                                                        <strong data-node="acc-value"></strong>
+                                                        <span class="info-message">* 결제 시 자동 충전</span>
+                                                        <span class="info-message-weak">(10만원 단위로 충전, 잔액은 언제든지 인출 가능)</span>
+                                                    </div>
+                                                </li>
+                                                <li class="pay-type-section last-section balance-insufficient" data-node="bank-selection-row">
+                                                    <label for="label_unifiedMoney_bankList" class="line-title">은행 선택</label>
+                                                    <div class="line-data">
+                                                        <select id="label_unifiedMoney_bankList" data-node="bankList-select" style="min-width:255px;">
+                                                            <option value="">선택</option>
+                                                            <option value="KAKAO@카카오뱅크@@">카카오뱅크</option>
+                                                            <option value="NH@농협은행@@">농협은행</option>
+                                                            <option value="KB@국민은행@@">국민은행</option>
+                                                            <option value="SHINHAN@신한은행@@">신한은행</option>
+                                                            <option value="WOORI@우리은행@@">우리은행</option>
+                                                            <option value="IBK@기업은행@@">기업은행</option>
+                                                            <option value="HANA@하나은행@@">하나은행</option>
+                                                            <option value="KFCC@새마을금고@@">새마을금고</option>
+                                                            <option value="POST_OFFICE@우체국@@">우체국</option>
+                                                            <option value="SC@SC제일은행@@">SC제일은행</option>
+                                                            <option value="DAEGU@대구은행@@">대구은행</option>
+                                                            <option value="BUSAN@부산은행@@">부산은행</option>
+                                                            <option value="KYONGNAM@경남은행@@">경남은행</option>
+                                                            <option value="KWANGJU@광주은행@@">광주은행</option>
+                                                            <option value="SHINHYUP@신협@@">신협</option>
+                                                            <option value="SUHYUB@수협은행@@">수협은행</option>
+                                                            <option value="KDB@산업은행@@">산업은행</option>
+                                                            <option value="JB@전북은행@@">전북은행</option>
+                                                            <option value="JEJU@제주은행@@">제주은행</option>
+                                                            <option value="CITI@씨티은행@@">씨티은행</option>
+                                                            <option value="KBANK@케이뱅크@@">케이뱅크</option>
+                                                            <option value="TOSSBANK@토스뱅크@@">토스뱅크</option>
+                                                        </select>
+                                                        <div class="validate-message" data-node="bankList-error-msg" style="display: none;"></div>
+                                                        <div data-node="bank-limit-common-msg" style="display: none;"></div>
+                                                        <div data-node="bank-limit-msg"></div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <script type="text/javascript">
+                                            var Handlebars = window.Handlebars || {}
+                                            (function() {
+                                                var template = Handlebars.template({"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
+                                                        var helper, lookupProperty = container.lookupProperty || function(parent, propertyName) {
+                                                            if (Object.prototype.hasOwnProperty.call(parent, propertyName)) {
+                                                                return parent[propertyName];
+                                                            }
+                                                            return undefined
+                                                        };
+
+                                                        return "<div class=\"unifiedMoney-benefit-landing-wrapper\">\n    <button class=\"unifiedMoney-benefit-close\" data-button=\"closeButton\"></button>\n    <div class=\"unifiedMoney-benefit-landing\">\n    <img class=\"unifiedMoney-benefit-landing-img\"\n         src=\""
+                                                            + container.escapeExpression(((helper = (helper = lookupProperty(helpers,"vCdnHttpsImage") || (depth0 != null ? lookupProperty(depth0,"vCdnHttpsImage") : depth0)) != null ? helper : container.hooks.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"vCdnHttpsImage","hash":{},"data":data,"loc":{"start":{"line":5,"column":14},"end":{"line":5,"column":32}}}) : helper)))
+                                                            + "rocketpay/order/unifiedMoney/unified_money_intro_landing_v3.jpg\">\n    </div>\n</div>\n";
+                                                    },"useData":true});
+                                                var templates = Handlebars.templates = Handlebars.templates || {};
+                                                templates['component/payment.pc/promotion/unifiedMoneyBenefitLanding'] = template;
+                                                var partials = Handlebars.partials = Handlebars.partials || {};
+                                                partials['component/payment.pc/promotion/unifiedMoneyBenefitLanding'] = template;
+                                            })();
+                                        </script>
+                                    </div>
+                                    <div class="rocketPayBox pay-box-content">
+                                        <h3 class="title">쿠팡 간편결제(계좌이체)</h3>
+                                        <script type="text/javascript">
+                                            var fromServerState = window.fromServerState || {};
+                                            fromServerState.rocketpayPayment = {
+                                                memberBankAccountList: [],
+                                                registrableBankAccountList: [{"name":"카카오뱅크","code":"KAKAO","onMaintenance":false},{"name":"농협은행","code":"NH","onMaintenance":false},{"name":"국민은행","code":"KB","onMaintenance":false},{"name":"신한은행","code":"SHINHAN","onMaintenance":false},{"name":"우리은행","code":"WOORI","onMaintenance":false},{"name":"기업은행","code":"IBK","onMaintenance":false},{"name":"하나은행","code":"HANA","onMaintenance":false},{"name":"새마을금고","code":"KFCC","onMaintenance":false},{"name":"우체국","code":"POST_OFFICE","onMaintenance":false},{"name":"SC제일은행","code":"SC","onMaintenance":false},{"name":"대구은행","code":"DAEGU","onMaintenance":false},{"name":"부산은행","code":"BUSAN","onMaintenance":false},{"name":"경남은행","code":"KYONGNAM","onMaintenance":false},{"name":"광주은행","code":"KWANGJU","onMaintenance":false},{"name":"신협","code":"SHINHYUP","onMaintenance":false},{"name":"수협은행","code":"SUHYUB","onMaintenance":false},{"name":"산업은행","code":"KDB","onMaintenance":false},{"name":"전북은행","code":"JB","onMaintenance":false},{"name":"제주은행","code":"JEJU","onMaintenance":false},{"name":"씨티은행","code":"CITI","onMaintenance":false},{"name":"케이뱅크","code":"KBANK","onMaintenance":false},{"name":"토스뱅크","code":"TOSSBANK","onMaintenance":false}],
+                                                limitNotifications: {
+                                                    payTypeInfos: [{"bankCode":"KAKAO","limitNotification":null,"pcLimitNotification":"","identifier":"KAKAO","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"NH","limitNotification":null,"pcLimitNotification":"","identifier":"NH","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"KB","limitNotification":null,"pcLimitNotification":"","identifier":"KB","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"SHINHAN","limitNotification":null,"pcLimitNotification":"","identifier":"SHINHAN","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"WOORI","limitNotification":null,"pcLimitNotification":"","identifier":"WOORI","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"IBK","limitNotification":null,"pcLimitNotification":"","identifier":"IBK","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"HANA","limitNotification":null,"pcLimitNotification":"","identifier":"HANA","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"KFCC","limitNotification":null,"pcLimitNotification":"","identifier":"KFCC","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"POST_OFFICE","limitNotification":null,"pcLimitNotification":"","identifier":"POST_OFFICE","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"SC","limitNotification":null,"pcLimitNotification":"","identifier":"SC","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"DAEGU","limitNotification":null,"pcLimitNotification":"","identifier":"DAEGU","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"BUSAN","limitNotification":null,"pcLimitNotification":"","identifier":"BUSAN","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"KYONGNAM","limitNotification":null,"pcLimitNotification":"","identifier":"KYONGNAM","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"KWANGJU","limitNotification":null,"pcLimitNotification":"","identifier":"KWANGJU","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"SHINHYUP","limitNotification":null,"pcLimitNotification":"","identifier":"SHINHYUP","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"SUHYUB","limitNotification":null,"pcLimitNotification":"","identifier":"SUHYUB","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"KDB","limitNotification":null,"pcLimitNotification":"","identifier":"KDB","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"JB","limitNotification":null,"pcLimitNotification":"","identifier":"JB","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"JEJU","limitNotification":null,"pcLimitNotification":"","identifier":"JEJU","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"CITI","limitNotification":null,"pcLimitNotification":"","identifier":"CITI","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"KBANK","limitNotification":null,"pcLimitNotification":"","identifier":"KBANK","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false},{"bankCode":"TOSSBANK","limitNotification":null,"pcLimitNotification":"","identifier":"TOSSBANK","messageColor":"","isShowMobile":false,"mobileLimitNotification":"","paymentDisabled":false,"isShowPc":false}],
+                                                    commonLimitNotifications: []
+                                                }
+                                            };
+                                        </script>
+                                        <div class="rocketpay-payment pay-type-content" data-controller="RocketpayPayment">
+                                            <ul class="pay-type-sections">
+                                                <li class="pay-type-section last-section">
+                                                    <label for="label_rocketBank_bankList" class="line-title">은행선택</label>
+                                                    <div class="line-data">
+                                                        <select id="label_rocketBank_bankList" data-node="bankList-select">
+                                                            <option value="">선택</option>
+                                                            <option value="KAKAO@카카오뱅크@@">카카오뱅크</option>
+                                                            <option value="NH@농협은행@@">농협은행</option>
+                                                            <option value="KB@국민은행@@">국민은행</option>
+                                                            <option value="SHINHAN@신한은행@@">신한은행</option>
+                                                            <option value="WOORI@우리은행@@">우리은행</option>
+                                                            <option value="IBK@기업은행@@">기업은행</option>
+                                                            <option value="HANA@하나은행@@">하나은행</option>
+                                                            <option value="KFCC@새마을금고@@">새마을금고</option>
+                                                            <option value="POST_OFFICE@우체국@@">우체국</option>
+                                                            <option value="SC@SC제일은행@@">SC제일은행</option>
+                                                            <option value="DAEGU@대구은행@@">대구은행</option>
+                                                            <option value="BUSAN@부산은행@@">부산은행</option>
+                                                            <option value="KYONGNAM@경남은행@@">경남은행</option>
+                                                            <option value="KWANGJU@광주은행@@">광주은행</option>
+                                                            <option value="SHINHYUP@신협@@">신협</option>
+                                                            <option value="SUHYUB@수협은행@@">수협은행</option>
+                                                            <option value="KDB@산업은행@@">산업은행</option>
+                                                            <option value="JB@전북은행@@">전북은행</option>
+                                                            <option value="JEJU@제주은행@@">제주은행</option>
+                                                            <option value="CITI@씨티은행@@">씨티은행</option>
+                                                            <option value="KBANK@케이뱅크@@">케이뱅크</option>
+                                                            <option value="TOSSBANK@토스뱅크@@">토스뱅크</option>
+                                                        </select>
+                                                        <div class="validate-message" data-node="bankList-error-msg" style="display: none;"></div>
+                                                        <div data-node="bank-limit-common-msg" style="display: none;"></div>
+                                                        <div data-node="bank-limit-msg"></div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="cardPayBox pay-box-content">
+                                        <h3 class="title">신용카드</h3>
+                                        <div class="card-payment pay-type-content" data-controller="CardPayment" data-controller-data="{
+                                                    &quot;cardHubMode&quot; : true,
+                                                    &quot;installmentsConditions&quot; : &quot;50000&quot;,
+                                                    &quot;savedCardId&quot; : &quot;LOTTE&quot;,
+                                                    &quot;cardPaymentPriceLimit&quot; : &quot;100&quot;,
+                                                    &quot;isCcidTarget&quot;: true
+                                                    }">
+                                            <ul class="pay-type-sections">
+                                                <li class="pay-type-section">
+                                                    <label for="cardTypeSelect" class="line-title">카드선택</label>
+                                                    <div class="line-data">
+                                                        <select name="cardCode" id="cardTypeSelect" class="corporate-card__cardList">
+                                                            <option value="" selected="" data-limitmsg="">선택</option>
+                                                            <option value="SAMSUNG" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false" data-maxinstallmentmonth="24" data-acquirercode="SAMSUNG">삼성카드</option>
+                                                            <option value="LOTTE" selected="" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false" data-maxinstallmentmonth="24" data-acquirercode="LOTTE">롯데카드</option>
+                                                            <option value="KB" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false" data-maxinstallmentmonth="24" data-acquirercode="KB">KB국민카드</option>
+                                                            <option value="SHINHAN" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false" data-maxinstallmentmonth="24" data-acquirercode="SHINHAN">신한카드</option>
+                                                            <option value="HANA_SK" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false" data-maxinstallmentmonth="24" data-acquirercode="HANA_SK">하나카드</option>
+                                                            <option value="BC" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false" data-maxinstallmentmonth="24" data-acquirercode="BC">BC카드</option>
+                                                            <option value="HYUNDAI" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false" data-maxinstallmentmonth="18" data-acquirercode="HYUNDAI">현대카드</option>
+                                                            <option value="WOORI" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false" data-maxinstallmentmonth="24" data-acquirercode="WOORI">우리카드</option>
+                                                            <option value="NH" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false" data-maxinstallmentmonth="24" data-acquirercode="NH">NH농협카드</option>
+                                                            <option value="CITY" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false" data-maxinstallmentmonth="24" data-acquirercode="CITY">씨티카드</option>
+                                                            <option value="KakaoBank" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false" data-maxinstallmentmonth="24" data-acquirercode="KakaoBank">카카오뱅크카드</option>
+                                                            <option value="TOSSBANK" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false" data-maxinstallmentmonth="24" data-acquirercode="TOSSBANK">토스뱅크카드</option>
+                                                            <option value="ETC" data-limitmsg="" data-messagecolor="" data-paymentdisabled="false" data-maxinstallmentmonth="24" data-acquirercode="BC">기타(은행/증권)카드</option>
+                                                        </select>
+                                                        <p class="validate-message" style="display: none;"></p>
+                                                    </div>
+                                                </li>
+                                                <li class="pay-type-section last-section">
+                                                    <label for="quotaSelect" class="line-title">할부기간</label>
+                                                    <div class="line-data">
+                                                        <select name="quota" id="quotaSelect" class="quotaSelect corporate-card__quotaList" disabled="">
+                                                            <option value="00" selected="">일시불</option>
+                                                        </select>
+                                                        <span class="note-install">법인카드는 일시불 결제만 가능합니다</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="rocketPayCardBox pay-box-content selected-pay-type">
+                                        <h3 class="title">신용/체크카드</h3>
+                                        <script type="text/javascript">
+                                            var fromServerState = window.fromServerState || {};
+                                            fromServerState.rocketCard = {
+                                                displayRocketCard: true,
+
+                                                cardPaymentPriceLimit: 100,
+
+
+                                                cardInstallmentsConditions: 50000,
+
+                                                rocketCardList: [{"memberCardId":23583763,"cardName":"롯데카드","cardCode":"LOTTE","acquirerCode":"LOTTE","maskingCardNumber":"513792******929*","basic":true,"cardType":"CREDIT","installmentMonth":0,"installmentLabelText":"일시불","wowCard":false,"onMaintenance":false}],
+                                                registrableRocketCardListJson: [{"cardCode":"SAMSUNG","cardName":"삼성카드","acquirerCode":"SAMSUNG","maxInstallmentMonth":24,"displayCardServiceTypeList":["PAYMENT","ROCKET_PAY"],"cardFreeInstallmentBenefitList":[{"installmentMonths":[2,3,4,5],"applyAmount":5},{"installmentMonths":[7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],"applyAmount":130}],"cardPartInstallmentBenefitList":[{"payMonth":"1,2,3","installmentMonth":"7","applyAmount":5},{"payMonth":"1,2,3,4,5","installmentMonth":"11","applyAmount":5}]},{"cardCode":"LOTTE","cardName":"롯데카드","acquirerCode":"LOTTE","maxInstallmentMonth":24,"displayCardServiceTypeList":["PAYMENT","ROCKET_PAY"],"cardFreeInstallmentBenefitList":[{"installmentMonths":[2,3,4,5],"applyAmount":5},{"installmentMonths":[7,8,9,10,11,12,13,14,15,16],"applyAmount":130}],"cardPartInstallmentBenefitList":[]},{"cardCode":"KB","cardName":"KB국민카드","acquirerCode":"KB","maxInstallmentMonth":24,"displayCardServiceTypeList":["PAYMENT","ROCKET_PAY"],"cardFreeInstallmentBenefitList":[{"installmentMonths":[2,3,4,5],"applyAmount":5},{"installmentMonths":[7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],"applyAmount":130}],"cardPartInstallmentBenefitList":[{"payMonth":"1,2,3","installmentMonth":"6","applyAmount":5},{"payMonth":"1,2,3,4,5","installmentMonth":"10","applyAmount":5}]},{"cardCode":"SHINHAN","cardName":"신한카드","acquirerCode":"SHINHAN","maxInstallmentMonth":24,"displayCardServiceTypeList":["PAYMENT","ROCKET_PAY"],"cardFreeInstallmentBenefitList":[{"installmentMonths":[2,3,4,5],"applyAmount":5}],"cardPartInstallmentBenefitList":[{"payMonth":"1,2,3,4","installmentMonth":"10","applyAmount":5},{"payMonth":"1,2,3,4,5","installmentMonth":"12","applyAmount":5}]},{"cardCode":"HANA_SK","cardName":"하나카드","acquirerCode":"HANA_SK","maxInstallmentMonth":24,"displayCardServiceTypeList":["PAYMENT","ROCKET_PAY"],"cardFreeInstallmentBenefitList":[{"installmentMonths":[2,3],"applyAmount":5},{"installmentMonths":[7,8,9,10,11,12,13,14,15,16],"applyAmount":130}],"cardPartInstallmentBenefitList":[{"payMonth":"1,2,3","installmentMonth":"6","applyAmount":5},{"payMonth":"1,2,3,4","installmentMonth":"10","applyAmount":5},{"payMonth":"1,2,3,4,5","installmentMonth":"12","applyAmount":5}]},{"cardCode":"BC","cardName":"BC카드","acquirerCode":"BC","maxInstallmentMonth":24,"displayCardServiceTypeList":["PAYMENT","ROCKET_PAY"],"cardFreeInstallmentBenefitList":[{"installmentMonths":[2,3,4,5],"applyAmount":5}],"cardPartInstallmentBenefitList":[{"payMonth":"1,2,3","installmentMonth":"10","applyAmount":5},{"payMonth":"1,2,3,4","installmentMonth":"12","applyAmount":5}]},{"cardCode":"HYUNDAI","cardName":"현대카드","acquirerCode":"HYUNDAI","maxInstallmentMonth":18,"displayCardServiceTypeList":["PAYMENT","ROCKET_PAY"],"cardFreeInstallmentBenefitList":[{"installmentMonths":[2,3],"applyAmount":5}],"cardPartInstallmentBenefitList":[]},{"cardCode":"WOORI","cardName":"우리카드","acquirerCode":"WOORI","maxInstallmentMonth":24,"displayCardServiceTypeList":["PAYMENT","ROCKET_PAY"],"cardFreeInstallmentBenefitList":[{"installmentMonths":[2,3,4,5],"applyAmount":5}],"cardPartInstallmentBenefitList":[{"payMonth":"1,2,3","installmentMonth":"10","applyAmount":5},{"payMonth":"1,2,3,4","installmentMonth":"12","applyAmount":5}]},{"cardCode":"NH","cardName":"NH농협카드","acquirerCode":"NH","maxInstallmentMonth":24,"displayCardServiceTypeList":["PAYMENT","ROCKET_PAY"],"cardFreeInstallmentBenefitList":[{"installmentMonths":[2,3,4],"applyAmount":5}],"cardPartInstallmentBenefitList":[{"payMonth":"1,2","installmentMonth":"5","applyAmount":5},{"payMonth":"1,2","installmentMonth":"6","applyAmount":5},{"payMonth":"1,2,3","installmentMonth":"7","applyAmount":5},{"payMonth":"1,2,3","installmentMonth":"8","applyAmount":5},{"payMonth":"1,2,3","installmentMonth":"9","applyAmount":5},{"payMonth":"1,2,3","installmentMonth":"10","applyAmount":5}]},{"cardCode":"CITY","cardName":"씨티카드","acquirerCode":"CITY","maxInstallmentMonth":24,"displayCardServiceTypeList":["PAYMENT","ROCKET_PAY"],"cardFreeInstallmentBenefitList":[],"cardPartInstallmentBenefitList":[]},{"cardCode":"KakaoBank","cardName":"카카오뱅크카드","acquirerCode":"KakaoBank","maxInstallmentMonth":24,"displayCardServiceTypeList":["PAYMENT","ROCKET_PAY"],"cardFreeInstallmentBenefitList":[],"cardPartInstallmentBenefitList":[]},{"cardCode":"TOSSBANK","cardName":"토스뱅크카드","acquirerCode":"TOSSBANK","maxInstallmentMonth":24,"displayCardServiceTypeList":["PAYMENT","ROCKET_PAY"],"cardFreeInstallmentBenefitList":[],"cardPartInstallmentBenefitList":[]},{"cardCode":"ETC","cardName":"기타(은행/증권)카드","acquirerCode":"BC","maxInstallmentMonth":24,"displayCardServiceTypeList":["PAYMENT","ROCKET_PAY"],"cardFreeInstallmentBenefitList":[],"cardPartInstallmentBenefitList":[]}],
+                                                cardInstallments: [{"code":"SAMSUNG","name":"삼성카드","cardInstallmentMap":{"50000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"03","name":"3개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"04","name":"4개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"05","name":"5개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"06","name":"6개월","freeInstallment":false,"partInstallment":false},{"month":"07","name":"7개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"08","name":"8개월","freeInstallment":false,"partInstallment":false},{"month":"09","name":"9개월","freeInstallment":false,"partInstallment":false},{"month":"10","name":"10개월","freeInstallment":false,"partInstallment":false},{"month":"11","name":"11개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"12","name":"12개월","freeInstallment":false,"partInstallment":false},{"month":"13","name":"13개월","freeInstallment":false,"partInstallment":false},{"month":"14","name":"14개월","freeInstallment":false,"partInstallment":false},{"month":"15","name":"15개월","freeInstallment":false,"partInstallment":false},{"month":"16","name":"16개월","freeInstallment":false,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false},{"month":"19","name":"19개월","freeInstallment":false,"partInstallment":false},{"month":"20","name":"20개월","freeInstallment":false,"partInstallment":false},{"month":"21","name":"21개월","freeInstallment":false,"partInstallment":false},{"month":"22","name":"22개월","freeInstallment":false,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}],"1300000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"03","name":"3개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"04","name":"4개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"05","name":"5개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"06","name":"6개월","freeInstallment":false,"partInstallment":false},{"month":"07","name":"7개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"08","name":"8개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"09","name":"9개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"10","name":"10개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"11","name":"11개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"12","name":"12개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"13","name":"13개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"14","name":"14개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"15","name":"15개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"16","name":"16개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"17","name":"17개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"18","name":"18개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"19","name":"19개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"20","name":"20개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"21","name":"21개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"22","name":"22개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}]}},{"code":"LOTTE","name":"롯데카드","cardInstallmentMap":{"50000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"03","name":"3개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"04","name":"4개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"05","name":"5개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"06","name":"6개월","freeInstallment":false,"partInstallment":false},{"month":"07","name":"7개월","freeInstallment":false,"partInstallment":false},{"month":"08","name":"8개월","freeInstallment":false,"partInstallment":false},{"month":"09","name":"9개월","freeInstallment":false,"partInstallment":false},{"month":"10","name":"10개월","freeInstallment":false,"partInstallment":false},{"month":"11","name":"11개월","freeInstallment":false,"partInstallment":false},{"month":"12","name":"12개월","freeInstallment":false,"partInstallment":false},{"month":"13","name":"13개월","freeInstallment":false,"partInstallment":false},{"month":"14","name":"14개월","freeInstallment":false,"partInstallment":false},{"month":"15","name":"15개월","freeInstallment":false,"partInstallment":false},{"month":"16","name":"16개월","freeInstallment":false,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false},{"month":"19","name":"19개월","freeInstallment":false,"partInstallment":false},{"month":"20","name":"20개월","freeInstallment":false,"partInstallment":false},{"month":"21","name":"21개월","freeInstallment":false,"partInstallment":false},{"month":"22","name":"22개월","freeInstallment":false,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}],"1300000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"03","name":"3개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"04","name":"4개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"05","name":"5개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"06","name":"6개월","freeInstallment":false,"partInstallment":false},{"month":"07","name":"7개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"08","name":"8개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"09","name":"9개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"10","name":"10개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"11","name":"11개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"12","name":"12개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"13","name":"13개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"14","name":"14개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"15","name":"15개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"16","name":"16개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false},{"month":"19","name":"19개월","freeInstallment":false,"partInstallment":false},{"month":"20","name":"20개월","freeInstallment":false,"partInstallment":false},{"month":"21","name":"21개월","freeInstallment":false,"partInstallment":false},{"month":"22","name":"22개월","freeInstallment":false,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}]}},{"code":"KB","name":"KB국민카드","cardInstallmentMap":{"50000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"03","name":"3개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"04","name":"4개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"05","name":"5개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"06","name":"6개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"07","name":"7개월","freeInstallment":false,"partInstallment":false},{"month":"08","name":"8개월","freeInstallment":false,"partInstallment":false},{"month":"09","name":"9개월","freeInstallment":false,"partInstallment":false},{"month":"10","name":"10개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"11","name":"11개월","freeInstallment":false,"partInstallment":false},{"month":"12","name":"12개월","freeInstallment":false,"partInstallment":false},{"month":"13","name":"13개월","freeInstallment":false,"partInstallment":false},{"month":"14","name":"14개월","freeInstallment":false,"partInstallment":false},{"month":"15","name":"15개월","freeInstallment":false,"partInstallment":false},{"month":"16","name":"16개월","freeInstallment":false,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false},{"month":"19","name":"19개월","freeInstallment":false,"partInstallment":false},{"month":"20","name":"20개월","freeInstallment":false,"partInstallment":false},{"month":"21","name":"21개월","freeInstallment":false,"partInstallment":false},{"month":"22","name":"22개월","freeInstallment":false,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}],"1300000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"03","name":"3개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"04","name":"4개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"05","name":"5개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"06","name":"6개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"07","name":"7개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"08","name":"8개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"09","name":"9개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"10","name":"10개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"11","name":"11개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"12","name":"12개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"13","name":"13개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"14","name":"14개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"15","name":"15개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"16","name":"16개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"17","name":"17개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"18","name":"18개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"19","name":"19개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"20","name":"20개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"21","name":"21개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"22","name":"22개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}]}},{"code":"SHINHAN","name":"신한카드","cardInstallmentMap":{"50000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"03","name":"3개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"04","name":"4개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"05","name":"5개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"06","name":"6개월","freeInstallment":false,"partInstallment":false},{"month":"07","name":"7개월","freeInstallment":false,"partInstallment":false},{"month":"08","name":"8개월","freeInstallment":false,"partInstallment":false},{"month":"09","name":"9개월","freeInstallment":false,"partInstallment":false},{"month":"10","name":"10개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"11","name":"11개월","freeInstallment":false,"partInstallment":false},{"month":"12","name":"12개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"13","name":"13개월","freeInstallment":false,"partInstallment":false},{"month":"14","name":"14개월","freeInstallment":false,"partInstallment":false},{"month":"15","name":"15개월","freeInstallment":false,"partInstallment":false},{"month":"16","name":"16개월","freeInstallment":false,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false},{"month":"19","name":"19개월","freeInstallment":false,"partInstallment":false},{"month":"20","name":"20개월","freeInstallment":false,"partInstallment":false},{"month":"21","name":"21개월","freeInstallment":false,"partInstallment":false},{"month":"22","name":"22개월","freeInstallment":false,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}]}},{"code":"HANA_SK","name":"하나카드","cardInstallmentMap":{"50000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"03","name":"3개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"04","name":"4개월","freeInstallment":false,"partInstallment":false},{"month":"05","name":"5개월","freeInstallment":false,"partInstallment":false},{"month":"06","name":"6개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"07","name":"7개월","freeInstallment":false,"partInstallment":false},{"month":"08","name":"8개월","freeInstallment":false,"partInstallment":false},{"month":"09","name":"9개월","freeInstallment":false,"partInstallment":false},{"month":"10","name":"10개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"11","name":"11개월","freeInstallment":false,"partInstallment":false},{"month":"12","name":"12개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"13","name":"13개월","freeInstallment":false,"partInstallment":false},{"month":"14","name":"14개월","freeInstallment":false,"partInstallment":false},{"month":"15","name":"15개월","freeInstallment":false,"partInstallment":false},{"month":"16","name":"16개월","freeInstallment":false,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false},{"month":"19","name":"19개월","freeInstallment":false,"partInstallment":false},{"month":"20","name":"20개월","freeInstallment":false,"partInstallment":false},{"month":"21","name":"21개월","freeInstallment":false,"partInstallment":false},{"month":"22","name":"22개월","freeInstallment":false,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}],"1300000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"03","name":"3개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"04","name":"4개월","freeInstallment":false,"partInstallment":false},{"month":"05","name":"5개월","freeInstallment":false,"partInstallment":false},{"month":"06","name":"6개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"07","name":"7개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"08","name":"8개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"09","name":"9개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"10","name":"10개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"11","name":"11개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"12","name":"12개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"13","name":"13개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"14","name":"14개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"15","name":"15개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"16","name":"16개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false},{"month":"19","name":"19개월","freeInstallment":false,"partInstallment":false},{"month":"20","name":"20개월","freeInstallment":false,"partInstallment":false},{"month":"21","name":"21개월","freeInstallment":false,"partInstallment":false},{"month":"22","name":"22개월","freeInstallment":false,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}]}},{"code":"BC","name":"BC카드","cardInstallmentMap":{"50000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"03","name":"3개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"04","name":"4개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"05","name":"5개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"06","name":"6개월","freeInstallment":false,"partInstallment":false},{"month":"07","name":"7개월","freeInstallment":false,"partInstallment":false},{"month":"08","name":"8개월","freeInstallment":false,"partInstallment":false},{"month":"09","name":"9개월","freeInstallment":false,"partInstallment":false},{"month":"10","name":"10개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"11","name":"11개월","freeInstallment":false,"partInstallment":false},{"month":"12","name":"12개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"13","name":"13개월","freeInstallment":false,"partInstallment":false},{"month":"14","name":"14개월","freeInstallment":false,"partInstallment":false},{"month":"15","name":"15개월","freeInstallment":false,"partInstallment":false},{"month":"16","name":"16개월","freeInstallment":false,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false},{"month":"19","name":"19개월","freeInstallment":false,"partInstallment":false},{"month":"20","name":"20개월","freeInstallment":false,"partInstallment":false},{"month":"21","name":"21개월","freeInstallment":false,"partInstallment":false},{"month":"22","name":"22개월","freeInstallment":false,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}]}},{"code":"HYUNDAI","name":"현대카드","cardInstallmentMap":{"50000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"03","name":"3개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"04","name":"4개월","freeInstallment":false,"partInstallment":false},{"month":"05","name":"5개월","freeInstallment":false,"partInstallment":false},{"month":"06","name":"6개월","freeInstallment":false,"partInstallment":false},{"month":"07","name":"7개월","freeInstallment":false,"partInstallment":false},{"month":"08","name":"8개월","freeInstallment":false,"partInstallment":false},{"month":"09","name":"9개월","freeInstallment":false,"partInstallment":false},{"month":"10","name":"10개월","freeInstallment":false,"partInstallment":false},{"month":"11","name":"11개월","freeInstallment":false,"partInstallment":false},{"month":"12","name":"12개월","freeInstallment":false,"partInstallment":false},{"month":"13","name":"13개월","freeInstallment":false,"partInstallment":false},{"month":"14","name":"14개월","freeInstallment":false,"partInstallment":false},{"month":"15","name":"15개월","freeInstallment":false,"partInstallment":false},{"month":"16","name":"16개월","freeInstallment":false,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false}]}},{"code":"WOORI","name":"우리카드","cardInstallmentMap":{"50000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"03","name":"3개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"04","name":"4개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"05","name":"5개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"06","name":"6개월","freeInstallment":false,"partInstallment":false},{"month":"07","name":"7개월","freeInstallment":false,"partInstallment":false},{"month":"08","name":"8개월","freeInstallment":false,"partInstallment":false},{"month":"09","name":"9개월","freeInstallment":false,"partInstallment":false},{"month":"10","name":"10개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"11","name":"11개월","freeInstallment":false,"partInstallment":false},{"month":"12","name":"12개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"13","name":"13개월","freeInstallment":false,"partInstallment":false},{"month":"14","name":"14개월","freeInstallment":false,"partInstallment":false},{"month":"15","name":"15개월","freeInstallment":false,"partInstallment":false},{"month":"16","name":"16개월","freeInstallment":false,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false},{"month":"19","name":"19개월","freeInstallment":false,"partInstallment":false},{"month":"20","name":"20개월","freeInstallment":false,"partInstallment":false},{"month":"21","name":"21개월","freeInstallment":false,"partInstallment":false},{"month":"22","name":"22개월","freeInstallment":false,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}]}},{"code":"NH","name":"NH농협카드","cardInstallmentMap":{"50000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"03","name":"3개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"04","name":"4개월 (무이자)","freeInstallment":true,"partInstallment":false},{"month":"05","name":"5개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"06","name":"6개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"07","name":"7개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"08","name":"8개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"09","name":"9개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"10","name":"10개월 (부분무이자)","freeInstallment":false,"partInstallment":true},{"month":"11","name":"11개월","freeInstallment":false,"partInstallment":false},{"month":"12","name":"12개월","freeInstallment":false,"partInstallment":false},{"month":"13","name":"13개월","freeInstallment":false,"partInstallment":false},{"month":"14","name":"14개월","freeInstallment":false,"partInstallment":false},{"month":"15","name":"15개월","freeInstallment":false,"partInstallment":false},{"month":"16","name":"16개월","freeInstallment":false,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false},{"month":"19","name":"19개월","freeInstallment":false,"partInstallment":false},{"month":"20","name":"20개월","freeInstallment":false,"partInstallment":false},{"month":"21","name":"21개월","freeInstallment":false,"partInstallment":false},{"month":"22","name":"22개월","freeInstallment":false,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}]}},{"code":"CITY","name":"씨티카드","cardInstallmentMap":{"50000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월","freeInstallment":false,"partInstallment":false},{"month":"03","name":"3개월","freeInstallment":false,"partInstallment":false},{"month":"04","name":"4개월","freeInstallment":false,"partInstallment":false},{"month":"05","name":"5개월","freeInstallment":false,"partInstallment":false},{"month":"06","name":"6개월","freeInstallment":false,"partInstallment":false},{"month":"07","name":"7개월","freeInstallment":false,"partInstallment":false},{"month":"08","name":"8개월","freeInstallment":false,"partInstallment":false},{"month":"09","name":"9개월","freeInstallment":false,"partInstallment":false},{"month":"10","name":"10개월","freeInstallment":false,"partInstallment":false},{"month":"11","name":"11개월","freeInstallment":false,"partInstallment":false},{"month":"12","name":"12개월","freeInstallment":false,"partInstallment":false},{"month":"13","name":"13개월","freeInstallment":false,"partInstallment":false},{"month":"14","name":"14개월","freeInstallment":false,"partInstallment":false},{"month":"15","name":"15개월","freeInstallment":false,"partInstallment":false},{"month":"16","name":"16개월","freeInstallment":false,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false},{"month":"19","name":"19개월","freeInstallment":false,"partInstallment":false},{"month":"20","name":"20개월","freeInstallment":false,"partInstallment":false},{"month":"21","name":"21개월","freeInstallment":false,"partInstallment":false},{"month":"22","name":"22개월","freeInstallment":false,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}]}},{"code":"KakaoBank","name":"카카오뱅크카드","cardInstallmentMap":{"50000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월","freeInstallment":false,"partInstallment":false},{"month":"03","name":"3개월","freeInstallment":false,"partInstallment":false},{"month":"04","name":"4개월","freeInstallment":false,"partInstallment":false},{"month":"05","name":"5개월","freeInstallment":false,"partInstallment":false},{"month":"06","name":"6개월","freeInstallment":false,"partInstallment":false},{"month":"07","name":"7개월","freeInstallment":false,"partInstallment":false},{"month":"08","name":"8개월","freeInstallment":false,"partInstallment":false},{"month":"09","name":"9개월","freeInstallment":false,"partInstallment":false},{"month":"10","name":"10개월","freeInstallment":false,"partInstallment":false},{"month":"11","name":"11개월","freeInstallment":false,"partInstallment":false},{"month":"12","name":"12개월","freeInstallment":false,"partInstallment":false},{"month":"13","name":"13개월","freeInstallment":false,"partInstallment":false},{"month":"14","name":"14개월","freeInstallment":false,"partInstallment":false},{"month":"15","name":"15개월","freeInstallment":false,"partInstallment":false},{"month":"16","name":"16개월","freeInstallment":false,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false},{"month":"19","name":"19개월","freeInstallment":false,"partInstallment":false},{"month":"20","name":"20개월","freeInstallment":false,"partInstallment":false},{"month":"21","name":"21개월","freeInstallment":false,"partInstallment":false},{"month":"22","name":"22개월","freeInstallment":false,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}]}},{"code":"TOSSBANK","name":"토스뱅크카드","cardInstallmentMap":{"50000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월","freeInstallment":false,"partInstallment":false},{"month":"03","name":"3개월","freeInstallment":false,"partInstallment":false},{"month":"04","name":"4개월","freeInstallment":false,"partInstallment":false},{"month":"05","name":"5개월","freeInstallment":false,"partInstallment":false},{"month":"06","name":"6개월","freeInstallment":false,"partInstallment":false},{"month":"07","name":"7개월","freeInstallment":false,"partInstallment":false},{"month":"08","name":"8개월","freeInstallment":false,"partInstallment":false},{"month":"09","name":"9개월","freeInstallment":false,"partInstallment":false},{"month":"10","name":"10개월","freeInstallment":false,"partInstallment":false},{"month":"11","name":"11개월","freeInstallment":false,"partInstallment":false},{"month":"12","name":"12개월","freeInstallment":false,"partInstallment":false},{"month":"13","name":"13개월","freeInstallment":false,"partInstallment":false},{"month":"14","name":"14개월","freeInstallment":false,"partInstallment":false},{"month":"15","name":"15개월","freeInstallment":false,"partInstallment":false},{"month":"16","name":"16개월","freeInstallment":false,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false},{"month":"19","name":"19개월","freeInstallment":false,"partInstallment":false},{"month":"20","name":"20개월","freeInstallment":false,"partInstallment":false},{"month":"21","name":"21개월","freeInstallment":false,"partInstallment":false},{"month":"22","name":"22개월","freeInstallment":false,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}]}},{"code":"ETC","name":"기타(은행/증권)카드","cardInstallmentMap":{"50000":[{"month":"00","name":"일시불","freeInstallment":false,"partInstallment":false},{"month":"02","name":"2개월","freeInstallment":false,"partInstallment":false},{"month":"03","name":"3개월","freeInstallment":false,"partInstallment":false},{"month":"04","name":"4개월","freeInstallment":false,"partInstallment":false},{"month":"05","name":"5개월","freeInstallment":false,"partInstallment":false},{"month":"06","name":"6개월","freeInstallment":false,"partInstallment":false},{"month":"07","name":"7개월","freeInstallment":false,"partInstallment":false},{"month":"08","name":"8개월","freeInstallment":false,"partInstallment":false},{"month":"09","name":"9개월","freeInstallment":false,"partInstallment":false},{"month":"10","name":"10개월","freeInstallment":false,"partInstallment":false},{"month":"11","name":"11개월","freeInstallment":false,"partInstallment":false},{"month":"12","name":"12개월","freeInstallment":false,"partInstallment":false},{"month":"13","name":"13개월","freeInstallment":false,"partInstallment":false},{"month":"14","name":"14개월","freeInstallment":false,"partInstallment":false},{"month":"15","name":"15개월","freeInstallment":false,"partInstallment":false},{"month":"16","name":"16개월","freeInstallment":false,"partInstallment":false},{"month":"17","name":"17개월","freeInstallment":false,"partInstallment":false},{"month":"18","name":"18개월","freeInstallment":false,"partInstallment":false},{"month":"19","name":"19개월","freeInstallment":false,"partInstallment":false},{"month":"20","name":"20개월","freeInstallment":false,"partInstallment":false},{"month":"21","name":"21개월","freeInstallment":false,"partInstallment":false},{"month":"22","name":"22개월","freeInstallment":false,"partInstallment":false},{"month":"23","name":"23개월","freeInstallment":false,"partInstallment":false},{"month":"24","name":"24개월","freeInstallment":false,"partInstallment":false}]}}]
+                                            }
+                                        </script>
+                                        <div class="rocketpay-card pay-type-content" data-controller="RocketpayCard" data-controller-data="{ &quot;hasCcidPromotion&quot;: true }" data-payment-promotions="[{&quot;promotionId&quot;:&quot;2cf7128b-708f-4127-b5b3-2c1f41de6fca&quot;,&quot;promotionType&quot;:&quot;ITEM_REWARD_CASH&quot;,&quot;payType&quot;:&quot;ROCKET_BALANCE&quot;,&quot;code&quot;:&quot;&quot;,&quot;discountAmount&quot;:0,&quot;discountPercentage&quot;:1,&quot;maximumAmount&quot;:0,&quot;remainDays&quot;:0,&quot;boostPromotion&quot;:false,&quot;paymentMethodPromotion&quot;:true,&quot;manageCode&quot;:&quot;COUPAY_MONEY_CASHBACK&quot;,&quot;i18nDiscountAmount&quot;:{&quot;amount&quot;:&quot;0&quot;,&quot;rawAmount&quot;:0,&quot;fractionDigits&quot;:0,&quot;currency&quot;:&quot;KRW&quot;},&quot;i18nMaximumAmount&quot;:{&quot;amount&quot;:&quot;0&quot;,&quot;rawAmount&quot;:0,&quot;fractionDigits&quot;:0,&quot;currency&quot;:&quot;KRW&quot;}}]">
+                                            <ul class="pay-type-sections">
+                                                <li class="pay-type-section">
+                                                    <label for="rocketCard-select" class="line-title">카드선택</label>
+                                                    <div class="line-data">
+                                                        <select name="rocketCardCode" id="rocketCard-select" class="rocketpay-card__cardList">
+                                                            <option value="23583763" data-member-card-id="23583763" data-card-type="CREDIT" data-card-name="롯데카드" data-card-code="LOTTE" data-card-acquirer-code="LOTTE" data-card-support-type="ROCKET_PAY" data-card-max-installment-month="" data-wow-card="false" selected="selected">
+                                                                롯데카드 / ******
+                                                            </option>
+                                                            <option value="SAMSUNG" data-card-type="CREDIT" data-card-code="SAMSUNG" data-card-acquirer-code="SAMSUNG" data-card-name="삼성카드" data-card-support-type="PAYMENT@ROCKET_PAY" data-card-max-installment-month="24">
+                                                                삼성카드
+                                                            </option>
+                                                            <option value="LOTTE" data-card-type="CREDIT" data-card-code="LOTTE" data-card-acquirer-code="LOTTE" data-card-name="롯데카드" data-card-support-type="PAYMENT@ROCKET_PAY" data-card-max-installment-month="24">
+                                                                롯데카드
+                                                            </option>
+                                                            <option value="KB" data-card-type="CREDIT" data-card-code="KB" data-card-acquirer-code="KB" data-card-name="KB국민카드" data-card-support-type="PAYMENT@ROCKET_PAY" data-card-max-installment-month="24">
+                                                                KB국민카드
+                                                            </option>
+                                                            <option value="SHINHAN" data-card-type="CREDIT" data-card-code="SHINHAN" data-card-acquirer-code="SHINHAN" data-card-name="신한카드" data-card-support-type="PAYMENT@ROCKET_PAY" data-card-max-installment-month="24">
+                                                                신한카드
+                                                            </option>
+                                                            <option value="HANA_SK" data-card-type="CREDIT" data-card-code="HANA_SK" data-card-acquirer-code="HANA_SK" data-card-name="하나카드" data-card-support-type="PAYMENT@ROCKET_PAY" data-card-max-installment-month="24">
+                                                                하나카드
+                                                            </option>
+                                                            <option value="BC" data-card-type="CREDIT" data-card-code="BC" data-card-acquirer-code="BC" data-card-name="BC카드" data-card-support-type="PAYMENT@ROCKET_PAY" data-card-max-installment-month="24">
+                                                                BC카드
+                                                            </option>
+                                                            <option value="HYUNDAI" data-card-type="CREDIT" data-card-code="HYUNDAI" data-card-acquirer-code="HYUNDAI" data-card-name="현대카드" data-card-support-type="PAYMENT@ROCKET_PAY" data-card-max-installment-month="18">
+                                                                현대카드
+                                                            </option>
+                                                            <option value="WOORI" data-card-type="CREDIT" data-card-code="WOORI" data-card-acquirer-code="WOORI" data-card-name="우리카드" data-card-support-type="PAYMENT@ROCKET_PAY" data-card-max-installment-month="24">
+                                                                우리카드
+                                                            </option>
+                                                            <option value="NH" data-card-type="CREDIT" data-card-code="NH" data-card-acquirer-code="NH" data-card-name="NH농협카드" data-card-support-type="PAYMENT@ROCKET_PAY" data-card-max-installment-month="24">
+                                                                NH농협카드
+                                                            </option>
+                                                            <option value="CITY" data-card-type="CREDIT" data-card-code="CITY" data-card-acquirer-code="CITY" data-card-name="씨티카드" data-card-support-type="PAYMENT@ROCKET_PAY" data-card-max-installment-month="24">
+                                                                씨티카드
+                                                            </option>
+                                                            <option value="KakaoBank" data-card-type="CREDIT" data-card-code="KakaoBank" data-card-acquirer-code="KakaoBank" data-card-name="카카오뱅크카드" data-card-support-type="PAYMENT@ROCKET_PAY" data-card-max-installment-month="24">
+                                                                카카오뱅크카드
+                                                            </option>
+                                                            <option value="TOSSBANK" data-card-type="CREDIT" data-card-code="TOSSBANK" data-card-acquirer-code="TOSSBANK" data-card-name="토스뱅크카드" data-card-support-type="PAYMENT@ROCKET_PAY" data-card-max-installment-month="24">
+                                                                토스뱅크카드
+                                                            </option>
+                                                            <option value="ETC" data-card-type="CREDIT" data-card-code="ETC" data-card-acquirer-code="BC" data-card-name="기타(은행/증권)카드" data-card-support-type="PAYMENT@ROCKET_PAY" data-card-max-installment-month="24">
+                                                                기타(은행/증권)카드
+                                                            </option>
+                                                        </select>
+                                                        <span class="note-install note-install-important">
+                                                                <label id="rocketCard-myCard-label" style="display: none;">
+                                                                <input type="checkbox" id="rocketCard-myCard-check" checked="checked">
+                                                                홍길동님 명의 카드
+                                                                </label>
+                                                                <span id="rocketCard-myCard-only" style="display: none;">
+                                                                * 홍길동님 명의 카드만 사용 가능합니다
+                                                                </span>
+                                                                </span>
+                                                        <div class="validate-message validate-message--minPrice" style="display: none;"></div>
+                                                        <div class="validate-message validate-message--selectCard" style="display: none;"></div>
+                                                    </div>
+                                                </li>
+                                                <li class="pay-type-section last-section">
+                                                    <label for="rocketCard-select" class="line-title">할부기간</label>
+                                                    <div class="line-data">
+                                                        <select name="quota" id="rocketCard-quota-select" class="rocketpay-card__quotaList">
+                                                            <option value="00">일시불</option>
+                                                            <option value="02">2개월 (무이자)</option>
+                                                            <option value="03">3개월 (무이자)</option>
+                                                            <option value="04">4개월 (무이자)</option>
+                                                            <option value="05">5개월 (무이자)</option>
+                                                            <option value="06">6개월</option>
+                                                            <option value="07">7개월</option>
+                                                            <option value="08">8개월</option>
+                                                            <option value="09">9개월</option>
+                                                            <option value="10">10개월</option>
+                                                            <option value="11">11개월</option>
+                                                            <option value="12">12개월</option>
+                                                            <option value="13">13개월</option>
+                                                            <option value="14">14개월</option>
+                                                            <option value="15">15개월</option>
+                                                            <option value="16">16개월</option>
+                                                            <option value="17">17개월</option>
+                                                            <option value="18">18개월</option>
+                                                            <option value="19">19개월</option>
+                                                            <option value="20">20개월</option>
+                                                            <option value="21">21개월</option>
+                                                            <option value="22">22개월</option>
+                                                            <option value="23">23개월</option>
+                                                            <option value="24">24개월</option>
+                                                        </select>
+                                                        <span id="rocketCard-installment-notice" class="note-install">* 할부는 50,000원 이상만 가능합니다</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div id="rocketPayModal" style="display: none">
+                                            <iframe src="" width="100%" height="100%" scrolling="no" frameborder="0" marginwidth="0" marginheight="0" topmargin="0" id="rocketPayIFrame" name="rocketPayModal" allowtransparency="true"></iframe>
+                                        </div>
+                                        <div id="rocketpay-card-limit-notification">
+                                        </div>
+                                        <style type="text/css">
+                                            /* 페이지별 분류 */
+                                            /* 공통 */
+                                            .paymentBenefitWrap { position: relative; margin-top: 10px; z-index: 3000; }
+                                            .paymentBenefitWrap .paymentBenefit {}
+                                            .paymentBenefitWrap .wrapBenefitLayerPop { display: inline-block; line-height: 17px; font-size: 11px; }
+                                            .paymentBenefitWrap .paymentBenefit .promotionBenefitTitle { display: none; }
+                                            .paymentBenefitWrap .benefitPopupTrigger { display: inline-block; height: 14px; padding: 2px 13px 0 5px; border: solid 1px #b6b9c1; font-size: 11px; line-height: 13px; letter-spacing: -1px; text-decoration: none; color: #55575f; cursor: default; background-position: 100% 0; background-color: #fff; background-image: url(//img1a.coupangcdn.com/image/static/common/bg_cardBenefit.png); background-repeat: no-repeat; }
+                                            .paymentBenefitWrap .benefitLayerPop { position: absolute; bottom: 18px; left: 0px; display: none; overflow-y: auto; overflow-x: hidden; border: 1px solid #787882; padding: 20px 20px 0px 20px; background-color: #fff; }
+                                            .paymentBenefitWrap .wrapBenefitLayerPop:hover .benefitLayerPop { display: inline-block; width: auto; }
+                                            .paymentBenefitWrap .benefitLayerPop:hover { display: inline-block; }
+                                            .paymentBenefitWrap .benefitLayerPop .benefitRemarks { margin: 10px 0px 20px; color: #787878; white-space: nowrap; font-size: 11px; letter-spacing: -1px; line-height: 17px; }
+                                            .paymentBenefitWrap .benefitLayerPop table:first-child { margin-top: 20px; }
+                                            .paymentBenefitWrap .benefitLayerPopTable { position: relative; min-width: 410px; width: 100%; margin-top: 50px; color: #5f5f5f; border-left: 2px solid #fff; font-size: 11px; letter-spacing: -1px; }
+                                            .paymentBenefitWrap .benefitLayerPopTable caption { position: absolute; top: -20px; display: block; visibility: visible; font-size: 12px; line-height: 20px; text-indent: 0px; font-weight: bold; color: #5f5f5f; text-align: left; }
+                                            .paymentBenefitWrap .benefitLayerPopTable thead { overflow: hidden; }
+                                            .paymentBenefitWrap .benefitLayerPopTable tbody { overflow: hidden; }
+                                            .paymentBenefitWrap .benefitLayerPopTable tr { width: 100%; margin-left: -1px; }
+                                            .paymentBenefitWrap .benefitLayerPopTable th { background-color: #f2f3f7; padding: 8px; margin-right: -10px; border-bottom: 1px solid #dce0e3; border-top: 1px solid #787882; border-left: 1px solid #dce0e3; white-space: nowrap; text-align: center; }
+                                            .paymentBenefitWrap .benefitLayerPopTable td { padding: 8px; border-bottom: 1px solid #dce0e3; border-left: 1px solid #dce0e3; white-space: nowrap; }
+                                            .paymentBenefitWrap .benefitLayerPopTable tr .creditCardCompany { text-align: center; }
+                                            .paymentBenefitWrap .benefitLayerPopTable img.logoImg { width: 72px; }
+                                            .paymentBenefitWrap .benefitLayerPopTable span.scopeNecessaryCondition,
+                                            .paymentBenefitWrap .promotionBenefitLayer { height: auto; }
+                                            .paymentBenefitWrap .promotionBenefitLayer { left: -150px; min-width: 460px; max-height: 300px; }
+                                            .paymentBenefitWrap .red { color: red; }
+                                            .paymentBenefitWrap .blue { color: blue; }
+                                            .paymentBenefitWrap .black { color: #5f5f5f; }
+                                            .paymentBenefitWrap .promotionBenefit { position: relative; display: block; }
+                                            .paymentBenefitWrap .promotionBenefit:hover .benefitLayerPop { display: none; }
+                                            .paymentBenefitWrap .promotionBenefit .subTitle {}
+                                            .paymentBenefitWrap .promotionBenefit .promotionBenefitList { position: relative; display: block; overflow: hidden; padding-bottom: 10px; }
+                                            .paymentBenefitWrap .promotionBenefit .promotionBenefitList li { position: relative; float: left; padding: 10px 0px 10px 95px; margin: 0px; width: 265px; margin-right: 6px; margin-top: 6px; border: 1px solid #eee; font-size: 11px; letter-spacing: -1px; }
+                                            .paymentBenefitWrap .promotionBenefit .promotionBenefitList .logoImg { position: absolute; top: 0px; left: 0px; margin: 10px; width: 72px; }
+                                            .paymentBenefitWrap .promotionBenefit .promotionBenefitList .benefit {}
+                                            .paymentBenefitWrap .promotionBenefit .promotionBenefitList .scope { display: block; }
+                                            .paymentBenefitWrap .promotionBenefit .promotionBenefitList .date {}
+                                            .paymentBenefitWrap .promotionBenefit .benefitPopupTrigger { display: none; }
+                                            .paymentBenefitWrap .installmentCreditBenefits .subTitle { display: none; }
+                                            .promotionBenefitList [class*="bold"],
+                                            .cardBenefitContent [class*="bold"] { font-weight: bold; }
+                                        </style>
+                                        <div class="paymentBenefitWrap orderForm">
+                                            <div class="paymentBenefit" id="paymentBenefit">
+                                                <h5 class="promotionBenefitTitle">카드혜택</h5>
+                                            </div>
+                                        </div>
+                                        <style type="text/css">
+                                            .installmentCreditBenefits { position: relative; margin-top: 10px; z-index: 3000; }
+                                            .installmentCreditBenefits .benefitPopupTrigger { display: inline-block; height: 14px; padding: 2px 18px 0 5px; border: solid 1px #b6b9c1; font-size: 11px; line-height: 13px; letter-spacing: -1px; text-decoration: none; color: #55575f; background-position: 100% 0; background-color: #fff; background-image: url(//img1a.coupangcdn.com/image/static/common/bg_cardBenefit.png); background-repeat: no-repeat; }
+                                            .installmentCreditBenefits .benefitPopupTrigger.payCcid-tooltip-message__link { margin-left: 0; }
+                                        </style>
+
+
+                                    </div>
+                                </div>
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div data-component="cash-receipt">
+                <div class="cash-receipt__root" data-cash-receipt__root="" style="display: none;">
+                    <h2 class="cash-receipt__title">현금영수증</h2>
+                    <div class="cash-receipt__wrap ">
+                        <div class="cash-receipt__checkbox-title__wrap cash-receipt__checkbox-title__wrap__no_content" data-cash-receipt__checkbox-title__wrap="">
+                            <span class="cash-receipt__checkbox  cash-receipt__checkbox__unchecked" data-cash-receipt__checkbox=""></span>
+                            <span class="cash-receipt__checkbox-title">현금영수증 신청</span>
+                        </div>
+                        <div data-cash-receipt__content="" style="display: none;">
+                            <div class="cash-receipt__request-type__root" data-cash-receipt__request-type__root="">
+                                    <span data-cash-receipt__request-type__wrap="DEDUCTION">
+                                    <span data-cash-receipt__request-type="DEDUCTION" class="cash-receipt__request-type__radio cash-receipt__request-type__radio__checked"></span>
+                                    <span data-cash-receipt__request-type-text="DEDUCTION" class="cash-receipt__request-type__desc cash-receipt__request-type__desc__checked">소득공제</span>
+                                    </span>
+                                <span data-cash-receipt__request-type__wrap="EXPENSE">
+                                    <span data-cash-receipt__request-type="EXPENSE" class="cash-receipt__request-type__radio cash-receipt__request-type__radio__unchecked"></span>
+                                    <span data-cash-receipt__request-type-text="EXPENSE" class="cash-receipt__request-type__desc cash-receipt__request-type__desc__unchecked">지출증빙</span>
+                                    </span>
+                            </div>
+                            <div class="cash-receipt__resiter-type__wrap" data-cash-receipt__resiter-type__root="">
+                                    <span>
+                                        <select name="cashReceiptRegisterType" class="cash-receipt__resiter-type__select" data-cash-receipt__resiter-type__selectbox="">
+                                            <option value="PHONE_NUMBER">휴대폰번호</option>
+                                            <option value="CASH_RECEIPT_CARD_NUMBER">현금영수증카드</option>
+                                        </select>
+                                    </span>
+                                <span><input name="cashReceiptRequestNo" class="cash-receipt__resiter-type__text " type="tel" size="20" maxlength="18" placeholder="숫자만 입력해 주세요" data-cash-receipt__resiter-type__text=""></span>
+                                <div class="cash-receipt__validation-message" data-cash-receipt__validation-message="">
+                                    <img class="cash-receipt__validation-message-icon" src="//img1a.coupangcdn.com/image/coupang/subscription/cart/pc/ico/ico_notice_20161024.png" width="12" height="12">
+                                    <span class="cash-receipt__validation-message-detail" data-cash-receipt__validation-message-detail=""></span>
+                                </div>
+                            </div>
+                            <div data-cash-receipt__notification__register="" style="display: none">
+                                <div class="cash-receipt__notification_wrap">
+                                    <div class="cash-receipt__notification_li">* 해외구매대행 / 로켓직구/ E쿠폰&amp;호텔뷔페 구매금액은 현금영수증 발행이 제외됩니다.</div>
+                                    <div class="cash-receipt__notification_li">* 쿠팡캐시 결제시 현금성 적립액에 한하여 현금영수증이 발행됩니다.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-cash-receipt__notification__unregister="">
+                            <div class="cash-receipt__notification_wrap">
+                                <div class="cash-receipt__notification_li">* 해외구매대행 / 로켓직구/ E쿠폰&amp;호텔뷔페 구매금액은 현금영수증 발행이 제외됩니다.</div>
+                                <div class="cash-receipt__notification_li">* 쿠팡캐시 결제시 현금성 적립액에 한하여 현금영수증이 발행됩니다.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wow-reward-cash-box"></div>
+            <div class="orderBox wrap-order-agree">
+                <div data-component="agreements">
+                    <div data-component="payment-agreements">
+                        <label class="agreements__label" for="agreement-of-card-agreements" data-agreement-root="card-agreements">
+                            <div class="agreements__title-box">
+                                <p class="agreements__message-and-checkbox-box">
+                                        <span data-agreements-title-text="">
+                                        구매조건 확인 및 결제대행 서비스 약관 동의
+                                        </span>
+                                </p>
+                                <div class="agreements__display-content-button-box">
+                                    <button type="button" class="agreements__display-content-button" data-agreements-display-content-button="">
+                                        보기
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="agreements__message--unchecked" data-agreements-message--unchecked="">구매조건 확인 및 결제대행 서비스 약관에 모두 동의하여야 합니다.</p>
+                            <div class="agreements__content agreements__content--parent " data-agreements-content="">
+                                <label class="agreements__label" for="agreement-of-card__terms-of-electronic-financial-transactions" data-agreement-root="card__terms-of-electronic-financial-transactions">
+                                    <input type="hidden" name="electronicFinancialAgree" value="true">
+                                    <div class="agreements__title-box agreements__title-box--sub">
+                                        <p class="agreements__message-and-checkbox-box">
+                            <span data-agreements-title-text="">
+                            서비스 이용 약관 동의
+                            </span>
+                                        </p>
+                                        <div class="agreements__display-content-button-box">
+                                            <button type="button" class="agreements__display-content-button" data-agreements-display-content-button="">
+                                                보기
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="agreements__content agreements__content--no-scroll " data-agreements-content="">
+                                        약관 내용이 없습니다.
+                                    </div>
+                                </label>
+                                <label class="agreements__label" for="agreement-of-card__personal-information-collection-and-usage-agreement" data-agreement-root="card__personal-information-collection-and-usage-agreement">
+                                    <input type="hidden" name="collectionAgree" value="true">
+                                    <div class="agreements__title-box agreements__title-box--sub">
+                                        <p class="agreements__message-and-checkbox-box">
+                            <span data-agreements-title-text="">
+                            개인정보 수집 및 이용 동의
+                            </span>
+                                        </p>
+                                        <div class="agreements__display-content-button-box">
+                                            <button type="button" class="agreements__display-content-button" data-agreements-display-content-button="">
+                                                보기
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="agreements__content agreements__content--no-scroll " data-agreements-content="">
+                                        약관 내용이 없습니다.
+                                    </div>
+                                </label>
+                                <label class="agreements__label" for="agreement-of-card__providing-personal-information-and-commissioning-consent" data-agreement-root="card__providing-personal-information-and-commissioning-consent">
+                                    <input type="hidden" name="provideAgree" value="true">
+                                    <div class="agreements__title-box agreements__title-box--sub">
+                                        <p class="agreements__message-and-checkbox-box">
+                            <span data-agreements-title-text="">
+                            개인정보 제공 및 위탁 동의
+                            </span>
+                                        </p>
+                                        <div class="agreements__display-content-button-box">
+                                            <button type="button" class="agreements__display-content-button" data-agreements-display-content-button="">
+                                                보기
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="agreements__content agreements__content--no-scroll " data-agreements-content="">
+                                        약관 내용이 없습니다.
+                                    </div>
+                                </label>
+                            </div>
+                        </label>
+                    </div>
+                    <div data-component="open-banking-agreements"></div>
+                    <!--  jikgu from U.S.A  -->
+                    <p class="agreements__message--sending" data-agreements-message--sending=""></p>
+                </div>
+                <div class="confirm-agreements-message">
+                    위 주문 내용을 확인 하였으며, 회원 본인은 개인정보 이용 및 제공(해외직구의 경우 국외제공) 및 결제에 동의합니다.
+                </div>
+                <div class="agreeBtn  hasRocketPayCheckoutButton" id="btn_all">
+                    <button type="button" id="paymentRocketpayBtn" style="display: inline-block;">
+                        <img src="/img/cancle.png" width="250" height="60" alt="취소하기">
+                        <span class="wow-selection-txt"></span>
+                    </button>
+                    <button type="button" id="paymentBtn">
+                        <img src="/img/payment.gif" width="260" height="60" alt="결제하기">
+                    </button>
+                </div>
+                <div class="agree_btn none" id="btn_all_ing">
+                    <span style="background:url('//image10.coupangcdn.com/image/www/newBuy/loading.gif') no-repeat"></span>
+                </div>
+            </div>
+        </div>
+        <div class="bot"></div>
+    </div>
+</div>
+</html>
