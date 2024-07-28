@@ -6,7 +6,7 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         function order(){
-            console.log("start_order")
+
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
 
@@ -47,22 +47,18 @@
             });
         }
         function addCart(){
-            console.log("addCart Start")
-            console.log("=================")
+
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
 
-            console.log("CSRF Token:", token); // 디버그 메시지 추가
-            console.log("CSRF Header:", header); // 디버그 메시지 추가
-
-
+            //cartItemDto
             var url = "/cart";
             var paramData = {
                 itemId : $(".itemIdInput").val(),
                 count : $("#option_box1_quantity").val()
 
             };
-            console.log(paramData)
+
 
             var param = JSON.stringify(paramData);
 
