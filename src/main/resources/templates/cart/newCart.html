@@ -7,7 +7,7 @@
 <th:block layout:fragment="script">
     <script>
         function updateQuantityAndSubTotal(change, index) {
-            console.log("update start")
+
             // 수량 업데이트
             var quantityInput = $('.quantity_' + index);
             var currentQuantity = parseInt(quantityInput.val());
@@ -33,16 +33,12 @@
 
             // 선택된 항목의 소계를 더해 총계를 계산
             $('[name="basket_product_normal_type_normal"]:checked').each(function() {
-                console.log("checkbox check");
+
                 var index = $(this).data('index');
                 var subtotalText = $('.sum_price_front_' + index).text();
                 var subtotal = parseInt(subtotalText.replace(/[^0-9]/g, ''));
                 total += subtotal;
 
-                console.log(subtotalText);
-                console.log(subtotal);
-                console.log(total);
-                console.log(index);
             });
 
             // 총계를 업데이트
@@ -67,8 +63,6 @@
                 $('.total_delv_price_front').text(2500);
                 finalTotal += 2500;
             }
-            console.log("finalTotal")
-            console.log(finalTotal)
 
             // 최종 총계를 업데이트
             $('#normal_normal_ship_fee_sum').text(finalTotal.toLocaleString());
@@ -77,26 +71,21 @@
 
 
         function initializeSubtotals() {
-            console.log("initialize Start")
+
             $('[class^="quantity_"]').each(function() {
                 var index = $(this).attr('class').split('_')[1];
                 var quantity = parseInt($(this).val());
 
-                console.log("initializeSubtotals")
-                console.log(index);
-                console.log(quantity);
 
                 // 가격 추출
                 var pricePerUnitText = $('.product_price_s_' + index).text();
                 var pricePerUnit = parseInt(pricePerUnitText.replace(/[^0-9]/g, ''));
 
-                console.log("priceperunit")
-                console.log(pricePerUnit);
-                console.log(pricePerUnitText);
 
                 // 소계 계산
                 var subtotal = quantity * pricePerUnit;
                 console.log(subtotal)
+
 
                 // 소계 업데이트
                 $('.sum_price_front_' + index).text(subtotal.toLocaleString());
@@ -120,7 +109,7 @@
             var selectedItems = [];
             $('[name="basket_product_normal_type_normal"]:checked').each(function() {
                 selectedItems.push($(this).val());
-                console.log(selectedItems)
+
             });
 
             if (selectedItems.length === 0) {
@@ -182,11 +171,15 @@
                     <h2>CART</h2>
                 </div>
 
-                <div class="xans-element- xans-order xans-order-basketpackage "><p class="orderStep"><img src="//img.echosting.cafe24.com/skin/base_ko_KR/order/img_order_step1.gif" alt="01 장바구니"></p>
-                    <div class="xans-element- xans-order xans-order-tabinfo ec-base-tab typeLight none "><ul class="menu">
+                <div class="xans-element- xans-order xans-order-basketpackage ">
+                    <p class="orderStep">
+                        <img src="//img.echosting.cafe24.com/skin/base_ko_KR/order/img_order_step1.gif" alt="01 장바구니">
+                    </p>
+                    <div class="xans-element- xans-order xans-order-tabinfo ec-base-tab typeLight none ">
+                        <ul class="menu">
                         <li class="selected "><a href="/order/basket.html">국내배송 (1)</a></li>
                         <li class=" "><a href="/order/basket.html?delvtype=B">해외배송 (0)</a></li>
-                    </ul>
+                        </ul>
                         <p class="right displaynone">장바구니에 담긴 상품은 7일 동안 보관됩니다.</p>
                     </div>
                     <div class="orderListArea ec-base-table typeList gBorder">
@@ -207,7 +200,7 @@
                                 <col style="width:110px">
                             </colgroup>
                             <thead><tr>
-                                <th scope="col"><input type="checkbox" onclick="Basket.setCheckBasketList('basket_product_normal_type_normal', this);"></th>
+                                <th scope="col"><input type="checkbox"></th>
                                 <th scope="col">IMAGE</th>
                                 <th scope="col">PRODUCT</th>
                                 <th scope="col">PRICE</th>
@@ -439,7 +432,7 @@
 
                     </div>
                 </div>
-
+            
                 <div class="xans-element- xans-myshop xans-myshop-wishlist ec-base-table typeList  xans-record-"><!--
 $login_page = /member/login.html
 $count = 5
