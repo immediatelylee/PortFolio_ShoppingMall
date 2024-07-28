@@ -1,5 +1,6 @@
 package com.shoppingmall.project_shoppingmall.dto;
 
+import com.shoppingmall.project_shoppingmall.domain.*;
 import lombok.*;
 
 @Getter

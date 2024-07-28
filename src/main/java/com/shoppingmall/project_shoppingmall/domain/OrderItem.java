@@ -3,6 +3,7 @@ package com.shoppingmall.project_shoppingmall.domain;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
+import java.math.*;
 
 @Entity
 @Getter @Setter
@@ -23,6 +24,7 @@ public class OrderItem extends BaseEntity {
     private int orderPrice; //주문가격
 
     private int count; //수량
+
 
     public static OrderItem createOrderItem(Item item, int count){
         OrderItem orderItem = new OrderItem();
