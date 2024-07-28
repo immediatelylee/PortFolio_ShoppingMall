@@ -341,12 +341,13 @@
 
                                 </td>
                             </tr></tfoot>
+
                             <tbody class="xans-element- xans-order xans-order-list center">
 
                             <th:block th:each="cartitem,iterStat : ${cartItems}">
                                 <tr class="xans-record-">
                                     <td>
-                                        <input type="checkbox" name="basket_product_normal_type_normal" th:value="${cartitem.cartItemId}" th:data-index="${iterStat.index}" checked>
+                                        <input type="checkbox" name="basket_product_normal_type_normal" th:value="${cartitem.cartItemId}" th:data-index="${cartitem.cartItemId}" checked>
                                     </td>
                                     <td class="thumb gClearLine">
                                         <a href="상품위치 등록해야함.">
@@ -361,14 +362,14 @@
                                         <ul class="xans-element- xans-order xans-order-optionall option">
                                             <li class="xans-record-">
                                                 <span class="">
-                            <!-- <a href="#none" onclick="Basket.showOptionChangeLayer('option_modify_layer_0', $(this))" style="padding: 5px 8px;border: 1px solid #ececec" class="btnNormal gBlank5 ">옵션변경</a> -->
+
                                                 </span>
                                             </li>
                                         </ul>
                                     </td>
                                     <td class="right">
                                         <div class="product_price">
-                                            <strong th:class="'product_price_s_'+${iterStat.index}" th:text="'₩' + ${#numbers.formatInteger(cartitem.price, 0, 'COMMA')}">₩초기값</strong>
+                                            <strong th:class="'product_price_s_'+${cartitem.cartItemId}" th:text="'₩' + ${#numbers.formatInteger(cartitem.price, 0, 'COMMA')}">₩초기값</strong>
                                         </div>
                                         <div id="product_sale_price_div0" class="displaynone">
                                             <strong>₩<span id="product_sale_price_front0">43,000</span></strong>
@@ -378,11 +379,11 @@
                                     <td>
                 <span>
                     <span class="ec-base-qty">
-                        <input th:class="'quantity_' + ${iterStat.index}" name="quantity_name" size="2" th:value="${cartitem.count}" type="text">
-                        <a th:onclick="updateQuantityAndSubTotal(1, [[${iterStat.index}]])">
+                        <input th:class="'quantity_' + ${cartitem.cartItemId}" name="quantity_name" size="2" th:value="${cartitem.count}" type="text">
+                        <a th:onclick="updateQuantityAndSubTotal(1, [[${cartitem.cartItemId}]])">
                             <img src="//img.echosting.cafe24.com/skin/base/common/btn_quantity_up.gif" alt="수량증가" class="up">
                         </a>
-                        <a th:onclick="updateQuantityAndSubTotal(-1, [[${iterStat.index}]])">
+                        <a th:onclick="updateQuantityAndSubTotal(-1, [[${cartitem.cartItemId}]])">
                             <img src="//img.echosting.cafe24.com/skin/base/common/btn_quantity_down.gif" alt="수량감소" class="down">
                         </a>
                     </span>
@@ -400,12 +401,17 @@
                                         <p class="ship">₩2,500<span class="displaynone"><br></span><br></p>
                                     </td>
                                     <td class="right">
-                                        <strong>₩<span th:class="'sum_price_front_' + ${iterStat.index}">초기값</span></strong>
+                                        <strong>₩<span th:class="'sum_price_front_' + ${cartitem.cartItemId}">초기값</span></strong>
                                         <div class="displaynone"></div>
                                     </td>
                                     <td class="button">
-                                        <a href="javascript:;" class="btnNormal-cart" style="padding: 5px 8px;border: 1px solid #ececec;width: 90px;margin: 1px 0" onclick="Basket.orderBasketItem(0);">order</a>
-                                        <a href="javascript:;" class="btnNormal-cart" style="padding: 5px 8px;border: 1px solid #ececec;width: 90px;margin: 1px 0" onclick="BasketNew.moveWish(0);">wish list</a>
+
+                                        <button type="button" th:onclick="orderSingleItems([[${cartitem.cartItemId}]])" class="btnNormal-cart" style="padding: 5px 8px;border: 1px solid #ececec;width: 90px;margin: 1px 0" >order</button>
+
+                                        <form th:action="@{'/cart/wish/' + ${cartitem.cartItemId}}" >
+                                            <input type="hidden" name="selectedIds" th:value="${cartitem.cartItemId}">
+                                        <button onclick="orderSingleItems([[${cartitem.cartItemId}]])" class="btnNormal-cart" style="padding: 5px 8px;border: 1px solid #ececec;width: 90px;margin: 1px 0" >wish list</button>
+                                        </form>
                                         <form th:action="@{'/cart/delete/' + ${cartitem.cartItemId}}" method="post" style="display:inline;">
                                             <input type="hidden" name="_method" value="delete">
                                             <button type="submit" class="btnNormal-cart" style="padding: 5px 8px; border: 1px solid #ececec; width: 90px; margin: 1px 0;">
@@ -547,8 +553,49 @@
                             <a href="#none" class="close" onclick="OrderLayer.offDiv('order_layer_benefit');"><img src="//img.echosting.cafe24.com/skin/base/common/btn_close.gif" alt="닫기"></a>
                         </div>
                     </div>
-                    <div class="xans-element- xans-order xans-order-totalorder ec-base-button justify"><a href="#none" onclick="Basket.orderAll(this)" link-order="/order/orderform.html?basket_type=all_buy" link-login="/member/login.html" class=" buyAll ">전체상품주문</a>
-                        <a href="#none" onclick="Basket.orderSelectBasket(this)" link-order="/order/orderform.html?basket_type=all_buy" link-login="/member/login.html" class="buySelect ">선택상품주문</a><a href="/" class="keepGoing">쇼핑계속하기</a>
+                    <div class="xans-element- xans-order xans-order-totalorder ec-base-button justify">
+                        <button href="#none" onclick="Basket.orderAll(this)" link-order="/order/orderform.html?basket_type=all_buy" link-login="/member/login.html" class=" buyAll "
+                           style="background-color: #e53d2f;
+                                    border-color: #e53d2f;
+                                    color: #fff;
+                                    -webkit-box-flex: 1;
+                                    -ms-flex: 1;
+                                    flex: 1;
+                                    width: 31.333%;
+                                    margin: 0 0 0 1%;
+                                    border: 1px solid #dcdcdc;
+                                    border-radius: 2px;
+                                    font-size: 13px;
+                                    line-height: 50px;
+                                    text-align: center;
+
+                                    box-sizing: border-box;">전체상품주문</button>
+                        <button onclick="orderCheckedItems()" class="buySelect "
+                        style="     -webkit-box-flex: 1;
+                                    -ms-flex: 1;
+                                    flex: 1;
+                                    width: 31.333%;
+                                    margin: 0 0 0 1%;
+                                    border: 1px solid #dcdcdc;
+                                    border-radius: 2px;
+                                    font-size: 13px;
+                                    line-height: 50px;
+                                    text-align: center;
+                                    background: #fff;
+                                    box-sizing: border-box;">선택상품주문</button>
+                        <button href="/" class="keepGoing"
+                                style="-webkit-box-flex: 1;
+                                    -ms-flex: 1;
+                                    flex: 1;
+                                    width: 31.333%;
+                                    margin: 0 0 0 1%;
+                                    border: 1px solid #dcdcdc;
+                                    border-radius: 2px;
+                                    font-size: 13px;
+                                    line-height: 50px;
+                                    text-align: center;
+                                    background: #fff;
+                                    box-sizing: border-box;"                           >쇼핑계속하기</button>
                         <div style="width:100%;height:1px;background:transparent;">
 
                         </div>
@@ -556,7 +603,7 @@
 
                     </div>
                 </div>
-            
+
                 <div class="xans-element- xans-myshop xans-myshop-wishlist ec-base-table typeList  xans-record-"><!--
 $login_page = /member/login.html
 $count = 5
