@@ -10,6 +10,7 @@ import org.thymeleaf.util.*;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.*;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +46,9 @@ public class CartService {
             return cartItem.getId();
         }
     }
-    // 장바구니 조회
+
+
+    // 사용자 정보를 이용하여 cart에 있는 모든 상품을 order에서 볼수 있도록함.
     @Transactional(readOnly = true)
     public List<CartDetailDto> getCartList(String email){
 
@@ -60,6 +63,22 @@ public class CartService {
         cartDetailDtoList = cartItemRepository.findCartDetailDtoList(cart.getId());
         return cartDetailDtoList;
     }
+
+    @Transactional(readOnly = true)
+    public List<CartDetailDto> getCartListByIds(String email, List<Long> ids) {
+        List<CartDetailDto> cartDetailDtoList = new ArrayList<>();
+
+        Member member = memberRepository.findByEmail(email);
+        Cart cart = cartRepository.findByMemberId(member.getId());
+        if (cart == null) {
+            return cartDetailDtoList;
+        }
+
+        cartDetailDtoList = cartItemRepository.findCartDetailDtoListByItemIds(cart.getId(), ids);
+        return cartDetailDtoList;
+    }
+
+
     @Transactional(readOnly = true)
     public boolean validateCartItem(Long cartItemId, String email){
         Member curMember = memberRepository.findByEmail(email);
@@ -94,31 +113,50 @@ public class CartService {
         cartItemRepository.deleteAll(cartItems);
     }
 
+    //상품에서 장바구니
+//    public List<CartDetailDto> orderCartItem(List<Long> cartItemIds) {
+//        List<CartItem> cartItems = cartRepository.findByIdIn(cartItemIds);
+//        return cartItems.stream()
+//                .map(cartItem -> new CartDetailDto(cartItem)) // CartDetailDto로 변환하는 로직
+//                .collect(Collectors.toList());
+//    }
 
 
     // 장바구니 주문
-    public Long orderCartItem(List<CartOrderDto> cartOrderDtoList, String email){
-        List<OrderDto> orderDtoList = new ArrayList<>();
+//    public Long orderCartItem(List<CartOrderDto> cartOrderDtoList, String email){
+//        List<OrderDto> orderDtoList = new ArrayList<>();
+//
+//        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
+//            CartItem cartItem = cartItemRepository
+//                    .findById(cartOrderDto.getCartItemId())
+//                    .orElseThrow(EntityNotFoundException::new);
+//
+//            OrderDto orderDto = new OrderDto();
+//            orderDto.setItemId(cartItem.getItem().getId());
+//            orderDto.setCount(cartItem.getCount());
+//            orderDtoList.add(orderDto);
+//        }
+//
+//        Long orderId = orderService.orders(orderDtoList, email);
+//        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
+//            CartItem cartItem = cartItemRepository
+//                    .findById(cartOrderDto.getCartItemId())
+//                    .orElseThrow(EntityNotFoundException::new);
+//            cartItemRepository.delete(cartItem);
+//        }
+//
+//        return orderId;
+//    }
 
-        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
-            CartItem cartItem = cartItemRepository
-                    .findById(cartOrderDto.getCartItemId())
-                    .orElseThrow(EntityNotFoundException::new);
-
-            OrderDto orderDto = new OrderDto();
-            orderDto.setItemId(cartItem.getItem().getId());
-            orderDto.setCount(cartItem.getCount());
-            orderDtoList.add(orderDto);
-        }
-
-        Long orderId = orderService.orders(orderDtoList, email);
-        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
-            CartItem cartItem = cartItemRepository
-                    .findById(cartOrderDto.getCartItemId())
-                    .orElseThrow(EntityNotFoundException::new);
-            cartItemRepository.delete(cartItem);
-        }
-
-        return orderId;
+    public List<CartItem> getCartItems() {
+        return cartItemRepository.findAll();
     }
+
+    public List<CartItem> getCartItemsByIds(List<Long> ids) {
+        return cartItemRepository.findAllById(ids);
+    }
+
+
+
+
 }
