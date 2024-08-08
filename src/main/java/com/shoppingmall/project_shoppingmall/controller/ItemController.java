@@ -187,17 +187,13 @@ public class ItemController {
 
     @PostMapping(value = "/admin/item/management/{itemId}")
     public String itemUpdate(@PathVariable("itemId") Long itemId, @Valid ItemFormDto itemFormDto, BindingResult bindingResult,
-                             @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,
-                             @RequestParam("itemDetailImgFile") List<MultipartFile> itemDetailImgFileList,
+                             @RequestParam(value = "itemImgFile" , required = false) List<MultipartFile> itemImgFileList,
+                             @RequestParam(value = "itemDetailImgFile", required = false) List<MultipartFile> itemDetailImgFileList,
                              Model model){
         if(bindingResult.hasErrors()){
             return "item/itemManagement";
         }
 
-        if(itemImgFileList.get(0).isEmpty() && itemFormDto.getId() == null){
-            model.addAttribute("errorMessage", "첫번째 상품 이미지는 필수 입력 값 입니다.");
-            return "item/itemManagement";
-        }
 
         try {
             // URL 패스의 itemId를 itemFormDto에 설정
@@ -211,6 +207,7 @@ public class ItemController {
             itemService.updateItem(itemFormDto, itemImgFileList,itemDetailImgFileList);
         } catch (Exception e){
             model.addAttribute("errorMessage", "상품 수정 중 에러가 발생하였습니다.");
+            System.out.println("상품수정중 에러 ");
             return "item/itemManagement";
         }
 

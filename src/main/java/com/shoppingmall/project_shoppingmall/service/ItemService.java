@@ -226,50 +226,57 @@ public class ItemService {
         item.updateItem(itemFormDto);
         itemRepository.save(item);
 
-        // 기존 이미지 정보 삭제
-        List<ItemImg> itemImgs = itemImgRepository.findByItemId(itemFormDto.getId());
-        for (ItemImg itemImg : itemImgs) {
-            itemImgRepository.delete(itemImg);
-        }
 
-        // 기존 상세 이미지 정보 삭제
-        List<ItemDetailImg> itemDetailImgs = itemDetailImgRepository.findByItemId(itemFormDto.getId());
-        for (ItemDetailImg itemDetailImg : itemDetailImgs) {
-            itemDetailImgRepository.delete(itemDetailImg);
-        }
+        // 이미지 파일 리스트가 비어 있지 않은 경우에만 이미지 업데이트 수행
+        if (itemImgFileList != null && !itemImgFileList.isEmpty() && !itemImgFileList.get(0).isEmpty()) {
+            // 기존 이미지 정보 삭제
+            List<ItemImg> itemImgs = itemImgRepository.findByItemId(itemFormDto.getId());
+            for (ItemImg itemImg : itemImgs) {
+                itemImgRepository.delete(itemImg);
+            }
 
-        // 기존 썸네일 이미지 정보 삭제
-        List<ItemThumbnail> itemThumbnails = itemThumbnailRepository.findByItemIdOrderByIdAsc(itemFormDto.getId());
+            // 기존 썸네일 이미지 정보 삭제
+            List<ItemThumbnail> itemThumbnails = itemThumbnailRepository.findByItemIdOrderByIdAsc(itemFormDto.getId());
+            for (ItemThumbnail itemThumbnail : itemThumbnails) {
+                itemThumbnailRepository.delete(itemThumbnail);
+            }
 
-        for (ItemThumbnail itemThumbnail : itemThumbnails) {
-            itemThumbnailRepository.delete(itemThumbnail);
-        }
+            // 새로운 이미지 저장
+            for (int i = 0; i < itemImgFileList.size(); i++) {
+                ItemImg itemImg = new ItemImg();
+                itemImg.setItem(item);
 
-        // 새로운 이미지 저장
-        for (int i = 0; i < itemImgFileList.size(); i++) {
-            ItemImg itemImg = new ItemImg();
-            itemImg.setItem(item);
+                if (i == 0) {
+                    // 첫번째 이미지 대표이미지 설정
+                    itemImg.setRepimgYn("Y");
 
-            if (i == 0) {
-                // 첫번째 이미지 대표이미지 설정
-                itemImg.setRepimgYn("Y");
+                    // 첫번째 이미지에 한해서 이미지 생성과 썸네일을 생성
+                    ItemThumbnail newItemThumbnail = new ItemThumbnail();
+                    newItemThumbnail.setItem(item);
 
-                // 첫번째 이미지에 한해서 이미지 생성과 썸네일을 생성
-                ItemThumbnail newItemThumbnail = new ItemThumbnail();
-                newItemThumbnail.setItem(item);
-
-                itemImgService.saveItemThumbnail(newItemThumbnail, itemImgFileList.get(i));
-                itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
-            } else {
-                itemImg.setRepimgYn("N");
-                itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
+                    itemImgService.saveItemThumbnail(newItemThumbnail, itemImgFileList.get(i));
+                    itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
+                } else {
+                    itemImg.setRepimgYn("N");
+                    itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
+                }
             }
         }
-        // 새로운 상세 이미지 저장
-        for (int i = 0; i < itemDetailImgFileList.size(); i++) {
-            ItemDetailImg itemDetailImg = new ItemDetailImg();
-            itemDetailImg.setItem(item);
-            itemImgService.saveItemDetailImg(itemDetailImg, itemDetailImgFileList.get(i));
+
+        // 상세 이미지 파일 리스트가 비어 있지 않은 경우에만 상세 이미지 업데이트 수행
+        if (itemDetailImgFileList != null && !itemDetailImgFileList.isEmpty() && !itemDetailImgFileList.get(0).isEmpty()) {
+            // 기존 상세 이미지 정보 삭제
+            List<ItemDetailImg> itemDetailImgs = itemDetailImgRepository.findByItemId(itemFormDto.getId());
+            for (ItemDetailImg itemDetailImg : itemDetailImgs) {
+                itemDetailImgRepository.delete(itemDetailImg);
+            }
+
+            // 새로운 상세 이미지 저장
+            for (int i = 0; i < itemDetailImgFileList.size(); i++) {
+                ItemDetailImg itemDetailImg = new ItemDetailImg();
+                itemDetailImg.setItem(item);
+                itemImgService.saveItemDetailImg(itemDetailImg, itemDetailImgFileList.get(i));
+            }
         }
         return item.getId();
     }
