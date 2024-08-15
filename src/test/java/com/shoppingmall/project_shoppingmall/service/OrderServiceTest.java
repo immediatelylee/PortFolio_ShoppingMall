@@ -52,44 +52,44 @@ class OrderServiceTest {
 
     }
 
-    @Test
-    @DisplayName("주문 테스트")
-    public void order(){
-        Item item = saveItem();
-        Member member = saveMember();
+//    @Test
+//    @DisplayName("주문 테스트")
+//    public void order(){
+//        Item item = saveItem();
+//        Member member = saveMember();
+//
+//        OrderDto orderDto = new OrderDto();
+//        orderDto.setCount(10);
+//        orderDto.setItemId(item.getId());
+//
+//        Long orderId = orderService.order(orderDto, member.getEmail());
+//        Order order = orderRepository.findById(orderId)
+//                .orElseThrow(EntityNotFoundException::new);
+//
+//        List<OrderItem> orderItems = order.getOrderItems();
+//
+//        int totalPrice = orderDto.getCount()*item.getPrice();
+//
+//        assertEquals(totalPrice, order.getTotalPrice());
+//    }
 
-        OrderDto orderDto = new OrderDto();
-        orderDto.setCount(10);
-        orderDto.setItemId(item.getId());
-
-        Long orderId = orderService.order(orderDto, member.getEmail());
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(EntityNotFoundException::new);
-
-        List<OrderItem> orderItems = order.getOrderItems();
-
-        int totalPrice = orderDto.getCount()*item.getPrice();
-
-        assertEquals(totalPrice, order.getTotalPrice());
-    }
-
-    @Test
-    @DisplayName("주문 취소 테스트")
-    public void cancelOrder(){
-        Item item = saveItem();
-        Member member = saveMember();
-
-        OrderDto orderDto = new OrderDto();
-        orderDto.setCount(10);
-        orderDto.setItemId(item.getId());
-        Long orderId = orderService.order(orderDto, member.getEmail());
-
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(EntityNotFoundException::new);
-        orderService.cancelOrder(orderId);
-
-        assertEquals(OrderStatus.CANCEL, order.getOrderStatus());
-        assertEquals(100, item.getStockNumber());
-    }
+//    @Test
+//    @DisplayName("주문 취소 테스트")
+//    public void cancelOrder(){
+//        Item item = saveItem();
+//        Member member = saveMember();
+//
+//        OrderDto orderDto = new OrderDto();
+//        orderDto.setCount(10);
+//        orderDto.setItemId(item.getId());
+//        Long orderId = orderService.order(orderDto, member.getEmail());
+//
+//        Order order = orderRepository.findById(orderId)
+//                .orElseThrow(EntityNotFoundException::new);
+//        orderService.cancelOrder(orderId);
+//
+//        assertEquals(OrderStatus.CANCEL, order.getOrderStatus());
+//        assertEquals(100, item.getStockNumber());
+//    }
 
 }

@@ -68,7 +68,7 @@ public class ItemService {
 
         return item.getId();
     }
-    
+
     @Transactional(readOnly = true)
     public Page<ItemFormDto> searchItems(ItemSearchType itemSearchType, String searchValue, String searchDateType, String sellStatus, String displayStatus, String mainCategory, String subCategory, String subSubCategory, Pageable pageable) {
         Page<ItemFormDto> items;

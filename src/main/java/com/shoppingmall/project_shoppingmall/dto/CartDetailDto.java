@@ -5,7 +5,9 @@ import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class CartDetailDto {
+// jackson 같은 라이브러리가 객체를 역직렬화 할때 기본생성자를 사용할수 있도록함.
 
     private Long cartItemId; //장바구니 상품 아이디
 

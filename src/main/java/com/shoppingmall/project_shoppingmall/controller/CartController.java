@@ -1,5 +1,6 @@
 package com.shoppingmall.project_shoppingmall.controller;
 
+import com.fasterxml.jackson.databind.*;
 import com.shoppingmall.project_shoppingmall.dto.*;
 import com.shoppingmall.project_shoppingmall.service.*;
 import lombok.*;
@@ -21,6 +22,7 @@ import java.util.stream.*;
 public class CartController {
 
     private final CartService cartService;
+    private final ObjectMapper objectMapper;
 
     //itemdetail (ajax)-> cart  (장바구니 버튼 클릭 -> 장바구니에 담기)
     @PostMapping(value = "/cart")
