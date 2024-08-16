@@ -96,8 +96,24 @@ public class CartController {
         List<Long> cartItemIds = orderRequestDto.getItems().stream()
                 .map(CartItemOrderDto::getCartItemId)
                 .collect(Collectors.toList());
+        System.out.println("cartItemIds  " +cartItemIds); // 1 출력됨
 
-        List<CartDetailDto> cartItems = cartService.getCartListByIds(principal.getName(), cartItemIds);
+        List<CartDetailDto> cartItems = cartService.getCartListByIds(principal.getName(), cartItemIds); //getName : admin@example.com
+        System.out.println("cartItems (cart/order)" +cartItems.toString());
+        if (cartItems != null && !cartItems.isEmpty()) {
+            for (CartDetailDto cartItem : cartItems) {
+                System.out.println("CartItem ID: " + cartItem.getCartItemId());
+                System.out.println("Item Name: " + cartItem.getItemNm());
+                System.out.println("Item Code: " + cartItem.getItemCode());
+                System.out.println("Price: " + cartItem.getPrice());
+                System.out.println("Count: " + cartItem.getCount());
+                System.out.println("Image URL: " + cartItem.getImgUrl());
+                System.out.println("------------------------------");
+            }
+        } else {
+            System.out.println("No items in the cart.");
+        }
+
 
         Map<Long, Integer> viewCountMap = orderRequestDto.getItems().stream()
                 .collect(Collectors.toMap(CartItemOrderDto::getCartItemId, CartItemOrderDto::getCount));
@@ -124,6 +140,10 @@ public class CartController {
         session.setAttribute("totalProductPrice", totalProductPrice);
         session.setAttribute("deliveryFee", deliveryFee);
         session.setAttribute("totalPayPrice", totalPayPrice);
+        System.out.println("cartItems (session) " +cartItems);
+        System.out.println("totalPayPrice (session)" +totalPayPrice);
+        System.out.println("totalProductPrice (session)" +totalProductPrice);
+        System.out.println("deliveryFee (session)" +deliveryFee);
 
 
 

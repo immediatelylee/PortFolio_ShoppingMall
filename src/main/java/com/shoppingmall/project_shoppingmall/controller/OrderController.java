@@ -79,6 +79,25 @@ public class OrderController {
         model.addAttribute("itemSummary", itemSummary);
         System.out.println(itemSummary);
 
+        System.out.println("OrderController CartItems");
+        if (cartItems != null && !cartItems.isEmpty()) {
+            for (CartDetailDto cartItem : cartItems) {
+                System.out.println("CartItem ID: " + cartItem.getCartItemId());
+                System.out.println("Item Name: " + cartItem.getItemNm());
+                System.out.println("Item Code: " + cartItem.getItemCode());
+                System.out.println("Price: " + cartItem.getPrice());
+                System.out.println("Count: " + cartItem.getCount());
+                System.out.println("Image URL: " + cartItem.getImgUrl());
+                System.out.println("------------------------------");
+            }
+        } else {
+            System.out.println("No items in the cart.");
+        }
+
+
+
+
+
         return "order/Order";
     }
 

@@ -70,11 +70,13 @@ public class CartService {
 
         Member member = memberRepository.findByEmail(email);
         Cart cart = cartRepository.findByMemberId(member.getId());
+        System.out.println("Cart check " + cart);
         if (cart == null) {
             return cartDetailDtoList;
         }
 
         cartDetailDtoList = cartItemRepository.findCartDetailDtoListByItemIds(cart.getId(), ids);
+        System.out.println("getCartListByIds: " + cartDetailDtoList);
         return cartDetailDtoList;
     }
 
