@@ -30,4 +30,13 @@ public class CartDetailDto {
         this.imgUrl = imgUrl;
     }
 
+    // imgUrl을 제외한 생성자
+    public CartDetailDto(Long cartItemId, String itemNm, String itemCode, int price, int count) {
+        this.cartItemId = cartItemId;
+        this.itemNm = itemNm;
+        this.itemCode = itemCode;
+        this.price = price;
+        this.count = count;
+        this.imgUrl = null;  // imgUrl은 null로 설정
+    }
 }
