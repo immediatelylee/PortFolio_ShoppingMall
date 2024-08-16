@@ -324,11 +324,12 @@
                                     </span>
                             </div>
                             <div class="bundle-info__item-list ">
-                                <div class="bundle-info__vendor-item-box  " th:each="cartItem : ${cartItems}">
-                                    <div class="bundle-info__vendor-item">
+                                <div class="bundle-info__vendor-item-box" th:each="cartItem : ${cartItems}">
+                                    <div class="bundle-info__vendor-item" >
+<!--                                        ENFANT SEERSUCKER BUCKET HAT sky blue-->
                                         <p style="
                                                 border-bottom: 0;
-                                            " th:text="${cartItem.itemNm}">
+                                            " th:text="${cartItem.itemNm}">상품명
                                             <span></span>
                                             <span class="bundle-info__vendor-item__offer-condition" ></span>
 
@@ -339,6 +340,19 @@
                                         수량 1개 / <span>무료배송</span>
                                     </div>
                                 </div>
+                                <!-- 기본값을 보여줄 블록 -->
+<!--                                <div class="bundle-info__vendor-item-box" th:if="${cartItems == null or cartItems.isEmpty()}">-->
+<!--                                    <div class="bundle-info__vendor-item">-->
+<!--                                        <p style="border-bottom: 0;">ENFANT SEERSUCKER BUCKET HAT sky blue-->
+<!--                                            <span></span>-->
+<!--                                            <span class="bundle-info__vendor-item__offer-condition"></span>-->
+<!--                                        </p>-->
+<!--                                    </div>-->
+
+<!--                                    <div class="bundle-info__item-description bundle-info__vendor-item-description&#45;&#45;last">-->
+<!--                                        수량 1개 / <span>무료배송</span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                             </div>
                         </div>
                     </div>
@@ -494,7 +508,7 @@
                                                 </label>
                                             </li>
                                             <li id="rocketPayCardBox" class="type-selector-li selected-pay-type">
-                                                <input class="type-selector-radio" type="radio" name="payType" id="payType10" value="ROCKET_CARD">
+                                                <input class="type-selector-radio" type="radio" name="payType" id="payType10" value="ROCKET_CARD" checked >
                                                 <label class="type-selector-label type-selector-label--card" for="payType10" style="font-weight: bold;">
                                                     <span class="type-selector-label__text">신용/체크카드</span>
                                                 </label>
