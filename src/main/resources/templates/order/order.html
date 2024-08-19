@@ -123,31 +123,14 @@
             result ='1';
         }
         if(result=='0') {
-            location.href= $.getContextPath()+"/Cart/Success";
+            location.href= "/order/success";
         }
         alert(msg);
 
     });
     }
 
-    // $(document).ready(function() {
-    //     const cartItems = [];
-    //
-    //     // .cart-item 클래스가 적용된 모든 div를 순회
-    //     $('.cart-item').each(function() {
-    //         const cartItem = {
-    //             cartItemId: $(this).data('cartitemid'),
-    //             itemNm: $(this).data('itemnm'),
-    //             count: $(this).data('count'),
-    //             price: $(this).data('price')
-    //         };
-    //
-    //         cartItems.push(cartItem);
-    //     });
-    //
-    //     console.log(cartItems);
-    //     // 이제 cartItems는 [{cartItemId: 1, itemNm: "상품명", count: 2, price: 10000}, ...] 형태의 리스트가 됨
-    // });
+
     </script>
 
 </th:block>
@@ -161,15 +144,7 @@
 
             </div>
             <div data-component="real-name-verification"></div>
-<!--    html의 정보노출이 너무 심해서 일단 주석        -->
-<!--            <th:block th:each="cartItem : ${cartItems}">-->
-<!--                <div class="cart-item"-->
-<!--                     th:data-cartitemid="${cartItem.cartItemId}"-->
-<!--                     th:data-itemnm="${cartItem.itemNm}"-->
-<!--                     th:data-count="${cartItem.count}"-->
-<!--                     th:data-price="${cartItem.price}"-->
-<!--                     style="display: none"></div>-->
-<!--            </th:block>-->
+
             <div data-component="customer">
                 <div class="customer__root">
                     <h2 class="customer__h2">
@@ -340,19 +315,7 @@
                                         수량 1개 / <span>무료배송</span>
                                     </div>
                                 </div>
-                                <!-- 기본값을 보여줄 블록 -->
-<!--                                <div class="bundle-info__vendor-item-box" th:if="${cartItems == null or cartItems.isEmpty()}">-->
-<!--                                    <div class="bundle-info__vendor-item">-->
-<!--                                        <p style="border-bottom: 0;">ENFANT SEERSUCKER BUCKET HAT sky blue-->
-<!--                                            <span></span>-->
-<!--                                            <span class="bundle-info__vendor-item__offer-condition"></span>-->
-<!--                                        </p>-->
-<!--                                    </div>-->
 
-<!--                                    <div class="bundle-info__item-description bundle-info__vendor-item-description&#45;&#45;last">-->
-<!--                                        수량 1개 / <span>무료배송</span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
                             </div>
                         </div>
                     </div>
@@ -683,30 +646,10 @@
                                                 </li>
                                             </ul>
                                         </div>
-<!--                                        <script type="text/javascript">-->
-<!--                                            var Handlebars = window.Handlebars || {}-->
-<!--                                            (function() {-->
-<!--                                                var template = Handlebars.template({"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {-->
-<!--                                                        var helper, lookupProperty = container.lookupProperty || function(parent, propertyName) {-->
-<!--                                                            if (Object.prototype.hasOwnProperty.call(parent, propertyName)) {-->
-<!--                                                                return parent[propertyName];-->
-<!--                                                            }-->
-<!--                                                            return undefined-->
-<!--                                                        };-->
 
-<!--                                                        return "<div class=\"unifiedMoney-benefit-landing-wrapper\">\n    <button class=\"unifiedMoney-benefit-close\" data-button=\"closeButton\"></button>\n    <div class=\"unifiedMoney-benefit-landing\">\n    <img class=\"unifiedMoney-benefit-landing-img\"\n         src=\""-->
-<!--                                                            + container.escapeExpression(((helper = (helper = lookupProperty(helpers,"vCdnHttpsImage") || (depth0 != null ? lookupProperty(depth0,"vCdnHttpsImage") : depth0)) != null ? helper : container.hooks.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"vCdnHttpsImage","hash":{},"data":data,"loc":{"start":{"line":5,"column":14},"end":{"line":5,"column":32}}}) : helper)))-->
-<!--                                                            + "rocketpay/order/unifiedMoney/unified_money_intro_landing_v3.jpg\">\n    </div>\n</div>\n";-->
-<!--                                                    },"useData":true});-->
-<!--                                                var templates = Handlebars.templates = Handlebars.templates || {};-->
-<!--                                                templates['component/payment.pc/promotion/unifiedMoneyBenefitLanding'] = template;-->
-<!--                                                var partials = Handlebars.partials = Handlebars.partials || {};-->
-<!--                                                partials['component/payment.pc/promotion/unifiedMoneyBenefitLanding'] = template;-->
-<!--                                            })();-->
-<!--                                        </script>-->
                                     </div>
                                     <div class="rocketPayBox pay-box-content">
-                                        <h3 class="title">쿠팡 간편결제(계좌이체)</h3>
+                                        <h3 class="title"> 간편결제(계좌이체)</h3>
                                         <script type="text/javascript">
                                             var fromServerState = window.fromServerState || {};
                                             fromServerState.rocketpayPayment = {
