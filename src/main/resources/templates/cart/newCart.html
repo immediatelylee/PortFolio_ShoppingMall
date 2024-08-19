@@ -210,60 +210,6 @@
                 }
             });
         }
-
-
-        // 수정전
-        // function collectCheckedItems() {
-        //     let checkedItems = [];
-        //     $('input[name="basket_product_normal_type_normal"]:checked').each(function() {
-        //         checkedItems.push($(this).val());
-        //     });
-        //     return checkedItems;
-        // }
-        //
-        // function orderCheckedItems() {
-        //     let checkedItems = collectCheckedItems();
-        //     console.log(checkedItems)
-        //     if (checkedItems.length === 0) {
-        //         alert("Please select at least one item to order.");
-        //         return;
-        //     }
-        //
-        //     var csrfToken = $('meta[name="_csrf"]').attr('content');
-        //     var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
-        //
-        //     // 선택된 항목의 ID만 추출하고 숫자로 변환
-        //     let itemIds = checkedItems.map(item => Number(item));
-        //     console.log(itemIds); // 예: [2]
-        //
-        //     // AJAX를 사용하여 서버에 주문 요청을 보냅니다.
-        //     // 선택상품id를 보내는것은 /order_id_save 입니다.
-        //     // post로 보내서 다시 /order로 보내는데 이때 RedirectAttribute를 사용해서 cartItemId를 사용합니다.
-        //     $.ajax({
-        //         url: '/order_id_save',
-        //         type: 'POST',
-        //         contentType: 'application/json',
-        //         data: JSON.stringify(itemIds),
-        //         beforeSend: function(xhr) {
-        //             xhr.setRequestHeader(csrfHeader, csrfToken);
-        //         },
-        //         success: function(response) {
-        //             // 서버에서 /order/selected로 리다이렉트 처리
-        //             window.location.href = '/order/selected';
-        //         },
-        //         error: function(error) {
-        //             alert("주문 처리 중 오류가 발생했습니다.");
-        //             console.log(error);
-        //         }
-        //     });
-        // }
-
-        // $('#orderButton').on('click', function() {
-        //     orderCheckedItems();
-        // });
-
-
-
     </script>
 </th:block>
 

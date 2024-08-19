@@ -71,77 +71,72 @@ public class ItemService {
 
     @Transactional(readOnly = true)
     public Page<ItemFormDto> searchItems(ItemSearchType itemSearchType, String searchValue, String searchDateType, String sellStatus, String displayStatus, String mainCategory, String subCategory, String subSubCategory, Pageable pageable) {
-        Page<Item> items;
+        Page<ItemFormDto> items;
+
+        // 검색어가없으면서 검색 조건이 있는경우
         if (searchValue == null || searchValue.isEmpty()) {
+            ItemSearchDto itemSearchDto = new ItemSearchDto();
+            itemSearchDto.setSearchDateType(searchDateType);
+            itemSearchDto.setMainCategory(mainCategory);
+            itemSearchDto.setSubCategory(subCategory);
+            itemSearchDto.setSubSubCategory(subSubCategory);
+
             if ("SELL".equals(sellStatus)) {
-                items = itemRepository.findByitemSellStatus(ItemSellStatus.SELL, pageable);
-//                items = itemRepository.findBySellStatus(ItemSellStatus.SELL);
+                itemSearchDto.setSearchSellStatus(ItemSellStatus.SELL);
             } else if ("SOLD_OUT".equals(sellStatus)) {
-                items = itemRepository.findByitemSellStatus(ItemSellStatus.SOLD_OUT, pageable);
-//                items = itemRepository.findBySellStatus(ItemSellStatus.SOLD_OUT);
-            } else if ("DISPLAY".equals(displayStatus)) {
-                items = itemRepository.findByitemDisplayStatus(ItemDisplayStatus.DISPLAY, pageable);
-//                items = itemRepository.findByDisplayStatus(ItemDisplayStatus.DISPLAY);
-            } else if ("NOT_DISPLAY".equals(displayStatus)) {
-                items = itemRepository.findByitemDisplayStatus(ItemDisplayStatus.NOT_DISPLAY, pageable);
-//                items = itemRepository.findByDisplayStatus(ItemDisplayStatus.NOT_DISPLAY);
-            } else {
-                items = itemRepository.findAll(pageable);
+                itemSearchDto.setSearchSellStatus(ItemSellStatus.SOLD_OUT);
             }
 
+            if ("DISPLAY".equals(displayStatus)) {
+                itemSearchDto.setSearchDisplayStatus(ItemDisplayStatus.DISPLAY);
+            } else if ("NOT_DISPLAY".equals(displayStatus)) {
+                itemSearchDto.setSearchDisplayStatus(ItemDisplayStatus.NOT_DISPLAY);
+            }
 
-            // Page<Item> 객체를 Page<ItemFormDto> 객체로 변환하면서 썸네일 URL 설정
-            Page<ItemFormDto> itemFormDtoPage = items.map(item -> {
-                ItemFormDto dto = ItemFormDto.of(item);
-                String thumbnailUrl = itemThumbnailRepository.findThumbnailUrlByItemId(item.getId());
-                dto.setThumbnailImgUrl(thumbnailUrl);
-                return dto;
-            });
-
-            return itemFormDtoPage;
-
+            if (itemSearchDto.hasSearchConditions()) {
+                items = itemRepository.getMainItemPage(itemSearchDto, pageable);
+            } else {
+                items = itemRepository.findAll(pageable).map(item -> {
+                    ItemFormDto dto = ItemFormDto.of(item);
+                    String thumbnailUrl = itemThumbnailRepository.findThumbnailUrlByItemId(item.getId());
+                    dto.setThumbnailImgUrl(thumbnailUrl);
+                    return dto;
+                });
+            }
 
         } else {
             ItemSearchDto itemSearchDto = new ItemSearchDto();
-            itemSearchDto.setSearchBy((itemSearchType));
-
+            itemSearchDto.setSearchBy(itemSearchType);
             itemSearchDto.setSearchQuery(searchValue);
             itemSearchDto.setSearchDateType(searchDateType);
             itemSearchDto.setMainCategory(mainCategory);
             itemSearchDto.setSubCategory(subCategory);
             itemSearchDto.setSubSubCategory(subSubCategory);
 
-
-            if ("A".equals(sellStatus)) {
-            } else if ("T".equals(sellStatus)) {
-                itemSearchDto.setSearchSellStatus((ItemSellStatus.SELL));
-            } else if ("F".equals(sellStatus)) {
-//                (sellStatus == "F") 를 예상함.
-                itemSearchDto.setSearchSellStatus((ItemSellStatus.SOLD_OUT));
-            } else {
-                System.out.println("==========sellStatus error ===============");
-                return null;
+            if ("SELL".equals(sellStatus)) {
+                itemSearchDto.setSearchSellStatus(ItemSellStatus.SELL);
+            } else if ("SOLD_OUT".equals(sellStatus)) {
+                itemSearchDto.setSearchSellStatus(ItemSellStatus.SOLD_OUT);
             }
 
-
-            if ("A".equals(displayStatus)) {
-            } else if ("T".equals(displayStatus)) {
-                itemSearchDto.setSearchDisplayStatus((ItemDisplayStatus.DISPLAY));
-            } else if ("F".equals(displayStatus)) {
-                itemSearchDto.setSearchDisplayStatus((ItemDisplayStatus.NOT_DISPLAY));
-            } else {
-                System.out.println("==========displayStatus error ===============");
-                return null;
+            if ("DISPLAY".equals(displayStatus)) {
+                itemSearchDto.setSearchDisplayStatus(ItemDisplayStatus.DISPLAY);
+            } else if ("NOT_DISPLAY".equals(displayStatus)) {
+                itemSearchDto.setSearchDisplayStatus(ItemDisplayStatus.NOT_DISPLAY);
             }
 
-
-            return itemRepository.getMainItemPage(itemSearchDto, pageable);
-//            return null; // 임시
+            items = itemRepository.getMainItemPage(itemSearchDto, pageable);
         }
 
+        // 이미지 설정이 안 되어 있다면 여기서 설정
+        Page<ItemFormDto> itemFormDtoPage = items.map(item -> {
+            String thumbnailUrl = itemThumbnailRepository.findThumbnailUrlByItemId(item.getId());
+            item.setThumbnailImgUrl(thumbnailUrl);
+            return item;
+        });
 
+        return itemFormDtoPage;
     }
-
 
     @Transactional
     public void updateItemStatus(List<Long> itemIds, String actionType) {
@@ -226,50 +221,57 @@ public class ItemService {
         item.updateItem(itemFormDto);
         itemRepository.save(item);
 
-        // 기존 이미지 정보 삭제
-        List<ItemImg> itemImgs = itemImgRepository.findByItemId(itemFormDto.getId());
-        for (ItemImg itemImg : itemImgs) {
-            itemImgRepository.delete(itemImg);
-        }
 
-        // 기존 상세 이미지 정보 삭제
-        List<ItemDetailImg> itemDetailImgs = itemDetailImgRepository.findByItemId(itemFormDto.getId());
-        for (ItemDetailImg itemDetailImg : itemDetailImgs) {
-            itemDetailImgRepository.delete(itemDetailImg);
-        }
+        // 이미지 파일 리스트가 비어 있지 않은 경우에만 이미지 업데이트 수행
+        if (itemImgFileList != null && !itemImgFileList.isEmpty() && !itemImgFileList.get(0).isEmpty()) {
+            // 기존 이미지 정보 삭제
+            List<ItemImg> itemImgs = itemImgRepository.findByItemId(itemFormDto.getId());
+            for (ItemImg itemImg : itemImgs) {
+                itemImgRepository.delete(itemImg);
+            }
 
-        // 기존 썸네일 이미지 정보 삭제
-        List<ItemThumbnail> itemThumbnails = itemThumbnailRepository.findByItemIdOrderByIdAsc(itemFormDto.getId());
+            // 기존 썸네일 이미지 정보 삭제
+            List<ItemThumbnail> itemThumbnails = itemThumbnailRepository.findByItemIdOrderByIdAsc(itemFormDto.getId());
+            for (ItemThumbnail itemThumbnail : itemThumbnails) {
+                itemThumbnailRepository.delete(itemThumbnail);
+            }
 
-        for (ItemThumbnail itemThumbnail : itemThumbnails) {
-            itemThumbnailRepository.delete(itemThumbnail);
-        }
+            // 새로운 이미지 저장
+            for (int i = 0; i < itemImgFileList.size(); i++) {
+                ItemImg itemImg = new ItemImg();
+                itemImg.setItem(item);
 
-        // 새로운 이미지 저장
-        for (int i = 0; i < itemImgFileList.size(); i++) {
-            ItemImg itemImg = new ItemImg();
-            itemImg.setItem(item);
+                if (i == 0) {
+                    // 첫번째 이미지 대표이미지 설정
+                    itemImg.setRepimgYn("Y");
 
-            if (i == 0) {
-                // 첫번째 이미지 대표이미지 설정
-                itemImg.setRepimgYn("Y");
+                    // 첫번째 이미지에 한해서 이미지 생성과 썸네일을 생성
+                    ItemThumbnail newItemThumbnail = new ItemThumbnail();
+                    newItemThumbnail.setItem(item);
 
-                // 첫번째 이미지에 한해서 이미지 생성과 썸네일을 생성
-                ItemThumbnail newItemThumbnail = new ItemThumbnail();
-                newItemThumbnail.setItem(item);
-
-                itemImgService.saveItemThumbnail(newItemThumbnail, itemImgFileList.get(i));
-                itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
-            } else {
-                itemImg.setRepimgYn("N");
-                itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
+                    itemImgService.saveItemThumbnail(newItemThumbnail, itemImgFileList.get(i));
+                    itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
+                } else {
+                    itemImg.setRepimgYn("N");
+                    itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
+                }
             }
         }
-        // 새로운 상세 이미지 저장
-        for (int i = 0; i < itemDetailImgFileList.size(); i++) {
-            ItemDetailImg itemDetailImg = new ItemDetailImg();
-            itemDetailImg.setItem(item);
-            itemImgService.saveItemDetailImg(itemDetailImg, itemDetailImgFileList.get(i));
+
+        // 상세 이미지 파일 리스트가 비어 있지 않은 경우에만 상세 이미지 업데이트 수행
+        if (itemDetailImgFileList != null && !itemDetailImgFileList.isEmpty() && !itemDetailImgFileList.get(0).isEmpty()) {
+            // 기존 상세 이미지 정보 삭제
+            List<ItemDetailImg> itemDetailImgs = itemDetailImgRepository.findByItemId(itemFormDto.getId());
+            for (ItemDetailImg itemDetailImg : itemDetailImgs) {
+                itemDetailImgRepository.delete(itemDetailImg);
+            }
+
+            // 새로운 상세 이미지 저장
+            for (int i = 0; i < itemDetailImgFileList.size(); i++) {
+                ItemDetailImg itemDetailImg = new ItemDetailImg();
+                itemDetailImg.setItem(item);
+                itemImgService.saveItemDetailImg(itemDetailImg, itemDetailImgFileList.get(i));
+            }
         }
         return item.getId();
     }

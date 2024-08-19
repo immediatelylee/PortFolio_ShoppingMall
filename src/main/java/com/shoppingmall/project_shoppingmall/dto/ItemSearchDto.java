@@ -22,5 +22,15 @@ public class ItemSearchDto {
     private String subCategory;
     private String subSubCategory;
 
+    // 검색 조건이 설정되어 있는지 확인하는 메소드
+    public boolean hasSearchConditions() {
+        return (searchQuery != null && !searchQuery.isEmpty()) ||
+                (searchDateType != null && !searchDateType.isEmpty()) ||
+                (mainCategory != null && !mainCategory.isEmpty()) ||
+                (subCategory != null && !subCategory.isEmpty()) ||
+                (subSubCategory != null && !subSubCategory.isEmpty()) ||
+                (searchSellStatus != null) ||
+                (searchDisplayStatus != null);
+    }
 }
 

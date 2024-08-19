@@ -187,17 +187,13 @@ public class ItemController {
 
     @PostMapping(value = "/admin/item/management/{itemId}")
     public String itemUpdate(@PathVariable("itemId") Long itemId, @Valid ItemFormDto itemFormDto, BindingResult bindingResult,
-                             @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,
-                             @RequestParam("itemDetailImgFile") List<MultipartFile> itemDetailImgFileList,
+                             @RequestParam(value = "itemImgFile" , required = false) List<MultipartFile> itemImgFileList,
+                             @RequestParam(value = "itemDetailImgFile", required = false) List<MultipartFile> itemDetailImgFileList,
                              Model model){
         if(bindingResult.hasErrors()){
             return "item/itemManagement";
         }
 
-        if(itemImgFileList.get(0).isEmpty() && itemFormDto.getId() == null){
-            model.addAttribute("errorMessage", "첫번째 상품 이미지는 필수 입력 값 입니다.");
-            return "item/itemManagement";
-        }
 
         try {
             // URL 패스의 itemId를 itemFormDto에 설정
@@ -211,39 +207,22 @@ public class ItemController {
             itemService.updateItem(itemFormDto, itemImgFileList,itemDetailImgFileList);
         } catch (Exception e){
             model.addAttribute("errorMessage", "상품 수정 중 에러가 발생하였습니다.");
+            System.out.println("상품수정중 에러 ");
             return "item/itemManagement";
         }
 
         return "redirect:/admin/item/management";
     }
 
-//    @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
-//    public String itemManage(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
-//
-//        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3);
-//        Page<Item> items = itemService.getAdminItemPage(itemSearchDto, pageable);
-//
-//        model.addAttribute("items", items);
-//        model.addAttribute("itemSearchDto", itemSearchDto);
-//        model.addAttribute("maxPage", 5);
-//
-//        return "item/itemMng";
-//    }
 
 //    @GetMapping(value = "/item/{itemId}")
 //    public String itemDtl(Model model, @PathVariable("itemId") Long itemId){
 //        ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
 //        model.addAttribute("item", itemFormDto);
-//        return "item/itemDtl";
+//        return "item/new_itemDtl";
 //    }
-    @GetMapping(value = "/item/{itemId}")
-    public String itemDtl(Model model, @PathVariable("itemId") Long itemId){
-        ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
-        model.addAttribute("item", itemFormDto);
-        return "item/new_itemDtl";
-    }
 
-    @GetMapping(value = "/admin/item/test/{itemId}")
+    @GetMapping(value = "/item/{itemId}")
     public String itemDetail(Model model,@PathVariable("itemId") Long itemId){
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
         model.addAttribute("item", itemFormDto);

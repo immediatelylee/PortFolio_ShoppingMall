@@ -15,7 +15,9 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.*;
 import javax.servlet.http.*;
+import java.math.*;
 import java.security.*;
+import java.time.*;
 import java.util.*;
 
 @Service
@@ -23,172 +25,72 @@ import java.util.*;
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final ItemRepository itemRepository;
-
-    private final MemberRepository memberRepository;
-
     private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final OrderPaymentRepository orderPaymentRepository;
 
-    private final ItemImgRepository itemImgRepository;
-    private final MemberService memberService;
-//    private final CartService cartService;
+    @Transactional
+    public Order createOrderWithPayment(List<CartDetailDto> cartDetailDtoList,String paymentMethod ) {
+        // 1. Order 생성
+        Order order = new Order();
+        order.setOrderDate(LocalDateTime.now());
 
-    public Long order(OrderDto orderDto, String email){
+        // UUID 생성 및 orderUid에 설정
+        String orderUid = "order_" + UUID.randomUUID().toString();
+        order.setOrderUid(orderUid);
 
-        Item item = itemRepository.findById(orderDto.getItemId())
-                .orElseThrow(EntityNotFoundException::new);
+        // 2. OrderItem 생성 및 Order에 추가
+        String firstProductName = null;
+        int remainingItemsCount = 0;
 
-        Member member = memberRepository.findByEmail(email);
+        for (int i = 0; i < cartDetailDtoList.size(); i++) {
+            CartDetailDto cartDetailDto = cartDetailDtoList.get(i);
+            OrderItem orderItem = new OrderItem();
+            orderItem.setProductName(cartDetailDto.getItemNm());
+            orderItem.setPrice(BigDecimal.valueOf(cartDetailDto.getPrice())); // int를 BigDecimal로 변환
+            orderItem.setQuantity(cartDetailDto.getCount());
+            orderItem.setOrder(order); // 연관 관계 설정
 
-        List<OrderItem> orderItemList = new ArrayList<>();
-        OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getCount());
-        orderItemList.add(orderItem);
-        Order order = Order.createOrder(member, orderItemList);
-        orderRepository.save(order);
+            order.addOrderItem(orderItem); // Order에 OrderItem 추가
+            orderItemRepository.save(orderItem); // OrderItem 저장
 
-        return order.getId();
-    }
-
-//    public Order createOrder(List<Long> cartItemIds, Principal principal) {
-//        Member member =memberService.getCurrentMember(principal);
-//
-//
-//        List<CartItem> cartItems;
-//        if (cartItemIds == null || cartItemIds.isEmpty()) {
-//            cartItems = cartService.getCartItems(); // 모든 장바구니 아이템
-//        } else {
-//            cartItems = cartService.getCartItemsByIds(cartItemIds); // 선택된 장바구니 아이템
-//        }
-//
-//        if (cartItems.isEmpty()) {
-//            throw new IllegalStateException("장바구니가 비어 있습니다.");
-//        }
-//
-//        List<OrderItem> orderItems = new ArrayList<>();
-//        for (CartItem cartItem : cartItems) {
-//            OrderItem orderItem = OrderItem.createOrderItem(cartItem.getItem(), cartItem.getCount());
-//            orderItems.add(orderItem);
-//        }
-//
-//        // 새로운 주문 생성
-//        Order order = Order.createOrder(member, orderItems, OrderStatus.ORDER);
-//        orderRepository.save(order);
-//
-//        return order;
-//    }
-
-//    public void completeOrder(Long orderId) {
-//        Order order = orderRepository.findById(orderId)
-//                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
-//
-//        // 주문 완료 처리
-//        for (OrderItem orderItem : order.getOrderItems()) {
-//            CartItem cartItem = cartService.findCartItemByItemId(orderItem.getItem().getId());
-//            if (cartItem != null) {
-//                cartService.removeItem(cartItem.getId());
-//            }
-//        }
-//    }
-
-    @Transactional(readOnly = true)
-    public Page<OrderHistDto> getOrderList(String email, Pageable pageable) {
-
-        List<Order> orders = orderRepository.findOrders(email, pageable);
-        Long totalCount = orderRepository.countOrder(email);
-
-        List<OrderHistDto> orderHistDtos = new ArrayList<>();
-
-        for (Order order : orders) {
-            OrderHistDto orderHistDto = new OrderHistDto(order);
-            List<OrderItem> orderItems = order.getOrderItems();
-            for (OrderItem orderItem : orderItems) {
-                ItemImg itemImg = itemImgRepository.findByItemIdAndRepimgYn
-                        (orderItem.getItem().getId(), "Y");
-                OrderItemDto orderItemDto =
-                        new OrderItemDto(orderItem, itemImg.getImgUrl());
-                orderHistDto.addOrderItemDto(orderItemDto);
+            // OrderName 설정을 위한 첫 번째 상품 이름과 나머지 항목 수 계산
+            if (i == 0) {
+                firstProductName = cartDetailDto.getItemNm();
+            } else {
+                remainingItemsCount++;
             }
-
-            orderHistDtos.add(orderHistDto);
         }
 
-        return new PageImpl<OrderHistDto>(orderHistDtos, pageable, totalCount);
-    }
-
-    // 로그인한 사용자와 주문 데이터 생성한 사용자가 같은지 검사
-    @Transactional(readOnly = true)
-    public boolean validateOrder(Long orderId, String email){
-        Member curMember = memberRepository.findByEmail(email);
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(EntityNotFoundException::new);
-        Member savedMember = order.getMember();
-
-        if(!StringUtils.equals(curMember.getEmail(), savedMember.getEmail())){
-            return false;
-        }
-
-        return true;
-    }
-
-    // 주문 취소 상태로 변경하면 변경감지에 의해 update 쿼리 실행
-    public void cancelOrder(Long orderId){
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(EntityNotFoundException::new);
-        order.cancelOrder();
-    }
-
-    public Long orders(List<OrderDto> orderDtoList, String email){
-
-        Member member = memberRepository.findByEmail(email);
-        List<OrderItem> orderItemList = new ArrayList<>();
-
-        for (OrderDto orderDto : orderDtoList) {
-            Item item = itemRepository.findById(orderDto.getItemId())
-                    .orElseThrow(EntityNotFoundException::new);
-
-            OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getCount());
-            orderItemList.add(orderItem);
-        }
-
-        Order order = Order.createOrder(member, orderItemList);
-        orderRepository.save(order);
-
-        return order.getId();
-    }
-
-    // 아예 새로 만듬 . 세션을 이용하여 /cart -> /order저장.
-
-    public Order createOrUpdateOrder(List<OrderItem> orderItems, Principal principal, HttpSession session) {
-        Member member = memberRepository.findByEmail(principal.getName());
-
-
-        Order order = (Order) session.getAttribute("order");
-        if (order == null || order.getOrderStatus() == OrderStatus.DONE) {
-            order = Order.createOrder(member, orderItems);
+        // OrderName 설정
+        if (remainingItemsCount > 0) {
+            order.setOrderName(firstProductName + " 외 " + remainingItemsCount + "건");
         } else {
-            order.getOrderItems().clear();
-            for (OrderItem item : orderItems) {
-                order.addOrderItem(item);
-            }
+            order.setOrderName(firstProductName);
         }
-        order.setOrderStatus(OrderStatus.ORDER);
-        session.setAttribute("order", order);
-        return order;
-    }
 
-    public Order completeOrder(Principal principal, HttpSession session) {
-        Order order = (Order) session.getAttribute("order");
-        if (order == null || order.getOrderStatus() == OrderStatus.DONE) {
-            throw new IllegalStateException("No active order to complete.");
-        }
-        order.setOrderStatus(OrderStatus.DONE);
+        // 3. Order 저장
         orderRepository.save(order);
-        session.removeAttribute("order");
-        return order;
+
+        // 4. Payment 생성 및 Order와 연관
+        OrderPayment payment = new OrderPayment();
+        payment.setOrder(order);
+        payment.setPaymentMethod(paymentMethod);
+        payment.setAmount(order.getTotalPrice()); // Order의 총 금액을 결제 금액으로 설정
+        payment.setPaymentDate(LocalDateTime.now());
+
+        orderPaymentRepository.save(payment); // Payment 저장
+
+        return order; // 저장된 Order 객체 반환
     }
 
-    public Order getCurrentOrder(HttpSession session) {
-        return (Order) session.getAttribute("order");
-    }
+
+
+
+
+
+
+
+
 }
 

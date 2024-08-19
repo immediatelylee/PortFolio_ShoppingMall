@@ -677,7 +677,7 @@
                     <th:block th:unless="${#strings.isEmpty(itemFormDto.id)}">
                         <button th:formaction="@{'/admin/item/management/' + ${itemFormDto.id}}" type="submit" method="post" class="my-button btn-primary">수정</button>
                     </th:block>
-                    <a th:href="@{/admin/item/itemmanagement}" class="my-button btn-outline-secondary">취소</a>
+                    <a th:href="@{/admin/item/management}" class="my-button btn-outline-secondary">취소</a>
                 </div>
 
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">

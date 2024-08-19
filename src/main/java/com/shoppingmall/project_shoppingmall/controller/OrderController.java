@@ -1,8 +1,11 @@
 package com.shoppingmall.project_shoppingmall.controller;
 
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.databind.*;
 import com.shoppingmall.project_shoppingmall.domain.*;
 import com.shoppingmall.project_shoppingmall.dto.*;
 import com.shoppingmall.project_shoppingmall.service.*;
+import com.sun.xml.bind.v2.*;
 import lombok.*;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
@@ -17,6 +20,7 @@ import javax.validation.*;
 import java.security.*;
 import java.sql.*;
 import java.util.*;
+import java.util.stream.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,39 +29,6 @@ public class OrderController {
     private final OrderService orderService;
     private final MemberService memberService;
     private final CartService cartService;
-
-    // 합쳐서 처리하려다가 ajax랑 뭔가 잘 안맞아서 폐기함. 게속해서 전체 검색만 해서 폐기
-//    @GetMapping("/order")
-//    public String orderItems(Principal principal, Model model) {
-//        Member member = memberService.getCurrentMember(principal);
-//        model.addAttribute("UserInfo", member);
-//
-//        List<Long> cartItemIds = (List<Long>) model.asMap().get("cartItemIds");
-//        List<CartDetailDto> cartItems;
-//
-//        if (cartItemIds == null || cartItemIds.isEmpty()) {
-//            // 전체 상품 조회
-//            cartItems = cartService.getCartList(principal.getName());
-//        } else {
-//            // 선택된 상품 조회
-//            cartItems = cartService.getCartListByIds(principal.getName(), cartItemIds);
-//        }
-//
-//        model.addAttribute("cartItems", cartItems);
-//
-//        int totalProductPrice = cartItems.stream()
-//                .mapToInt(item -> item.getPrice() * item.getCount())
-//                .sum();
-//
-//        int deliveryFee = totalProductPrice > 50000 ? 0 : 2500;
-//        int totalPayPrice = totalProductPrice + deliveryFee;
-//
-//        model.addAttribute("totalProductPrice", totalProductPrice);
-//        model.addAttribute("deliveryFee", deliveryFee);
-//        model.addAttribute("totalPayPrice", totalPayPrice);
-//
-//        return "order/Order";
-//    }
 
     // 세션에 저장하지 않고 바로 하는 전체 상품주문형태
     // selected는 cartController의 /cart/order에 존재함.
@@ -80,6 +51,10 @@ public class OrderController {
         model.addAttribute("deliveryFee", deliveryFee);
         model.addAttribute("totalPayPrice", totalPayPrice);
 
+        String itemSummary = generateItemSummary(cartItems);
+
+        model.addAttribute("itemSummary", itemSummary);
+
         return "order/Order";
     }
 
@@ -99,192 +74,87 @@ public class OrderController {
         model.addAttribute("deliveryFee", deliveryFee);
         model.addAttribute("totalPayPrice", totalPayPrice);
 
+        String itemSummary = generateItemSummary(cartItems);
+
+        model.addAttribute("itemSummary", itemSummary);
+        System.out.println(itemSummary);
+
+        System.out.println("OrderController CartItems");
+        if (cartItems != null && !cartItems.isEmpty()) {
+            for (CartDetailDto cartItem : cartItems) {
+                System.out.println("CartItem ID: " + cartItem.getCartItemId());
+                System.out.println("Item Name: " + cartItem.getItemNm());
+                System.out.println("Item Code: " + cartItem.getItemCode());
+                System.out.println("Price: " + cartItem.getPrice());
+                System.out.println("Count: " + cartItem.getCount());
+                System.out.println("Image URL: " + cartItem.getImgUrl());
+                System.out.println("------------------------------");
+            }
+        } else {
+            System.out.println("No items in the cart.");
+        }
+
+
+
+
+
         return "order/Order";
     }
 
+    @PostMapping("/order/prework")
+    public ResponseEntity<?> createOrderWithPayment(@RequestBody OrderPayRequestDto orderPayRequestDto) {
+        // 1. Order와 OrderItem 생성, OrderPayment 준비
+        Order order = orderService.createOrderWithPayment(orderPayRequestDto.getCartDetailDtoList(), orderPayRequestDto.getPaymentMethod());
 
+        // 2. 응답으로 orderUid 반환
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("orderUid", order.getOrderUid());
+        response.put("orderName",order.getOrderName());
 
-    //수정 전
-//    @GetMapping("/order/selected")
-//    public String orderSelectedItemsGet(Principal principal, Model model, IdsTransferDto idsTransferDto) {
-//        Member member = memberService.getCurrentMember(principal);
-//        model.addAttribute("UserInfo", member);
-//
-//
-//        List<Long> cartItemIds = idsTransferDto.getSelectedIds();
-//
-//        if (cartItemIds != null && !cartItemIds.isEmpty()) {
-//            List<CartDetailDto> cartItems = cartService.getCartListByIds(member.getName(), cartItemIds);
-//
-//            int totalProductPrice = cartItems.stream()
-//                    .mapToInt(item -> item.getPrice() * item.getCount())
-//                    .sum();
-//
-//            int deliveryFee = totalProductPrice > 50000 ? 0 : 2500;
-//            int totalPayPrice = totalProductPrice + deliveryFee;
-//
-//            model.addAttribute("cartItems", cartItems);
-//            model.addAttribute("totalProductPrice", totalProductPrice);
-//            model.addAttribute("deliveryFee", deliveryFee);
-//            model.addAttribute("totalPayPrice", totalPayPrice);
-//        } else {
-//            // handle the case when cartItemIds is null or empty
-//            model.addAttribute("cartItems", Collections.emptyList());
-//            model.addAttribute("totalProductPrice", 0);
-//            model.addAttribute("deliveryFee", 0);
-//            model.addAttribute("totalPayPrice", 0);
-//        }
-//
-//        return "order/Order";
-//    }
-
-
-    //임시
-//    @PostMapping("/order_id_save")
-//    public ResponseEntity<Map<String, String>> saveOrderIds(@RequestBody List<Long> ids, RedirectAttributes redirectAttributes) {
-//        // debug 로그 추가
-//        System.out.println("Received IDs: " + ids);
-//
-//        if (ids == null || ids.isEmpty()) {
-//            // ids가 없을 경우에 대한 예외 처리
-//            return ResponseEntity.badRequest().body(Collections.singletonMap("redirectUrl", "/order"));
-//        }
-//
-//        // 플래시 속성에 IDs 추가
-//        redirectAttributes.addFlashAttribute("cartItemIds", ids);
-//
-//        // 리다이렉트 URL 반환
-//        return ResponseEntity.ok(Collections.singletonMap("redirectUrl", "/order"));
-//    }
-
-
-    //ajax에서 선택상품주문을 했을때 선택상품에 대한 id를 redirectAttribute에 저장하는 과정-다시
-//    @PostMapping("/order_id_save")
-//    public String saveOrderIds(@RequestBody List<Long> ids, RedirectAttributes redirectAttributes) {
-//        // debug 로그 추가
-//        System.out.println("Received IDs: " + ids);
-//
-//        if (ids == null || ids.isEmpty()) {
-//            // ids가 없을 경우에 대한 예외 처리
-//            return "redirect:/order"; // 리다이렉트하여 GET 요청으로 처리
-//        }
-//
-//        // 플래시 속성에 IDs 추가
-//        redirectAttributes.addFlashAttribute("cartItemIds", ids);
-//
-//        // 리다이렉트
-//        return "redirect:/order";
-//    }
-
-//    @PostMapping(value = "/orders")
-//    public String orderSelectedItems(Principal principal, Model model, @RequestBody List<Long> ids) {
-//        // debug 로그 추가
-//        System.out.println("Received IDs: " + ids);
-//
-//        Member member = memberService.getCurrentMember(principal);
-//        model.addAttribute("UserInfo", member);
-//
-//        List<CartDetailDto> cartItems = cartService.getCartListByIds(principal.getName(), ids);
-//        model.addAttribute("cartItems", cartItems);
-//
-//        int totalProductPrice = cartItems.stream()
-//                .mapToInt(item -> item.getPrice() * item.getCount())
-//                .sum();
-//
-//        int deliveryFee = totalProductPrice > 50000 ? 0 : 2500;
-//        int totalPayPrice = totalProductPrice + deliveryFee;
-//
-//        model.addAttribute("totalProductPrice", totalProductPrice);
-//        model.addAttribute("deliveryFee", deliveryFee);
-//        model.addAttribute("totalPayPrice", totalPayPrice);
-//
-//        return "order/Order";
-//    }
-
-//    @GetMapping(value = "/order")
-//    public String orderTest(Principal principal ,Model model, @RequestParam(required = false) List<Long> ids){
-//        Member member =memberService.getCurrentMember(principal);
-//        model.addAttribute("UserInfo",member);
-//
-//        List<CartDetailDto> cartItems;
-//
-//        if (ids == null || ids.isEmpty()) {
-//            cartItems = cartService.getCartList(principal.getName());
-//
-//        } else{
-//            cartItems = cartService.getCartListByIds(principal.getName(), ids);
-//
-//        }
-//        model.addAttribute("cartItems", cartItems);
-//        int totalProductPrice = cartItems.stream()
-//                .mapToInt(item -> item.getPrice() * item.getCount())
-//                .sum();
-//
-//        int deliveryFee = totalProductPrice > 50000 ? 0 : 2500;
-//        int totalPayPrice = totalProductPrice + deliveryFee;
-//
-//        model.addAttribute("totalProductPrice", totalProductPrice);
-//        model.addAttribute("deliveryFee", deliveryFee);
-//        model.addAttribute("totalPayPrice", totalPayPrice);
-//
-//        return "order/Order";
-//    }
-
-
-
-
-
-
-//    @PostMapping("/order/checkout")
-//    public String placeOrder(@RequestBody List<Long> cartItemIds, Principal principal, Model model) {
-//        Member member = memberService.getCurrentMember(principal);
-//
-//        // 선택된 상품만 조회
-//        List<CartDetailDto> selectedCartItems = cartService.getSelectedCartItems(principal.getName(), cartItemIds);
-//
-//        // 주문 처리 로직 구현
-//        int totalProductPrice = selectedCartItems.stream()
-//                .mapToInt(item -> item.getPrice() * item.getCount())
-//                .sum();
-//
-//        int deliveryFee = totalProductPrice > 50000 ? 0 : 2500;
-//        int totalPayPrice = totalProductPrice + deliveryFee;
-//
-//        // 모델에 데이터 추가
-//        model.addAttribute("UserInfo", member);
-//        model.addAttribute("cartItems", selectedCartItems);
-//        model.addAttribute("totalProductPrice", totalProductPrice);
-//        model.addAttribute("deliveryFee", deliveryFee);
-//        model.addAttribute("totalPayPrice", totalPayPrice);
-//
-//        // 주문 페이지로 이동
-//        return "order/Order";
-//    }
-
-    // 새로만듬.
-    @PostMapping("/createOrUpdate")
-    public ResponseEntity<Order> createOrUpdateOrder(@RequestBody List<OrderItem> orderItems, Principal principal, HttpSession session) {
-        Order updatedOrder = orderService.createOrUpdateOrder(orderItems, principal, session);
-        return ResponseEntity.ok(updatedOrder);
+        return ResponseEntity.ok(response);
+//        TODO: 현재 orderPayRequestDto의 paymethod는 ajax에서 card로 지정되어있음. 추후에 수정
     }
 
-    @PostMapping("/complete")
-    public ResponseEntity<Order> completeOrder(Principal principal, HttpSession session) {
-        try {
-            Order completedOrder = orderService.completeOrder(principal, session);
-            return ResponseEntity.ok(completedOrder);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-        }
+    @GetMapping("/order/success")
+    public String test(Principal principal, Model model, HttpSession session){
+        Member member = memberService.getCurrentMember(principal);
+        model.addAttribute("UserInfo", member);
+
+        // 세션에서 데이터 가져오기
+        List<CartDetailDto> cartItems = (List<CartDetailDto>) session.getAttribute("cartItems");
+        Integer totalProductPrice = (Integer) session.getAttribute("totalProductPrice");
+        Integer deliveryFee = (Integer) session.getAttribute("deliveryFee");
+        Integer totalPayPrice = (Integer) session.getAttribute("totalPayPrice");
+
+        model.addAttribute("cartItems", cartItems);
+        model.addAttribute("totalProductPrice", totalProductPrice);
+        model.addAttribute("deliveryFee", deliveryFee);
+        model.addAttribute("totalPayPrice", totalPayPrice);
+        return "order/orderSuccess";
     }
 
-    @GetMapping("/current")
-    public ResponseEntity<Order> getCurrentOrder(HttpSession session) {
-        Order currentOrder = orderService.getCurrentOrder(session);
-        if (currentOrder == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    private String generateItemSummary(List<CartDetailDto> cartItems) {
+        if (cartItems == null || cartItems.isEmpty()) {
+            return "No items";
         }
-        return ResponseEntity.ok(currentOrder);
+
+        // 아이템 이름을 리스트로 추출
+        List<String> itemNames = cartItems.stream()
+                .map(CartDetailDto::getItemNm)
+                .distinct() // 중복된 아이템 이름을 제거 (필요 시)
+                .collect(Collectors.toList());
+
+        // 첫 번째 아이템 이름 가져오기
+        String firstItemName = itemNames.get(0);
+        int remainingItemCount = itemNames.size() - 1;
+
+        // "사과 외 2건" 또는 "사과"와 같은 형식으로 문자열 생성
+        if (remainingItemCount > 0) {
+            return firstItemName + " 외 " + remainingItemCount + "건";
+        } else {
+            return firstItemName;
+        }
     }
 
 

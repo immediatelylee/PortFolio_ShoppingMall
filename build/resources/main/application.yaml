@@ -3,6 +3,8 @@ management.endpoints.web.exposure.include: "*"
 
 server.port: 9091
 
+#나중에 제거해야함
+server.servlet.session.timeout: 180000
 
 
 spring:
@@ -32,8 +34,14 @@ spring.servlet.multipart.maxFileSize: 20MB
 spring.servlet.multipart.maxRequestSize: 100MB
 #상품 이미지 업로드 경로
 itemImgLocation: C:/shop/item
+brandImgLocation: C:/shop/brand
 #리소스 업로드 경로
 uploadPath: file:///C:/shop/
+
+#포트원
+apiKey: ${PO_apiKey}
+secretKey: ${PO_secretKey}
+
 
 #기본 batch size 설정
 spring.jpa.properties.hibernate.default_batch_fetch_size: 1000

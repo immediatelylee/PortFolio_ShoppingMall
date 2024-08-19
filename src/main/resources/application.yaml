@@ -26,6 +26,10 @@ spring:
 
 logging:
   level:
+    com:
+      mysql:
+        cj:
+          jdbc=DEBUG:
     org.hibernate.type.descriptor.sql.BasicBinder: trace
 
 #파일 한 개당 최대 사이즈
@@ -37,6 +41,11 @@ itemImgLocation: C:/shop/item
 brandImgLocation: C:/shop/brand
 #리소스 업로드 경로
 uploadPath: file:///C:/shop/
+
+#포트원
+apiKey: ${PO_apiKey}
+secretKey: ${PO_secretKey}
+
 
 #기본 batch size 설정
 spring.jpa.properties.hibernate.default_batch_fetch_size: 1000
