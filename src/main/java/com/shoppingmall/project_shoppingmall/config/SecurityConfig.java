@@ -31,10 +31,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ;
 
         http.authorizeRequests()
-                .mvcMatchers("/", "/members/**", "/item/**", "/img/**","/images/**","/web/**").permitAll()
+                .mvcMatchers("/", "/members/**", "/item/**", "/img/**","/images/**","/web/**","/error").permitAll()
                 .mvcMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
         ;
+
 
         http.exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
@@ -54,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**","/images/**","/web/**");
+        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**","/images/**","/web/**","/error");
     }
 
 }
