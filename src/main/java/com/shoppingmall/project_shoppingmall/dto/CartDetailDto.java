@@ -21,6 +21,7 @@ public class CartDetailDto {
 
     private String imgUrl; //상품 이미지 경로
 
+    // imgUrl 포함한 생성자.
     public CartDetailDto(Long cartItemId, String itemNm,String itemCode, int price, int count, String imgUrl){
         this.cartItemId = cartItemId;
         this.itemNm = itemNm;

@@ -116,6 +116,23 @@ public class OrderController {
 //        TODO: 현재 orderPayRequestDto의 paymethod는 ajax에서 card로 지정되어있음. 추후에 수정
     }
 
+    @GetMapping("/order/success")
+    public String test(Principal principal, Model model, HttpSession session){
+        Member member = memberService.getCurrentMember(principal);
+        model.addAttribute("UserInfo", member);
+
+        // 세션에서 데이터 가져오기
+        List<CartDetailDto> cartItems = (List<CartDetailDto>) session.getAttribute("cartItems");
+        Integer totalProductPrice = (Integer) session.getAttribute("totalProductPrice");
+        Integer deliveryFee = (Integer) session.getAttribute("deliveryFee");
+        Integer totalPayPrice = (Integer) session.getAttribute("totalPayPrice");
+
+        model.addAttribute("cartItems", cartItems);
+        model.addAttribute("totalProductPrice", totalProductPrice);
+        model.addAttribute("deliveryFee", deliveryFee);
+        model.addAttribute("totalPayPrice", totalPayPrice);
+        return "order/orderSuccess";
+    }
 
     private String generateItemSummary(List<CartDetailDto> cartItems) {
         if (cartItems == null || cartItems.isEmpty()) {
