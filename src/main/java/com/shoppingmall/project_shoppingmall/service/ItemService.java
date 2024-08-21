@@ -25,6 +25,8 @@ public class ItemService {
     private final ItemImgRepository itemImgRepository;
     private final ItemDetailImgRepository itemDetailImgRepository;
     private final ItemThumbnailRepository itemThumbnailRepository;
+    // 상품에서 브랜드를 수정시에 brand를 조회하기 위하여
+    private final BrandRepository brandRepository;
 
 
     public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList, List<MultipartFile> itemDetailImgFileList) throws Exception {
@@ -217,8 +219,12 @@ public class ItemService {
         Item item = itemRepository.findById(itemFormDto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
 
+        // Brand를 데이터베이스에서 조회
+        Brand brand = brandRepository.findById(itemFormDto.getBrandId())
+                .orElseThrow(() -> new EntityNotFoundException("해당 브랜드를 찾을 수 없습니다."));
+
         // 상품 정보 업데이트
-        item.updateItem(itemFormDto);
+        item.updateItem(itemFormDto,brand);
         itemRepository.save(item);
 
 

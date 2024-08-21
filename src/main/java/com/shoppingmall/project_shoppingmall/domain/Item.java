@@ -55,7 +55,7 @@ public class Item extends BaseEntity {
     private Brand brand;
 
 
-    public void updateItem(ItemFormDto itemFormDto){
+    public void updateItem(ItemFormDto itemFormDto,Brand brand){
         this.itemNm = itemFormDto.getItemNm();
         this.itemCode = itemFormDto.getItemCode();
         this.price = itemFormDto.getPrice();
@@ -66,7 +66,7 @@ public class Item extends BaseEntity {
         this.mainCategory = itemFormDto.getMainCategory();
         this.subCategory = itemFormDto.getSubCategory();
         this.subSubCategory = itemFormDto.getSubSubCategory();
-
+        this.brand=brand;
         this.color = itemFormDto.getColor();
         this.size = itemFormDto.getSize();
     }
