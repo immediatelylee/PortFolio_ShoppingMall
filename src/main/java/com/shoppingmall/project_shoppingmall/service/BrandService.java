@@ -20,6 +20,8 @@ import java.util.*;
 public class BrandService {
 
     private final BrandRepository brandRepository;
+    private final ItemService itemService;
+    // 브랜드에 속한 item의 수를 계산하기 위해서 부득이 하게 추가하였음.
 
     public Long saveBrand(BrandFormDto brandFormDto) throws Exception {
         String brandCode = generateBrandCode(); // 1. 브랜드 코드 생성
@@ -114,11 +116,24 @@ public class BrandService {
         }
     }
 
+
+
     private String generateBrandCode() {
         // 2. 브랜드 코드 생성 로직
         //B + 7자리 숫자
         return "B" + String.format("%07d", brandRepository.count() + 1);
     }
 
+    public Map<Long, Long> getBrandItemCounts() {
+        List<Brand> brands = brandRepository.findAll();
+        Map<Long, Long> brandItemCounts = new HashMap<>();
+
+        for (Brand brand : brands) {
+            Long itemCount = itemService.countItemsByBrandId(brand.getId());
+            brandItemCounts.put(brand.getId(), itemCount);
+        }
+
+        return brandItemCounts;
+    }
 
 }

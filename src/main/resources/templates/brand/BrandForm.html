@@ -222,13 +222,13 @@
                     <tr>
                         <td>
                             <input type="checkbox" name="selectedIds" th:value="${brand.id}" class="rowChk" >
-                        </td>
+                        </td>ㅑ
                         <td><th:block th:text="${brand.id}">1</th:block></td>
                         <td class="txtCode"><a th:href="@{'/admin/brand/management/' + ${brand.id}}" class="txtLink" th:text="${brand.brandCode}" >B0000000</a></td>
                         <td class="left"><a th:href="@{'/admin/brand/management/' + ${brand.id}}" class="txtLink" th:text="${brand.brandNm}">자체브랜드</a></td>
                         <td th:text="${brand.brandStatus}">사용함</td>
                         <td th:text="${#temporals.format(brand.regTime,'yyyy-MM-dd')}"> 2024-02-15</td>
-                        <td class="right"><a href="" target="_blank" title="새창 열림" class="txtLink eShowChild">2</a></td>
+                        <td class="right"><a href="" target="_blank" title="새창 열림" class="txtLink eShowChild" th:text="${brandItemCounts[brand.id]}">브랜드아이템숫자</a></td>
                     </tr>
                     </th:block>
                     </tbody>
