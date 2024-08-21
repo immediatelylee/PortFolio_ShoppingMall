@@ -228,7 +228,9 @@
                         <td class="left"><a th:href="@{'/admin/brand/management/' + ${brand.id}}" class="txtLink" th:text="${brand.brandNm}">자체브랜드</a></td>
                         <td th:text="${brand.brandStatus}">사용함</td>
                         <td th:text="${#temporals.format(brand.regTime,'yyyy-MM-dd')}"> 2024-02-15</td>
-                        <td class="right"><a href="" target="_blank" title="새창 열림" class="txtLink eShowChild" th:text="${brandItemCounts[brand.id]}">브랜드아이템숫자</a></td>
+                        <td class="right">
+                            <a th:href="@{'http://localhost:9091/admin/item/management?itemSearchType=BRAND_NM&searchValue='+${brand.brandNm}}" target="_blank" title="새창 열림" class="txtLink eShowChild" th:text="${brandItemCounts[brand.id]}">브랜드아이템숫자</a>
+                        </td>
                     </tr>
                     </th:block>
                     </tbody>
