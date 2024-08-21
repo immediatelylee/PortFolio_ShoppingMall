@@ -224,7 +224,7 @@ public class ItemService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 브랜드를 찾을 수 없습니다."));
 
         // 상품 정보 업데이트
-        item.updateItem(itemFormDto,brand);
+        item.updateItem(itemFormDto,brand); // TODO: itemservice에 brand를 조회하기위해서 부득이 하게 brandRepository를 필드값으로 넣어야 했음 더 좋은 방식이 있다면 수정함.
         itemRepository.save(item);
 
 
