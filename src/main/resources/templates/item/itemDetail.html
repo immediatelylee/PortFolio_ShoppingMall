@@ -234,7 +234,10 @@
                                     <span style="font-size:12px;color:#555555;">Price</span>
                                 </th>
                                 <td style="vertical-align: middle;">
-                                    <span style="font-size:12px;color:#555555;"><strong id="span_product_price_text" th:text="'₩' + ${item.price}" >₩43,000</strong><input id="product_price" name="product_price" value="" type="hidden"></span>
+                                    <span style="font-size:12px;color:#555555;">
+                                        <strong id="span_product_price_text" th:text="'₩' + ${#numbers.formatInteger(item.price, 0, 'COMMA')}" >₩43,000</strong>
+<!--                                        <strong id="span_product_price_text" th:text="'₩' + ${item.price}" >₩43,000</strong>-->
+                                        <input id="product_price" name="product_price" value="" type="hidden"></span>
                                 </td>
                             </tr>
                             </tbody>
@@ -327,7 +330,7 @@
                                 </td>
                                 <td class="right"><span id="option_box1_price">
                                     <input type="hidden" class="option_box_price" th:value="${item.price}" product-no="8978" item_code="P0000NHI000B">
-                                    <span class="ec-front-product-item-price" code="P0000NHI000B" product-no="8978" th:text="${item.price}">₩43,000</span>
+                                    <span class="ec-front-product-item-price" code="P0000NHI000B" product-no="8978" th:text="${#numbers.formatInteger(item.price, 0, 'COMMA')}">₩43,000</span>
                                 </span>
                                 </td>
                             </tr>
@@ -338,8 +341,9 @@
                         </table>
                     </div>
                     <div id="totalPrice" class="totalPrice">
-                        <strong>TOTAL : <span class="total"><strong><em th:text="'₩' + ${item.price}"></em></strong> (1개)</span>
-                        </strong>
+<!--                        <strong>TOTAL : <span class="total"><strong><em th:text="'₩' + ${item.price}"></em></strong> (1개)</span></strong>-->
+<!--                            ${#numbers.formatInteger(item.price, 0, 'COMMA')}-->
+                        <strong>TOTAL : <span class="total"><strong><em th:text="'₩' + ${#numbers.formatInteger(item.price, 0, 'COMMA')}"></em></strong> (1개)</span></strong>
                     </div>
                     <p class="ec-base-help txt11 displaynone EC-price-warning">할인가가 적용된 최종 결제예정금액은 주문 시 확인할 수 있습니다.</p>
                     <div class="xans-element- xans-product xans-product-action ">
