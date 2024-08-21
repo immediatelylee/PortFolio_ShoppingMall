@@ -40,7 +40,7 @@ public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredi
     Page<Item> findByitemDisplayStatus(ItemDisplayStatus displayStatus,Pageable pageable);
 //    List<Item> findByDisplayStatus(ItemDisplayStatus displayStatus);
 
-
+    Long countByBrandId(Long brandId);
 
 }
 

@@ -386,6 +386,10 @@ public class ItemService {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new IllegalArgumentException("해당 아이템이 없습니다. ID: " + itemId));
         return item.getItemCode();
     }
+    // brand의 속한 아이템수를 계산하기 위해
+    public Long countItemsByBrandId(Long brandId) {
+        return itemRepository.countByBrandId(brandId);
+    }
 }
 
 
