@@ -25,6 +25,8 @@ public class ItemService {
     private final ItemImgRepository itemImgRepository;
     private final ItemDetailImgRepository itemDetailImgRepository;
     private final ItemThumbnailRepository itemThumbnailRepository;
+    // 상품에서 브랜드를 수정시에 brand를 조회하기 위하여
+    private final BrandRepository brandRepository;
 
 
     public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList, List<MultipartFile> itemDetailImgFileList) throws Exception {
@@ -217,8 +219,12 @@ public class ItemService {
         Item item = itemRepository.findById(itemFormDto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
 
+        // Brand를 데이터베이스에서 조회
+        Brand brand = brandRepository.findById(itemFormDto.getBrandId())
+                .orElseThrow(() -> new EntityNotFoundException("해당 브랜드를 찾을 수 없습니다."));
+
         // 상품 정보 업데이트
-        item.updateItem(itemFormDto);
+        item.updateItem(itemFormDto,brand); // TODO: itemservice에 brand를 조회하기위해서 부득이 하게 brandRepository를 필드값으로 넣어야 했음 더 좋은 방식이 있다면 수정함.
         itemRepository.save(item);
 
 
@@ -385,6 +391,10 @@ public class ItemService {
     public String findItemCodeById(Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new IllegalArgumentException("해당 아이템이 없습니다. ID: " + itemId));
         return item.getItemCode();
+    }
+    // brand의 속한 아이템수를 계산하기 위해
+    public Long countItemsByBrandId(Long brandId) {
+        return itemRepository.countByBrandId(brandId);
     }
 }
 

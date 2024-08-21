@@ -68,7 +68,9 @@ public class BrandController {
         Page<Brand> searchBrands = brandService.searchBrands(brandSearchType,searchValue,searchStatus,pageable).map(BrandFormDto::toBrand);
         List<Integer> barNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(),searchBrands.getTotalPages());
 
-
+        //  브랜드에 속한 아이템수를 계산하기 위해서 추가하였음
+        Map<Long, Long> brandItemCounts = brandService.getBrandItemCounts();
+        model.addAttribute("brandItemCounts", brandItemCounts);
 
         model.addAttribute("paginationBarNumbers", barNumbers);
         model.addAttribute("BrandSearchType",brandSearchType.values());
