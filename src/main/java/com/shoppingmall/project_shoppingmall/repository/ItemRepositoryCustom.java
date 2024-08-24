@@ -9,7 +9,7 @@ import java.util.*;
 
 public interface ItemRepositoryCustom {
 
-//    Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
+
 
 // 메인
     Page<ItemFormDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
@@ -21,9 +21,7 @@ public interface ItemRepositoryCustom {
     List<Item> findItemsBySellStatus(ItemSellStatus sellStatus);
     List<Item> findItemsByDisplayStatus(ItemDisplayStatus displayStatus);
 
-//    Page<MainItemDto> getItemManagetable(ItemSearchDto itemSearchDto, Pageable pageable);
-
-//    List<Item> searchByCategory(String mainCategory,String subCategory,String subSubCategory);
+    List<ItemWithImgDto> findItemsWithImgsBySubCategory(String subCategory);
 
 }
 

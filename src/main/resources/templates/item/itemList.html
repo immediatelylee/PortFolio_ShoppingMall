@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout8-itemList}">
+
+<th:block layout:fragment="script">
+    <script>
+
+    </script>
+</th:block>
+<div layout:fragment="content">
+    <div id="wrap">
+        <div id="container">
+            <div id="contents">
+                <style class="sf-hidden">
+                    #container {
+                        max-width: 1500px;
+                        min-width: 1200px;
+                        width: 100%;
+                        margin: 0 auto;
+                    }
+                    .xans-product-menupackage .title h2 {
+                        padding: 0px;
+                        width: 180px;
+                        box-sizing: border-box;
+                        font-size: 20px;
+                        background: #fff;
+                        letter-spacing: 1px;
+                        color: #000;
+                        text-align: center;
+                    }
+                    .brand_wrap .banner img {
+                        width: 100%;
+                    }
+                    ul {
+                        list-style-type: none; /* 기본 리스트 스타일 제거 */
+                        padding: 0;
+                    }
+                    li {
+                        display: inline-block; /* 가로 배치 */
+                        margin-right: 20px; /* 항목 간 간격 */
+                        vertical-align: top; /* 상단 정렬 */
+                    }
+                </style>
+                <div class="brand_wrap" >
+                    <div style="width: 85%; float: right;">
+
+                        <div class="xans-element- xans-product xans-product-normalpackage">
+                            <div class="xans-element- xans-product xans-product-normalmenu">
+                                <div class="function">
+                                    <p class="prdCount">TOTAL : <strong th:text="${onSaleItemCount}">상품 수</strong> (s)</p>
+                                </div>
+
+                            </div>
+                            <div class="xans-element- xans-product xans-product-listnormal ec-base-product">
+                                <ul class="prdList grid3" >
+                                    <li id="anchorBoxId_53163" data-aos="fade-in" class="list_item xans-record-" th:each="item:${items}">
+                                        <div class="listImg">
+                                            <div class="thumbnail">
+                                                <a th:href="@{'http://localhost:9091/item/' +${item.itemId}}" target="_parent" name="anchorBoxName_53163">
+                                                    <img
+                                                            th:src="${item.itemImgUrl}"
+                                                            class="listImage"
+                                                            id="eListPrdImage53163_1"
+                                                            alt="마리마켓 -  ENFANT REVERSIBLE PUFFER brown"
+                                                    />
+                                                </a>
+                                                <div class="listOver">
+                                                    <p class="oZoom">
+                                                        <img
+                                                                src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><rect fill-opacity="0"/></svg>'
+                                                                style="
+                                                            cursor: pointer;
+                                                            background-blend-mode: normal !important;
+                                                            background-clip: content-box !important;
+                                                            background-position: 50% 50% !important;
+                                                            background-color: rgba(0, 0, 0, 0) !important;
+                                                            background-image: var(--sf-img-53) !important;
+                                                            background-size: 100% 100% !important;
+                                                            background-origin: content-box !important;
+                                                            background-repeat: no-repeat !important;
+                                                        "
+                                                                alt="상품 큰 이미지 보기"
+                                                        />
+                                                    </p>
+                                                    <p class="oWish">
+                                                        <img
+                                                                src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><rect fill-opacity="0"/></svg>'
+                                                                class="icon_img ec-product-listwishicon"
+                                                                alt="관심상품 등록 전"
+                                                                productno="53163"
+                                                                categoryno="7925"
+                                                                icon_status="off"
+                                                                login_status="T"
+                                                                individual-set="F"
+                                                                style="
+                                                            background-blend-mode: normal !important;
+                                                            background-clip: content-box !important;
+                                                            background-position: 50% 50% !important;
+                                                            background-color: rgba(0, 0, 0, 0) !important;
+                                                            background-image: var(--sf-img-54) !important;
+                                                            background-size: 100% 100% !important;
+                                                            background-origin: content-box !important;
+                                                            background-repeat: no-repeat !important;
+                                                        "
+                                                        />
+                                                    </p>
+                                                    <p class="oCart">
+                                                        <img
+                                                                src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><rect fill-opacity="0"/></svg>'
+                                                                alt="장바구니 담기"
+                                                                class="ec-admin-icon cart"
+                                                                style="
+                                                            background-blend-mode: normal !important;
+                                                            background-clip: content-box !important;
+                                                            background-position: 50% 50% !important;
+                                                            background-color: rgba(0, 0, 0, 0) !important;
+                                                            background-image: var(--sf-img-55) !important;
+                                                            background-size: 100% 100% !important;
+                                                            background-origin: content-box !important;
+                                                            background-repeat: no-repeat !important;
+                                                        "
+                                                        />
+                                                    </p>
+                                                </div>
+                                                <p class="sold_i" style="position: absolute; left: 50%; top: 50%; z-index: 95; transform: translate(-50%, -50%); width: 100%;"></p>
+                                            </div>
+                                            <span class="option_bt">
+                                            <a>
+                                                <img
+                                                        src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="33" height="23"><rect fill-opacity="0"/></svg>'
+                                                        id="btn_preview_listnormal-053163"
+                                                        class="option_preview"
+                                                        alt=""
+                                                        style="
+                                                        background-blend-mode: normal !important;
+                                                        background-clip: content-box !important;
+                                                        background-position: 50% 50% !important;
+                                                        background-color: rgba(0, 0, 0, 0) !important;
+                                                        background-image: var(--sf-img-56) !important;
+                                                        background-size: 100% 100% !important;
+                                                        background-origin: content-box !important;
+                                                        background-repeat: no-repeat !important;
+                                                    "
+                                                />
+                                            </a>
+                                        </span>
+                                            <div class="description">
+                                                <div class="name">
+
+                                                    <a th:href="@{'http://localhost:9091/item/' +${item.itemId}}" target="_parent">
+                                                        <span style="font-size: 15px; color: #000000;"th:text="${item.itemNm}">상품명</span>
+                                                    </a>
+                                                </div>
+                                                <ul class="xans-element- xans-product xans-product-listitem spec">
+                                                    <li name="BRAND" class="xans-record-">
+                                                        <strong class="title displaynone sf-hidden"> :</strong>
+                                                        <span style="font-size: 13px; color: #555555;">
+                                                            <a href="" class="k" th:text="${item.brandNm}">브랜드 명(MARITHÉ ENFANT)</a></span>
+                                                    </li>
+                                                    <li name="판매가" class="xans-record-">
+                                                        <strong class="title displaynone sf-hidden"> :</strong>
+                                                        <span style="font-size: 14px; color: #000000; font-weight: bold;"th:text="${#numbers.formatInteger(item.price, 0, 'COMMA')}">상품가격</span>
+                                                        <span id="span_product_tax_type_text"> </span>
+                                                    </li>
+                                                </ul>
+                                                <div class="icon">
+                                                    <div class="promotion"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="xans-element- xans-product xans-product-normalpaging ec-base-paginate">
+                            <a href="#none" class="first">
+                                <img
+                                        src="data:image/gif;base64,R0lGODlhIgAiAJEAAHh4eNfV1f///wAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4zLWMwMTEgNjYuMTQ1NjYxLCAyMDEyLzAyLzA2LTE0OjU2OjI3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo4NEE3NkQ0NEIwMDcxMUUzQjU3MzhBQ0Y0MkU2M0QxMSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo4NEE3NkQ0NUIwMDcxMUUzQjU3MzhBQ0Y0MkU2M0QxMSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjg0QTc2RDQyQjAwNzExRTNCNTczOEFDRjQyRTYzRDExIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjg0QTc2RDQzQjAwNzExRTNCNTczOEFDRjQyRTYzRDExIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAAAAAAAsAAAAACIAIgAAAliMj6m74g+jnDHQi6XN/O4OQl8YjmRnnlmqei3IvprMxfRj30IeAYDjq4F8P6KQYzQeMckgqtP8LTPRKVXqxPBoW1n39W2FVeNTmXQu6VzrSRrWdjPmdEUBADs="
+                                        alt="첫 페이지"
+                                />
+                            </a>
+                            <a href="#none">
+                                <img
+                                        src="data:image/gif;base64,R0lGODlhIgAiAJEAAHh4eNfV1f///wAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4zLWMwMTEgNjYuMTQ1NjYxLCAyMDEyLzAyLzA2LTE0OjU2OjI3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5MzFDMEMyM0IwMDcxMUUzODUwQ0I2NjQ1Mjg5RkFBRSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo5MzFDMEMyNEIwMDcxMUUzODUwQ0I2NjQ1Mjg5RkFBRSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjkzMUMwQzIxQjAwNzExRTM4NTBDQjY2NDUyODlGQUFFIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjkzMUMwQzIyQjAwNzExRTM4NTBDQjY2NDUyODlGQUFFIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAAAAAAAsAAAAACIAIgAAAlKMj6m74g+jnDHQi6XN/O4OQl8YjmRnnlmqei3IvprMxfRj30I+AQBM8v1QIWEJZDwifcrlsHZiEnUUHs0qw760La7KewKTxE1qxTwhwxjstqIAADs="
+                                        alt="이전 페이지"
+                                />
+                            </a>
+<!--                            시간이 없어서 목업으로 pagination하였음 추후에 수정-->
+                            <ol>
+                                <li class="xans-record-"><a th:href="@{http://localhost:9091/item/infant?page=1}" class="this">1</a></li>
+                                <li class="xans-record-"><a th:href="@{http://localhost:9091/item/infant?page=2}" class="other">2</a></li>
+                                <li class="xans-record-"><a th:href="@{http://localhost:9091/item/infant?page=3}" class="other">3</a></li>
+                                <li class="xans-record-"><a th:href="@{http://localhost:9091/item/infant?page=4}" class="other">4</a></li>
+                            </ol>
+                            <a href="">
+                                <img
+                                        src="data:image/gif;base64,R0lGODlhIgAiAJEAAHh4eNfV1f///wAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4zLWMwMTEgNjYuMTQ1NjYxLCAyMDEyLzAyLzA2LTE0OjU2OjI3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpBMDMyNEU2MkIwMDcxMUUzQkJFRkY5MTUzRjEyRDIwQiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpBMDMyNEU2M0IwMDcxMUUzQkJFRkY5MTUzRjEyRDIwQiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkEwMzI0RTYwQjAwNzExRTNCQkVGRjkxNTNGMTJEMjBCIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkEwMzI0RTYxQjAwNzExRTNCQkVGRjkxNTNGMTJEMjBCIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAAAAAAAsAAAAACIAIgAAAlOMj6mr4g+jnDHQi6XN/O4OQl8YjmRnnlmqei3IvprMxfRj30IOAcDJe/h+pdCwaPTBkkQU6IjkKElBWfV1bWVVW6DO9Z10qWFxeXYWpUWMtntRAAA7"
+                                        alt="다음 페이지"
+                                />
+                            </a>
+                            <a href="" class="last">
+                                <img
+                                        src="data:image/gif;base64,R0lGODlhIgAiAJEAAHh4eNfV1f///wAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4zLWMwMTEgNjYuMTQ1NjYxLCAyMDEyLzAyLzA2LTE0OjU2OjI3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpBRUE3RkVCNUIwMDcxMUUzOUUyN0U1MDY1OTQ0OEU4RCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpBRUE3RkVCNkIwMDcxMUUzOUUyN0U1MDY1OTQ0OEU4RCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkFFQTdGRUIzQjAwNzExRTM5RTI3RTUwNjU5NDQ4RThEIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkFFQTdGRUI0QjAwNzExRTM5RTI3RTUwNjU5NDQ4RThEIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAAAAAAAsAAAAACIAIgAAAluMj6mr4g+jnDHQi6XN/O4OQl8YjmRnnlmqei3IvprMxfRj30LuAED/g3F8P6Jw6BMYayDjEsMDFpPMjJNaxVCxWd3MO4nKxC9yy6xCn9Qkdgkchn/lOIb9vigAADs="
+                                        alt="마지막 페이지"
+                                />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

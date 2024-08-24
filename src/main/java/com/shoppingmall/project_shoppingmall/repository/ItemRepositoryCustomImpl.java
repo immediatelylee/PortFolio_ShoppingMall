@@ -189,4 +189,33 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     }
 
 //  여기도 where을 itemNmLikeike(itemSearchDto.getSearchQuery()) 에서 searchByLike로 바꿈
+
+
+    @Override
+    public List<ItemWithImgDto> findItemsWithImgsBySubCategory(String subCategory) {
+        QItem item = QItem.item;
+        QItemImg itemImg = QItemImg.itemImg;
+
+        return queryFactory
+                .select(new QItemWithImgDto(
+                        item.id,
+                        item.itemNm,
+                        item.price,
+                        item.itemDetail,
+                        item.itemSellStatus.stringValue(),
+                        item.itemDisplayStatus.stringValue(),
+                        item.mainCategory,
+                        item.subCategory,
+                        item.subSubCategory,
+                        item.brand.brandNm,
+                        itemImg.imgUrl
+                ))
+                .from(item)
+                .leftJoin(itemImg).on(itemImg.item.eq(item))
+                .where(item.subCategory.eq(subCategory),
+                        (item.itemDisplayStatus.eq(ItemDisplayStatus.DISPLAY)), // 진열 상태 조건 추가
+                        itemImg.repimgYn.eq("Y")) // 대표 이미지 조건
+                .fetch();
+    }
 }
+

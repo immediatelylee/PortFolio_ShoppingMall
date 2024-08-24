@@ -87,14 +87,25 @@ public class ItemController {
                 .filter(category -> category.getParentItemCategory().isPresent() &&
                         category.getParentItemCategory().get() == ItemCategory.ROOT)
                 .collect(Collectors.toList()));
-        System.out.println("===============================================");
-        System.out.println(Arrays.stream(ItemCategory.values())
-                .filter(category -> category.getParentItemCategory().isPresent() &&
-                        category.getParentItemCategory().get() == ItemCategory.ROOT)
-                .collect(Collectors.toList()));
-
 
         return "item/itemManagement";
+    }
+
+
+    @GetMapping(value = "/item/infant")
+    public String itemInfant(@PageableDefault(page = 0,size = 10 ,sort = "id" ,direction = Sort.Direction.DESC) Pageable pageable, Model model){
+
+        // 추후에 수정해야함(각 코너마다의 count로 바꿔야함)
+        Long onSaleItemCount = itemService.getItemsOnSaleCount();
+        List<ItemWithImgDto> items = itemService.getItemsWithImgsBySubCategory("아동");
+        model.addAttribute("items", items);
+
+        model.addAttribute("onSaleItemCount", onSaleItemCount);
+
+        System.out.println("============test");
+        System.out.println(items);
+
+        return "item/itemList";
     }
 
     @GetMapping(value = "/admin/item/itemadd")
@@ -214,19 +225,12 @@ public class ItemController {
         return "redirect:/admin/item/management";
     }
 
-
-//    @GetMapping(value = "/item/{itemId}")
-//    public String itemDtl(Model model, @PathVariable("itemId") Long itemId){
-//        ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
-//        model.addAttribute("item", itemFormDto);
-//        return "item/new_itemDtl";
-//    }
-
     @GetMapping(value = "/item/{itemId}")
     public String itemDetail(Model model,@PathVariable("itemId") Long itemId){
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
         model.addAttribute("item", itemFormDto);
         return "item/itemDetail";
     }
+
 }
 

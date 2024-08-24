@@ -396,6 +396,10 @@ public class ItemService {
     public Long countItemsByBrandId(Long brandId) {
         return itemRepository.countByBrandId(brandId);
     }
+
+    public List<ItemWithImgDto> getItemsWithImgsBySubCategory(String subCategory) {
+        return itemRepository.findItemsWithImgsBySubCategory(subCategory);
+    }
 }
 
 
