@@ -2,14 +2,14 @@
 
 혼자서 진행한 쇼핑몰 프로젝트입니다.
 
-프리미엄 유아 쇼핑몰입니다.
+프리미엄 영유아 쇼핑몰입니다.
 
 # Description
 
 * 참여 인원: 1명(Front/Back end)
 * 사용 기술
-  * Spring boot,Spring Data JPA,QueryDsl,Spring Security,
-  * IntelliJ , Java 11, Thymeleaf
+  * Spring boot,Spring Data JPA,QueryDsl,Spring Security
+  * IntelliJ , Java 11, Thymeleaf, thumbnailator,jquery
   * Mysql ,H2,iamport 
 
 
