@@ -4,15 +4,6 @@
 
 프리미엄 영유아 쇼핑몰입니다.
 
-# Description
-
-* 참여 인원: 1명(Front/Back end)
-* 사용 기술
-  * Spring boot,Spring Data JPA,QueryDsl,Spring Security
-  * IntelliJ , Java 11, Thymeleaf, thumbnailator,jquery
-  * Mysql ,H2,iamport 
-
-
 # Views
 
 * 전체 프로젝트 설명 (마우스 우클릭 - 새탭에서 열기)
@@ -20,13 +11,24 @@
     <img src="https://img.youtube.com/vi/dvROwZE9FsQ/0.jpg" alt="포트폴리오 설명 영상">
 </a>
 
+* 프로젝트의 각 기능을 설명한 부분을 모아서 연결한 영상입니다.
+* 영상 아래는 각 기능을 나눠서 설명한 부분이며 이 영상을 한번 보는것이 더 프로젝트를 이해하기 좋습니다.
+* 썸네일 클릭시에 해당페이지에서 유튜브로 이동되므로 마우스 우클릭후 새탭에서 열어주시면 감사하겠습니다.
+
+  
 <br />
 <br />
 <br />
 <br />
 <br />
 
+# Description
 
+* 참여 인원: 1명(Front/Back end)
+* 사용 기술
+  * Spring boot,Spring Data JPA,QueryDsl,Spring Security
+  * IntelliJ , Java 11, Thymeleaf, thumbnailator,jquery
+  * Mysql ,H2,iamport 
 
 
 * 메인페이지  
