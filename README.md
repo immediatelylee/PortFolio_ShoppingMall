@@ -25,7 +25,7 @@
 
 # Description
 
-* 참여 인원: 1명(Front/Back end)
+* 참여 인원: 1명(Front/Backend)
 * 사용 기술
   * Spring boot,Spring Data JPA,QueryDsl,Spring Security
   * IntelliJ , Java 11, Thymeleaf, thumbnailator,jquery
