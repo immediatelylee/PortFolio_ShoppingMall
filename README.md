@@ -12,6 +12,7 @@
 </a>
 
 [전체 프로젝트설명 영상 바로가기](https://www.youtube.com/watch?v=dvROwZE9FsQ)
+<a href="https://www.youtube.com/watch?v=dvROwZE9FsQ" target="_blank">
 * 프로젝트의 각 기능을 설명한 부분을 모아서 연결한 영상입니다.
 * 영상 아래는 각 기능을 나눠서 설명한 부분이며 이 영상을 한번 보는것이 더 프로젝트를 이해하기 좋습니다.
 * 썸네일 클릭시에 해당페이지에서 유튜브로 이동되므로 마우스 우클릭후 새탭에서 열어주시면 감사하겠습니다.
