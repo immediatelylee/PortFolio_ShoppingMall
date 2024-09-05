@@ -9,10 +9,10 @@ INSERT INTO brand (brand_id, reg_time, update_time, created_by, modified_by, bra
 VALUES(2,'2024-06-15 16:35:15.352965','2024-06-15 16:35:15.352965','admin@example.com','admin@example.com','B0000002','brand2',true);
 
 INSERT  INTO  item (item_id, reg_time, update_time, created_by, modified_by, main_category,item_code , item_detail, item_display_status, item_nm, item_sell_status, price, stock_number,sub_category,sub_sub_category, brand_id)
-VALUES(1,'2024-06-15 16:35:15.352965','2024-06-15 16:35:15.352965','admin@example.com','admin@example.com','패션의류/잡화','I0000001' ,1,'NOT_DISPLAY','Enfant_CLASSIC_LOGO_KNIT_PULLOVER','SOLD_OUT',43000,1,'아동' ,'여아' ,1)
-,(2,'2024-06-15 16:36:11.467419','2024-06-15 16:36:11.467419','admin@example.com','admin@example.com','패션의류/잡화','I0000002',2,'NOT_DISPLAY','Enfant_mari_bear_embroidery_hoodie','SOLD_OUT',28000,1,'아동','여아' ,1)
-,(3,'2024-06-28 13:33:41.084926','2024-06-28 13:33:41.084926','admin@example.com','admin@example.com','패션의류/잡화','I0000003','red','NOT_DISPLAY','Enfant_CLASSIC_LOGO_KNIT_PULLOVER_red','SOLD_OUT',43000,100,'아동','여아' ,1)
-,(4,'2024-06-28 13:33:41.084926','2024-06-28 13:33:41.084926','admin@example.com','admin@example.com','패션의류/잡화','I0000004','ENFANT SEERSUCKER BUCKET HAT sky blue','NOT_DISPLAY','ENFANT SEERSUCKER BUCKET HAT sky blue','SOLD_OUT',1000,100,'아동','여아' ,1);
+VALUES(1,'2024-06-15 16:35:15.352965','2024-06-15 16:35:15.352965','admin@example.com','admin@example.com','패션의류/잡화','I0000001' ,1,'DISPLAY','Enfant_CLASSIC_LOGO_KNIT_PULLOVER','SELL',43000,1,'아동' ,'여아' ,1)
+,(2,'2024-06-15 16:36:11.467419','2024-06-15 16:36:11.467419','admin@example.com','admin@example.com','패션의류/잡화','I0000002',2,'DISPLAY','Enfant_mari_bear_embroidery_hoodie','SELL',28000,1,'아동','여아' ,1)
+,(3,'2024-06-28 13:33:41.084926','2024-06-28 13:33:41.084926','admin@example.com','admin@example.com','패션의류/잡화','I0000003','red','DISPLAY','Enfant_CLASSIC_LOGO_KNIT_PULLOVER_red','SELL',43000,100,'아동','여아' ,1)
+,(4,'2024-06-28 13:33:41.084926','2024-06-28 13:33:41.084926','admin@example.com','admin@example.com','패션의류/잡화','I0000004','ENFANT SEERSUCKER BUCKET HAT sky blue','DISPLAY','ENFANT SEERSUCKER BUCKET HAT sky blue','SELL',1000,100,'아동','여아' ,1);
 
 
 
