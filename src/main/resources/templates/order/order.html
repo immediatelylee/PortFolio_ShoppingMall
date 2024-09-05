@@ -24,6 +24,27 @@
                     console.error("Error fetching cart items:", error);
                 }
             });
+
+            // 배달 예정날짜 구하기
+            // 오늘 날짜 가져오기
+            const today = new Date();
+
+            // 내일 날짜 계산 (하루 더하기)
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+
+            // 요일 배열
+            const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+
+            // 내일의 요일 계산
+            const dayOfWeek = daysOfWeek[tomorrow.getDay()];
+
+            // 월과 일을 숫자로 가져오기 (9/7 형식으로 표시)
+            const month = tomorrow.getMonth() + 1;  // getMonth()는 0부터 시작하므로 1을 더함
+            const day = tomorrow.getDate();
+
+            // 날짜와 요일을 HTML에 넣기 (9/7 형식)
+            $('#delivery-date').text(`내일(${dayOfWeek}) ${month}/${day} 도착 예정`);
         });
 
 
@@ -292,8 +313,10 @@
                             <div class="bundle-info__expected-delivery-date-box">
                                     <span class="bundle-info__expected-delivery-info">
                                     <span class="bundle-info__expected-delivery-date ">
-                                    <strong data-bundle-info__cdm-pdd="">내일(월) 7/22</strong>
-                                    <span class="bundle-info__expected-delivery-date-suffix bundle-info__expected-delivery-date-suffix--colored" data-bundle-info__cdm-guarantee="">도착 예정</span>
+                                    <strong data-bundle-info__cdm-pdd="" id="delivery-date">내일(월) 7/22</strong>
+
+
+                                    <span class="bundle-info__expected-delivery-date-suffix bundle-info__expected-delivery-date-suffix--colored" data-bundle-info__cdm-guarantee=""></span>
                                     </span>
 
                                     </span>
