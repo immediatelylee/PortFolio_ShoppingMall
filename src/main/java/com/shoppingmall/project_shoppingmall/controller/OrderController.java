@@ -44,7 +44,7 @@ public class OrderController {
                 .mapToInt(item -> item.getPrice() * item.getCount())
                 .sum();
 
-        int deliveryFee = totalProductPrice > 50000 ? 0 : 2500;
+        int deliveryFee = (totalProductPrice == 0) ? 0 : (totalProductPrice > 50000 ? 0 : 2500);
         int totalPayPrice = totalProductPrice + deliveryFee;
 
         model.addAttribute("totalProductPrice", totalProductPrice);
