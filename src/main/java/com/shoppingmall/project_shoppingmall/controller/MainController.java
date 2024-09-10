@@ -21,4 +21,10 @@ public class MainController {
 
         return "main";
     }
+    @GetMapping(value ="/notification")
+    public String notification(){
+        return "mockup";
+    }
+
+
 }
