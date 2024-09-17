@@ -210,6 +210,17 @@
                 }
             });
         }
+        function checkAllItems() {
+            $('input[name="basket_product_normal_type_normal"]').prop('checked', true);
+        }
+
+        function orderAllItems() {
+            // 모든 항목 체크
+            checkAllItems();
+
+            // 기존의 선택된 항목을 주문하는 함수 호출
+            orderCheckedItems();
+        }
     </script>
 </th:block>
 
@@ -500,7 +511,8 @@
                         </div>
                     </div>
                     <div class="xans-element- xans-order xans-order-totalorder ec-base-button justify">
-                        <button href="#none" onclick="Basket.orderAll(this)" link-order="/order/orderform.html?basket_type=all_buy" link-login="/member/login.html" class=" buyAll "
+<!--                        link-order="/order/orderform.html?basket_type=all_buy" link-login="/member/login.html" -->
+                        <button onclick=" orderAllItems()"  class="buyAll"
                            style="background-color: #e53d2f;
                                     border-color: #e53d2f;
                                     color: #fff;
