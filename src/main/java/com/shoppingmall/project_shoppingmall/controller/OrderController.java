@@ -94,10 +94,6 @@ public class OrderController {
             System.out.println("No items in the cart.");
         }
 
-
-
-
-
         return "order/Order";
     }
 
