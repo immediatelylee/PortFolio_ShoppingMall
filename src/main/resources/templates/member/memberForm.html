@@ -452,7 +452,7 @@
         #join_test .join-form li .email_bg::after{content: ' '; display: block; background-image: url(/img/icon.svg);background-position: 0 1px;width: 22px; height: 22px;position: absolute; left: -9px; top: -2px;}
 
         #join_test .join-form li label { font-size:14px; font-weight:bold; }
-        #join_test .join-form li .txt-input { position:absolute; top:2px; left:52px; width:300px; height: 46px; line-height:49px; padding:0; margin:0; font-size: 14px; font-weight: bold; color:black; border: 0; opacity: 1;}
+        #join_test .join-form li .txt-input { position:absolute; top:2px; left:52px; width:300px; height: 46px; line-height:49px; padding:0; margin:0; font-size: 15px; color:black; border: 0; opacity: 1;}
         #join_test .join-form li .input-radio { width:14px; height:14px; margin:0; margin-top:-2px; padding:0; vertical-align:middle; }
         #join_test .join-form li .btn { display:block; position:absolute; top:6px; right:8px; width:83px; height:34px; line-height:36px; font-size:14px; font-weight:bold; color:#fff; text-align:center; }
         #join_test .join-form li.birth:after { clear:both; display:block; content:''; }
@@ -583,12 +583,41 @@
 <th:block layout:fragment="script">
 
     <script th:inline="javascript">
-        $(document).ready(function(){
-            var errorMessage = [[${errorMessage}]];
-            if(errorMessage != null){
-                alert(errorMessage);
-            }
-        });
+        $(document).ready(function() {
+            // 전체 동의 체크박스를 클릭했을 때 나머지 체크박스를 모두 선택/해제하는 함수
+            $('#every_agree').on('change', function() {
+                var checked = $(this).is(':checked');
+                $('.every_agree').prop('checked', checked);
+            });
+
+            // 각 개별 체크박스가 변경될 때 전체 동의 체크박스를 업데이트하는 함수
+            $('.every_agree').on('change', function() {
+                var allChecked = $('.every_agree').length === $('.every_agree:checked').length;
+                $('#every_agree').prop('checked', allChecked);
+            });
+
+            // 유효성 검사 함수 - 동의하지 않으면 경고를 표시
+            $('#submitBtn').on('click', function() {
+                var termsChecked = $('#yaok2').is(':checked');
+                var privacyChecked = $('#privacy1').is(':checked');
+
+                if (!termsChecked || !privacyChecked) {
+                    alert("이용약관 및 개인정보 수집 및 이용 안내에 모두 동의하셔야 합니다.");
+                    return false;
+                }
+
+                alert("가입이 완료되었습니다.");
+            });
+
+            // '내용보기' 링크 클릭 시 해당 섹션으로 스크롤
+            $('.scroll-to').on('click', function(e) {
+                e.preventDefault(); // 기본 anchor 동작 방지
+                var target = $(this).attr('href'); // 클릭한 링크의 href 값을 가져옴
+                $('html, body').animate({
+                    scrollTop: $(target).offset().top
+                }, 500); // 500ms에 걸쳐 부드럽게 스크롤
+            });
+
             // 비밀번호 일치 확인 함수
             function validatePassword() {
                 var password1 = $('#password1').val();
@@ -766,11 +795,11 @@
                                                             <a href="#chk_cont2">내용보기</a>                </li>
                                                     </ul>
                                                 </div>
-                                            </div>                                        <div class="new-btn-area">
+                                            </div>
+                                            <div class="new-btn-area">
+                                                 <button type="submit">동의하고 가입완료</button>
+                                            </div>
 
-                                            <button type="submit">동의하고 가입완료</button>
-
-                                        </div>
                                             <h4 class="tit" id="chk_cont1">이용약관</h4>
                                             <div class="privercy-contract">
                                             <textarea cols="80" wrap="off" rows="10" readonly="">인터넷 쇼핑몰 『주식회사 마리마켓 사이버 몰』회원 약관
