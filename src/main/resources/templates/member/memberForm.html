@@ -9,7 +9,23 @@
         /* BASIC css start */
         .btn_login_box ul li a{width:148px !important; height:43px !important;  line-height: 43px;text-align: center;display:block}
 
-
+        /* 비밀번호가 일치하지 않을 때 보여줄 스타일 */
+        .error {
+            border: 1px solid red;
+        }
+        .success {
+            border: 1px solid green;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            display: none; /* 처음엔 숨겨두기 */
+        }
+        .success-message {
+            color: green;
+            font-size: 12px;
+            display: none;
+        }
 
         /* CSS Document */
         .member_wrap{width:100%; margin:0 auto;}
@@ -573,6 +589,37 @@
                 alert(errorMessage);
             }
         });
+            // 비밀번호 일치 확인 함수
+            function validatePassword() {
+                var password1 = $('#password1').val();
+                var password2 = $('#password2').val();
+
+                if (password1 === "" || password2 === "") {
+                    // 아무것도 입력되지 않은 경우, 메시지 숨기기
+                    $('#error-message, #success-message').hide();
+                    $('#password1, #password2').removeClass('error success');
+                    return;
+                }
+
+                if (password1 !== password2) {
+                    // 비밀번호가 일치하지 않으면
+                    $('#password1, #password2').addClass('error').removeClass('success');
+                    $('#error-message').show();
+                    $('#success-message').hide();
+                } else {
+                    // 비밀번호가 일치하면
+                    $('#password1, #password2').addClass('success').removeClass('error');
+                    $('#error-message').hide();
+                    $('#success-message').show();
+                }
+            }
+
+            // 비밀번호 입력 필드에서 입력할 때마다 확인 (실시간 확인)
+            $('#password1, #password2').on('keyup', function() {
+                validatePassword();
+            });
+
+        });
     </script>
 
 </th:block>
@@ -593,10 +640,10 @@
                             <form action="/members/new" role="form" method="post" enctype="multipart/form-data" th:object="${memberFormDto}">
                             <div id="join_test">
                                     <div class="box-wrap">
-                                    <ul class="join-form">
+                                    <ul class="join-form" style="margin-bottom: 41px;">
 
                                         <li>
-                                            <span class="email_bg"><!-- 배경이미지(이메일) --></span>
+                                            <span class="email_bg" ><!-- 배경이미지(이메일) -->         </span>
                                             <input type="email" th:field="*{email}" name="email" id="email" value="" class="MS_input_txt w137 txt-input input-label" size="20" maxlength="35" placeholder="이메일 - 이메일 형식으로 등록해주세요" >
                                         </li>
                                         <li>
@@ -610,6 +657,8 @@
                                         <li>
                                             <span class="pwc_bg"><!-- 배경이미지(패스워드 체크) --></span>
                                             <input type="password" name="password2" id="password2" class="MS_input_txt w137 txt-input input-label" value="" size="15" maxlength="20" placeholder="비밀번호 확인">
+                                            <div id="error-message" class="error-message">비밀번호가 일치하지 않습니다.</div>
+                                            <div id="success-message" class="success-message">비밀번호가 일치합니다.</div>
                                         </li>
 
                                     </ul>
