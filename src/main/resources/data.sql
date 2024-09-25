@@ -1,7 +1,7 @@
-INSERT INTO member (name, email, password,phone, address, role)
-VALUES ('John Doe', 'admin@example.com', '$2a$12$NiP8ZlFx6bcXIvXwWy0BtOEu2ZWbg4IfHGaUJhB6d.Epygv5Xba5q','010-1234-5678' ,'123 Main St', 'ADMIN');
-INSERT INTO member (name, email, password, phone,address, role)
-VALUES ('User', 'user@example.com', '$2a$12$NiP8ZlFx6bcXIvXwWy0BtOEu2ZWbg4IfHGaUJhB6d.Epygv5Xba5q','010-3456-7890' ,'123 Main St', 'USER');
+INSERT INTO member (name, email, password,phone, zone_code,road_address,detail_address ,role)
+VALUES ('John Doe', 'admin@example.com', '$2a$12$NiP8ZlFx6bcXIvXwWy0BtOEu2ZWbg4IfHGaUJhB6d.Epygv5Xba5q','010-1234-5678' ,'11111','경기 성남시 분당구 판교역로 166','101동304호', 'ADMIN');
+INSERT INTO member (name, email, password,phone, zone_code,road_address,detail_address ,role)
+VALUES ('User', 'user@example.com', '$2a$12$NiP8ZlFx6bcXIvXwWy0BtOEu2ZWbg4IfHGaUJhB6d.Epygv5Xba5q','010-3456-7890' ,'22222', '경기 성남시 분당구 판교역로 166','101동304호', 'USER');
 
 INSERT INTO brand (brand_id, reg_time, update_time, created_by, modified_by, brand_code, brand_nm, brand_status)
 VALUES(1,'2024-06-15 16:35:15.352965','2024-06-15 16:35:15.352965','admin@example.com','admin@example.com','B0000001','brand1',true);
