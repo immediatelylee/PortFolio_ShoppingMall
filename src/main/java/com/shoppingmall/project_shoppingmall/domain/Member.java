@@ -27,7 +27,14 @@ public class Member extends BaseEntity{
     private String password;
     private String phone;
 
-    private String address;
+    @Column(name = "zone_code")
+    private String zoneCode; // 우편번호
+
+    @Column(name = "road_address")
+    private String roadAddress; // 지번주소
+
+    @Column(name = "detail_address")
+    private String detailAddress; // 상세주소
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -36,7 +43,9 @@ public class Member extends BaseEntity{
         Member member = new Member();
         member.setName(memberFormDto.getName());
         member.setEmail(memberFormDto.getEmail());
-        member.setAddress(memberFormDto.getAddress());
+        member.setZoneCode(memberFormDto.getZoneCode());
+        member.setRoadAddress(memberFormDto.getRoadAddress());
+        member.setDetailAddress(memberFormDto.getDetailAddress());
         String password = passwordEncoder.encode(memberFormDto.getPassword());
         member.setPassword(password);
         member.setPhone(memberFormDto.getPhone());

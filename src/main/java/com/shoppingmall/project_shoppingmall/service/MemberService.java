@@ -50,9 +50,9 @@ public class MemberService implements UserDetailsService {
             String email = principal.getName();
             Member member = memberRepository.findByEmail(email);
             if (member != null){
-                return member.getAddress();
+//                return member.getAddress();
+                return member.getZoneCode();
             }
-
         }
         return null;
     }

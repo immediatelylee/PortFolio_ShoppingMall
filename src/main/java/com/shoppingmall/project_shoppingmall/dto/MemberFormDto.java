@@ -25,7 +25,12 @@ public class MemberFormDto {
 
     private String phone;
 
+    @NotEmpty(message = "우편번호는 필수 입력 값입니다.")
+    private String zoneCode;
+
     @NotEmpty(message = "주소는 필수 입력 값입니다.")
-    private String address;
+    private String roadAddress; // 지번주소
+    @NotEmpty(message = "주소는 필수 입력 값입니다.")
+    private String detailAddress; // 상세주소
 }
 
