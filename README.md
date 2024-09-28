@@ -6,8 +6,10 @@
 
 # Description
 
-Mary market Version 1 (2023 8.18 ~ 9.29)
-Mary market Version 2 (2023 12.17 ~ 8.24)
+Mary market Version 1 (2023 8.18 ~ 9.29)  
+
+Mary market Version 2 (2023 12.17 ~ 8.24)  
+
 Mary market Version 3 (2024 9.1 ~ 현재)
 
 # Views
