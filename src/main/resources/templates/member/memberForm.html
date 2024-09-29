@@ -1,582 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout2}">
+      layout:decorate="~{layouts/layout2_1}">
 
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
-        /* BASIC css start */
-        .btn_login_box ul li a{width:148px !important; height:43px !important;  line-height: 43px;text-align: center;display:block}
-
-        /* 비밀번호가 일치하지 않을 때 보여줄 스타일 */
-        .error {
-            border: 1px solid red;
-        }
-        .success {
-            border: 1px solid green;
-        }
-        .error-message {
-            color: red;
-            font-size: 12px;
-            display: none; /* 처음엔 숨겨두기 */
-        }
-        .success-message {
-            color: green;
-            font-size: 12px;
-            display: none;
-        }
-
-        /* CSS Document */
-        .member_wrap{width:100%; margin:0 auto;}
-        .member_pwd_wrap{margin:20px auto 40px auto;}
-        .member_tit h2{font-size:0; text-align:center;padding:50px 0;border-bottom:1px solid #f0f0f0;}
-        .member_cont{padding:40px 60px;width:470px;margin:0 auto;}
-        .member_cont h3{font-weight:normal; font-size:18px; color:#222222;}
-        .member_cont h3 + p{padding:5px 0 8px 0; color:#bebebc;}
-        .login_input, .certify_confirm_input{border-top:1px solid #dbdbdb;}
-        .wake_base_box .login_input{border-top:none 0;}
-
-        /*.join_base_wrap .btn_center_box,
-        .login_input + .btn_center_box,*/
-        .member_cont .btn_center_box,
-        .member_warning + .btn_center_box{margin:35px 0 0 0;}
-        .join_ok_box .btn_center_box{padding:30px 0 0 0; border-top:1px solid #dbdbdb;}
-
-        /* 로그인 */
-        .member_cont .member_login_box h3{font-weight:normal; font-size:18px; color:#222222;}
-        .member_cont .member_login_box .member_login{margin:0 0 20px 0;}
-        .member_cont .member_login_box .login_input_sec{overflow:hidden;}
-        .member_cont .member_login_box .login_input_sec > div{float:left;}
-        .member_cont .member_login_box .login_input_sec input{display:block; width:292px; height:36px; margin:15px 0 10px 0; padding:0 0 0 8px; border:1px solid #f0f0f0; color:#060606;}
-        .member_cont .member_login_box .login_input_sec a{float: right;
-            width: 158px;
-            height: 91px;
-            line-height: 91px;
-            margin: 15px 0 0 0;
-            border: 0;
-            background: #060606;
-            color: #ffffff;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-        }
-        .member_cont .member_login_box .id_chk{padding:0 0 26px 0;}
-        .member_cont .member_login_box .id_chk p{padding:6px 0 0 0;}
-        .member_cont .member_login_box .id_chk span{display:inline-block;}
-
-        .member_cont .btn_login_box{overflow:hidden; margin:20px 0 0 0; padding:20px 0 0 0; border-top:1px solid #f0f0f0;}
-        .member_cont .btn_login_box li{float:left; margin:0 0 0 10px;}
-        .member_cont .btn_login_box li:first-child{margin:0;}
-        /* 비회원 주문하기 */
-        .member_cont .nonmember_join_box{margin:40px 0 0 0;}
-        .member_cont .nonmember_join_box .btn_center_box{margin:0;}
-        .member_cont .nonmember_join_box .btn_member_black{width:100%; margin:20px 0 0 0;}
-        /* 비회원 주문조회 */
-        .member_cont .nonmember_order_box{margin:40px 0 0 0;}
-        .member_cont .nonmember_order_box .order_input_sec{overflow:hidden;}
-        .member_cont .nonmember_order_box .order_input_sec > div{float:left;}
-        .member_cont .nonmember_order_box .order_input_sec input{display:block; width:292px; height:36px; margin:15px 0 10px 0; padding:0 0 0 8px; border:1px solid #f0f0f0; color:#060606;}
-
-        .member_cont .nonmember_order_box .order_input_sec a {
-            line-height: 89px;
-            display: block;
-            width: 470px;
-            height: 89px;
-            margin: 15px 0;
-            border: 1px solid #060606;
-            background: #fff;
-            color: #060606;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .member_cont .nonmember_order_box p{padding:0 0 0 18px; background:url('/design/webddle01/img/member/icon_caution.png') no-repeat 0 3px; color:#6d6d6d;}
-
-        /* 비밀번호 찾기 */
-        .find_password_box .login_input{padding:30px 0 0 0;}
-        .find_password_box .login_input .member_warning{width:370px; margin:0 0 0 100px;}
-        .find_password_box .login_input input[type=text],
-        .find_password_box .login_input input[type=password]{width:263px; margin:10px 0 0 0;}
-        .find_password_box .login_input input{}
-
-        /* 비밀번호 변경 */
-        .find_password_reset_box .login_input{width:320px; padding:30px 75px 0 76px; text-align:center;}
-        .find_password_reset_box .login_input input{width:320px; margin:15px 0 0 0; padding:0 0 0 5px;}
-        .find_password_reset_box .login_input strong{display:block; padding:3px 0 0 0; text-align:left; color:#929292; font-weight:normal;}
-
-        /* 아이디 찾기 완료, 비밀번호 변경 완료 */
-        .find_complete_box{text-align:center; min-height:130px;}
-        .find_complete_box p{padding:15px 0 50px 0; font-size:18px; color:#232323;}
-        .find_complete_box .find_id_name{font-size:22px; color:#e38bac;}
-
-        /* 아이디 찾기 */
-        .find_id_box .find_id_sec h3{font-weight:normal; font-size:18px; color:#222222;}
-        .find_id_sec .login_input{overflow:hidden; margin:10px 0 0 0; border-top:none 0;}
-        .find_id_sec .login_input > div{float:left;}
-        .find_id_sec .login_input input{display:block; width:292px; height:36px; margin:15px 0 10px 0; padding:0 0 0 8px; border:1px solid #f0f0f0; color:#060606;}
-        .find_id_sec > p{color:#060606;}
-        .find_id_box .btn_member_sec{margin:20px 0 0 0; border-top: 1px solid #f0f0f0;}
-        .find_id_box .btn_member_sec ul{overflow:hidden; margin:20px 0 0 0; text-align:center; font-size:0;}
-        .find_id_box .btn_member_sec li{display:inline-block; margin:0 0 0 10px;}
-        .find_id_box .btn_member_sec li:first-child{margin:0;}
-
-        /* 회원가입 완료 */
-        .join_ok_box .join_ok_tit{text-align:center; background:url('/design/webddle01/img/member/img_join_ok.png') no-repeat center 0; padding:50px 0 0 0;}
-        .join_ok_box .join_ok_tit .complete{padding:20px 0 0 0; font-size:18px; color:#222222;}
-        .join_ok_box .join_ok_tit .complete strong{font-weight:bold;}
-        .join_ok_box .join_ok_tit p{padding:20px 0 20px 0; color:#989898; letter-spacing:-0.5px}
-        .join_ok_box .join_ok_tit p span{font-weight:bold; color:#222222;}
-        .join_ok_box .btn_member_sec{border-top:1px solid #dbdbdb;}
-        .join_ok_box .btn_member_sec ul{overflow:hidden; margin:20px 0 0 0; text-align:center; font-size:0;}
-        .join_ok_box .btn_member_sec li{display:inline-block; margin:0 0 0 10px;}
-        .join_ok_box .btn_member_sec li:first-child{margin:0;}
-        .join_ok_box .btn_member_sec li button{width: 150px; height: 42px; border:1px solid #cccccc; background: #fff; color: #3e3d3c; font-weight:bold; font-size: 13px; cursor:pointer;}
-        .join_ok_box .btn_member_sec li button:hover{border:1px solid #bbbbbb; color:#333333;}
-        .join_ok_box .btn_member_sec .btn_login{background: #060606; border:1px solid #060606; color: #fff;}
-        .join_ok_box .btn_member_sec .btn_login:hover{border:1px solid #060606; color: #fff; background:#060606;}
-
-        /* 회원승인 대기 */
-        .join_wait_box .join_wait_tit{text-align:center; background:url('/design/webddle01/img/member/img_join_wait.png') no-repeat center 0; padding:35px 0 20px 0; border-bottom:1px solid #dbdbdb;}
-        .join_wait_box .join_wait_tit .complete{padding:20px 0 0 0; font-size:18px; color:#222222;}
-        .join_wait_box .join_wait_tit .complete strong{font-weight:bold; color:#e38bac;}
-        .join_wait_box .join_wait_tit p{padding:20px 0 20px 0; color:#989898; letter-spacing:-0.5px; line-height:20px;}
-        .join_wait_box .join_wait_tit p span{font-weight:bold; color:#222222;}
-        .join_wait_box .join_wait_tit + .btn_center_box{margin:20px 0 0 0; padding:30px 0 0 0; /*border-top:1px solid #dbdbdb;*/}
-        /* 14세 미만 회원가입 안내 */
-        .join_wait_box .join_wait_14under{margin:30px 0 0 0; padding:20px 20px 20px 20px; border:1px solid #dbdbdb; line-height:1.6;}
-        .join_wait_box .join_wait_14under dl{}
-        .join_wait_box .join_wait_14under dt{padding:0 0 0 18px; background:url('/design/webddle01/img/member/icon_caution02.png') no-repeat 0 3px;}
-        .join_wait_box .join_wait_14under dd{color:#989898;}
-        .join_wait_box .link_blank:hover{text-decoration:underline;}/* 관련법규 전문보기 */
-        .join_wait_box .btn_gray_list{display:block; margin:20px 0 0 0;}/* 14세 미만 회원가입 동의서 다운받기 */
-
-
-        /* 본인인증 수단 선택 */
-        .user_certify_box .user_certify_tit > p{color:#bebebc;}
-        .user_certify_box .user_certify_list{padding:30px 0 0 0;}
-        .user_certify_box .user_certify_list li{padding:0 0 18px 0;}
-        .user_certify_box .user_certify_list li p{padding: 4px 0 0 26px; color:#b5b5b5;}
-        .user_certify_box .user_certify_list .form_element strong{color:#8e8e8e;}
-        .user_certify_box .btn_member_sec ul{overflow:hidden; margin:20px 0 0 0; text-align:center; font-size:0;}
-        .user_certify_box .btn_member_sec li{display:inline-block;}
-        .user_certify_box .btn_member_sec li button{width: 150px; height: 42px; border:1px solid #6b6b6b; background: #6b6b6b; color: #fff; font-weight:bold; font-size: 13px; cursor:pointer;}
-        .user_certify_box .btn_member_sec li button:hover{border:1px solid #626262; color: #fff; background:#626262;}
-
-        /* 본인인증 인증번호 확인 */
-        .certify_confirm_box .certify_confirm_tit > p{color:#bebebc;}
-        .certify_confirm_box .certify_confirm_input{padding:30px 0 0 0; text-align:center;}
-        .certify_confirm_box .certify_confirm_input > div{display: inline;}
-        .certify_confirm_box .certify_confirm_input input{width:263px; height:28px; padding:0 0 0 5px; border:1px solid #dddddd; color:#909090;}
-        .certify_confirm_box .certify_confirm_input p{padding:5px 0 0 11px; color:#929292;}
-        .certify_confirm_box .certify_confirm_input a{color:#121e1e; text-decoration:underline;}
-        .certify_confirm_box .btn_member_sec ul{overflow:hidden; margin:25px 0 0 0; text-align:center; font-size:0;}
-        .certify_confirm_box .btn_member_sec li{display:inline-block; margin:0 0 0 10px;}
-        .certify_confirm_box .btn_member_sec li:first-child{margin:0;}
-
-        /* 휴면회원 해제 선택 */
-        .wake_base_box .wake_base_tit{border-bottom:1px solid #dbdbdb;}
-        .wake_base_box .wake_base_tit .complete{padding:20px 0 20px 0; font-size:18px; color:#222222;}
-        .wake_base_box .wake_base_tit .complete strong{font-weight:bold;}
-        .wake_base_box .wake_date{overflow:hidden; padding:15px 25px 25px 25px; background:#f4f4f4;}
-        .wake_base_box .wake_date dl{float:left; width:50%; padding:10px 0 0 0;}
-        .wake_base_box .wake_date dt{float:left; color:#aaaaaa;}
-        .wake_base_box .wake_date dd{font-weight:bold;}
-        .wake_base_box .wake_date dd strong{color:#e38bac;}
-        .wake_base_box .wake_notice{padding:20px 0 30px 0; line-height: 23px; font-size:12px; color:#797979;}
-        .wake_base_box .wake_notice em{display:block; padding:10px 0 0 0; font-weight:bold;}
-        .wake_base_box .none_wake{border-bottom:1px solid #dbdbdb;}
-        .wake_base_box .none_wake p{padding:30px 0; text-align:center; font-size:18px; color:#868686;}
-        .wake_base_box .wake_ok{border-bottom:1px solid #dbdbdb;}
-        .wake_base_box .wake_ok p{padding:30px 0; text-align:center; font-size:18px; color:#868686;}
-        .wake_base_box .wake_certify_input{padding:30px 0; border-bottom:1px solid #dbdbdb;}
-        .wake_base_box .wake_certify_input .wc_info_tip{padding:0 0 25px 0; font-size:13px; text-align:center; letter-spacing:-1px;}
-        #wrap .wake_base_box .wake_certify_input .member_warning{display:block; width:369px; margin:0 auto;}
-        .wake_base_box .wake_certify_input .member_warning strong{padding:0 0 0 10px; line-height:31px;}
-        .wake_base_box .wake_certify_input .member_warning input{width:90%;}
-        .wake_base_box .wake_certify_input .member_warning .phone_num{width:230px; margin:10px 0 0 0;}
-        .wake_base_box .wake_certify_input .member_warning .email_num{width:230px; margin:10px 0 0 0;}
-        .wake_base_box .wake_certify_input .member_warning .email_direct{width:130px; margin:10px 0 0 0;}
-        .wake_base_box .wake_certify_input .member_warning .chosen-container{margin:10px 0 0 0;}
-        .wake_base_box .user_certify_list{padding:30px 0; border-bottom:1px solid #dbdbdb;}
-        .wake_base_box .user_certify_list p{text-align:center;}
-        .wake_base_box .user_certify_list ul{padding: 20px 0 0 0; line-height:39px;}
-        .wake_base_box .uc_info_tip{padding:20px 0 0 0; font-size:14px;}
-        .wake_base_box .complete_box{text-align:center; min-height:130px;}
-        .wake_base_box .complete_box p{padding:40px 0 45px 0; font-size:18px; color:#232323;}
-        .wake_base_box .login_input .form_element{display:block;}
-        .wake_base_box .login_input + .btn_center_box,
-        .wake_base_box .complete_box + .btn_center_box{margin:35px 0 0 0;}
-        .wake_base_box .wake_base_tit + .login_input{border-top:none 0;}
-        .wake_base_box .wake_base_tit + .btn_center_box,
-        .wake_base_box .wake_certify_input +.btn_center_box{margin:35px 0 0 0;}
-        #wrap .wake_base_box .wake_certify_input .member_warning.prior_wrong .chosen-single{border:1px solid #d6d6d6;}
-
-
-        /* 휴면회원 해제 완료 */
-        .wake_complete_box .wake_complete_tit p{padding:20px 0 20px 0; font-size:18px; color:#222222;}
-        .wake_complete_box .wake_complete_tit p strong{font-weight:bold;}
-        .wake_complete_box .btn_member_sec{border-top:1px solid #dbdbdb;}
-        .wake_complete_box .btn_member_sec ul{overflow:hidden; margin:20px 0 0 0; text-align:center; font-size:0;}
-        .wake_complete_box .btn_member_sec li{display:inline-block;}
-        .wake_complete_box .btn_member_sec li button{width: 150px; height: 42px; border:1px solid #6b6b6b; background: #6b6b6b; color: #fff; font-weight:bold; font-size: 13px; cursor:pointer;}
-        .wake_complete_box .btn_member_sec li button:hover{border:1px solid #626262; color: #fff; background:#626262;}
-
-        /* 휴면회원 해제 인증 */
-        .wake_certify_box .wake_certify_tit .complete{padding:20px 0 20px 0; font-size:18px; color:#222222;}
-        .wake_certify_box .wake_certify_tit .complete strong{font-weight:bold;}
-        .wake_certify_box .wake_date{overflow:hidden; padding:15px 25px 25px 25px; background:#f4f4f4;}
-        .wake_certify_box .wake_date dl{float:left; width:50%; padding:10px 0 0 0;}
-        .wake_certify_box .wake_date dt{float:left; color:#aaaaaa;}
-        .wake_certify_box .wake_date dd{font-weight:bold;}
-        .wake_certify_box .wake_notice{padding:20px 0 30px 0; line-height: 23px; font-size:12px; color:#797979;}
-        .wake_certify_box .wake_notice em{display:block; padding:10px 0 0 0; font-weight:bold;}
-        .wake_certify_box .wake_certify_input{border-top:1px solid #dbdbdb; border-bottom:1px solid #dbdbdb; padding:30px 0; text-align:center;}
-        .wake_certify_box .wake_certify_input input{width:330px; height:36px; margin:15px 0 20px 0;}
-        .wake_certify_box .wake_certify_input a{color:#fa2828;}
-        .wake_certify_box .btn_member_sec ul{overflow:hidden; margin:25px 0 0 0; text-align:center; font-size:0;}
-        .wake_certify_box .btn_member_sec li{display:inline-block; margin:0 0 0 10px;}
-        .wake_certify_box .btn_member_sec li:first-child{margin:0;}
-
-        /* 비밀번호 변경안내 */
-        .password_change{padding:70px 60px; border:1px solid #dbdbdb;}
-        .password_change .password_change_tit{text-align:center;}
-        .password_change .password_change_tit strong{display:block; padding:0 0 10px 0; font-size:23px;}
-        .password_change .password_change_tit span{font-size:16px; color:#222222;}
-        .password_change .password_change_tit p{font-size:12px; color:#777; padding:20px 0 40px 0;}
-        .password_change .password_change_input{padding:40px 0 20px 0; text-align:center; background:#f4f4f4;}
-        .password_change .password_change_input input{width:380px; margin:10px 0 20px 0;}
-        .password_change .password_change_input .new_password{width:380px; margin:0 auto; padding:10px 0 0 0; border-top:1px dotted #d4d4d4;}
-        .password_change .btn_member_sec ul{overflow:hidden; margin:25px 0 30px 0; text-align:center; font-size:0;}
-        .password_change .btn_member_sec li{display:inline-block; margin:0 0 0 10px;}
-        .password_change .btn_member_sec li:first-child{margin:0;}
-        .password_change .password_change_tip{margin:60px 0 0 0; padding:30px 0 0 0;background:url('/design/webddle01/img/member/icon_tip.png') no-repeat 0 0;}
-        .password_change .password_change_tip p{padding:10px 0 0 0;}
-
-        /* 회원가입 정보입력 */
-        .join_base_wrap .member_tit{overflow:hidden; border-bottom:1px solid #dbdbdb;}
-        .join_base_wrap .member_tit h2{font-size:0; padding:50px 0;text-align:center;}
-        .join_base_wrap .member_tit ol{float:right; line-height: 62px;}
-        .join_base_wrap .member_tit ol li{float:left; font-size:14px; color:#d1d1d1;}
-        .join_base_wrap .member_tit .page_on{color:#060606; font-weight:bold;}
-        .join_base_wrap .member_tit li span{font-size:16px; font-weight:bold;}
-        .join_base_wrap .member_tit li span > img{padding:0 14px; vertical-align: -1px;}
-        .join_base_wrap .member_cont{width:743px; margin:0 auto; border:none;}
-        .join_base_wrap .member_cont h3{padding:0 0 17px 0; font-size:18px; color:#222222;}
-        .join_base_wrap table th{padding:10px 25px;}
-        .join_base_wrap table th span{padding:0 0 0 10px; margin: 0 0 0 -10px;}
-        .join_base_wrap .important{background:url('/design/webddle01/img/member/icon_dot_03.png') no-repeat 0 center;}
-
-        .join_type_box .type_select_sec{padding:40px 0 60px 0; border-top:1px solid #1c1c1c;}
-        .join_type_box .type_select_sec .form_element{display:block;}
-        .join_type_box .type_select_sec ul{text-align:center;}
-        .join_type_box .type_select_sec li{display:inline-block; padding: 0 13px;}
-
-        .base_info_box h3{display:inline-block;}
-        .base_info_box > span{float:right; padding:0 0 0 10px; line-height: 40px; color:#060606;}
-        .base_info_box > span img{vertical-align:middle;}
-        .base_info_box .base_info_sec{border-top:1px solid #f0f0f0;}
-        .base_info_sec table{width:100%;}
-        .base_info_sec table th{text-align:left; border-bottom:1px solid #f0f0f0; background:#f7f7f7;}
-        .base_info_sec table th:first-child,
-        .base_info_sec table td:first-child{border-left:none;}
-        .base_info_sec table td{padding:15px 0 15px 15px; border-bottom:1px solid #f0f0f0;}
-        .base_info_sec table input[type="text"]{width:380px;}
-        .base_info_sec table .form_element{display:block; margin-top:5px;}
-        /*.base_info_sec table select{margin:0 0 0 5px; padding:5.5px 4px; vertical-align:top; border:1px solid #cccccc;}*/
-        .base_info_sec table strong{font-weight:normal; color:#3f8fe6;}
-        /* 비밀번호 영역 */
-        .member_pw_change{margin:15px 0 0 0;}
-        .member_pw_change dl{padding:5px 0 5px 0; font-size:0;}
-        .member_pw_change dt{display:inline-block; width:120px; padding:5px 0 0 0; font-size:12px; font-weight:bold; vertical-align:top;}
-        .member_pw_change dd{display:inline-block; font-size:12px;}
-        .member_pw_change input[type="password"]{width:260px;}
-
-        /* 사업자 정보 */
-        .business_info_box{margin:40px 0 0 0;}
-        .business_info_box .business_info_sec{border-top:1px solid #1c1c1c;}
-        .business_info_sec table{width:100%;}
-        .business_info_sec table th{text-align:left; border-bottom:1px solid #dcdcdc; background:#fbfbfb;}
-        .business_info_sec table th:first-child,
-        .business_info_sec table td:first-child{border-left:none;}
-        .business_info_sec table td{padding:15px 0 15px 15px; border-bottom:1px solid #dcdcdc;}
-        .business_info_sec table input[type="text"]{width:380px;}
-
-        /* 부가정보 */
-        .addition_info_box{margin:40px 0 0 0;}
-        .addition_info_box .addition_info_sec{border-top:1px solid #1c1c1c;}
-        .addition_info_sec table{width:100%;}
-        .addition_info_sec table th{text-align:left; border-bottom:1px solid #dcdcdc; background:#fbfbfb;}
-        .addition_info_sec table th:first-child,
-        .addition_info_sec table td:first-child{border-left:none;}
-        .addition_info_sec table td{padding:15px 0 15px 15px; border-bottom:1px solid #dcdcdc;}
-        .addition_info_sec table input[type="text"]{width:380px;}
-        /*.addition_info_sec table select{padding:5.5px 4px; vertical-align:top; border:1px solid #cccccc;}*/
-        .addition_info_sec table li{float:left; padding:0 30px 0 0;}
-        .addition_info_sec .hobby_list li{float:left; width:33%; padding:0 0 7px 0;}
-        .addition_info_sec textarea{width:98%; height:100px; margin:0 0 10px 0;}
-        .addition_info_sec .anniversary{background:url('/design/webddle01/img/member/icon_calendar.png') no-repeat right center;}
-        .join_base_wrap .btn_member_sec ul{overflow:hidden; margin:25px 0 0 0; text-align:center; font-size:0;}
-        .join_base_wrap .btn_member_sec li{display:inline-block; margin:0 0 0 10px;}
-        .join_base_wrap .btn_member_sec li:first-child{margin:0;}
-
-        /* 회원가입 약관동의 */
-        /*.join_agreement_wrap .member_tit{overflow:hidden; border-bottom:1px solid #f0f0f0;}
-        .join_agreement_wrap .member_tit h2{ font-size:0; color:#060606;}
-        .join_agreement_wrap .member_tit ol{ line-height: 62px;float:right;}
-        .join_agreement_wrap .member_tit ol li{float:left; color:#d1d1d1;}
-        .join_agreement_wrap .member_tit .page_on{color:#060606;}
-        .join_agreement_wrap .member_tit li span{font-size:16px; font-weight:bold;}
-        .join_agreement_wrap .member_tit li span > img{padding:0 14px; vertical-align: -1px;}
-        .join_agreement_wrap .member_cont{width:743px; margin:0 auto; border:none;}
-        .join_agreement_wrap .member_cont h3{padding:0 0 17px 0; font-weight:normal; font-size:18px; color:#060606;}*/
-
-
-
-        .t_member_tit{overflow:hidden; border-bottom:1px solid #f0f0f0;}
-        .t_member_tit h2{font-size:0;padding:50px 0;text-align:center;border-bottom:1px solid #f0f0f0;}
-        .t_member_tit ol{width:743px;margin:0 auto; line-height: 62px;padding:30px 0 30px 80px;overflow:hidden;}
-        .t_member_tit ol li{float:left; color:#d1d1d1;width:220px;text-align:center;}
-        .t_member_tit .page_on{color:#060606;}
-        .t_member_tit li span{}
-        .t_member_tit li span > img{padding:0 14px; vertical-align: -1px;}
-        .t_member_cont{width:743px; margin:0 auto; border:none;}
-        .t_member_cont h3{padding:0 0 17px 0; font-weight:normal; font-size:18px; color:#060606;}
-
-
-
-        .join_agreement_wrap .join_agreement_cont{padding:30px 0 0 0; border-top:1px solid #f0f0f0;}
-        .join_agreement_cont .form_element em{font-weight:bold;}
-        .join_agreement_cont .form_element span{color:#717171; font-size:11px;}
-        .join_agreement_cont .form_element strong{color:#060606;}
-        .join_agreement_cont .form_element strong.choice{color:#060606;}
-        .join_agreement_cont .form_element span > a{padding:0 10px 0 5px; color:#060606; font-size:12px; background:url('/design/webddle01/img/member/icon_arrow_03.png') no-repeat right center; text-decoration:underline;}
-        .join_agreement_cont .form_element span > a:hover {text-decoration:underline;}
-        .join_agreement_cont .join_agreement_box{margin:0 0 30px 0;}
-        .join_agreement_cont .agreement_choice_box{padding:10px 0 0 0;}
-        .join_agreement_cont .agreement_choice_box table{width:100%;}
-        .join_agreement_cont .agreement_choice_box table th{padding:20px 0; border-top:1px solid #999999; border-left:1px solid #dcdcdc; background:#fbfbfb}
-        .join_agreement_cont .agreement_choice_box table th:first-child,
-        .join_agreement_cont .agreement_choice_box table td:first-child{border-left:none;}
-        .join_agreement_cont .agreement_choice_box table td{padding:20px 0 20px 10px; border-top:1px solid #dcdcdc; border-left:1px solid #dcdcdc; border-bottom:1px solid #dcdcdc;}
-        .join_agreement_cont .agreement_choice_box .agreement_scroll{overflow-y:scroll; height: 92px;}
-        .join_agreement_cont .important_check_box {text-align:center;}
-        .join_agreement_cont .important_check_box .important_check{display:inline-block; margin:0 auto; padding:0 0 0 18px; color:#060606; background:url('/design/webddle01/img/member/icon_caution02.png') no-repeat 0px 3px;}
-        .join_agreement_cont .agreement_box{overflow-x: hidden; overflow-y: auto; height: 89px; margin: 10px 0 0; padding: 20px; border: 1px solid #f0f0f0; border-top: 1px solid #f0f0f0;}
-
-        .join_agreement_wrap .join_certify_box{margin:30px 0 0 0;}
-        .join_agreement_wrap .join_certify_box h3{font-weight:bold;}
-        .join_agreement_wrap .join_certify_list{padding:50px 0; border-top:1px solid #999999; border-left:1px solid #e6e6e6; border-right:1px solid #e6e6e6; border-bottom:1px solid #e6e6e6;}
-        .join_agreement_wrap .join_certify_list .form_element{display:block;}
-        .join_agreement_wrap .join_certify_list ul{text-align:center;}
-        .join_agreement_wrap .join_certify_list li{display:inline-block; padding:0 13px 0 13px;}
-
-        .join_agreement_wrap .btn_member_sec ul{overflow:hidden; margin:20px 0 0 0; text-align:center; font-size:0;}
-        .join_agreement_wrap .btn_member_sec li{display:inline-block;}
-        .join_agreement_wrap .btn_member_sec li button{width:150px; height:42px; border:1px solid #6b6b6b; background:#6b6b6b; color:#fff; font-weight:bold; font-size:13px; cursor:pointer;}
-        .join_agreement_wrap .btn_member_sec li button:hover{border:1px solid #626262; color:#fff; background:#626262;}
-
-        .agreement_choice_box .form_element{text-align:center;}
-        .agreement_choice_box .form_element input{left:26px;}
-
-        /* 가입방법 선택 */
-        .member_cont .member_login_box .member_login_shop{margin:0 0 20px 0; padding:0 0 20px 0;/* border-bottom:1px solid #dcdcdc;*/}
-        .member_guide_txt{text-align:center; padding:18px 0 20px 0; color:#666666;}
-        .member_guide_txt a:hover{text-decoration:underline;}
-
-        .info_again{padding:5px 0 0 0; text-align:left; color:#929292;}
-        .info_again a{color:#060606; text-decoration:underline;}
-
-
-        /* ----------------  회원가입 레이아웃 ------------------------------ */
-
-        /* 비밀번호 */
-        .member_password{}
-        .member_password .btn_gray_list{margin:0 5px 0 0;}
-
-        /* 회원가입 이메일 */
-        .base_info_sec .member_email input[type="text"]{width:251px;}
-        .base_info_sec .member_email select{width:120px;}
-        /* 생일 */
-        .addition_info_sec .member_birthday input[type="text"]{width:180px;}
-        .addition_info_sec .member_birthday select{width:70px;}
-        /* 주소 */
-        #contents .member_address .address_postcode{overflow:hidden;}
-        #contents .member_address .address_postcode input{float:left; width:190px;}
-        #contents .member_address .address_postcode .btn_post_search{float:left; margin:0 0 0 5px; padding:5px 10px 5px 10px; border:1px solid #989898;}
-        #contents .member_address .address_input{float:left; width:72%;}
-        #contents .member_address .address_input input{margin:10px 0 0 0;}
-        /* 직업 셀렉트 박스 */
-        #contents .select_jop{width:380px;}
-        #contents .select_phone{width:80px;}
-        #contents .select_email{width:120px;}
-
-        /* 인증수단 선택 */
-        .user_certify_list{}
-        .user_certify_list li{padding:10px 0 10px 0;}
-        .user_certify_list li:first-child{padding-top:0;}
-        .user_certify_list li span{display:block; margin:5px 0 0 27px; color:#888888;}
-
-
-
-
-
-
-        /* button */
-        .cbtn{display:inline-block;font-size:11px;color:#000;min-width:98px;height:31px;line-height:32px;border:1px solid #000;text-align:center;-webkit-transition:all 0.3s ease;transition:all 0.3s ease;}
-        .cbtn.form{}
-        .cbtn.form.action{background-color:#000;color:#fff;}
-        .cbtn.form:hover{background-color:#000;color:#fff;}
-        .cbtn.form.action:hover{background-color:#fff;color:#000;}
-
-        .btnArea{}
-        .btnArea:after{content:"";display:block;clear:both;}
-        .btnArea .left{float:left;width:50%;}
-        .btnArea .right{float:right;width:50%;}
-        .btnArea .center{text-align:center;}
-
-        #join_test .page-body { width: 680px; margin: 50px auto 0;}
-        #join_test .join-form { margin-bottom:12px; border-top:1px solid #dadada; border-left:1px solid #dadada; }
-        #join_test .join-form li { position:relative; height:51px; line-height:49px; padding:0 23px; border-right:1px solid #dadada; border-bottom:1px solid #dadada; background:#fff; color:#000; }
-        #join_test .join-form li .address{ position:relative; height:49px; line-height:49px; padding:0 23px; border-right:1px solid #dadada; border-bottom:1px solid #dadada; background:#fff; color:#000; }
-        #join_test .join-form li .name_bg{border-right: 1px solid white; padding: 0px; background-color: white; position: relative;}
-        #join_test .join-form li .name_bg::after{content: ' '; display: block; background-image: url(/img/icon.svg);background-position: 0 -21px;width: 22px; height: 22px;position: absolute; left: -9px; top: -2px;}
-        #join_test .join-form li .pw_bg{border-right: 1px solid white; padding: 0px; background-color: white; position: relative;}
-        #join_test .join-form li .pw_bg::after{content: ' '; display: block; background-image: url(/img/icon.svg);background-position: -21px 0;width: 22px; height: 22px;position: absolute; left: -9px; top: -2px;}
-        #join_test .join-form li .pwc_bg{border-right: 1px solid white; padding: 0px; background-color: white; position: relative;}
-        #join_test .join-form li .pwc_bg::after{content: ' '; display: block; background-image: url(/img/icon.svg);background-position: -42px 0;width: 22px; height: 22px;position: absolute; left: -9px; top: -2px;}
-        #join_test .join-form li .email_bg{border-right: 1px solid white; padding: 0px; background-color: white; position: relative;}
-        #join_test .join-form li .email_bg::after{content: ' '; display: block; background-image: url(/img/icon.svg);background-position: 0 1px;width: 22px; height: 22px;position: absolute; left: -9px; top: -2px;}
-
-        #join_test .join-form li label { font-size:14px; font-weight:bold; }
-        #join_test .join-form li .txt-input { position:absolute; top:2px; left:52px; width:300px; height: 46px; line-height:49px; padding:0; margin:0; font-size: 15px; color:black; border: 0; opacity: 1;}
-        #join_test .join-form li .input-radio { width:14px; height:14px; margin:0; margin-top:-2px; padding:0; vertical-align:middle; }
-        #join_test .join-form li .btn { display:block; position:absolute; top:6px; right:8px; width:83px; height:34px; line-height:36px; font-size:14px; font-weight:bold; color:#fff; text-align:center; }
-        #join_test .join-form li.birth:after { clear:both; display:block; content:''; }
-        #join_test .join-form li.birth { *z-index:2; line-height:51px; }
-        #join_test .join-form li.birth .birth_txt { width:150px; margin-left:0px; font-size:13px; font-weight:bold; text-align:left; color: #0549bb; padding-bottom: 5px; }
-        #join_test .join-form li.birth dl dd { position:relative; float:left; width:100px; margin-left:10px; font-size:14px; font-weight:bold; }
-        #join_test .join-form li.birth dl dd:first-child { width:100px; margin-left:0; }
-        #join_test .join-form li.birth dl.type2 ul li { margin:0; padding:0; border:0; }
-        #join_test .join-form li.birth dl.type2 ul li .txt-input { left:0; width:90%; }
-        #join_test .join-form li.gender {}
-        #join_test .join-form li.gender label { margin-right:30px; }
-        #join_test .join-msg{margin-bottom:10px}
-        #join_test .join-msg li label { font-size:14px; font-weight:bold; }
-        #join_test .join-msg li { height:18px; line-height:18px; padding-left:2px; color:#999; }
-        #join_test .bottom-btn { padding:40px 0; text-align:center; }
-        #join_test .bottom-btn a { display:block; height:58px; line-height:62px; margin:0 auto; font-weight:bold; color:#fff; font-size:24px; text-align:center; letter-spacing:-1px; }
-        #join_test .address-form { margin-bottom:12px; border-top:1px solid #dadada; border-left:1px solid #dadada; }
-
-        #join_test  li .address_bg{border-right: 1px solid white; padding: 0px; background-color: white; position: relative;}
-        #join_test  li .address_bg::after{content: ' '; display: block; background-image: url(/img/address.svg);background-position: 0 1px;width: 22px; height: 22px;position: absolute; left: -9px; top: -2px;}
-
-
-        #sms_btn,
-        .sms_num { position:absolute; top:0; left:323px }
-
-        /* 약관 동의 */
-        #join_test .tb-l { text-align: left; }
-        #join_test .tb-c { text-align: center; }
-        #join_test .pl-30 { padding-left: 15px; }
-        #join_test .pl-6 { padding-left: 6px; }
-        #join_test .pt-10 { padding-top:10px; }
-        #join_test .pb-10 { padding-bottom:10px; }
-        #join_test .ml-30 { margin-left:0px !important; }
-        #join_test .p10 { padding:10px; }
-        #join_test .input-cbox { width:12px; height:12px; padding:0; margin:0; margin-top:-3px; *margin-top:1px; vertical-align:middle; *vertical-align:top; }
-        #join_test .new-btn-area { text-align: center; margin:20px 0 0; padding-bottom:30px; border-bottom:1px solid #ececec; }
-        #join_test .new-btn-area button { display:block; width:234px; height:64px; line-height:66px; margin:0 auto; font-size:22px;color:#fff; background:#060606; border:1px solid #060606; font-weight: bold;}
-        #chkwrap { border:1px solid #dedede; }
-        #chkwrap .all-chk { height:43px; line-height:45px; padding-left:20px; font-size:14px; font-weight:bold; color:#000; border-bottom:1px solid #dedede; }
-        #chkwrap .all-chk .input-cbox { width:14px; height:14px; padding:0; margin:0; margin-top:-3px; *margin-top:0; vertical-align:middle; *vertical-align:top; }
-        #chkwrap .cont ul:after { clear: both; content: ""; display: block; }
-        #chkwrap .cont ul {  width: 500px; padding-left: 30px !important; padding-bottom:15px; }
-        #chkwrap .cont ul li { float:left; width:220px !important; padding-left:0px; line-height:18px; letter-spacing:-1px; }
-        #chkwrap .cont ul li.w240 { width:240px; padding-left:0; }
-        #chkwrap .cont ul li a { display:inline-block; width:50px !important; height:16px; line-height:20px; *line-height:18px; font-weight:normal; font-size:11px; border:1px solid #bdbec7; background:#fafafa; text-align:center; }
-        #chkwrap .cont strong { color:#000; }
-        #chkwrap .cont label { font-weight:bold; }
-        #chkwrap .cont .marketing { padding-left:30px; border-top:1px dashed #dadada; line-height:18px; position: repative; }
-        #chkwrap .cont .marketing .mk-wrap { height:44px; line-height:46px; }
-
-        h4.tit { margin-top: 50px; margin-bottom: 5px; padding-left:5px; font-size: 14px; font-weight: bold; }
-
-        /* 이용 약관 */
-        #join_test .privercy-contract textarea {
-            width: 100%;
-            white-space: break-spaces;
-            height:165px; }
-        /* 개인정보 수집이용, 제3제공, 취급위탁 테이블 */
-        #join_test .contract-tbl { width:100%; border-spacing:0; border-collapse:collapse; }
-        #join_test .contract-tbl th,
-        #join_test .contract-tbl td { border:1px solid #e0e0e0; text-align:center; }
-        #join_test .contract-tbl th {
-            width: 15%; background: #fcfcfc; }
-        #join_test .contract-tbl th div { height:41px; line-height:43px; }
-        #join_test .contract-tbl tbody th { font-weight:normal; }
-
-        #join_test .btm-msg { padding-top:30px; line-height:18px; }
-
-        .join-footer{text-align:center;padding-top:15px;}
-        .join-footer .cbtn.form{width:288px;height:58px;line-height:58px;font-size:16px;margin:0 5px;}
-        /* BASIC css end */
-
-        /* 약관 동의 */
-        #chkwrap .tb-l { text-align: left; }
-        #chkwrap .tb-c { text-align: center; }
-        #chkwrap .pl-30 { padding-left: 15px; }
-        #chkwrap .pl-6 { padding-left: 6px; }
-        #chkwrap .pt-10 { padding-top:10px; }
-        #chkwrap .pb-10 { padding-bottom:10px; }
-        #chkwrap .ml-30 { margin-left:30px; }
-        #chkwrap .p10 { padding:10px; }
-        #chkwrap { border:1px solid #dedede; background: #ffffff; }
-        #chkwrap .all-chk { height:43px; line-height:45px; padding-left:20px; font-size:14px; font-weight:bold; color:#000; border-bottom:1px solid #dedede; }
-        #chkwrap .all-chk .input-cbox { width:14px; height:14px; *margin-top:0; }
-        #chkwrap .cont ul:after { clear: both; content: ""; display: block; }
-        #chkwrap .cont ul { width: 600px; }
-        #chkwrap .cont ul li { float:left; width:270px; line-height:18px; }
-        #chkwrap .cont ul li a { display:inline-block; width:60px; height:16px; line-height:20px; *line-height:18px; margin-top:-2px; font-weight:normal; font-size:11px; border:1px solid #bdbec7; background:#fafafa; text-align:center; }
-        #chkwrap .cont strong { color:#000; }
-        #chkwrap .cont label { font-weight:bold; }
-        #chkwrap .cont .marketing { padding-left:30px; border-top:1px dashed #dadada; line-height:18px; }
-        #chkwrap .cont .marketing .mk-wrap { height:44px; line-height:46px; }
-        #chkwrap .cont .marketing .mk-wrap input { margin-top:-1px; *margin-top:0; }
-
-        .new-btn-area { text-align: center; margin:20px 0 0; padding-bottom:30px; border-bottom:1px solid #ececec; }
-        .new-btn-area a { display:block; width:234px; height:64px; line-height:66px; margin:0 auto; font-size:22px; font-weight:bold; color:#fff; background:#0549bb; border:1px solid #053688; }
-        h4.tit { margin-top: 50px; margin-bottom: 5px; padding-left:5px; font-size: 14px; font-weight: bold; }
-
-        /* 이용 약관 */
-        /* 개인정보 수집이용, 제3제공, 취급위탁 테이블 */
-        .new-privercy-contract .p10 { padding:10px; }
-        .new-privercy-contract textarea { width:97%; height: 70px; }
-        .new-privercy-contract .contract-tbl { width:100%; border-spacing:0; border-collapse:collapse; }
-        .new-privercy-contract .contract-tbl th,
-        .new-privercy-contract .contract-tbl td { border:1px solid #e0e0e0; text-align:center; }
-        .new-privercy-contract .contract-tbl th { background: #fcfcfc; }
-        .new-privercy-contract .contract-tbl th div { height:41px; line-height:43px; }
-        .new-privercy-contract .contract-tbl tbody th { font-weight:normal; }
-
-        .btm-msg { padding-top:30px; line-height:18px; }
-
-        /* layout */
-        .content_box{width:100%;}
-        .content_box2{width:1200px;margin:30px auto;}
-
-        input:-webkit-autofill {
-            background-color: white !important; /* 자동완성으로 입력된 배경색을 흰색으로 고정 */
-            color: black !important; /* 글자 색상도 고정 */
-            -webkit-box-shadow: 0 0 0 1000px white inset !important; /* 배경색을 덮어쓰기 */
-            box-shadow: 0 0 0 1000px white inset !important; /* box-shadow로 배경 덮어쓰기 */
-        }
     </style>
-
-
 </th:block>
 
 <!-- 사용자 스크립트 추가 -->
@@ -649,6 +79,53 @@
             });
 
         });
+        // 유효성 검사 함수
+        function validateForm() {
+            var allChecked = $('.every_agree').length === $('.every_agree:checked').length;
+            var password = $('#password').val();
+            var confirmPassword = $('#confirmPassword').val();
+            var email = $('#email').val();
+
+            // 이용약관과 개인정보 수집 동의가 모두 체크되지 않았으면 경고
+            if (!allChecked) {
+                alert("이용약관과 개인정보 수집에 모두 동의해야 합니다.");
+                return false; // 폼 제출 중단
+            }
+
+            // 비밀번호와 비밀번호 확인 일치 여부 검증
+            if (password !== confirmPassword) {
+                alert("비밀번호가 일치하지 않습니다.");
+                return false; // 폼 제출 중단
+            }
+
+            // 이메일 중복 확인 (AJAX 요청)
+            return checkEmailExists(email);
+        }
+
+        // 이메일 중복 확인 함수
+        function checkEmailExists(email) {
+            var emailExists = false;
+            $.ajax({
+                url: '/check-email',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ email: email }),
+                async: false, // 동기식 요청
+                success: function(response) {
+                    if (response.exists) {
+                        alert("이미 가입된 이메일입니다.");
+                        emailExists = true;
+                    }
+                },
+                error: function() {
+                    alert("이메일 확인 중 오류가 발생했습니다.");
+                    emailExists = true; // 오류 발생 시 폼 제출 중단
+                }
+            });
+
+            // 이메일 중복이 있으면 false 반환, 없으면 true 반환하여 폼 제출 허용
+            return !emailExists;
+        }
         function sample4_execDaumPostcode() {
             new daum.Postcode({
                 oncomplete: function(data) {
@@ -724,7 +201,11 @@
                         </div>
                         <!-- //member_tit -->
                         <div class="member_cont" style="width:780px;">
-                            <form action="/members/new" role="form" method="post" enctype="multipart/form-data" th:object="${memberFormDto}">
+                            <form action="/members/new" role="form" method="post" enctype="multipart/form-data" th:object="${memberFormDto}" onsubmit="">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <div th:if="${errorMessage}">
+                                    <p style="color: red;" th:text="${errorMessage}"></p>
+                                </div>
                             <div id="join_test">
                                     <div class="box-wrap">
                                     <ul class="join-form" style="margin-bottom: 41px;">
@@ -739,7 +220,7 @@
                                         </li>
                                         <li>
                                             <span class="pw_bg"><!-- 배경이미지(패스워드) --></span>
-                                            <input type="password" name="password1" id="password1" class="MS_input_txt w137 txt-input input-label" value="" size="15" maxlength="20" placeholder="비밀번호">
+                                            <input type="password" th:field="*{password}" id="password1" class="MS_input_txt w137 txt-input input-label" value="" size="15" maxlength="20" placeholder="비밀번호">
                                         </li>
                                         <li>
                                             <span class="pwc_bg"><!-- 배경이미지(패스워드 체크) --></span>
@@ -752,18 +233,18 @@
                                     <ul class="join-form">
                                         <li class="address">
                                             <span class="address_bg" style="color: #dadada;"><!-- 배경이미지(주소) --></span>
-                                            <input class="MS_input_txt w137 txt-input input-label" id="sample4_postcode" placeholder="우편번호"  type="text" readonly="readonly" >
+                                            <input class="MS_input_txt w137 txt-input input-label" id="sample4_postcode" placeholder="우편번호"  type="text" th:field="*{zoneCode}" readonly="readonly" >
                                             <button type="button" class="btn btn-default" style="position: relative;width: 184px;height: 50px; top: -49px;left: 450px;background-color: white;border-left: 1px solid #eeeeee;border-collapse: separate; z-index: 999;color: gray;" onclick="sample4_execDaumPostcode()">
                                                 <i class="fa fa-search"></i> 우편번호 찾기
                                             </button>
                                         </li>
                                         <li >
-                                            <input class="MS_input_txt w137 txt-input input-label" type="text" id="sample4_roadAddress" placeholder="도로명 주소" readonly="readonly" />
+                                            <input class="MS_input_txt w137 txt-input input-label" type="text" th:field="*{roadAddress}" id="sample4_roadAddress" placeholder="도로명 주소" readonly="readonly" />
                                             <input class="MS_input_txt w137 txt-input input-label" type="text" id="sample4_extraAddress" style="left: 478px; width:177px; padding-left: 15px;">
 
                                         </li>
                                         <li >
-                                            <input class="MS_input_txt w137 txt-input input-label" type="text" id="sample4_detailAddress"  placeholder="상세주소" >
+                                            <input class="MS_input_txt w137 txt-input input-label" type="text" th:field="*{detailAddress}" id="sample4_detailAddress"  placeholder="상세주소" >
 
                                         </li>
                                     </ul>
@@ -786,12 +267,14 @@
                                                     <ul>
                                                         <li class="ml-30 pt-10">
                                                             <label>
-                                                                <input type="checkbox" name="yaok2" id="yaok2" value="Y" class="input-cbox every_agree"> 이용약관</label>
+                                                                <input type="checkbox" name="yaok2" id="yaok2" value="Y" class="input-cbox every_agree"> 이용약관
+                                                            </label>
                                                             <a href="#chk_cont1">내용보기</a>
                                                         </li>
                                                         <li class="ml-30 pt-10">
                                                             <label>
-                                                                <input type="checkbox" name="privacy1" id="privacy1" value="agree_uidB" class="input-cbox every_agree"> 개인정보 수집 및 이용 안내</label>
+                                                                <input type="checkbox" name="privacy1" id="privacy1" value="agree_uidB" class="input-cbox every_agree"> 개인정보 수집 및 이용 안내
+                                                            </label>
                                                             <a href="#chk_cont2">내용보기</a>                </li>
                                                     </ul>
                                                 </div>
