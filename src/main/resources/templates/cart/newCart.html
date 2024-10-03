@@ -210,6 +210,17 @@
                 }
             });
         }
+        function checkAllItems() {
+            $('input[name="basket_product_normal_type_normal"]').prop('checked', true);
+        }
+
+        function orderAllItems() {
+            // 모든 항목 체크
+            checkAllItems();
+
+            // 기존의 선택된 항목을 주문하는 함수 호출
+            orderCheckedItems();
+        }
     </script>
 </th:block>
 
@@ -500,7 +511,8 @@
                         </div>
                     </div>
                     <div class="xans-element- xans-order xans-order-totalorder ec-base-button justify">
-                        <button href="#none" onclick="Basket.orderAll(this)" link-order="/order/orderform.html?basket_type=all_buy" link-login="/member/login.html" class=" buyAll "
+<!--                        link-order="/order/orderform.html?basket_type=all_buy" link-login="/member/login.html" -->
+                        <button onclick=" orderAllItems()"  class="buyAll"
                            style="background-color: #e53d2f;
                                     border-color: #e53d2f;
                                     color: #fff;
@@ -612,10 +624,17 @@ $mode = basket
 
                 <div class="xans-element- xans-myshop xans-myshop-wishlistpaging ec-base-paginate">
                     <!-- $mode = basket -->
-                    <a href="#none" class="first"><img src="/web/upload/img/bt_first.png" alt="첫 페이지"></a>
+                    <a href="#none" class="first">
+                        <img src="/web/upload/img/bt_first.png" alt="첫 페이지"></a>
                     <a href=""><img src="/web/upload/img/bt_prev.png" alt="이전 페이지"></a>
                     <ol>
-                        <li class="xans-record-"><a href="?page=1" class="this">1</a></li>
+                        <li class="xans-record-" style="border: transparent">
+                            <a href="?page=1" class="this"
+                                                    style="padding-bottom: 0px;color: #E7141A;display: block;
+                                                        width: 22px;margin: 0px 0 3px 0;font-weight: 500;color: #111;
+                                                        line-height: 15px;font-size: 12px;background: #fff;border: transparent">1
+                            </a>
+                        </li>
                     </ol>
                     <a href="#none"><img src="/web/upload/img/bt_next.png" alt="다음 페이지"></a>
                     <a href="#none" class="last"><img src="/web/upload/img/bt_last.png" alt="마지막 페이지"></a>

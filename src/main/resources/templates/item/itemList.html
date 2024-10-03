@@ -67,8 +67,9 @@
                                                 </a>
                                                 <div class="listOver">
                                                     <p class="oZoom">
+                                                        <a th:href="@{'http://localhost:9091/item/' + ${item.itemId}}">
                                                         <img
-                                                                src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><rect fill-opacity="0"/></svg>'
+                                                                src="/web/upload/icon/search-outline.svg"
                                                                 style="
                                                             cursor: pointer;
                                                             background-blend-mode: normal !important;
@@ -82,10 +83,11 @@
                                                         "
                                                                 alt="상품 큰 이미지 보기"
                                                         />
+                                                        </a>
                                                     </p>
                                                     <p class="oWish">
                                                         <img
-                                                                src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><rect fill-opacity="0"/></svg>'
+                                                                src="/web/upload/icon/heart-outline.svg"
                                                                 class="icon_img ec-product-listwishicon"
                                                                 alt="관심상품 등록 전"
                                                                 productno="53163"
@@ -107,7 +109,7 @@
                                                     </p>
                                                     <p class="oCart">
                                                         <img
-                                                                src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><rect fill-opacity="0"/></svg>'
+                                                                src="/web/upload/icon/shopping_cart_icon.svg"
                                                                 alt="장바구니 담기"
                                                                 class="ec-admin-icon cart"
                                                                 style="
