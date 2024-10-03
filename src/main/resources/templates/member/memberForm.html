@@ -202,7 +202,7 @@
                         <!-- //member_tit -->
                         <div class="member_cont" style="width:780px;">
                             <form action="/members/new" role="form" method="post" enctype="multipart/form-data" th:object="${memberFormDto}" onsubmit="">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
                                 <div th:if="${errorMessage}">
                                     <p style="color: red;" th:text="${errorMessage}"></p>
                                 </div>
@@ -567,6 +567,7 @@
                                     </fieldset>
                                     <!-- use_contract -->
                                 </div>
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                 </form>                    </div><!-- #terms -->
                         </div>
                         <!-- //member_cont -->
