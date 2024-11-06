@@ -26,6 +26,10 @@ spring:
 
 logging:
   level:
+    com:
+      mysql:
+        cj:
+          jdbc=DEBUG:
     org.hibernate.type.descriptor.sql.BasicBinder: trace
 
 #파일 한 개당 최대 사이즈
