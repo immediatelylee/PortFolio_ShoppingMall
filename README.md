@@ -19,7 +19,7 @@ Mary market Version 3 (2024 9.1 ~ 현재)
     <img src="https://img.youtube.com/vi/dvROwZE9FsQ/0.jpg" alt="포트폴리오 설명 영상">
 </a>
 
-[전체 프로젝트설명 영상 바로가기](https://www.youtube.com/watch?v=dvROwZE9FsQ)   전체 프로젝트 설명입니다 해당 링크 우클릭하여 새탭 열기를 부탁드립니다.😊
+[전체 프로젝트설명 영상 바로가기](https://www.youtube.com/watch?v=dvROwZE9FsQ)   - 전체 프로젝트 설명입니다 해당 링크 우클릭하여 새탭에서 링크열기를 부탁드립니다.😊
 
 * 프로젝트의 각 기능을 설명한 부분을 모아서 연결한 영상입니다.
 * 영상 아래는 각 기능을 나눠서 설명한 부분이며 이 영상을 한번 보는것이 더 프로젝트를 이해하기 좋습니다.
