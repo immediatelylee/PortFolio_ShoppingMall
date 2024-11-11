@@ -5,67 +5,53 @@
 
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
-<!--    <style>-->
-<!--        .carousel-inner > .item {-->
-<!--            height: 250px;-->
-<!--        }-->
-<!--        .margin{-->
-<!--            margin-bottom:30px;-->
-<!--        }-->
-<!--        .banner{-->
-<!--            height: 200px;-->
-<!--        }-->
-<!--        .card-text{-->
-<!--            text-overflow: ellipsis;-->
-<!--            white-space: nowrap;-->
-<!--            overflow: hidden;-->
-<!--        }-->
-<!--        a:hover{-->
-<!--            text-decoration:none;-->
-<!--        }-->
-<!--        .center{-->
-<!--            text-align:center;-->
-<!--        }-->
-<!--        .banner{-->
-<!--            position: absolute; top:100; left: 100;-->
-<!--            /*width: 100%;*/-->
-<!--            /*height: 100%;*/-->
-<!--        }-->
-<!--    </style>-->
+
 </th:block>
 
 <div layout:fragment="content">
 
-    <div class="slide_wrapper">
 
-        <ul class="slides">
-            <li><a href="#"><img src="/img/banner/pc_mainBnr_2.jpg"></a></li>
-            <li><a href="#"><img src="/img/banner/pc_mainBnr_4.jpg"></a></li>
-            <li><a href="#"><img src="/img/banner/pc_mainBnr_5.jpg"></a></li>
-            <li><a href="#"><img src="/img/banner/pc_mainBnr_7.jpg"></a></li>
-        </ul>
+        <div class="bxslider">
+            <div><img src="/img/banner/pc_mainBnr_2.jpg"></div>
+            <div><img src="/img/banner/pc_mainBnr_4.jpg"></div>
+            <div><img src="/img/banner/pc_mainBnr_5.jpg"></div>
+            <div><img src="/img/banner/pc_mainBnr_7.jpg"></div>
 
-    </div>
+            <!-- 커스텀 컨트롤 박스 -->
+<!--            <div class="custom-controls">-->
+<!--                <div id="prevSlide" class="control-icon prev"></div>-->
+<!--                <div id="nextSlide" class="control-icon next"></div>-->
+<!--                <div id="autoToggle" class="control-icon auto"></div>-->
+<!--                <span id="slideIndex">1 / n</span>-->
+<!--            </div>-->
+        </div>
+        <script></script>
 
 
 
-    <ul class="controls">
-        <span class="pauseplay">
-            <a class="toggle"> ||</a>
-        </span>
-        <li class="slideprev">
-            <!-- <a class="prev"><img src="./img/prev.png" alt="">prev</a> -->
-            <a class="prev"><img src="#" alt=""></a>
-
-        </li>
-        <span class="slideText">1/9</span>
-        <li class="slidenext">
-            <!-- <a class="next"><img src="./img/next.png" alt="">next</a> -->
-            <a class="next"><img src="#" alt=""></a>
-
-        </li>
-    </ul>
-    <script src="/js/real_slide.js"></script>
+<!--    <div class="slide_wrapper">-->
+<!--        <ul class="slides">-->
+<!--            <li><a href="#"><img src="/img/banner/pc_mainBnr_2.jpg"></a></li>-->
+<!--            <li><a href="#"><img src="/img/banner/pc_mainBnr_4.jpg"></a></li>-->
+<!--            <li><a href="#"><img src="/img/banner/pc_mainBnr_5.jpg"></a></li>-->
+<!--            <li><a href="#"><img src="/img/banner/pc_mainBnr_7.jpg"></a></li>-->
+<!--        </ul>-->
+<!--    </div>-->
+<!--    <ul class="controls">-->
+<!--        <span class="pauseplay">-->
+<!--            <a class="toggle"> ||</a>-->
+<!--        </span>-->
+<!--        <li class="slideprev">-->
+<!--            &lt;!&ndash; <a class="prev"><img src="./img/prev.png" alt="">prev</a> &ndash;&gt;-->
+<!--            <a class="prev"><img src="#" alt=""></a>-->
+<!--        </li>-->
+<!--        <span class="slideText">1/9</span>-->
+<!--        <li class="slidenext">-->
+<!--            &lt;!&ndash; <a class="next"><img src="./img/next.png" alt="">next</a> &ndash;&gt;-->
+<!--            <a class="next"><img src="#" alt=""></a>-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--    <script src="/js/real_slide.js"></script>-->
 
 <!--mdpick-->
     <p class="mainTitle"><b>WEEKLY</b> SALE <br></p>
