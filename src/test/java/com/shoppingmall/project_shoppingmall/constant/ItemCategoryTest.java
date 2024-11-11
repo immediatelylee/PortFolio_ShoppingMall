@@ -17,7 +17,7 @@ class ItemCategoryTest {
     }
 
     @Test
-    @DisplayName("카테고리 도메인 테스트 - ROOT의 상위카테고리는 없다.")
+    @DisplayName("카테고리 도메인 테스트 - ROOT의 상위카테고리는 없다")
     void rootGetParentCategoryIsEmptyTest() {
         Optional<ItemCategory> rootParentCategory = ItemCategory.ROOT.getParentItemCategory();
 
@@ -35,7 +35,7 @@ class ItemCategoryTest {
 
 
     @Test
-    @DisplayName("키테고리 도메인 테스트 - FASHION_CHILDREN의 하위카테고리에 TV가 없다.")
+    @DisplayName("카테고리 도메인 테스트 - FASHION_CHILDREN의 하위카테고리에 TV가 없다.")
     void fashionChildrenGetSubCategoriesNotContainsTVTest() {
         List<ItemCategory> fashionChildrenSubCategories = ItemCategory.FASHION_CHILDREN.getChildCategories();
 
