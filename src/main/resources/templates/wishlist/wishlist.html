@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout5-cart}">
+
+
+<th:block layout:fragment="script">
+    <script>
+
+        function deleteWishlistItem(element) {
+            console.log("start")
+            var wishlistItemId  = element.getAttribute("data-wishlistitem-id");
+
+            // CSRF 토큰 설정 (Spring Security 사용 시)
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+
+            // 서버에 Ajax 요청 보내기 - wishlist페이지에서 각 row의 삭제버튼 클릭시
+            $.ajax({
+                url: `/wishlist/delete`, // 새 URL
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ wishlistItemId: wishlistItemId }), // JSON 형태로 데이터 전달
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function (response) {
+                    alert("위시리스트에서 상품이 삭제되었습니다.");
+                    window.location.href = "/wishlist";  //리다이렉트
+                },
+                error: function () {
+                    alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+                }
+            });
+        }
+    </script>
+</th:block>
+
+<div layout:fragment="content">
+    <div class="wrap">
+        <div id="container">
+            <div id="contents" data-aos="fade-in" class="aos-init aos-animate">
+
+                <style>
+                    .ec-base-table thead th { padding:18px 0; border-top:1px solid #bbb;border-bottom:1px solid #bbb;font-size:11px; color:#222; vertical-align:middle; font-weight:normal;  letter-spacing:0.5px; }
+                    .total  { width:90%; margin:0 auto}
+                    .total thead th  { padding:0px 0; border-top:1px solid #fff;border-bottom:1px solid #ececec;font-size:11px; }
+                    .total thead th strong {font-weight:400 }
+
+                    /* 230113 MAY-POP.COM */
+                    .xans-order-totalorder { width: 90%; margin: 10px auto 40px !important; display: -webkit-box; display: -ms-flexbox; display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap; }
+                    .xans-order-totalorder > a { -webkit-box-flex: 1; -ms-flex: 1; flex: 1; width: 31.333%; margin: 0 0 0 1%; border: 1px solid #dcdcdc; border-radius: 2px; font-size: 13px; line-height: 50px; text-align: center; background: #fff; box-sizing: border-box; }
+                    .xans-order-totalorder > a:first-child { margin: 0; }
+                    .xans-order-totalorder > a.buyAll { background-color: #e53d2f; border-color: #e53d2f; color: #fff; }
+                </style>
+
+                <div class="titleArea">
+                    <h2>WISH LIST</h2>
+                </div>
+
+
+                </div>
+<!--여기부터 관심상품-->
+                <div class="xans-element- xans-myshop xans-myshop-wishlist ec-base-table typeList  xans-record-"><!--
+$login_page = /member/login.html
+$count = 5
+$mode = basket
+-->
+                    <div class="title">
+                        <h3>관심상품</h3>
+                    </div>
+
+                    <table border="1" summary="">
+                        <caption>관심상품 목록</caption>
+                        <colgroup>
+                            <col style="width:27px">
+                            <col style="width:92px">
+                            <col style="width:auto">
+                            <col style="width:105px">
+                            <col style="width:100px">
+                            <col style="width:100px">
+                            <col style="width:85px">
+                            <col style="width:105px">
+                            <col style="width:110px">
+                        </colgroup>
+                        <thead><tr>
+                            <th scope="col"><input type="checkbox"></th>
+                            <th scope="col">이미지</th>
+                            <th scope="col">상품정보</th>
+                            <th scope="col">판매가</th>
+                            <th scope="col" class="mileage">적립금</th>
+                            <th scope="col">배송구분</th>
+                            <th scope="col">배송비</th>
+                            <th scope="col">합계</th>
+                            <th scope="col">선택</th>
+                        </tr></thead><tbody class="xans-element- xans-myshop xans-myshop-wishlistitem center">
+                    <th:block th:each="wishlistItem,iterStat : ${wishlistItems}">
+                    <tr class="xans-record-">
+                        <td>
+                            <input type="checkbox" name="basket_product_normal_type_normal" th:value="${wishlistItem.wishlistItemId}" th:data-index="${wishlistItem.wishlistItemId}" checked>
+                        </td>
+                        <td class="thumb">
+                            <a href="상품위치 등록해야함.">
+                                <img th:src="@{${wishlistItem.imgUrl}}" style="max-width: 80px">
+                            </a>
+                        </td>
+                        <td class="left">
+                            <strong class="name">
+                                <a href="상품위치 등록해야함." th:utext="${wishlistItem.itemNm} + ' <br> ' + ${wishlistItem.itemCode}">상품명<br>상품코드</a>
+                            </strong>
+                        </td>
+                        <td class="price right">
+                            <strong th:class="'product_price_s_'+${wishlistItem.wishlistItemId}" th:text="'₩' + ${#numbers.formatInteger(wishlistItem.price, 0, 'COMMA')}">₩초기값</strong>
+                        </td>
+                        <td><span class="txtInfo">-</span></td>
+                        <td><div class="txtInfo">기본배송<br></div></td>
+                        <td>
+                            <span class="">₩2,500<br></span> 조건</td>
+                        <td class="price right">₩45,500</td>
+                        <td class="button">
+<!--                            <a href="#none" style="width: 90px;height: 22px;margin: 1px 0;padding: 0px 0px 20px 1px;border: 1px solid transparent;background-color: #333;vertical-align: middle;/* text-align: center; */" onclick="CAPP_SHOP_NEW_PRODUCT_OPTIONSELECT.selectOptionCommon(8978,  29, 'wishlist', '')" class="btnSubmit ">주문</a>-->
+                            <a href="#none" style="width: 90px;margin: 1px 0;padding: 5px 8px;border: 1px solid #ececec" onclick="CAPP_SHOP_NEW_PRODUCT_OPTIONSELECT.selectOptionCommon(8978,  29, 'wishlist', '')" class="btnNormal ">장바구니</a>
+                            <a href="#none" style="width: 90px;margin: 1px 0;padding: 5px 8px;border: 1px solid #ececec" class="btnNormal btn_wishlist_del" onclick="deleteWishlistItem(this)" th:data-wishlistitem-id="${wishlistItem.wishlistItemId}"><i class="icoDelete"></i> 삭제</a>
+                        </td>
+                    </tr>
+                    </th:block>
+                    </tbody>
+                    </table>
+                    <p class="message displaynone">관심상품 내역이 없습니다.</p>
+                </div>
+<!--여기 네비게이터-->
+                <div class="xans-element- xans-myshop xans-myshop-wishlistpaging ec-base-paginate">
+                    <!-- $mode = basket -->
+                    <a href="#none" class="first">
+                        <img src="/web/upload/img/bt_first.png" alt="첫 페이지"></a>
+                    <a href=""><img src="/web/upload/img/bt_prev.png" alt="이전 페이지"></a>
+                    <ol>
+                        <li class="xans-record-" style="border: transparent">
+                            <a href="?page=1" class="this"
+                                                    style="padding-bottom: 0px;color: #E7141A;display: block;
+                                                        width: 22px;margin: 0px 0 3px 0;font-weight: 500;color: #111;
+                                                        line-height: 15px;font-size: 12px;background: #fff;border: transparent">1
+                            </a>
+                        </li>
+                    </ol>
+                    <a href="#none"><img src="/web/upload/img/bt_next.png" alt="다음 페이지"></a>
+                    <a href="#none" class="last"><img src="/web/upload/img/bt_last.png" alt="마지막 페이지"></a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</html>
