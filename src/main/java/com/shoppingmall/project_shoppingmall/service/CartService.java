@@ -115,40 +115,6 @@ public class CartService {
         cartItemRepository.deleteAll(cartItems);
     }
 
-    //상품에서 장바구니
-//    public List<CartDetailDto> orderCartItem(List<Long> cartItemIds) {
-//        List<CartItem> cartItems = cartRepository.findByIdIn(cartItemIds);
-//        return cartItems.stream()
-//                .map(cartItem -> new CartDetailDto(cartItem)) // CartDetailDto로 변환하는 로직
-//                .collect(Collectors.toList());
-//    }
-
-
-    // 장바구니 주문
-//    public Long orderCartItem(List<CartOrderDto> cartOrderDtoList, String email){
-//        List<OrderDto> orderDtoList = new ArrayList<>();
-//
-//        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
-//            CartItem cartItem = cartItemRepository
-//                    .findById(cartOrderDto.getCartItemId())
-//                    .orElseThrow(EntityNotFoundException::new);
-//
-//            OrderDto orderDto = new OrderDto();
-//            orderDto.setItemId(cartItem.getItem().getId());
-//            orderDto.setCount(cartItem.getCount());
-//            orderDtoList.add(orderDto);
-//        }
-//
-//        Long orderId = orderService.orders(orderDtoList, email);
-//        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
-//            CartItem cartItem = cartItemRepository
-//                    .findById(cartOrderDto.getCartItemId())
-//                    .orElseThrow(EntityNotFoundException::new);
-//            cartItemRepository.delete(cartItem);
-//        }
-//
-//        return orderId;
-//    }
 
     public List<CartItem> getCartItems() {
         return cartItemRepository.findAll();

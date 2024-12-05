@@ -5,7 +5,46 @@
 
 <th:block layout:fragment="script">
     <script>
+        function toggleWishlist(element) {
 
+            var itemId = element.getAttribute("data-item-id");
+            var currentSrc = element.getAttribute("src");
+
+            // CSRF 토큰 설정 (Spring Security 사용 시)
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            // 빈 하트와 채워진 하트의 경로
+            var emptyHeart = "/web/upload/icon/heart-outline.svg";
+            var filledHeart = "/web/upload/icon/heart-filled.png";
+
+            // 추가 또는 삭제 요청 URL
+            var url = currentSrc === emptyHeart ? `/wishlist` : `/wishlist/remove`;
+
+
+            // 서버에 요청
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: "application/json",
+                data: JSON.stringify({ itemId: itemId }),
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function () {
+                    // src 속성 변경 (빈 하트 ↔ 채워진 하트)
+                    element.setAttribute("src", currentSrc === emptyHeart ? filledHeart : emptyHeart);
+                },
+                error: function (xhr) {
+                    if (xhr.status === 401) {
+                        // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+                        window.location.href = "/members/login";
+                    } else {
+                        alert("위시리스트 업데이트에 실패했습니다.");
+                    }
+                }
+            });
+        }
     </script>
 </th:block>
 <div layout:fragment="content">
@@ -85,25 +124,45 @@
                                                         />
                                                         </a>
                                                     </p>
+<!--                                                    th:if="${wishlistItemIds.contains(item.itemId)}"-->
+<!--                                                    th:src="@{/web/upload/icon/heart-filled.png}"-->
                                                     <p class="oWish">
                                                         <img
-                                                                src="/web/upload/icon/heart-outline.svg"
+                                                                th:if="${wishlistItemIds.contains(item.itemId)}"
+                                                                th:src="@{/web/upload/icon/heart-filled.png}"
+
                                                                 class="icon_img ec-product-listwishicon"
                                                                 alt="관심상품 등록 전"
-                                                                productno="53163"
-                                                                categoryno="7925"
-                                                                icon_status="off"
-                                                                login_status="T"
-                                                                individual-set="F"
+                                                                th:data-item-id="${item.itemId}"
+                                                                onclick="toggleWishlist(this)"
                                                                 style="
-                                                            background-blend-mode: normal !important;
-                                                            background-clip: content-box !important;
-                                                            background-position: 50% 50% !important;
-                                                            background-color: rgba(0, 0, 0, 0) !important;
-                                                            background-image: var(--sf-img-54) !important;
-                                                            background-size: 100% 100% !important;
-                                                            background-origin: content-box !important;
-                                                            background-repeat: no-repeat !important;
+                                                        background-blend-mode: normal !important;
+                                                        background-clip: content-box !important;
+                                                        background-position: 50% 50% !important;
+                                                        background-color: rgba(0, 0, 0, 0) !important;
+                                                        background-image: var(--sf-img-54) !important;
+                                                        background-size: 100% 100% !important;
+                                                        background-origin: content-box !important;
+                                                        background-repeat: no-repeat !important;
+                                                        "
+                                                        />
+                                                        <img
+                                                                th:unless="${wishlistItemIds.contains(item.itemId)}"
+                                                                th:src="@{/web/upload/icon/heart-outline.svg}"
+
+                                                        class="icon_img ec-product-listwishicon"
+                                                        alt="관심상품 등록 전"
+                                                        th:data-item-id="${item.itemId}"
+                                                        onclick="toggleWishlist(this)"
+                                                        style="
+                                                        background-blend-mode: normal !important;
+                                                        background-clip: content-box !important;
+                                                        background-position: 50% 50% !important;
+                                                        background-color: rgba(0, 0, 0, 0) !important;
+                                                        background-image: var(--sf-img-54) !important;
+                                                        background-size: 100% 100% !important;
+                                                        background-origin: content-box !important;
+                                                        background-repeat: no-repeat !important;
                                                         "
                                                         />
                                                     </p>
