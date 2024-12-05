@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.*;
 import javax.persistence.*;
 import javax.validation.*;
 import java.io.*;
+import java.security.Principal;
 import java.util.*;
 import java.util.stream.*;
 
@@ -28,6 +29,7 @@ public class ItemController {
     private final ItemService itemService;
     private final BrandService brandService;
     private final PaginationService paginationService;
+    private final WishlistService wishlistService;
 
     @ModelAttribute("ItemCategory")
     public ItemCategory[] itemCategories(){
@@ -93,13 +95,24 @@ public class ItemController {
 
 
     @GetMapping(value = "/item/infant")
-    public String itemInfant(@PageableDefault(page = 0,size = 10 ,sort = "id" ,direction = Sort.Direction.DESC) Pageable pageable, Model model){
+    public String itemInfant(@PageableDefault(page = 0,size = 10 ,sort = "id" ,direction = Sort.Direction.DESC) Pageable pageable, Model model, Principal principal){
+
+
 
         // 추후에 수정해야함(각 코너마다의 count로 바꿔야함)
         Long onSaleItemCount = itemService.getItemsOnSaleCount();
         List<ItemWithImgDto> items = itemService.getItemsWithImgsBySubCategory("아동");
-        model.addAttribute("items", items);
 
+        List<Long> wishlistItemIds = new ArrayList<>(); // 사용자의 위시리스트 상품 ID 리스트
+
+        if (principal != null) { // 로그인된 사용자인 경우
+            String memberEmail = principal.getName();
+            wishlistItemIds = wishlistService.getWishlistItemIds(memberEmail);
+
+        }
+
+        model.addAttribute("items", items);
+        model.addAttribute("wishlistItemIds", wishlistItemIds);
         model.addAttribute("onSaleItemCount", onSaleItemCount);
 
         System.out.println("============test");
