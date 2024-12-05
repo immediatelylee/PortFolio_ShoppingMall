@@ -25,6 +25,7 @@ public class CartController {
     private final ObjectMapper objectMapper;
 
     //itemdetail (ajax)-> cart  (장바구니 버튼 클릭 -> 장바구니에 담기)
+    // CartItemDto는 ItemId, Count만 있는 단순 dto
     @PostMapping(value = "/cart")
     public @ResponseBody ResponseEntity cart(@RequestBody @Valid CartItemDto cartItemDto, BindingResult bindingResult, Principal principal){
 
