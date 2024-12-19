@@ -14,7 +14,6 @@ var slides = document.querySelector('.slides'),
 
 console.log(SlideText)
 makeClone();
-
 function makeClone(){
     for(var i = 0; i<slideCount; i++){
         //a.cloneNode() , a.cloneNode(true)
@@ -36,10 +35,6 @@ function makeClone(){
     setTimeout(function(){
         slides.classList.add('animated');
     },100);
-
-
-
-
 }
 
 function updateWidth(){
@@ -104,17 +99,34 @@ function stopSlide(){
 
 toggleBtn.addEventListener('click', toggleSlideshow);
 // 추가본
+// function toggleSlideshow() {
+//     if (isPaused) {
+//         isPaused = false; // If paused, resume the slideshow
+//         toggleBtn.textContent = '||'; // Change to play symbol
+//         autoSlide(); // Start automatic slideshow
+//     } else {
+//         isPaused = true; // If not paused, pause the slideshow
+//         toggleBtn.textContent = '▶'; // Change to pause symbol
+//         stopSlide(); // Stop the slideshow
+//     }
+// }
 function toggleSlideshow() {
+    const pauseIcon = document.querySelector('.pause-icon');
+    const playIcon = document.querySelector('.play-icon');
+
     if (isPaused) {
-        isPaused = false; // If paused, resume the slideshow
-        toggleBtn.textContent = '||'; // Change to play symbol
-        autoSlide(); // Start automatic slideshow
+        isPaused = false; // Resume the slideshow
+        pauseIcon.style.display = 'block'; // Show pause icon
+        playIcon.style.display = 'none';  // Hide play icon
+        autoSlide();
     } else {
-        isPaused = true; // If not paused, pause the slideshow
-        toggleBtn.textContent = '▶'; // Change to pause symbol
-        stopSlide(); // Stop the slideshow
+        isPaused = true; // Pause the slideshow
+        pauseIcon.style.display = 'none'; // Hide pause icon
+        playIcon.style.display = 'block'; // Show play icon
+        stopSlide();
     }
 }
+
 
 function updateSlideText(){
     SlideText.textContent = (currentIdx+1) + " / " + slideCount
