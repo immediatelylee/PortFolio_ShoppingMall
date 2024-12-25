@@ -54,6 +54,10 @@ public class Item extends BaseEntity {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
+    //241225추가
+    @ManyToOne
+    @JoinColumn(name = "option_set_id")
+    private OptionSet optionSet;
 
     public void updateItem(ItemFormDto itemFormDto,Brand brand){
         this.itemNm = itemFormDto.getItemNm();
