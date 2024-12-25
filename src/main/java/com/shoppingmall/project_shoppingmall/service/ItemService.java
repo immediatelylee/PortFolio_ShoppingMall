@@ -400,6 +400,11 @@ public class ItemService {
     public List<ItemWithImgDto> getItemsWithImgsBySubCategory(String subCategory) {
         return itemRepository.findItemsWithImgsBySubCategory(subCategory);
     }
+
+    public Item getItemById(Long id) {
+        return itemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Item not found"));
+    }
 }
 
 

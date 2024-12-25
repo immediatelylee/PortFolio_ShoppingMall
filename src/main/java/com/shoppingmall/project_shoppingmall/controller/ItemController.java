@@ -30,6 +30,8 @@ public class ItemController {
     private final BrandService brandService;
     private final PaginationService paginationService;
     private final WishlistService wishlistService;
+    private final OptionSetService optionSetService;
+    private final UsedOptionService usedOptionService;
 
     @ModelAttribute("ItemCategory")
     public ItemCategory[] itemCategories(){
@@ -243,6 +245,14 @@ public class ItemController {
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
         model.addAttribute("item", itemFormDto);
         return "item/itemDetail";
+    }
+
+    @ResponseBody
+    @PostMapping("/item/{itemId}/options")
+    public ResponseEntity<List<UsedOption>> addOptions(@PathVariable Long itemId) {
+        Item item = itemService.getItemById(itemId);
+        List<UsedOption> usedOptions = usedOptionService.generateUsedOptions(item);
+        return ResponseEntity.ok(usedOptions);
     }
 
 }
