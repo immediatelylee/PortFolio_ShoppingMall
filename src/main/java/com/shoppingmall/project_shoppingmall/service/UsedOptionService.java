@@ -32,4 +32,9 @@ public class UsedOptionService {
 
         return usedOptionRepository.saveAll(usedOptions);
     }
+
+    // 특정 Item에 연관된 UsedOption 조회
+    public List<UsedOption> getUsedOptionsByItem(Item item) {
+        return usedOptionRepository.findByItem(item);
+    }
 }

@@ -32,6 +32,7 @@ public class ItemController {
     private final WishlistService wishlistService;
     private final OptionSetService optionSetService;
     private final UsedOptionService usedOptionService;
+    private final OptionCombinationService combinationService;
 
     @ModelAttribute("ItemCategory")
     public ItemCategory[] itemCategories(){
@@ -253,6 +254,27 @@ public class ItemController {
         Item item = itemService.getItemById(itemId);
         List<UsedOption> usedOptions = usedOptionService.generateUsedOptions(item);
         return ResponseEntity.ok(usedOptions);
+    }
+
+    // 옵션 조합 생성 API
+    @ResponseBody
+    @PostMapping("/item/{itemId}/options/combinations")
+    public ResponseEntity<List<OptionCombination>> generateCombinations(@PathVariable Long itemId) {
+        Item item = itemService.getItemById(itemId);
+        List<UsedOption> usedOptions = usedOptionService.getUsedOptionsByItem(item);  // 조회 구현 연결
+
+        // 조합 생성
+        List<OptionCombination> combinations = combinationService.generateCombinations(item, usedOptions);
+        return ResponseEntity.ok(combinations);
+    }
+
+    // 옵션 조합 조회 API
+    @ResponseBody
+    @GetMapping("/item/{itemId}/options/combinations")
+    public ResponseEntity<List<OptionCombination>> getCombinations(@PathVariable Long itemId) {
+        Item item = itemService.getItemById(itemId);
+        List<OptionCombination> combinations = combinationService.getCombinationsByItem(item);
+        return ResponseEntity.ok(combinations);
     }
 
 }
