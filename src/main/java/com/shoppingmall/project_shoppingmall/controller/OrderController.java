@@ -34,9 +34,10 @@ public class OrderController {
     // selected는 cartController의 /cart/order에 존재함.
     @GetMapping(value = "/order")
     public String orderAllItems(Principal principal, Model model) {
+        //사용자 정보(이메일)
         Member member = memberService.getCurrentMember(principal);
         model.addAttribute("UserInfo", member);
-
+        //cart의 전체 상품 조회
         List<CartDetailDto> cartItems = cartService.getCartList(principal.getName());
         model.addAttribute("cartItems", cartItems);
 

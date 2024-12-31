@@ -105,7 +105,7 @@
         var paymentPrice = [[${totalPayPrice}]];
         var buyerName = '[[${UserInfo.name}]]';
         var buyerEmail = '[[${UserInfo.email}]]';
-        var buyerAddress = '[[${UserInfo.address}]]';
+        var buyerAddress = '[[${UserInfo.roadAddress} + ' ' + ${UserInfo.roadAddress}]]';
         var buyer_tel = '[[${UserInfo.phone}]]'
 
         console.log("buyerName:"+buyerName);
@@ -140,7 +140,7 @@
             result ='0';
         } else {
             var msg = '결제에 실패하였습니다.';
-            msg += '에러내용 : ' + rsp.error_msg;
+            msg += rsp.error_msg;
             result ='1';
         }
         if(result=='0') {
@@ -256,7 +256,7 @@
                     </tr>
                     <tr>
                         <th class="delivery-address__th">배송주소</th>
-                        <td class="delivery-address__td" th:text="${UserInfo.address}">
+                        <td class="delivery-address__td" th:text="${UserInfo.roadAddress + ' ' + UserInfo.detailAddress}">
                             서울시 신사동 123-4
 
                             <div id="blocked-address-error-message" class="blocked-address-section" data-delivery-address__blocked-message="">
