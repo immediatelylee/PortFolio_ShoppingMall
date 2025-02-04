@@ -47,3 +47,35 @@ VALUES(1,'thumb_b5791dfb-847d-425e-b354-453462e663daenfant_CLASSIC_LOGO_KNIT_PUL
 ,(3,'thumb_6e90e00e-75b3-403a-aece-6496a493d944enfant_CLASSIC_LOGO_KNIT_PULLOVER_front_red.jpg','/images/item/sample_thumb/thumb_6e90e00e-75b3-403a-aece-6496a493d944enfant_CLASSIC_LOGO_KNIT_PULLOVER_front_red.jpg','enfant_CLASSIC_LOGO_KNIT_PULLOVER_front_red.jpg',null,3)
 ,(4,'thumb_199a6f08-5f94-4059-854f-9baf5a9b9f89ENFANT SEERSUCKER BUCKET HAT sky blue.jpg','/images/item/sample_thumb/thumb_199a6f08-5f94-4059-854f-9baf5a9b9f89ENFANT SEERSUCKER BUCKET HAT sky blue.jpg','ENFANT SEERSUCKER BUCKET HAT sky blue.jpg',null,4);
 
+
+-- 1) OptionSet
+INSERT INTO option_set(id, name) VALUES(1, '색상/사이즈');
+INSERT INTO option_set(id, name) VALUES(2, '재질/두께');
+
+-- 2) Option
+-- 첫 번째 세트(1)에 대해 "색상", "사이즈"
+INSERT INTO shop_option(id, name, code, option_set_id, option_index) VALUES(101, '색상', 'O0000001', 1, 0);
+INSERT INTO shop_option(id, name, code, option_set_id, option_index) VALUES(102, '사이즈', 'O0000002', 1, 1);
+
+-- 두 번째 세트(2)에 대해 "재질", "두께"
+INSERT INTO shop_option(id, name, code, option_set_id, option_index) VALUES(201, '재질', 'O0000003', 2, 0);
+INSERT INTO shop_option(id, name, code, option_set_id, option_index) VALUES(202, '두께', 'O0000004', 2, 1);
+
+-- 3) OptionValue
+-- (A) 색상: 블랙, 화이트
+INSERT INTO option_value(id, value, option_id, order_index) VALUES(1001, '블랙', 101, 0);
+INSERT INTO option_value(id, value, option_id, order_index) VALUES(1002, '화이트', 101, 1);
+
+-- (B) 사이즈: S, M, L
+INSERT INTO option_value(id, value, option_id, order_index) VALUES(1003, 'S', 102, 0);
+INSERT INTO option_value(id, value, option_id, order_index) VALUES(1004, 'M', 102, 1);
+INSERT INTO option_value(id, value, option_id, order_index) VALUES(1005, 'L', 102, 2);
+
+-- (C) 재질: 면, 폴리에스터
+INSERT INTO option_value(id, value, option_id, order_index) VALUES(2001, '면', 201, 0);
+INSERT INTO option_value(id, value, option_id, order_index) VALUES(2002, '폴리에스터', 201, 1);
+
+-- (D) 두께: 얇음, 보통, 두꺼움
+INSERT INTO option_value(id, value, option_id, order_index) VALUES(2003, '얇음', 202, 0);
+INSERT INTO option_value(id, value, option_id, order_index) VALUES(2004, '보통', 202, 1);
+INSERT INTO option_value(id, value, option_id, order_index) VALUES(2005, '두꺼움', 202, 2);
