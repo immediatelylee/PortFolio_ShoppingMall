@@ -3222,3 +3222,56 @@ html:lang(vi) .mSitemap .sitemap > li > strong { font-family:"Helvetica Neue",He
 @media print and (-webkit-min-device-pixel-ratio:0) {
     html,body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td,span,strong { font-family:"맑은 고딕", "Malgun Gothic", sans-serif !important; }
 }
+
+/* 상품옵션테이블이 간격이 맞지 않아서 추가.  */
+
+/* Grid */
+.section { margin:0 0 24px; }
+.section:after { content:""; display:block; clear:both; }
+.section.gClearSmartmode { /* smartmode 전용이므로 suio.css에 style을 선언하지 않는다 */ }
+.section > .gLeft { float:left; width:49.5%; text-align:left; }
+.section > .gRight { float:right; width:49.5%; }
+.section.fixed { max-width:1028px; }
+.mButton.fixed { max-width:1028px; }
+.gGrid { margin:10px 0 0; padding:10px 0 0; border-top:1px solid #d9dadc; }
+.gSingle { display:block; margin-top:5px !important; }
+.gDouble { display:block; margin-top:10px !important; }
+.gTriple { display:block; margin-top:15px !important; }
+.gBreak { display:inline-block; margin:1px 0 0; }
+.gSingleBreak { display:block; margin-bottom:5px !important; }
+.gDoubleBreak { display:block; margin-bottom:10px !important; }
+.gTripleBreak { display:block; margin-bottom:15px !important; }
+.gMiniSide { margin-left:4px !important; }
+.gSingleSide { margin-left:11px !important; }
+.gDoubleSide { margin-left:25px !important; }
+.gTripleSide { margin-left:40px !important; }
+
+.gIcon { margin-top:5px; }
+.gWidth { display:inline-block; vertical-align:middle; word-wrap:break-word; }
+
+/* gridSet */
+.gridSet { display:-webkit-flex; display:-ms-flex; display:-moz-flex; display:flex; -webkit-flex-wrap:wrap; -ms-flex-wrap:wrap; -moz-flex-wrap:wrap; flex-wrap:wrap; }
+.gridSet .grid { word-break:break-all; }
+.gridSet.nowrap { -webkit-flex-wrap:nowrap; -ms-flex-wrap:nowrap; -moz-flex-wrap:nowrap; flex-wrap:nowrap; }
+.gridSet .grid.nowrap { white-space:nowrap; }
+.gridSet .grid.gFlex1 { -webkit-flex:1; -ms-flex:1; -moz-flex:1; flex:1; }
+.gridSet .grid.gFlex2 { -webkit-flex:2; -ms-flex:2; -moz-flex:2; flex:2; }
+/* parent align */
+.gridSet.top { -webkit-align-items:flex-start; -ms-align-items:flex-start; -moz-align-items:flex-start; align-items:flex-start; }
+.gridSet.middle { -webkit-align-items:center; -ms-align-items:center; -moz-align-items:center; align-items:center; }
+.gridSet.bottom { -webkit-align-items:flex-end; -ms-align-items:flex-end; -moz-align-items:flex-end; align-items:flex-end; }
+.gridSet.left { text-align:left; -webkit-justify-content:flex-start; -ms-justify-content:flex-start; justify-content:flex-start; }
+.gridSet.center { text-align:center; -webkit-justify-content:center; -ms-justify-content:center; justify-content:center; }
+.gridSet.right { text-align:right; -webkit-justify-content:flex-end; -ms-justify-content:flex-end; justify-content:flex-end; }
+/* child align */
+.gridSet .grid.top { -webkit-align-self:flex-start; -ms-align-self:flex-start; -moz-align-self:flex-start; align-self:flex-start; }
+.gridSet .grid.middle { -webkit-align-self:center; -ms-align-self:center; -moz-align-self:center; align-self:center; }
+.gridSet .grid.bottom { -webkit-align-self:flex-end; -ms-align-self:flex-end; -moz-align-self:flex-end; align-self:flex-end; }
+.gridSet .grid.left { text-align:left; }
+.gridSet .grid.center { text-align:center; }
+.gridSet .grid.right { text-align:right; }
+.gridSet.gBetween { -webkit-justify-content:space-between; -ms-justify-content:space-between; -moz-justify-content:space-between; justify-content:space-between; }
+
+/* Size : width.css */
+
+html:lang(ko) body, html:lang(ko) code { font-size:13px; letter-spacing: -0.5px; }

@@ -39,3 +39,11 @@
     display: block;
     margin-top: 5px !important;
 }
+
+.mBoard col.product {
+    width: 193px;
+}
+/*250127추가 추후 더 추가하면 파일로 다시 정리*/
+#eOptionCombineMatrixTemplate {
+    display: none;
+}
