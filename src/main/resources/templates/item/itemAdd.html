@@ -264,6 +264,7 @@
         }
     }
 
+
         $(document).ready(function() {
             // 페이지 로드 시, hidden input의 값을 가져와서 depth 요소에 설정
             var mainCategory = $("#mainCategory").val();
@@ -365,7 +366,7 @@
                 </div>
 
 
-                <div id="QA_register2" class="section">
+                <div id="QA_register2" class="section" style="margin-top: 25px">
                     <div class="mToggleBar eToggle selected">
                         <h2>판매 정보</h2>
                         <div class="ctrl">
@@ -429,11 +430,11 @@
                                         <div class="gIcoShop">
                                             <label class="gLabel">
                                                 <input type="radio" th:field="*{itemDisplayStatus}" th:value="DISPLAY"  class="form-check-input" name="itemDisplayStatus">
-<!--                                                <input type="radio" name="is_display[1]" class="fChk" value="T"> -->
+
                                                 진열함</label>
                                             <label class="gLabel eSelected">
                                                 <input type="radio" th:field="*{itemDisplayStatus}" th:value="NOT_DISPLAY"  class="form-check-input" name="itemDisplayStatus">
-<!--                                                <input type="radio" name="is_display[1]" class="fChk" value="F" checked="checked">-->
+
                                                 진열안함</label>
                                         </div>
                                     </td>
@@ -445,11 +446,11 @@
 
                                             <label class="gLabel">
                                                 <input type="radio" th:field="*{itemSellStatus}" th:value="SELL"  class="form-check-input" name="itemSellStatus">
-<!--                                                <input type="radio" name="selling_status[1]" class="fChk" value="T">-->
+
                                                 판매함</label>
                                             <label class="gLabel eSelected">
                                                 <input type="radio" th:field="*{itemSellStatus}" th:value="SOLD_OUT"  class="form-check-input" name="itemSellStatus">
-<!--                                                <input type="radio" name="selling_status[1]" class="fChk" value="F" checked="checked">-->
+
                                                 판매안함</label>
                                         </div>
                                     </td>
@@ -609,7 +610,7 @@
                                         </div>
                                         <p class="gDouble">
                                             <span class="icoDot"></span>
-                                            <strong class="gWidth wPrdCategory">선택된 상품분류</strong>
+                                            <strong class="gWidth wPrdCategory" style="width: 91px">선택된 상품분류</strong>
                                             <span class="_product_category_none">
                                 </span>
                                             <span style="display:none;" class="_product_category_checked">
