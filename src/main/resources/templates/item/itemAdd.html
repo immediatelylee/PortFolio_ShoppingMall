@@ -290,8 +290,140 @@
             if (hasValues) {
                 $("._product_category_checked").removeAttr("style");
             }
-        });
+            // 라디오 버튼 -> 옵션 사용 여부 변경
+            $('input[name="has_option"]').on('change', function() {
+                const val = $(this).val();
+                toggleHasOption(val);
+            });
 
+        function toggleHasOption(hasOption) {
+            if (hasOption === 'T') {
+                console.log("togglehasOption start")
+                //
+                // 1) .mToggleBar.eToggle 에 selected 클래스 추가
+                //
+                $('.mToggleBar.eToggle').addClass('selected');
+                //
+                // 2), 3) 버튼 em 텍스트 "펼치기" -> "접기"
+                //
+                $('.mToggleBar.eToggle .ctrl button em').text('접기');
+                //
+                // 4) "사용함" 라벨 -> eSelected, "사용안함" 라벨 -> removeClass
+                //
+                $('#eOptionUseT').closest('label').addClass('eSelected');
+                $('#eOptionUseF').closest('label').removeClass('eSelected');
+                //
+                // 5) 모든 .gDivision.eMultiProductStock -> display='table' (일단 전부 table) -- 이였으나.
+                // 옵션구성방식과 옵션설정을 전부 구현할 시간적 여유가 없어서  임시로 display: table->none으로 지정
+                // TODO: 추후에 조합 일체선택형,조합일체분리선택형,상품연동형,독립선택형... 구현가능할때 다시 display:table로 지정
+                //
+                $('.gDivision.eMultiProductStock').css('display','none');
+                //
+                // 6) eItemListingType -> display='none' (diff: none 유지)
+                //
+                $('#eItemListingType').css('display','none');
+                //
+                // 7) eOptionRegistType -> style="": diff에서 display: none -> (없음)
+                // TODO: 추후에 다시 '' 으로 지정할것
+                //
+                $('#eOptionRegistType').css('display','none');
+                //
+                // 8) eSavedOption -> style=""
+                //
+                $('#eSavedOption').css('display','');
+                //
+                // 9), 11) .option-set-modify -> style="display:none"
+                //
+                $('.option-set-modify').css('display','none');
+                //
+                // 10) eOptionSetValuesT -> style="display:none"
+                //
+                $('#eOptionSetValuesT').css('display','none');
+                //
+                // 12) eSingleProductStock -> style="display:none"
+                //
+                $('#eSingleProductStock').css('display','none');
+                //
+                // 13) eItemListContainer -> style=""
+                //
+                $('#eItemListContainer').css('display','');
+
+                //추가
+                // 중복적용 - 추후 5) 7)개발이 다시 진행되면 주석을 풀거나 삭제
+                // $('.gDivision.eMultiProductStock').css('display','table');
+                $('#eItemListingType').css('display','none');
+                // 중복적용 - 추후 5) 7)개발이 다시 진행되면 주석을 풀거나 삭제
+                // $('#eOptionRegistType').css('display','');
+                $('#eSavedOption').css('display','');
+                $('.option-set-modify').css('display','none');
+                $('#eOptionSetValuesT').css('display','none');
+                $('#eSingleProductStock').css('display','none');
+                $('#eItemListContainer').css('display','');
+
+                // 1) "사용함"이어서 테이블을 보이게 했으면,
+                //    Chosen 셀렉트들도 업데이트
+                $('#eOptionSetF').trigger('chosen:updated');
+                // 만약 #eOptionSetT 등 다른 select도 있다면
+                // $('#eOptionSetT').trigger('chosen:updated');
+
+            } else {
+                // === "사용안함(F)" ===
+                //
+                // 1) .mToggleBar.eToggle: removeClass('selected')
+                //
+                $('.mToggleBar.eToggle').removeClass('selected');
+                //
+                // 2), 3) 버튼 em 텍스트 "접기" -> "펼치기"
+                //
+                $('.mToggleBar.eToggle .ctrl button em').text('펼치기');
+                //
+                // 4) "사용안함" 라벨 -> eSelected, "사용함" 라벨 -> removeClass
+                //
+                $('#eOptionUseT').closest('label').removeClass('eSelected');
+                $('#eOptionUseF').closest('label').addClass('eSelected');
+                //
+                // 5) .gDivision.eMultiProductStock -> display='none'
+                //
+                $('.gDivision.eMultiProductStock').css('display','none');
+                //
+                // 6) eItemListingType -> display='none'
+                //
+                $('#eItemListingType').css('display','none');
+                //
+                // 7) eOptionRegistType -> display='none'
+                //
+                $('#eOptionRegistType').css('display','none');
+                //
+                // 8) eSavedOption -> display='none'
+                //
+                $('#eSavedOption').css('display','none');
+                //
+                // 9), 11) .option-set-modify -> 원래 상태 (보이게)
+                //
+                $('.option-set-modify').css('display','');
+                //
+                // 10) eOptionSetValuesT -> display=''
+                //
+                $('#eOptionSetValuesT').css('display','');
+                //
+                // 12) eSingleProductStock -> display='table'
+                //
+                $('#eSingleProductStock').css('display','table');
+                //
+                // 13) eItemListContainer -> display='none'
+                //
+                $('#eItemListContainer').css('display','none');
+
+
+                $('.gDivision.eMultiProductStock').css('display','none');
+                $('#eOptionSetValuesT').css('display','');
+                $('#eSingleProductStock').css('display','table');
+                $('#eItemListContainer').css('display','none');
+
+                // (필요하면)
+                $('#eOptionSetF').trigger('chosen:updated');
+            }
+        }
     </script>
 </th:block>
 <div layout:fragment="content">
