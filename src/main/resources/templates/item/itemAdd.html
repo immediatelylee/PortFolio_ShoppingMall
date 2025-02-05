@@ -296,6 +296,12 @@
                 toggleHasOption(val);
             });
 
+            // chosen 라이브러리 초기화
+            $('#eOptionSetF').chosen({
+                allow_single_deselect: true,
+                search_contains : true,
+                no_results_text : "검색결과가 없습니다. : "
+            });
         function toggleHasOption(hasOption) {
             if (hasOption === 'T') {
                 console.log("togglehasOption start")
