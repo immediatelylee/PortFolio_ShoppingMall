@@ -54,10 +54,20 @@ public class Item extends BaseEntity {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    //241225추가
-    @ManyToOne
-    @JoinColumn(name = "option_set_id")
-    private OptionSet optionSet;
+    // [1] 옵션 표시방식을 구분하는 필드
+    @Enumerated(EnumType.STRING)
+    private OptionDisplayType displayType;
+    // 예) COMBINED(조합 일체형) / SEPARATED(분리 선택형) / 혹은 null이면 옵션 미사용 등
+
+    // [2] 조합 일체형 옵션: Item : OptionCombination = 1 : N
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OptionCombination> optionCombinations = new ArrayList<>();
+
+    //편의 메서드
+    public void addOptionCombination(OptionCombination oc) {
+        this.optionCombinations.add(oc);
+        oc.setItem(this);
+    }
 
     public void updateItem(ItemFormDto itemFormDto,Brand brand){
         this.itemNm = itemFormDto.getItemNm();
