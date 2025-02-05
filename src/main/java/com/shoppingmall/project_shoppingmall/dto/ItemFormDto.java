@@ -55,6 +55,18 @@ public class ItemFormDto {
     // 썸네일 이미지 URL
     private String thumbnailImgUrl;
 
+    // [옵션 관련]
+    private OptionDisplayType displayType;
+    // COMBINED(조합 일체형), SEPARATED(분리 선택형), NONE(옵션 미사용) 등
+
+    // 조합 일체형에서 쓸 옵션 조합 리스트
+    // 예: ["블랙-S", "블랙-M", "화이트-S"]
+    private List<String> combinationList = new ArrayList<>();
+
+    // 재고관리를 위한 추가
+    private List<Integer> combinationStocks;
+    private List<Integer> combinationAddPrices;
+
     public Item toItem(){
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(this, Item.class);
@@ -62,7 +74,20 @@ public class ItemFormDto {
 
     public static ItemFormDto of(Item item){
         ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(item,ItemFormDto.class);
+        ItemFormDto dto = modelMapper.map(item, ItemFormDto.class);
+
+        // (추가) OptionCombination -> combinationList 변환
+        if (item.getOptionCombinations() != null && !item.getOptionCombinations().isEmpty()) {
+            List<String> combos = new ArrayList<>();
+            item.getOptionCombinations().forEach(oc -> {
+                combos.add(oc.getCombination());
+            });
+            dto.setCombinationList(combos);
+        }
+        // brand -> brandId는 Service 단에서나,
+        // or else if (item.getBrand()!=null) dto.setBrandId(item.getBrand().getId());
+        // ...
+        return dto;
     }
     public static ItemFormDto addThumbnail(Item item,String thumbnailImgUrl){
         ModelMapper modelMapper = new ModelMapper();
