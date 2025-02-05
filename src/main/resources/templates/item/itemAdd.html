@@ -302,6 +302,72 @@
                 search_contains : true,
                 no_results_text : "검색결과가 없습니다. : "
             });
+            $('#eSavedOption').css('display','none');
+
+            // 사용된 옵션에 옵션 처리
+            // 1) 페이지 로드 후 템플릿을 변수에 보관
+            let $optionTemplate;
+            $optionTemplate = $('#eOptionCombineMatrixTemplate').clone(true);
+
+            // 2) tbody .empty() 하기 전에, 템플릿을 미리 safe-keep
+            //    그리고 #eOptionCombineMatrixTemplate 자체를 remove() or hide()
+            $('#eOptionCombineMatrixTemplate').remove();
+
+
+            // 사용된 옵션 출력
+            // 1) select가 바뀔 때
+            $('#eOptionSetF').on('change', function(){
+                let setId = $(this).val();
+                // (a) 기존 행들 제거
+                $('#eOptionCombineMatrix').empty();
+
+                // (b) 값이 없으면 종료
+                if(!setId) return;
+
+                // (c) AJAX로 /api/optionSet/{setId} 호출
+                $.ajax({
+                    url: '/api/optionSet/' + setId,
+                    method: 'GET',
+                    success: function(data){
+                        // data = { id:..., name:"색상/사이즈", options:[ {id:101, name:"색상", values:["블랙","화이트"]}, ... ] }
+                        if(!data || !data.options) return;
+                        data.options.forEach(function(optDto){
+                            addOptionRow(optDto);
+                        });
+                    },
+                    error: function(xhr){
+                        console.error("옵션세트 불러오기 실패:", xhr);
+                    }
+                });
+                // =============== 사용된 옵션에서 옵션 이동 ===============
+                // =============== 이동 버튼 클릭 핸들러 ==================
+
+                // "위로 이동" 버튼
+                $(document).on('click', '.optionMatrix .lv1Up', function(){
+                    let $tr = $(this).closest('tr.optionMatrix');
+                    let $prev = $tr.prev('.optionMatrix');
+                    if($prev.length > 0) {
+                        // 이전 행이 있으면, 그 앞에 붙여서 순서 교환
+                        $prev.before($tr);
+                        // 순서 갱신
+                        refreshSortOrder();
+                    }
+                });
+
+                // "아래로 이동" 버튼
+                $(document).on('click', '.optionMatrix .lv1Down', function(){
+                    let $tr = $(this).closest('tr.optionMatrix');
+                    let $next = $tr.next('.optionMatrix');
+                    if($next.length > 0) {
+                        // 다음 행이 있으면, 그 뒤에 붙여서 순서 교환
+                        $next.after($tr);
+                        // 순서 갱신
+                        refreshSortOrder();
+                    }
+                });
+
+        });
+
         function toggleHasOption(hasOption) {
             if (hasOption === 'T') {
                 console.log("togglehasOption start")
