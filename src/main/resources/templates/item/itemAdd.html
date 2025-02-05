@@ -496,6 +496,102 @@
                 $('#eOptionSetF').trigger('chosen:updated');
             }
         }
+
+        function addOptionRow(optDto){
+            // (a) 템플릿 복제
+            let $tpl = $optionTemplate.clone(true);
+            $tpl.removeAttr('id').show();
+
+            // **이 부분에서 "eSortlv1Down" → "lv1Down", "eSortlv1Up" → "lv1Up" 치환**
+            // (1) 전체 하위 요소 중 'eSortlv1'이 들어간 클래스를 찾는다
+            $tpl.find('[class*="eSortlv1"]').each(function(){
+                let oldClass = $(this).attr('class');
+                // (2) 치환
+                //     "eSortlv1Down" -> "lv1Down"
+                //     "eSortlv1Up" -> "lv1Up"
+                let newClass = oldClass
+                    .replace('eSortlv1Down','lv1Down')
+                    .replace('eSortlv1Up','lv1Up');
+                $(this).attr('class', newClass);
+            });
+
+            // (b) 옵션명 표시
+            $tpl.find('.eOptionName').text(optDto.name);
+
+            // (c) 옵션값(li) 동적 추가
+            let $ul = $tpl.find('ul.mForm');
+            // "전체" li는 그대로 두고, optDto.values를 붙여줌
+            optDto.values.forEach(function(v){
+                let liHtml = `
+        <li>
+          <label class="gLabel eSelected">
+            <input type="checkbox" class="fChk" optionprice="0" checked="checked" value="${v}">
+            ${v}
+          </label>
+        </li>`;
+                $ul.append(liHtml);
+            });
+
+            // d) #eOptionCombineMatrix에 append
+            $('#eOptionCombineMatrix').append($tpl);
+        }
+            // =============== 순서 갱신 함수 ===============
+
+            function refreshSortOrder(){
+                // 1) 모든 .optionMatrix 행을 순회하여, 현재 인덱스+1을 숨은 필드 sortOrder[]에 세팅
+                $('#optionMatrixTbody tr.optionMatrix').each(function(index){
+                    // index는 0부터, 우리가 보통 1부터라고 하면 index+1
+                    $(this).find('input[name="sortOrder[]"]').val(index+1);
+                });
+
+                // 2) 최상위/최하위 버튼 비활성화 처리
+                //    먼저 모든 Up/Down 버튼을 활성화
+                $('.optionMatrix .lv1Up').prop('disabled', false);
+                $('.optionMatrix .lv1Down').prop('disabled', false);
+
+                let $allRows = $('#optionMatrixTbody tr.optionMatrix');
+                // 최상위 행 - Up 비활성
+                $allRows.first().find('.lv1Up').prop('disabled', true);
+                // 최하위 행 - Down 비활성
+                $allRows.last().find('.lv1Down').prop('disabled', true);
+            }
+
+            // =============== 페이지 처음 로딩 시에도 초기 상태 갱신 ===============
+            refreshSortOrder();
+
+            // =============== 사용된 옵션 체크 ===============
+            // ===========================================
+            //  (A) "전체" 체크박스 -> 같은 행의 옵션값 모두 체크/해제
+            // ===========================================
+            $(document).on('change', 'tr.optionMatrix input._all_option_check', function(){
+                const isChecked = $(this).prop('checked');
+                const $row = $(this).closest('tr.optionMatrix');
+                // 같은 행의 개별 옵션값 체크박스 (._all_option_check 제외)
+                const $optionValues = $row.find('input.fChk').not('._all_option_check');
+                $optionValues.prop('checked', isChecked);
+
+            });
+
+            // ===========================================
+            //  (B) 개별 옵션값 체크/해제 -> "전체" 체크박스도 반영
+            // ===========================================
+            $(document).on('change', 'tr.optionMatrix input.fChk:not(._all_option_check)', function(){
+                const $row = $(this).closest('tr.optionMatrix');
+                const $allChk = $row.find('input._all_option_check');
+
+                const $allValues = $row.find('input.fChk').not('._all_option_check');
+                // 모든 개별 값이 체크돼 있다면 "전체"도 체크
+                // 하나라도 풀려 있으면 "전체" 해제
+                let allChecked = true;
+                $allValues.each(function(){
+                    if(!$(this).prop('checked')){
+                        allChecked = false;
+                        return false; // break out of .each
+                    }
+                });
+                $allChk.prop('checked', allChecked);
+            });
+
             // ===========================================
             //  (C) "모든 옵션 품목추가" 버튼 (#eEntireOption)
             //      -> 모든 옵션값 체크 후, 품목추가 처리
