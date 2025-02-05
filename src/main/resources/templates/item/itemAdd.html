@@ -496,6 +496,138 @@
                 $('#eOptionSetF').trigger('chosen:updated');
             }
         }
+            // ===========================================
+            //  (C) "모든 옵션 품목추가" 버튼 (#eEntireOption)
+            //      -> 모든 옵션값 체크 후, 품목추가 처리
+            // ===========================================
+            $('#eEntireOption').on('click', function(e){
+                e.preventDefault();
+
+                // 1) 모든 체크박스 (._all_option_check 포함/제외) 전부 체크
+                $('tr.optionMatrix').each(function(){
+                    $(this).find('input.fChk').prop('checked', true);
+                });
+
+                // 2) 품목추가 로직
+                const checkedItems = gatherCheckedOptionValues();
+                console.log("checkedItems")
+                console.log(checkedItems)
+                createProductOption(checkedItems);
+            });
+
+            // ===========================================
+            //  (D) "선택한 옵션 품목추가" 버튼 (#eSelectedOption)
+            //      -> 현재 체크돼 있는 것만 품목추가 처리
+            // ===========================================
+            $('#eSelectedOption').on('click', function(e){
+                e.preventDefault();
+
+                const checkedItems = gatherCheckedOptionValues();
+                createProductOption(checkedItems);
+            });
+
+            // ===========================================
+            //  (E) 체크된 옵션 목록 수집 함수
+            //      ex: [ {optionCode:'O000000A', values:['블랙','화이트']}, ... ]
+            // ===========================================
+            function gatherCheckedOptionValues(){
+                let result = [];
+
+                $('tr.optionMatrix').each(function(){
+                    // let optionCode = $(this).attr('option_code');
+                    // if(!optionCode) return; // 안전 체크
+
+                    // 이 행에서 체크된 개별 옵션값들
+                    let values = [];
+                    $(this).find('input.fChk:not(._all_option_check):checked').each(function(){
+                        values.push($(this).val());
+                    });
+
+                    if(values.length > 0) {
+                        result.push({
+
+                            values: values
+                        });
+                    }
+                });
+
+                return result;
+            }
+
+            // ===========================================
+            //  (F) 상품옵션 생성
+            // ===========================================
+            function createProductOption(checkedItems) {
+                // ajax를 위한 csrf토큰
+                var csrfToken = $('meta[name="_csrf"]').attr('content');
+                var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+
+                // (1) 각 객체의 values 배열만 추출 → 2차원 배열
+                let groups = checkedItems.map(item => item.values);
+                console.log("전송할 옵션 그룹 데이터:", groups);
+
+                // (2) 상품 아이템 ID가 있다면 (예: hidden input 등에서 가져오거나 변수에 저장)
+                // 여기서는 예시로 하드코딩합니다.
+                let itemId = 1;  // 실제 아이템 ID로 대체하세요.
+
+                // (3) AJAX 요청: 서버에서 데카르트 곱(모든 옵션 조합)을 생성하는 API 호출
+                $.ajax({
+                    url: '/api/optionCombination/generate/' + itemId,  // 예: /api/optionCombination/generate/1
+                    type: 'POST',
+                    data: JSON.stringify({ groups: groups }),
+                    contentType: 'application/json',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader(csrfHeader, csrfToken);
+                    },
+                    success: function(data) {
+                        console.log("상품옵션 생성 결과:", data);
+                        // (4) 성공 시 화면에 결과 출력 (예: renderProductOptions 함수 호출)
+                        renderProductOptions(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("상품옵션 생성 실패:", error);
+                    }
+                });
+            }
+
+            // ===========================================
+            //  (G) 랜더링
+            // ===========================================
+            function renderProductOptions(optionCombinations) {
+                // optionCombinations가 배열인지 확인
+                if (!Array.isArray(optionCombinations)) {
+                    console.error("전달받은 데이터가 배열이 아닙니다:", optionCombinations);
+                    return;
+                }
+
+                optionCombinations.forEach(function(itemData, idx) {
+                    // itemData는 { combination: "블랙-S" } 형태입니다.
+                    let combination = itemData.combination;
+                    // 순번을 idx+1로 지정 (원하는 형식으로 변경 가능)
+                    let sequenceNum = idx + 1;
+
+                    // 템플릿(#eItemRowTemplate) 복제
+                    let $clone = $('#eItemRowTemplate').clone(true);
+
+                    // 중복 ID 제거, 숨김 해제, 클래스 및 속성 부여
+                    $clone.removeAttr('id')
+                        .show()
+                        .addClass('created-item-row')
+                        .attr('option_compare', `옵션=${combination}`)
+                        .attr('item-sequence', sequenceNum);
+
+                    // 템플릿 내부 요소에 값 설정
+                    $clone.find('.eItemSequnce').text(sequenceNum);
+                    $clone.find('.eOptionValue').text(combination);
+                    $clone.find('.eOptionValueHidden').val(combination);
+                    $clone.find('.eOptionNameHidden').val('색상#$%사이즈'); // 필요에 따라 값을 변경
+
+                    // 완성된 복제 템플릿을 #eItemList 내부에 삽입
+                    $('#eItemList').append($clone);
+                });
+            }
+        });
     </script>
 </th:block>
 <div layout:fragment="content">
