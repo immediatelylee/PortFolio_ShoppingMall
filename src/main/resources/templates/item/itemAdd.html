@@ -2,6 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout3-item}">
+<th:block layout:fragment="css">
+    <style>
+        /* 전역 box-sizing 설정을 덮어씌우고 싶다면 !important 사용 */
+        *,
+        *::before,
+        *::after {
+            box-sizing: content-box !important;
+        }
+    </style>
+</th:block>
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
