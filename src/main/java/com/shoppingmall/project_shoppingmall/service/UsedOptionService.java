@@ -1,9 +1,6 @@
 package com.shoppingmall.project_shoppingmall.service;
 
-import com.shoppingmall.project_shoppingmall.domain.Item;
-import com.shoppingmall.project_shoppingmall.domain.Option;
-import com.shoppingmall.project_shoppingmall.domain.OptionSet;
-import com.shoppingmall.project_shoppingmall.domain.UsedOption;
+import com.shoppingmall.project_shoppingmall.domain.*;
 import com.shoppingmall.project_shoppingmall.repository.UsedOptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

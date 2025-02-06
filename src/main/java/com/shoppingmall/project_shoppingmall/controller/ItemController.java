@@ -1,27 +1,33 @@
 package com.shoppingmall.project_shoppingmall.controller;
 
-import com.shoppingmall.project_shoppingmall.constant.*;
-import com.shoppingmall.project_shoppingmall.domain.*;
-import com.shoppingmall.project_shoppingmall.dto.*;
+import com.shoppingmall.project_shoppingmall.constant.ItemCategory;
+import com.shoppingmall.project_shoppingmall.constant.ItemSearchType;
+import com.shoppingmall.project_shoppingmall.domain.Brand;
+import com.shoppingmall.project_shoppingmall.domain.OptionSet;
+import com.shoppingmall.project_shoppingmall.dto.IdsTransferDto;
+import com.shoppingmall.project_shoppingmall.dto.ItemFormDto;
+import com.shoppingmall.project_shoppingmall.dto.ItemWithImgDto;
 import com.shoppingmall.project_shoppingmall.service.*;
-import lombok.*;
-import lombok.experimental.*;
-import org.springframework.data.domain.*;
-import org.springframework.data.web.*;
-import org.springframework.http.*;
-import org.springframework.stereotype.*;
-import org.springframework.ui.*;
-import org.springframework.validation.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.*;
-import org.springframework.web.servlet.mvc.support.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.persistence.*;
-import javax.validation.*;
-import java.io.*;
+import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.security.Principal;
-import java.util.*;
-import java.util.stream.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller
@@ -31,8 +37,7 @@ public class ItemController {
     private final PaginationService paginationService;
     private final WishlistService wishlistService;
     private final OptionSetService optionSetService;
-    private final UsedOptionService usedOptionService;
-    private final OptionCombinationService combinationService;
+
 
     @ModelAttribute("ItemCategory")
     public ItemCategory[] itemCategories(){
