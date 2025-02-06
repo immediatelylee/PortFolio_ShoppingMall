@@ -143,6 +143,10 @@ public class ItemController {
         System.out.println(depth2);
         System.out.println(depth3);
 
+        // 1) 모든 OptionSet 조회
+        List<OptionSet> setList = optionSetService.getAllOptionSets();
+        model.addAttribute("optionSets", setList);
+
         return "item/itemAdd";
     }
 
