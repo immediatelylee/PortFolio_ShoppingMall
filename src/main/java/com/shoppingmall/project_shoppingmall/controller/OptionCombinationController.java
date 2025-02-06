@@ -39,7 +39,7 @@ public class OptionCombinationController {
         // 예시: request.getGroups()가 [["블랙", "화이트"], ["S", "M", "L"], ["면", "폴리에스터"]] 라면,
         // 실제 옵션명은 미리 정해져 있다고 가정하고 (예: ["색상", "사이즈", "소재"]) - 실제로는 사용안함
         // optioncombination생성용도로 optionName을 받음 generateCombinations을 해도 실제 optionName을 사용하지 않고
-        // usedopiton도 사용하지 않음.
+        // usedopiton도 아직 db에 저장하지 않음 추후에 사용할 예정
         List<String> optionNames = Arrays.asList("색상", "사이즈", "소재");
         List<List<String>> groups = request.getGroups();
         for (int i = 0; i < groups.size(); i++) {
