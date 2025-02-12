@@ -536,7 +536,6 @@
             $('#eOptionCombineMatrix').append($tpl);
         }
             // =============== 순서 갱신 함수 ===============
-
             function refreshSortOrder(){
                 // 1) 모든 .optionMatrix 행을 순회하여, 현재 인덱스+1을 숨은 필드 sortOrder[]에 세팅
                 $('#optionMatrixTbody tr.optionMatrix').each(function(index){
@@ -554,7 +553,7 @@
                 $allRows.first().find('.lv1Up').prop('disabled', true);
                 // 최하위 행 - Down 비활성
                 $allRows.last().find('.lv1Down').prop('disabled', true);
-            }
+        }
 
             // =============== 페이지 처음 로딩 시에도 초기 상태 갱신 ===============
             refreshSortOrder();
@@ -723,7 +722,87 @@
                     $('#eItemList').append($clone);
                 });
             }
+
+            // ---------- 상품옵션 체크박스   ----------
+            // (1) 전체 선택 체크박스 기능
+            $(document).on('change', '#chkAllItem', function() {
+                var isChecked = $(this).prop('checked');
+                // .loadingArea 하위에서, class가 created-item-row인 table 내부의
+                // td.w14 안에 있는 input.rowChk.eItemCheckBox를 찾아 checked 상태를 설정
+                $('.loadingArea')
+                    .find('table.created-item-row td.w14 input.rowChk.eItemCheckBox')
+                    .prop('checked', isChecked);
+            });
+            // (2) 옵션행 순서 변경 및 순번/속성 업데이트 기능
+            function updateSortButtons(){
+                var $rows = $('#eItemList table.created-item-row');
+                // 순번 및 item-sequence attribute 재계산 (1부터 시작)
+                $rows.each(function(index){
+                    // 표시된 순번 업데이트 (예: <td class="eItemSequnce">)
+                    $(this).find('.eItemSequnce').text(index + 1);
+                    // 테이블에 있는 custom attribute "item-sequence"도 업데이트
+                    $(this).attr('item-sequence', index + 1);
+                });
+                // 모든 Up/Down 버튼 활성화
+                $rows.find('button.lv2Up, button.lv2Down').prop('disabled', false);
+                if($rows.length > 0){
+                    $rows.first().find('button.lv2Up').prop('disabled', true);
+                    $rows.last().find('button.lv2Down').prop('disabled', true);
+                }
+            }
+
+            // "위로 이동" 버튼 클릭 이벤트
+            $(document).on('click.optionSort', 'button.lv2Up', function(e){
+                e.preventDefault();
+                var $row = $(this).closest('table.created-item-row');
+                var $prev = $row.prev('table.created-item-row');
+                if($prev.length){
+                    $row.insertBefore($prev);
+                    updateSortButtons();
+                }
+            });
+
+            // "아래로 이동" 버튼 클릭 이벤트
+            $(document).on('click.optionSort', 'button.lv2Down', function(e){
+                e.preventDefault();
+                var $row = $(this).closest('table.created-item-row');
+                var $next = $row.next('table.created-item-row');
+                if($next.length){
+                    $row.insertAfter($next);
+                    updateSortButtons();
+                }
+            });
+
+            // 페이지 로드 시 초기 상태 업데이트
+            updateSortButtons();
+
+
+            // ---------- 상품옵션 재고관리   ----------
+            // 재고관리 '사용함'으로 변경하였을때
+            $(document).on('change', 'select.eBatchUseManageStockMp', function(){
+                var useStock = $(this).val();
+                // 현재 select가 포함된 tr을 기준으로 작업 (만약 공통 부모가 tr이 아니라면 적절히 조정)
+                var $row = $(this).closest('tr');
+
+                if(useStock === 'T'){
+                    // "사용함"인 경우: 재고 유형, 판매 기준, 재고 수량을 보이게 하고,
+                    // 대시를 빈 문자열("")로 변경 (즉, 대시 제거)
+                    $row.find('select.eBatchStockTypeMp').css('display', 'inline-block');
+                    $row.find('select.eBatchSoldOutStockTypeMp').css('display', 'inline-block');
+                    $row.find('input.eBatchStockNumberMp').css('display', 'inline-block');
+                    $row.find('.ec-use-inventory-display-item').text('');
+                } else {
+                    // "사용안함"인 경우: 관련 요소들을 숨기고,
+                    // 대시("-")를 다시 표시
+                    $row.find('select.eBatchStockTypeMp').css('display', 'none');
+                    $row.find('select.eBatchSoldOutStockTypeMp').css('display', 'none');
+                    $row.find('input.eBatchStockNumberMp').css('display', 'none');
+                    $row.find('.ec-use-inventory-display-item').text('-');
+                }
+            });
+
         });
+
     </script>
 </th:block>
 <div layout:fragment="content">
@@ -1654,7 +1733,12 @@
                                             <input type="hidden" class="eOptionValueHidden" name="mp_option_value[]" data-default-shop="">
                                             <input type="hidden" class="eOptionNameHidden" name="mp_option_name[]">
                                             <input type="hidden" class="eOptionImageHidden" name="mp_item_image[]">
-                                            <p class="gSingle"><span class="figure"><a href="#layerImgSelectProductList" class="eModal eButtonImageRegister" data-target="item"><img class="eOptionImageView" src="//img.echosting.cafe24.com/thumb/48x48.gif" alt="" width="48" height="48"></a></span>
+                                            <p class="gSingle" style="display: none">
+                                                <span class="figure">
+                                                    <a href="#layerImgSelectProductList" class="eModal eButtonImageRegister" data-target="item">
+                                                        <img class="eOptionImageView" src="//img.echosting.cafe24.com/thumb/48x48.gif" alt="" width="48" height="48">
+                                                    </a>
+                                                </span>
                                                 <button type="button" class="btnIcon icoDel top eOptionImageDelete" data-target="item" style="display:none;"><span>삭제</span></button>
                                             </p>
                                         </td>
@@ -1690,7 +1774,7 @@
                                             <span class="ec-use-inventory-display-item">-</span>                </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="7" class="left">
+                                        <td colspan="7" class="left" style="display: none">
                                             <div class="mBoard gSmall gCellNarrow">
                                                 <table border="1" summary="">
                                                     <caption>쇼핑몰목록</caption>
