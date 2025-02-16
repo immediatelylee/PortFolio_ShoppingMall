@@ -59,13 +59,20 @@ public class ItemFormDto {
     private OptionDisplayType displayType;
     // COMBINED(조합 일체형), SEPARATED(분리 선택형), NONE(옵션 미사용) 등
 
-    // 조합 일체형에서 쓸 옵션 조합 리스트
-    // 예: ["블랙-S", "블랙-M", "화이트-S"]
-    private List<String> combinationList = new ArrayList<>();
+//    // 조합 일체형에서 쓸 옵션 조합 리스트
+//    // 예: ["블랙/S", "블랙/M", "화이트/S"]
+//    private List<String> combinationList = new ArrayList<>();
 
-    // 재고관리를 위한 추가
-    private List<Integer> combinationStocks;
-    private List<Integer> combinationAddPrices;
+
+    // 조합 일체형에서 쓸 옵션 조합 리스트
+    // 예: ["블랙/S", "블랙/M", "화이트/S"]
+    private List<String> combinationList;
+//    private List<String> mp_item_image;
+    private List<String> stockOption_use;   // "T" 또는 "F" 값 (재고 사용 여부)
+//    private List<String> mp_stock_type;
+//    private List<String> mp_sold_out_stock_type;
+    private List<Integer> itemOption_stock;        // 옵션별 재고 수량
+//    private List<Integer> mp_stock_warn_value;
 
     public Item toItem(){
         ModelMapper modelMapper = new ModelMapper();
