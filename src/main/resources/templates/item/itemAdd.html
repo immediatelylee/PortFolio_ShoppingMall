@@ -652,76 +652,128 @@
             // ===========================================
             //  (F) 상품옵션 생성
             // ===========================================
+
+            function cartesianProduct(arrays) {
+                // 결과를 담을 배열
+                const result = [];
+
+                // 재귀 함수: 현재 인덱스(index)부터 시작하여, current에 선택한 요소들을 누적
+                function helper(index, current) {
+                    // 모든 배열을 순회했다면 결과에 추가
+                    if (index === arrays.length) {
+                        result.push(current);
+                        return;
+                    }
+                    // 현재 배열의 모든 요소에 대해 재귀 호출
+                    for (let i = 0; i < arrays[index].length; i++) {
+                        helper(index + 1, current.concat(arrays[index][i]));
+                    }
+                }
+
+                // 시작: 인덱스 0, 빈 배열에서 시작
+                helper(0, []);
+                return result;
+            }
+
             function createProductOption(checkedItems) {
-                // ajax를 위한 csrf토큰
-                var csrfToken = $('meta[name="_csrf"]').attr('content');
-                var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
-
-
-                // (1) 각 객체의 values 배열만 추출 → 2차원 배열
+                // (1) 각 객체의 values 배열만 추출하여 2차원 배열로 만듭니다.
                 let groups = checkedItems.map(item => item.values);
                 console.log("전송할 옵션 그룹 데이터:", groups);
 
-                // (2) 상품 아이템 ID가 있다면 (예: hidden input 등에서 가져오거나 변수에 저장)
-                // 여기서는 예시로 하드코딩합니다.
-                let itemId = 1;  // 실제 아이템 ID로 대체하세요.
+                // (2) 데카르트 곱을 통해 모든 조합을 생성합니다.
+                let combinations = cartesianProduct(groups);
+                // 각 조합을 "/"로 연결해서 텍스트 형태로 만듭니다.
+                let combinationTexts = combinations.map(comb => comb.join('/'));
+                console.log("생성된 옵션 조합 텍스트:", combinationTexts);
 
-                // (3) AJAX 요청: 서버에서 데카르트 곱(모든 옵션 조합)을 생성하는 API 호출
-                $.ajax({
-                    url: '/api/optionCombination/generate/' + itemId,  // 예: /api/optionCombination/generate/1
-                    type: 'POST',
-                    data: JSON.stringify({ groups: groups }),
-                    contentType: 'application/json',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader(csrfHeader, csrfToken);
-                    },
-                    success: function(data) {
-                        console.log("상품옵션 생성 결과:", data);
-                        // (4) 성공 시 화면에 결과 출력 (예: renderProductOptions 함수 호출)
-                        renderProductOptions(data);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("상품옵션 생성 실패:", error);
-                    }
-                });
+                // // (3) 생성된 조합 텍스트들을 화면에 표시합니다.
+                // // 예: 옵션 조합 목록을 보여주는 div 혹은 span (미리 HTML에 준비되어 있어야 함)
+                // $('#optionCombinationDisplay').text(combinationTexts.join(', '));
+                //
+                // // (4) hidden input에 JSON 문자열로 저장합니다.
+                // // 이 값은 나중에 item 저장 시 함께 전송되어 서버에서 처리됩니다.
+                // $('#optionCombinationHidden').val(JSON.stringify(combinationTexts));
+
+                renderProductOptions(combinationTexts);
             }
 
             // ===========================================
             //  (G) 랜더링
             // ===========================================
-            function renderProductOptions(optionCombinations) {
-                // optionCombinations가 배열인지 확인
-                if (!Array.isArray(optionCombinations)) {
-                    console.error("전달받은 데이터가 배열이 아닙니다:", optionCombinations);
-                    return;
-                }
+            function renderProductOptions(combinationTexts) {
+                console.log("combinationTexts:", combinationTexts);
 
-                optionCombinations.forEach(function(itemData, idx) {
-                    // itemData는 { combination: "블랙-S" } 형태입니다.
-                    let combination = itemData.combination;
-                    // 순번을 idx+1로 지정 (원하는 형식으로 변경 가능)
-                    let sequenceNum = idx + 1;
+                // 기존에 생성된 행들을 모두 지웁니다.
+                $('table.eChkColor.eItemRow.created-item-row').remove();
 
-                    // 템플릿(#eItemRowTemplate) 복제
-                    let $clone = $('#eItemRowTemplate').clone(true);
-
-                    // 중복 ID 제거, 숨김 해제, 클래스 및 속성 부여
-                    $clone.removeAttr('id')
+                combinationTexts.forEach(function(combination, index) {
+                    // 템플릿 행 복제
+                    let $row = $('#eItemRowTemplate').clone(true);
+                    if ($row.length === 0) {
+                        console.error("템플릿 #eItemRowTemplate이 존재하지 않습니다.");
+                        return;
+                    }
+                    $row.removeAttr('id')
                         .show()
-                        .addClass('created-item-row')
+                        .addClass('created-item-row')  // 여기서 바로 추가
                         .attr('option_compare', `옵션=${combination}`)
-                        .attr('item-sequence', sequenceNum);
+                        .attr('item-sequence', index+1);
 
-                    // 템플릿 내부 요소에 값 설정
-                    $clone.find('.eItemSequnce').text(sequenceNum);
-                    $clone.find('.eOptionValue').text(combination);
-                    $clone.find('.eOptionValueHidden').val(combination);
-                    $clone.find('.eOptionNameHidden').val('색상#$%사이즈'); // 필요에 따라 값을 변경
 
-                    // 완성된 복제 템플릿을 #eItemList 내부에 삽입
-                    $('#eItemList').append($clone);
+                    $row.removeAttr('id').show(); // id 제거하고 보이게 처리
+                    // 순번 업데이트 (예: eItemSequnce 요소)
+                    $row.find('.eItemSequnce').text(index + 1);
+                    // 옵션 조합 텍스트를 .eOptionValue 요소에 설정
+                    $row.find('.eOptionValue').text(combination);
+                    // 필요하다면 hidden input에도 조합 값을 넣어줍니다.
+                    $row.find('.eOptionValueHidden').val(combination);
+                    $row.find('.eItemCheckBox').val(index + 1);
+                    // -----------------------------
+                    // name 속성 변경 작업
+                    // 기존에 name="mp_option_value[]"인 요소를 "combinationList[]"로 변경
+                    $row.find('.eOptionValueHidden').attr('name', 'combinationList[]');
+                    // 기존에 name="mp_use_manage_stock[]"인 select를 "stockOption_use[]"로 변경
+                    $row.find('select.eBatchUseManageStockMp').attr('name', 'stockOption_use[]');
+                    // 기존에 name="mp_stock_number[]"인 input을 "itemOption_stock[]"로 변경
+                    $row.find('input.eBatchStockNumberMp').attr('name', 'itemOption_stock[]');
+                    // -----------------------------
+
+
+                    // 디버그: 복제된 행의 HTML 내용 확인
+                    // console.log("클론된 행 HTML:", $row.html());
+                    // 복제한 행을 최종 컨테이너에 추가합니다.
+                    $('#eItemList').append($row);
                 });
             }
+
+            // ===========================================
+            //  (G) 삭제 이후 업데이트
+            // ===========================================
+            // 삭제 후 순번 업데이트 함수
+            function updateItemSequence() {
+                $('table.eChkColor.eItemRow.created-item-row').each(function(index) {
+                    // index는 0부터 시작하므로 실제 순번은 index+1
+                    $(this).attr('item-sequence', index + 1);
+                    $(this).find('.eItemSequnce').text(index + 1);
+                    $(this).find('.eItemCheckBox').val(index + 1);
+                });
+            }
+
+            // "선택된 행 삭제" 버튼 클릭 핸들러
+            $(document).on('click', '.eItemDelete', function(e) {
+                e.preventDefault();
+                // 각 생성된 옵션 테이블(row)마다 체크박스를 검사합니다.
+                $('table.eChkColor.eItemRow.created-item-row').each(function() {
+                    // 각 테이블의 첫번째 td(w14) 안에 있는 체크박스 (클래스: rowChk eItemCheckBox)를 찾습니다.
+                    // 만약 체크되어 있다면 해당 테이블(row)를 삭제합니다.
+                    if ($(this).find('td.w14 input.rowChk.eItemCheckBox').prop('checked')) {
+                        $(this).remove();
+                    }
+                });
+                // 삭제 후 순번 업데이트
+                updateItemSequence();
+            });
+
 
             // ---------- 상품옵션 체크박스   ----------
             // (1) 전체 선택 체크박스 기능
