@@ -1,12 +1,17 @@
 package com.shoppingmall.project_shoppingmall.domain;
 
-import com.shoppingmall.project_shoppingmall.constant.*;
-import com.shoppingmall.project_shoppingmall.dto.*;
-import com.shoppingmall.project_shoppingmall.exception.*;
-import lombok.*;
+import com.shoppingmall.project_shoppingmall.constant.ItemDisplayStatus;
+import com.shoppingmall.project_shoppingmall.constant.ItemSellStatus;
+import com.shoppingmall.project_shoppingmall.constant.OptionDisplayType;
+import com.shoppingmall.project_shoppingmall.dto.ItemFormDto;
+import com.shoppingmall.project_shoppingmall.exception.OutOfStockException;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="item")
@@ -32,6 +37,9 @@ public class Item extends BaseEntity {
     @Column(nullable = false)
     private int stockNumber; //재고수량
 
+    @Column
+    private Boolean useOptionStock;
+
     @Lob
     @Column(nullable = false)
     private String itemDetail; //상품 상세 설명
@@ -49,11 +57,26 @@ public class Item extends BaseEntity {
     private String color;
     private Integer size;
 
+
     //    추가
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
+    // [1] 옵션 표시방식을 구분하는 필드
+    @Enumerated(EnumType.STRING)
+    private OptionDisplayType displayType;
+    // 예) COMBINED(조합 일체형) / SEPARATED(분리 선택형) / 혹은 null이면 옵션 미사용 등
+
+    // [2] 조합 일체형 옵션: Item : OptionCombination = 1 : N
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OptionCombination> optionCombinations = new ArrayList<>();
+
+    //편의 메서드
+    public void addOptionCombination(OptionCombination oc) {
+        this.optionCombinations.add(oc);
+        oc.setItem(this);
+    }
 
     public void updateItem(ItemFormDto itemFormDto,Brand brand){
         this.itemNm = itemFormDto.getItemNm();

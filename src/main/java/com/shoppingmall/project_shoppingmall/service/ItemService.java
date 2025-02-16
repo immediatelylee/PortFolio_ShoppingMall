@@ -27,45 +27,104 @@ public class ItemService {
     private final ItemThumbnailRepository itemThumbnailRepository;
     // 상품에서 브랜드를 수정시에 brand를 조회하기 위하여
     private final BrandRepository brandRepository;
+    private final OptionCombinationRepository optionCombinationRepository;
 
 
-    public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList, List<MultipartFile> itemDetailImgFileList) throws Exception {
-
-        //상품 등록
-        String itemCode = generateItemCode();
+    public Long saveItem(ItemFormDto itemFormDto,
+                         List<MultipartFile> itemImgFileList,
+                         List<MultipartFile> itemDetailImgFileList
+                         ) throws Exception {
+        System.out.println(itemFormDto);
+        // 1) Item 엔티티 생성 & 필드 세팅
         Item item = itemFormDto.toItem();
+        // 기존에 있었던 itemCode 생성 로직
+        String itemCode = generateItemCode();
         item.setItemCode(itemCode);
+
+        // 2) 옵션 처리 분기
+        if (itemFormDto.getDisplayType() == OptionDisplayType.COMBINED) {
+            // 조합 일체형
+            handleCombinedOptions(item, itemFormDto.getCombinationList());
+            item.setDisplayType(OptionDisplayType.COMBINED);
+        }
+        else if (itemFormDto.getDisplayType() == OptionDisplayType.SEPARATED) {
+            // 분리 선택형
+            // 예) OptionSet을 직접 연결 or UsedOption 생성
+            handleSeparatedOptions(item, itemFormDto);
+            item.setDisplayType(OptionDisplayType.SEPARATED);
+        }
+        else {
+            // 옵션 미사용 / NONE
+            // item.setDisplayType(OptionDisplayType.NONE); // 필요 시
+        }
+
+        // 3) Item DB 저장
         itemRepository.save(item);
 
-        //이미지 등록
-        for (int i = 0; i < itemImgFileList.size(); i++) {
-            //set itemimg-item
-            ItemImg itemImg = new ItemImg();
-            itemImg.setItem(item);
+        // 4) 이미지 등록
+        // 대표 이미지 + 일반 이미지
+        if (itemImgFileList != null && !itemImgFileList.isEmpty()) {
+            for (int i = 0; i < itemImgFileList.size(); i++) {
+                ItemImg itemImg = new ItemImg();
+                itemImg.setItem(item);
 
-            if (i == 0) {
-                itemImg.setRepimgYn("Y");
-                // set itemthumbnail-time
-                ItemThumbnail itemThumbnail = new ItemThumbnail();
-                itemThumbnail.setItem(item);
+                if (i == 0) {
+                    // 대표 이미지
+                    itemImg.setRepimgYn("Y");
 
-                itemImgService.saveItemThumbnail(itemThumbnail, itemImgFileList.get(i));
-                itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
-            } else {
-                itemImg.setRepimgYn("N");
+                    // 썸네일도 같이
+                    ItemThumbnail itemThumbnail = new ItemThumbnail();
+                    itemThumbnail.setItem(item);
 
-                itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
+                    itemImgService.saveItemThumbnail(itemThumbnail, itemImgFileList.get(i));
+                    itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
+                } else {
+                    // 일반 이미지
+                    itemImg.setRepimgYn("N");
+                    itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
+                }
             }
         }
-        // 상세이미지 등록
-        for (int i = 0; i < itemDetailImgFileList.size(); i++) {
-            // set itemdetailimg-item
-            ItemDetailImg itemDetailImg = new ItemDetailImg();
-            itemDetailImg.setItem(item);
 
+        // 5) 상세 이미지 등록
+        if (itemDetailImgFileList != null && !itemDetailImgFileList.isEmpty()) {
+            for (int i = 0; i < itemDetailImgFileList.size(); i++) {
+                ItemDetailImg itemDetailImg = new ItemDetailImg();
+                itemDetailImg.setItem(item);
 
-            itemImgService.saveItemDetailImg(itemDetailImg, itemDetailImgFileList.get(i));
+                itemImgService.saveItemDetailImg(itemDetailImg, itemDetailImgFileList.get(i));
+            }
+        }
 
+        // 5) 옵션 조합 저장 (옵션재고를 사용하는 경우)
+        if (itemFormDto.getCombinationList() != null &&
+                !itemFormDto.getCombinationList().isEmpty()) {
+
+            List<String> combinationList = itemFormDto.getCombinationList();
+            // stockUses: 각 옵션 조합에 대해 재고 사용 여부 ("T" 또는 "F")
+            List<String> stockUses = itemFormDto.getStockOption_use();
+            // stocks: 각 옵션 조합별 재고 수량 (정수)
+            List<Integer> stocks = itemFormDto.getItemOption_stock();
+
+            List<OptionCombination> combinationEntities = new ArrayList<>();
+            for (int i = 0; i < combinationList.size(); i++) {
+                OptionCombination oc = new OptionCombination();
+                oc.setCombination(combinationList.get(i));
+
+                // 재고 사용 여부를 체크 (대소문자 구분 없이 "T"이면 true)
+                boolean useStock = "T".equalsIgnoreCase(stockUses.get(i));
+                // 사용하면 해당 재고값, 그렇지 않으면 0 할당
+                if (useStock) {
+                    oc.setUse_stock(true);
+                    oc.setStock(stocks.get(i));
+                } else {
+                    oc.setUse_stock(false);
+                    oc.setStock(0);
+                }
+                oc.setItem(item);  // 연관관계 설정
+                combinationEntities.add(oc);
+            }
+            optionCombinationRepository.saveAll(combinationEntities);
         }
 
         return item.getId();
@@ -399,6 +458,53 @@ public class ItemService {
 
     public List<ItemWithImgDto> getItemsWithImgsBySubCategory(String subCategory) {
         return itemRepository.findItemsWithImgsBySubCategory(subCategory);
+    }
+
+    public Item getItemById(Long id) {
+        return itemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Item not found"));
+    }
+
+    /**
+     * [조합 일체형] 옵션 처리
+     * - combinationList: ["블랙-S","블랙-M","화이트-S"] 등
+     */
+    private void handleCombinedOptions(Item item, List<String> combinationList) {
+        // 조합 목록을 반복하며 OptionCombination 생성
+        if (combinationList != null) {
+            for (String combo : combinationList) {
+                OptionCombination oc = new OptionCombination();
+                oc.setCombination(combo);
+                oc.setStock(0); // 필요하면 재고 필드 활용
+
+                // item.addOptionCombination(oc);
+                // 연관관계 편의 메서드
+                item.addOptionCombination(oc);
+            }
+        }
+    }
+
+    /**
+     * [분리 선택형] 옵션 처리
+     * - 예) itemFormDto로부터 optionSetId를 가져올 수도 있고,
+     *       color/size 필드를 직접 사용해 UsedOption을 만든다든지
+     */
+    private void handleSeparatedOptions(Item item, ItemFormDto itemFormDto) {
+        // 예: OptionSet을 미리 만들어놓았다면
+        // Long optionSetId = itemFormDto.getOptionSetId(); (필드 추가 필요)
+        // OptionSet optionSet = optionSetService.getOptionSetById(optionSetId);
+        // item.setOptionSet(optionSet);
+
+        // or color/size 등 직접 저장
+        // if (itemFormDto.getColor() != null && itemFormDto.getSize() != null) {
+        //     UsedOption usedOptColor = new UsedOption("색상", itemFormDto.getColor());
+        //     usedOptColor.setItem(item);
+        //     UsedOption usedOptSize = new UsedOption("사이즈", String.valueOf(itemFormDto.getSize()));
+        //     usedOptSize.setItem(item);
+        //     // usedOptionRepository.save(...); cascade 설정에 따라 다름
+        // }
+
+        // etc...
     }
 }
 

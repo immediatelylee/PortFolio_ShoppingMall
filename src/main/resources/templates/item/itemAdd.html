@@ -2,6 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout3-item}">
+<th:block layout:fragment="css">
+    <style>
+        /* 전역 box-sizing 설정을 덮어씌우고 싶다면 !important 사용 */
+        *,
+        *::before,
+        *::after {
+            box-sizing: content-box !important;
+        }
+    </style>
+</th:block>
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
@@ -254,6 +264,7 @@
         }
     }
 
+
         $(document).ready(function() {
             // 페이지 로드 시, hidden input의 값을 가져와서 depth 요소에 설정
             var mainCategory = $("#mainCategory").val();
@@ -279,6 +290,569 @@
             if (hasValues) {
                 $("._product_category_checked").removeAttr("style");
             }
+            // 라디오 버튼 -> 옵션 사용 여부 변경
+            $('input[name="has_option"]').on('change', function() {
+                const val = $(this).val();
+                toggleHasOption(val);
+            });
+
+            // chosen 라이브러리 초기화
+            $('#eOptionSetF').chosen({
+                allow_single_deselect: true,
+                search_contains : true,
+                no_results_text : "검색결과가 없습니다. : "
+            });
+            $('#eSavedOption').css('display','none');
+
+            // 사용된 옵션에 옵션 처리
+            // 1) 페이지 로드 후 템플릿을 변수에 보관
+            let $optionTemplate;
+            $optionTemplate = $('#eOptionCombineMatrixTemplate').clone(true);
+
+            // 2) tbody .empty() 하기 전에, 템플릿을 미리 safe-keep
+            //    그리고 #eOptionCombineMatrixTemplate 자체를 remove() or hide()
+            $('#eOptionCombineMatrixTemplate').remove();
+
+
+            // 사용된 옵션 출력
+            // 1) select가 바뀔 때
+            $('#eOptionSetF').on('change', function(){
+                let setId = $(this).val();
+                // (a) 기존 행들 제거
+                $('#eOptionCombineMatrix').empty();
+
+                // (b) 값이 없으면 종료
+                if(!setId) return;
+
+                // (c) AJAX로 /api/optionSet/{setId} 호출
+                $.ajax({
+                    url: '/api/optionSet/' + setId,
+                    method: 'GET',
+                    success: function(data){
+                        // data = { id:..., name:"색상/사이즈", options:[ {id:101, name:"색상", values:["블랙","화이트"]}, ... ] }
+                        if(!data || !data.options) return;
+                        data.options.forEach(function(optDto){
+                            addOptionRow(optDto);
+                        });
+                    },
+                    error: function(xhr){
+                        console.error("옵션세트 불러오기 실패:", xhr);
+                    }
+                });
+                // =============== 사용된 옵션에서 옵션 이동 ===============
+                // =============== 이동 버튼 클릭 핸들러 ==================
+
+                // "위로 이동" 버튼
+                $(document).on('click', '.optionMatrix .lv1Up', function(){
+                    let $tr = $(this).closest('tr.optionMatrix');
+                    let $prev = $tr.prev('.optionMatrix');
+                    if($prev.length > 0) {
+                        // 이전 행이 있으면, 그 앞에 붙여서 순서 교환
+                        $prev.before($tr);
+                        // 순서 갱신
+                        refreshSortOrder();
+                    }
+                });
+
+                // "아래로 이동" 버튼
+                $(document).on('click', '.optionMatrix .lv1Down', function(){
+                    let $tr = $(this).closest('tr.optionMatrix');
+                    let $next = $tr.next('.optionMatrix');
+                    if($next.length > 0) {
+                        // 다음 행이 있으면, 그 뒤에 붙여서 순서 교환
+                        $next.after($tr);
+                        // 순서 갱신
+                        refreshSortOrder();
+                    }
+                });
+
+        });
+
+        function toggleHasOption(hasOption) {
+            if (hasOption === 'T') {
+                console.log("togglehasOption start")
+                //
+                // 1) .mToggleBar.eToggle 에 selected 클래스 추가
+                //
+                $('.mToggleBar.eToggle').addClass('selected');
+                //
+                // 2), 3) 버튼 em 텍스트 "펼치기" -> "접기"
+                //
+                $('.mToggleBar.eToggle .ctrl button em').text('접기');
+                //
+                // 4) "사용함" 라벨 -> eSelected, "사용안함" 라벨 -> removeClass
+                //
+                $('#eOptionUseT').closest('label').addClass('eSelected');
+                $('#eOptionUseF').closest('label').removeClass('eSelected');
+                //
+                // 5) 모든 .gDivision.eMultiProductStock -> display='table' (일단 전부 table) -- 이였으나.
+                // 옵션구성방식과 옵션설정을 전부 구현할 시간적 여유가 없어서  임시로 display: table->none으로 지정
+                // TODO: 추후에 조합 일체선택형,조합일체분리선택형,상품연동형,독립선택형... 구현가능할때 다시 display:table로 지정
+                //
+                $('.gDivision.eMultiProductStock').css('display','none');
+                //
+                // 6) eItemListingType -> display='none' (diff: none 유지)
+                //
+                $('#eItemListingType').css('display','none');
+                //
+                // 7) eOptionRegistType -> style="": diff에서 display: none -> (없음)
+                // TODO: 추후에 다시 '' 으로 지정할것
+                //
+                $('#eOptionRegistType').css('display','none');
+                //
+                // 8) eSavedOption -> style=""
+                //
+                $('#eSavedOption').css('display','');
+                //
+                // 9), 11) .option-set-modify -> style="display:none"
+                //
+                $('.option-set-modify').css('display','none');
+                //
+                // 10) eOptionSetValuesT -> style="display:none"
+                //
+                $('#eOptionSetValuesT').css('display','none');
+                //
+                // 12) eSingleProductStock -> style="display:none"
+                //
+                $('#eSingleProductStock').css('display','none');
+                //
+                // 13) eItemListContainer -> style=""
+                //
+                $('#eItemListContainer').css('display','');
+
+                //추가
+                // 중복적용 - 추후 5) 7)개발이 다시 진행되면 주석을 풀거나 삭제
+                // $('.gDivision.eMultiProductStock').css('display','table');
+                $('#eItemListingType').css('display','none');
+                // 중복적용 - 추후 5) 7)개발이 다시 진행되면 주석을 풀거나 삭제
+                // $('#eOptionRegistType').css('display','');
+                $('#eSavedOption').css('display','');
+                $('.option-set-modify').css('display','none');
+                $('#eOptionSetValuesT').css('display','none');
+                $('#eSingleProductStock').css('display','none');
+                $('#eItemListContainer').css('display','');
+
+                // 1) "사용함"이어서 테이블을 보이게 했으면,
+                //    Chosen 셀렉트들도 업데이트
+                $('#eOptionSetF').trigger('chosen:updated');
+                // 만약 #eOptionSetT 등 다른 select도 있다면
+                // $('#eOptionSetT').trigger('chosen:updated');
+
+            } else {
+                // === "사용안함(F)" ===
+                //
+                // 1) .mToggleBar.eToggle: removeClass('selected')
+                //
+                $('.mToggleBar.eToggle').removeClass('selected');
+                //
+                // 2), 3) 버튼 em 텍스트 "접기" -> "펼치기"
+                //
+                $('.mToggleBar.eToggle .ctrl button em').text('펼치기');
+                //
+                // 4) "사용안함" 라벨 -> eSelected, "사용함" 라벨 -> removeClass
+                //
+                $('#eOptionUseT').closest('label').removeClass('eSelected');
+                $('#eOptionUseF').closest('label').addClass('eSelected');
+                //
+                // 5) .gDivision.eMultiProductStock -> display='none'
+                //
+                $('.gDivision.eMultiProductStock').css('display','none');
+                //
+                // 6) eItemListingType -> display='none'
+                //
+                $('#eItemListingType').css('display','none');
+                //
+                // 7) eOptionRegistType -> display='none'
+                //
+                $('#eOptionRegistType').css('display','none');
+                //
+                // 8) eSavedOption -> display='none'
+                //
+                $('#eSavedOption').css('display','none');
+                //
+                // 9), 11) .option-set-modify -> 원래 상태 (보이게)
+                //
+                $('.option-set-modify').css('display','');
+                //
+                // 10) eOptionSetValuesT -> display=''
+                //
+                $('#eOptionSetValuesT').css('display','');
+                //
+                // 12) eSingleProductStock -> display='table'
+                //
+                $('#eSingleProductStock').css('display','table');
+                //
+                // 13) eItemListContainer -> display='none'
+                //
+                $('#eItemListContainer').css('display','none');
+
+
+                $('.gDivision.eMultiProductStock').css('display','none');
+                $('#eOptionSetValuesT').css('display','');
+                $('#eSingleProductStock').css('display','table');
+                $('#eItemListContainer').css('display','none');
+
+                // (필요하면)
+                $('#eOptionSetF').trigger('chosen:updated');
+            }
+        }
+
+        function addOptionRow(optDto){
+            // (a) 템플릿 복제
+            let $tpl = $optionTemplate.clone(true);
+            $tpl.removeAttr('id').show();
+
+            // **이 부분에서 "eSortlv1Down" → "lv1Down", "eSortlv1Up" → "lv1Up" 치환**
+            // (1) 전체 하위 요소 중 'eSortlv1'이 들어간 클래스를 찾는다
+            $tpl.find('[class*="eSortlv1"]').each(function(){
+                let oldClass = $(this).attr('class');
+                // (2) 치환
+                //     "eSortlv1Down" -> "lv1Down"
+                //     "eSortlv1Up" -> "lv1Up"
+                let newClass = oldClass
+                    .replace('eSortlv1Down','lv1Down')
+                    .replace('eSortlv1Up','lv1Up');
+                $(this).attr('class', newClass);
+            });
+
+            // (b) 옵션명 표시
+            $tpl.find('.eOptionName').text(optDto.name);
+
+            // (c) 옵션값(li) 동적 추가
+            let $ul = $tpl.find('ul.mForm');
+            // "전체" li는 그대로 두고, optDto.values를 붙여줌
+            optDto.values.forEach(function(v){
+                let liHtml = `
+        <li>
+          <label class="gLabel eSelected">
+            <input type="checkbox" class="fChk" optionprice="0" checked="checked" value="${v}">
+            ${v}
+          </label>
+        </li>`;
+                $ul.append(liHtml);
+            });
+
+            // d) #eOptionCombineMatrix에 append
+            $('#eOptionCombineMatrix').append($tpl);
+        }
+            // =============== 순서 갱신 함수 ===============
+            function refreshSortOrder(){
+                // 1) 모든 .optionMatrix 행을 순회하여, 현재 인덱스+1을 숨은 필드 sortOrder[]에 세팅
+                $('#optionMatrixTbody tr.optionMatrix').each(function(index){
+                    // index는 0부터, 우리가 보통 1부터라고 하면 index+1
+                    $(this).find('input[name="sortOrder[]"]').val(index+1);
+                });
+
+                // 2) 최상위/최하위 버튼 비활성화 처리
+                //    먼저 모든 Up/Down 버튼을 활성화
+                $('.optionMatrix .lv1Up').prop('disabled', false);
+                $('.optionMatrix .lv1Down').prop('disabled', false);
+
+                let $allRows = $('#optionMatrixTbody tr.optionMatrix');
+                // 최상위 행 - Up 비활성
+                $allRows.first().find('.lv1Up').prop('disabled', true);
+                // 최하위 행 - Down 비활성
+                $allRows.last().find('.lv1Down').prop('disabled', true);
+        }
+
+            // =============== 페이지 처음 로딩 시에도 초기 상태 갱신 ===============
+            refreshSortOrder();
+
+            // =============== 사용된 옵션 체크 ===============
+            // ===========================================
+            //  (A) "전체" 체크박스 -> 같은 행의 옵션값 모두 체크/해제
+            // ===========================================
+            $(document).on('change', 'tr.optionMatrix input._all_option_check', function(){
+                const isChecked = $(this).prop('checked');
+                const $row = $(this).closest('tr.optionMatrix');
+                // 같은 행의 개별 옵션값 체크박스 (._all_option_check 제외)
+                const $optionValues = $row.find('input.fChk').not('._all_option_check');
+                $optionValues.prop('checked', isChecked);
+
+            });
+
+            // ===========================================
+            //  (B) 개별 옵션값 체크/해제 -> "전체" 체크박스도 반영
+            // ===========================================
+            $(document).on('change', 'tr.optionMatrix input.fChk:not(._all_option_check)', function(){
+                const $row = $(this).closest('tr.optionMatrix');
+                const $allChk = $row.find('input._all_option_check');
+
+                const $allValues = $row.find('input.fChk').not('._all_option_check');
+                // 모든 개별 값이 체크돼 있다면 "전체"도 체크
+                // 하나라도 풀려 있으면 "전체" 해제
+                let allChecked = true;
+                $allValues.each(function(){
+                    if(!$(this).prop('checked')){
+                        allChecked = false;
+                        return false; // break out of .each
+                    }
+                });
+                $allChk.prop('checked', allChecked);
+            });
+
+            // ===========================================
+            //  (C) "모든 옵션 품목추가" 버튼 (#eEntireOption)
+            //      -> 모든 옵션값 체크 후, 품목추가 처리
+            // ===========================================
+            $('#eEntireOption').on('click', function(e){
+                e.preventDefault();
+
+                // 1) 모든 체크박스 (._all_option_check 포함/제외) 전부 체크
+                $('tr.optionMatrix').each(function(){
+                    $(this).find('input.fChk').prop('checked', true);
+                });
+
+                // 2) 품목추가 로직
+                const checkedItems = gatherCheckedOptionValues();
+                console.log("checkedItems")
+                console.log(checkedItems)
+                createProductOption(checkedItems);
+            });
+
+            // ===========================================
+            //  (D) "선택한 옵션 품목추가" 버튼 (#eSelectedOption)
+            //      -> 현재 체크돼 있는 것만 품목추가 처리
+            // ===========================================
+            $('#eSelectedOption').on('click', function(e){
+                e.preventDefault();
+
+                const checkedItems = gatherCheckedOptionValues();
+                createProductOption(checkedItems);
+            });
+
+            // ===========================================
+            //  (E) 체크된 옵션 목록 수집 함수
+            //      ex: [ {optionCode:'O000000A', values:['블랙','화이트']}, ... ]
+            // ===========================================
+            function gatherCheckedOptionValues(){
+                let result = [];
+
+                $('tr.optionMatrix').each(function(){
+                    // let optionCode = $(this).attr('option_code');
+                    // if(!optionCode) return; // 안전 체크
+
+                    // 이 행에서 체크된 개별 옵션값들
+                    let values = [];
+                    $(this).find('input.fChk:not(._all_option_check):checked').each(function(){
+                        values.push($(this).val());
+                    });
+
+                    if(values.length > 0) {
+                        result.push({
+
+                            values: values
+                        });
+                    }
+                });
+
+                return result;
+            }
+
+            // ===========================================
+            //  (F) 상품옵션 생성
+            // ===========================================
+
+            function cartesianProduct(arrays) {
+                // 결과를 담을 배열
+                const result = [];
+
+                // 재귀 함수: 현재 인덱스(index)부터 시작하여, current에 선택한 요소들을 누적
+                function helper(index, current) {
+                    // 모든 배열을 순회했다면 결과에 추가
+                    if (index === arrays.length) {
+                        result.push(current);
+                        return;
+                    }
+                    // 현재 배열의 모든 요소에 대해 재귀 호출
+                    for (let i = 0; i < arrays[index].length; i++) {
+                        helper(index + 1, current.concat(arrays[index][i]));
+                    }
+                }
+
+                // 시작: 인덱스 0, 빈 배열에서 시작
+                helper(0, []);
+                return result;
+            }
+
+            function createProductOption(checkedItems) {
+                // (1) 각 객체의 values 배열만 추출하여 2차원 배열로 만듭니다.
+                let groups = checkedItems.map(item => item.values);
+                console.log("전송할 옵션 그룹 데이터:", groups);
+
+                // (2) 데카르트 곱을 통해 모든 조합을 생성합니다.
+                let combinations = cartesianProduct(groups);
+                // 각 조합을 "/"로 연결해서 텍스트 형태로 만듭니다.
+                let combinationTexts = combinations.map(comb => comb.join('/'));
+                console.log("생성된 옵션 조합 텍스트:", combinationTexts);
+
+                // // (3) 생성된 조합 텍스트들을 화면에 표시합니다.
+                // // 예: 옵션 조합 목록을 보여주는 div 혹은 span (미리 HTML에 준비되어 있어야 함)
+                // $('#optionCombinationDisplay').text(combinationTexts.join(', '));
+                //
+                // // (4) hidden input에 JSON 문자열로 저장합니다.
+                // // 이 값은 나중에 item 저장 시 함께 전송되어 서버에서 처리됩니다.
+                // $('#optionCombinationHidden').val(JSON.stringify(combinationTexts));
+
+                renderProductOptions(combinationTexts);
+            }
+
+            // ===========================================
+            //  (G) 랜더링
+            // ===========================================
+            function renderProductOptions(combinationTexts) {
+                console.log("combinationTexts:", combinationTexts);
+
+                // 기존에 생성된 행들을 모두 지웁니다.
+                $('table.eChkColor.eItemRow.created-item-row').remove();
+
+                combinationTexts.forEach(function(combination, index) {
+                    // 템플릿 행 복제
+                    let $row = $('#eItemRowTemplate').clone(true);
+                    if ($row.length === 0) {
+                        console.error("템플릿 #eItemRowTemplate이 존재하지 않습니다.");
+                        return;
+                    }
+                    $row.removeAttr('id')
+                        .show()
+                        .addClass('created-item-row')  // 여기서 바로 추가
+                        .attr('option_compare', `옵션=${combination}`)
+                        .attr('item-sequence', index+1);
+
+
+                    $row.removeAttr('id').show(); // id 제거하고 보이게 처리
+                    // 순번 업데이트 (예: eItemSequnce 요소)
+                    $row.find('.eItemSequnce').text(index + 1);
+                    // 옵션 조합 텍스트를 .eOptionValue 요소에 설정
+                    $row.find('.eOptionValue').text(combination);
+                    // 필요하다면 hidden input에도 조합 값을 넣어줍니다.
+                    $row.find('.eOptionValueHidden').val(combination);
+                    $row.find('.eItemCheckBox').val(index + 1);
+                    // -----------------------------
+                    // name 속성 변경 작업
+                    // 기존에 name="mp_option_value[]"인 요소를 "combinationList[]"로 변경
+                    $row.find('.eOptionValueHidden').attr('name', 'combinationList[]');
+                    // 기존에 name="mp_use_manage_stock[]"인 select를 "stockOption_use[]"로 변경
+                    $row.find('select.eBatchUseManageStockMp').attr('name', 'stockOption_use[]');
+                    // 기존에 name="mp_stock_number[]"인 input을 "itemOption_stock[]"로 변경
+                    $row.find('input.eBatchStockNumberMp').attr('name', 'itemOption_stock[]');
+                    // -----------------------------
+
+
+                    // 디버그: 복제된 행의 HTML 내용 확인
+                    // console.log("클론된 행 HTML:", $row.html());
+                    // 복제한 행을 최종 컨테이너에 추가합니다.
+                    $('#eItemList').append($row);
+                });
+            }
+
+            // ===========================================
+            //  (G) 삭제 이후 업데이트
+            // ===========================================
+            // 삭제 후 순번 업데이트 함수
+            function updateItemSequence() {
+                $('table.eChkColor.eItemRow.created-item-row').each(function(index) {
+                    // index는 0부터 시작하므로 실제 순번은 index+1
+                    $(this).attr('item-sequence', index + 1);
+                    $(this).find('.eItemSequnce').text(index + 1);
+                    $(this).find('.eItemCheckBox').val(index + 1);
+                });
+            }
+
+            // "선택된 행 삭제" 버튼 클릭 핸들러
+            $(document).on('click', '.eItemDelete', function(e) {
+                e.preventDefault();
+                // 각 생성된 옵션 테이블(row)마다 체크박스를 검사합니다.
+                $('table.eChkColor.eItemRow.created-item-row').each(function() {
+                    // 각 테이블의 첫번째 td(w14) 안에 있는 체크박스 (클래스: rowChk eItemCheckBox)를 찾습니다.
+                    // 만약 체크되어 있다면 해당 테이블(row)를 삭제합니다.
+                    if ($(this).find('td.w14 input.rowChk.eItemCheckBox').prop('checked')) {
+                        $(this).remove();
+                    }
+                });
+                // 삭제 후 순번 업데이트
+                updateItemSequence();
+            });
+
+
+            // ---------- 상품옵션 체크박스   ----------
+            // (1) 전체 선택 체크박스 기능
+            $(document).on('change', '#chkAllItem', function() {
+                var isChecked = $(this).prop('checked');
+                // .loadingArea 하위에서, class가 created-item-row인 table 내부의
+                // td.w14 안에 있는 input.rowChk.eItemCheckBox를 찾아 checked 상태를 설정
+                $('.loadingArea')
+                    .find('table.created-item-row td.w14 input.rowChk.eItemCheckBox')
+                    .prop('checked', isChecked);
+            });
+            // (2) 옵션행 순서 변경 및 순번/속성 업데이트 기능
+            function updateSortButtons(){
+                var $rows = $('#eItemList table.created-item-row');
+                // 순번 및 item-sequence attribute 재계산 (1부터 시작)
+                $rows.each(function(index){
+                    // 표시된 순번 업데이트 (예: <td class="eItemSequnce">)
+                    $(this).find('.eItemSequnce').text(index + 1);
+                    // 테이블에 있는 custom attribute "item-sequence"도 업데이트
+                    $(this).attr('item-sequence', index + 1);
+                });
+                // 모든 Up/Down 버튼 활성화
+                $rows.find('button.lv2Up, button.lv2Down').prop('disabled', false);
+                if($rows.length > 0){
+                    $rows.first().find('button.lv2Up').prop('disabled', true);
+                    $rows.last().find('button.lv2Down').prop('disabled', true);
+                }
+            }
+
+            // "위로 이동" 버튼 클릭 이벤트
+            $(document).on('click.optionSort', 'button.lv2Up', function(e){
+                e.preventDefault();
+                var $row = $(this).closest('table.created-item-row');
+                var $prev = $row.prev('table.created-item-row');
+                if($prev.length){
+                    $row.insertBefore($prev);
+                    updateSortButtons();
+                }
+            });
+
+            // "아래로 이동" 버튼 클릭 이벤트
+            $(document).on('click.optionSort', 'button.lv2Down', function(e){
+                e.preventDefault();
+                var $row = $(this).closest('table.created-item-row');
+                var $next = $row.next('table.created-item-row');
+                if($next.length){
+                    $row.insertAfter($next);
+                    updateSortButtons();
+                }
+            });
+
+            // 페이지 로드 시 초기 상태 업데이트
+            updateSortButtons();
+
+
+            // ---------- 상품옵션 재고관리   ----------
+            // 재고관리 '사용함'으로 변경하였을때
+            $(document).on('change', 'select.eBatchUseManageStockMp', function(){
+                var useStock = $(this).val();
+                // 현재 select가 포함된 tr을 기준으로 작업 (만약 공통 부모가 tr이 아니라면 적절히 조정)
+                var $row = $(this).closest('tr');
+
+                if(useStock === 'T'){
+                    // "사용함"인 경우: 재고 유형, 판매 기준, 재고 수량을 보이게 하고,
+                    // 대시를 빈 문자열("")로 변경 (즉, 대시 제거)
+                    $row.find('select.eBatchStockTypeMp').css('display', 'inline-block');
+                    $row.find('select.eBatchSoldOutStockTypeMp').css('display', 'inline-block');
+                    $row.find('input.eBatchStockNumberMp').css('display', 'inline-block');
+                    $row.find('.ec-use-inventory-display-item').text('');
+                } else {
+                    // "사용안함"인 경우: 관련 요소들을 숨기고,
+                    // 대시("-")를 다시 표시
+                    $row.find('select.eBatchStockTypeMp').css('display', 'none');
+                    $row.find('select.eBatchSoldOutStockTypeMp').css('display', 'none');
+                    $row.find('input.eBatchStockNumberMp').css('display', 'none');
+                    $row.find('.ec-use-inventory-display-item').text('-');
+                }
+            });
+
         });
 
     </script>
@@ -355,7 +929,7 @@
                 </div>
 
 
-                <div id="QA_register2" class="section">
+                <div id="QA_register2" class="section" style="margin-top: 25px">
                     <div class="mToggleBar eToggle selected">
                         <h2>판매 정보</h2>
                         <div class="ctrl">
@@ -419,11 +993,11 @@
                                         <div class="gIcoShop">
                                             <label class="gLabel">
                                                 <input type="radio" th:field="*{itemDisplayStatus}" th:value="DISPLAY"  class="form-check-input" name="itemDisplayStatus">
-<!--                                                <input type="radio" name="is_display[1]" class="fChk" value="T"> -->
+
                                                 진열함</label>
                                             <label class="gLabel eSelected">
                                                 <input type="radio" th:field="*{itemDisplayStatus}" th:value="NOT_DISPLAY"  class="form-check-input" name="itemDisplayStatus">
-<!--                                                <input type="radio" name="is_display[1]" class="fChk" value="F" checked="checked">-->
+
                                                 진열안함</label>
                                         </div>
                                     </td>
@@ -435,11 +1009,11 @@
 
                                             <label class="gLabel">
                                                 <input type="radio" th:field="*{itemSellStatus}" th:value="SELL"  class="form-check-input" name="itemSellStatus">
-<!--                                                <input type="radio" name="selling_status[1]" class="fChk" value="T">-->
+
                                                 판매함</label>
                                             <label class="gLabel eSelected">
                                                 <input type="radio" th:field="*{itemSellStatus}" th:value="SOLD_OUT"  class="form-check-input" name="itemSellStatus">
-<!--                                                <input type="radio" name="selling_status[1]" class="fChk" value="F" checked="checked">-->
+
                                                 판매안함</label>
                                         </div>
                                     </td>
@@ -599,7 +1173,7 @@
                                         </div>
                                         <p class="gDouble">
                                             <span class="icoDot"></span>
-                                            <strong class="gWidth wPrdCategory">선택된 상품분류</strong>
+                                            <strong class="gWidth wPrdCategory" style="width: 91px">선택된 상품분류</strong>
                                             <span class="_product_category_none">
                                 </span>
                                             <span style="display:none;" class="_product_category_checked">
@@ -624,8 +1198,714 @@
                     </div>
                 </div>
 
+<!--            상품 옵션-->
+            <div class="section eOptionArea" id="QA_register4">
+                <input type="hidden" name="bItemExtraCount" value="">
+                <input type="hidden" name="sBatchTotalData">
+                <input type="hidden" name="sModifyOptionData" value="F" id="eModifyOptionData">
+                <input type="hidden" name="set_stock_data_modify" value="F" id="eSetStockModifyData">
+            <div class="mToggleBar eToggle selected" id="item">
+                <h2 class="eToggleTitle">옵션/재고 설정</h2>
+            </div>
+            <div class="toggleArea" style="display:block;">
+                <div class="mBoard typeProduct">
+                    <table border="1" summary="">
+                        <caption>옵션 사용여부 설정</caption>
+                        <colgroup>
+                            <col class="product">
+                            <col style="width:auto">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th scope="row">옵션사용
+                            </th>
+                            <td>
+                                <label class="gLabel eSelected"><input type="radio" name="has_option" class="fChk eMarketChecker" id="eOptionUseT" value="T"> 사용함</label>
+                                <label class="gLabel"><input type="radio" name="has_option" class="fChk" id="eOptionUseF" value="F" checked="checked"> 사용안함</label>
+                                <input type="hidden" name="has_option_old" value="">
+                                <input type="hidden" name="product_sub_code_old" value="">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
 
-                <div id="QA_register5" class="section">
+                    <table border="1" summary="" class="gDivision eMultiProductStock" style="display: none;">
+                        <caption>품목 구성방식 설정</caption>
+                        <colgroup>
+                            <col class="product">
+                            <col style="width:auto">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th scope="row">옵션 구성방식 <div class="cTip" code="PR.PE.RE.OP.20"><div class="mTooltip gLarge">
+                                <button type="button" class="icon eTip">도움말</button>
+                                <div class="tooltip" style="z-index : 1; ">
+                                    <div class="content"></div>
+                                    <button type="button" class="close eClose">닫기</button>
+                                    <span class="edge"></span>
+                                </div>
+                            </div>
+                            </div></th>
+                            <td class="gGrid _product_listing_type" beforeclick="T">
+                                <label class="gLabel eOptionTypeLabel eSelected"><input type="radio" name="option_type" class="fChk eOptionType" id="eItemCombineT_C" value="T" checked="checked"> 조합 일체선택형</label>
+                                <label class="gLabel eOptionTypeLabel"><input type="radio" name="option_type" class="fChk eOptionType" id="eItemCombineT_S" value="T"> 조합 분리선택형</label>
+                                <label class="gLabel eOptionTypeLabel"><input type="radio" name="option_type" class="fChk eOptionType" id="eItemCombineE" value="E"> 상품 연동형</label>
+                                <label class="gLabel eOptionTypeLabel"><input type="radio" name="option_type" class="fChk eOptionType" id="eItemCombineF" value="F"> 독립 선택형</label>
+                                <input type="hidden" name="old_option_type" id="sOldOptionType" value="">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <table border="1" summary="" class="gDivision addForm" id="eUseOptionOnlyOne" style="display: none;">
+                        <caption>옵션 선택방식 설정</caption>
+                        <colgroup>
+                            <col class="product">
+                            <col style="width:auto">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th scope="row">옵션 선택방식</th>
+                            <td>
+                                <label class="gLabel"><input type="checkbox" name="use_option_select_onlyone" value="T" class="fChk"> 옵션별로 한 개씩 선택</label>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <table border="1" summary="" class="gDivision eMultiProductStock" id="eItemListingType" style="display: none;">
+                        <caption>옵션 표시방식 설정</caption>
+                        <colgroup>
+                            <col class="product">
+                            <col style="width:auto">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th scope="row">옵션 표시방식</th>
+                            <td>
+                                <label class="gLabel eSelected"><input type="radio" name="item_listing_type" class="fChk" checked="checked" id="eItemDisplayTypeC" value="C"> 일체선택형</label>
+                                <label class="gLabel"><input type="radio" name="item_listing_type" class="fChk" id="eItemDisplayTypeS" value="S"> 분리선택형</label>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 옵션설정 -->
+                    <table border="1" summary="" class="gDivision eMultiProductStock" id="eOptionRegistType" style="display: none;">
+                        <caption>옵션 등록방식 설정</caption>
+                        <colgroup>
+                            <col class="product">
+                            <col style="width:auto">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th scope="row">옵션설정 <div class="cTip" code="PR.PE.RE.OP.30"><div class="mTooltip gLarge">
+                                <button type="button" class="icon eTip">도움말</button>
+                                <div class="tooltip" style="z-index : 1; ">
+                                    <div class="content"></div>
+                                    <button type="button" class="close eClose">닫기</button>
+                                    <span class="edge"></span>
+                                </div>
+                            </div>
+                            </div></th>
+                            <td>
+                                <label class="gLabel eSelected"><input type="radio" name="is_option_setting" class="fChk" id="eUseOptionSetT" value="T" checked="checked"> 옵션세트 불러오기</label>
+                                <label class="gLabel"><input type="radio" name="is_option_setting" class="fChk" id="eUseOptionSetS" value="S"> 옵션 불러오기</label>
+                                <label class="gLabel"><input type="radio" name="is_option_setting" class="fChk" id="eUseOptionSetF" value="F"> 직접 입력하기</label>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 옵션세트명 -->
+                    <table border="1" summary="" class="gDivision" id="eOptionSetName" style="display:none">
+                        <caption>옵션세트명 입력</caption>
+                        <colgroup>
+                            <col class="product">
+                            <col style="width:auto">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th scope="row">옵션세트명 <div class="cTip" code="PR.PE.RE.OP.40"><div class="mTooltip ">
+                                <button type="button" class="icon eTip">도움말</button>
+                                <div class="tooltip" style="z-index : 1; width: 550px">
+                                    <div class="content"></div>
+                                    <button type="button" class="close eClose">닫기</button>
+                                    <span class="edge"></span>
+                                </div>
+                            </div>
+                            </div>
+                                <strong class="icoRequired">필수</strong>
+                            </th>
+                            <td>
+                                <input type="text" name="option_setname" class="fText" style="width:300px;">
+                                <a href="#none" class="btnNormal" id="btnOptionSetName"><span>상품명 불러오기</span></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <table border="1" summary="" class="gDivision " id="eManualOption" style="display: none;">
+                        <caption>상품 옵션 입력</caption>
+                        <colgroup>
+                            <col class="product">
+                            <col style="width:auto">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th scope="row">옵션입력 <div class="cTip" code="PR.PE.RE.OP.50"><div class="mTooltip ">
+                                <button type="button" class="icon eTip">도움말</button>
+                                <div class="tooltip" style="z-index : 1; width: 650px">
+                                    <div class="content"></div>
+                                    <button type="button" class="close eClose">닫기</button>
+                                    <span class="edge"></span>
+                                </div>
+                            </div>
+                            </div></th>
+                            <td>
+                                <div id="eUseOptionSetFLoadArea" class="mCtrl typeHeader">
+                                    <div class="gLeft">
+                                        <div class="inputFormArea">
+                                            <a href="#none" class="btnCtrl eSetList"><span>옵션세트 불러오기<em class="icoLayer"></em></span></a>
+                                            <div id="eLoadOptionSetList" class="mInputForm typeCtrl">
+                                                <div class="function">
+                                                    <select id="eSetSearchKey" name="SearchKey" class="fSelect" style="width:135px;">
+                                                        <option value="SetName" selected="selected">옵션세트명</option>
+                                                        <option value="SetDesc">옵션세트 설명</option>
+                                                        <option value="SetCode">옵션세트코드</option>
+                                                        <option value="OptionName">옵션명</option>
+                                                        <option value="OptionValue">옵션값</option>
+                                                        <option value="OptionCode">옵션코드</option>
+                                                    </select>
+                                                    <input id="eSetSearchValue" name="SearchValue" type="text" class="fText" style="width:200px;">
+                                                </div>
+                                                <div class="list">
+                                                    <div class="scroll">
+                                                    </div>
+                                                    <div class="ctrl">
+                                                        <a href="#none" title="새창 열림" class="btnNormal" onclick="OlnkR.openOptionSet()"><span>옵션세트 관리 바로가기<em class="icoLink"></em></span></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="inputFormArea">
+                                            <a href="#none" class="btnCtrl eOptionList"><span>옵션 불러오기<em class="icoLayer"></em></span></a>
+                                            <div id="eLoadOptionList" class="mInputForm typeCtrl">
+                                                <div class="function">
+                                                    <select id="eOptionSearchKey" name="SearchKey" class="fSelect" style="width:110px;">
+                                                        <option value="OptionName" selected="selected">옵션명</option>
+                                                        <option value="OptionValue">옵션값</option>
+                                                        <option value="OptionDesc">옵션설명</option>
+                                                        <option value="OptionCode">옵션코드</option>
+                                                    </select>
+                                                    <input id="eOptionSearchValue" name="SearchValue" type="text" class="fText" style="width:220px;">
+                                                </div>
+                                                <div class="list">
+                                                    <div class="scroll">
+                                                    </div>
+                                                    <div class="ctrl">
+                                                        <a href="#none" title="새창 열림" class="btnNormal" onclick="OlnkR.openOptionList()"><span>옵션관리 바로가기<em class="icoLink"></em></span></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mBoard gCellSingle">
+                                    <table border="1" summary="">
+                                        <caption>옵션세트</caption>
+                                        <colgroup>
+                                            <col style="width:80px">
+                                            <col style="width:150px">
+                                            <col style="width:240px">
+                                            <col style="width:auto">
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">편집</th>
+                                            <th scope="col">옵션스타일</th>
+                                            <th scope="col">옵션명</th>
+                                            <th scope="col">옵션값</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="eManualOptionTbody">
+                                        <tr class="eHeading heading" id="eManualOptionHeadTemplate">
+                                            <td class="center">
+                                                <button type="button" class="btnOption lv1Down"><span>선택한 항목 한줄 아래로 이동</span></button>
+                                                <button type="button" class="btnOption lv1Up"><span>선택한 항목 한줄 위로 이동</span></button>
+                                            </td>
+                                            <td>
+                                                <select class="eOptionStyleSelect" id="option_display_type_[#NUM#]">
+                                                    <option value="S">셀렉트박스</option>
+                                                    <option value="P">미리보기</option>
+                                                    <option value="B">텍스트버튼</option>
+                                                    <option value="R">라디오버튼</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="option1" placeholder="예시) 색상" class="fText eManualOptionName" style="width:90%;">
+                                                <p class="gSingle">
+                                                    <label class="eIsNecessaryOption" style="display: none;">
+                                                        <input type="checkbox" class="fChk eOptionNecessary" name="is_necessary[#NUM#]" value="T"> 필수옵션으로 사용
+                                                    </label>
+                                                </p>
+                                            </td>
+                                            <td class="eBubbleArea" id="eOptionBubbleArea_[#NUM#]">
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="mCtrl typeFooter">
+                                    <div class="gRight">
+                                        <a href="#none" class="btnCtrl _product_option_self_create" id="eManualOptionCombine"><span>모든 옵션 품목추가</span></a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <table border="1 " summary="" class="gDivision eMultiProductStock" id="eSavedOption" style="">
+                        <caption>상품 옵션 설정</caption>
+                        <colgroup>
+                            <col class="product">
+                            <col style="width:auto">
+                        </colgroup>
+                        <tbody>
+
+                        <tr id="optionSingleLoad" style="display: none;">
+                            <th scope="row">옵션 불러오기 <strong class="icoRequired">필수</strong></th>
+                            <td>
+                                <a class="btnCtrl" id="popupItemOptionList" title="새창 열림" href="#none"><span>옵션 추가 <em class="icoLink"></em></span></a>
+                            </td>
+                        </tr>
+
+                        <tr id="optionSetLoad">
+                            <th scope="row">옵션세트 불러오기 <strong class="icoRequired">필수</strong></th>
+                            <td class="">
+<!--                                test area-->
+                                <span id="eOptionSetValuesF">
+                                <select id="eOptionSetF" data-placeholder="- 옵션세트(품목생성형) 선택 -" class="chzn-select-deselect option-set-value-box chzn-done" style="width: 450px;">
+
+                                    <option value=""></option>
+                                    <option th:each="os : ${optionSets}"
+                                                      th:value="${os.id}"
+                                                      th:text="${os.name}">
+                                    </option>
+
+
+
+                                </select>
+
+                                    <a href="#none" target="_blank" title="새창 열림" class="btnNormal option-set-modify" style="display: inline-block;">
+                                        <span>옵션세트 수정<em class="icoLink"></em></span>
+                                    </a>
+                                    <a href="#none" title="새창 열림" class="btnNormal" onclick="OlnkR.openOptionSet()">
+                                        <span>옵션세트(품목생성형) 관리 바로가기<em class="icoLink"></em></span>
+                                    </a>
+                                </span>
+
+                                <input type="hidden" name="edit_option_set_code" value="">
+                                <input type="hidden" name="mp_prd_product_code" value="">
+                                <input type="hidden" name="is_using_option_set" value="">
+                            </td>
+                        </tr>
+                        <tr id="eOptionMatrixPrvBox" style="display: none;">
+                            <th scope="row">사용된 옵션</th>
+                            <td>
+                                <div class="gIcoShop">
+                                    <span class="icoShop" title="쇼핑몰별">쇼핑몰별</span>
+                                    <div class="mBoard eOptionCombine">
+                                        <table border="1" summary="">
+                                            <caption>옵션 미리보기</caption>
+                                            <colgroup class="eOptionCombinePrvBoxCol">
+                                                <col class="chk each-option-remove-col" style="display:none;">
+                                                <col style="width:100px">
+                                                <col style="width:150px">
+                                                <col style="width:auto">
+                                                <col style="width:130px">
+                                                <col style="width:110px">
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th scope="col" class="each-option-remove-all" style="display:none;">
+                                                    <input type="checkbox" class="allChk">
+                                                </th>
+                                                <th scope="col" class="eModifyOptionSetSort">편집</th>
+                                                <th scope="col">옵션명</th>
+                                                <th scope="col">옵션값</th>
+                                                <th scope="col">옵션스타일</th>
+                                                <th scope="col">옵션값 관리</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="eOptionMatrixPrvList">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="mCtrl typeFooter">
+                                        <div class="gLeft">
+                                            <a href="#none" class="btnNormal option-remove-button" style="display:none">
+                                                <span><em class="icoDel"></em> 삭제</span>
+                                            </a>
+                                            <a href="#none" class="btnNormal" style="visibility:hidden;"><span>높이를 일정하게 맞추기 위한 가짜 버튼</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="eOptionMatrixSelBox">
+                            <th scope="row">사용된 옵션 <strong class="icoRequired">필수</strong></th>
+                            <td>
+                                <div class="mBoard eOptionCombine">
+                                    <table border="1" summary="">
+                                        <caption>쇼핑몰별 공통계산</caption>
+                                        <colgroup class="eOptionCombineCol">
+                                            <col class="chk each-option-remove-col" style="display:none;">
+                                            <col style="width:100px">
+                                            <col style="width:150px">
+                                            <col style="width:auto">
+                                            <col style="width:130px">
+                                            <col style="width:150px">
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th scope="col" class="each-option-remove-all" style="display:none;"><input type="checkbox" class="allChk"></th>
+                                            <th scope="col" class="eModifyOptionSetSort">편집</th>
+                                            <th scope="col">옵션명</th>
+                                            <th scope="col">옵션값</th>
+                                            <th scope="col">옵션스타일</th>
+                                            <th scope="col">옵션값 관리</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="eOptionCombineMatrix">
+
+                                        <tr id="eOptionCombineMatrixTemplate" class="optionMatrix" >
+                                            <!-- 상품등록이나 수정시에 옵션 세트를 선택할때 이용하는 탬플릿 -->
+                                            <td class="each-option-remove" style="display:none;">
+                                                <input type="checkbox" class="rowChk remove-option-check">
+                                            </td>
+                                            <td class="center eModifyOptionSetSort">
+                                                <button type="button" class="btnOption eSortlv1Down"><span>선택한 항목 한줄 아래로 이동</span></button>
+                                                <button type="button" class="btnOption eSortlv1Up"><span>선택한 항목 한줄 위로 이동</span></button>
+                                            </td>
+                                            <td>
+                                                <span class="eOptionName">색상</span>
+                                                <!-- 각 행마다 sortOrder[] 숨겨진 필드 -->
+                                                <input type="hidden" name="sortOrder[]" value="1">
+                                            </td>
+                                                <p><label class="eIsNecessaryOption" style="display: none;">
+                                                    <input type="checkbox" class="fChk eOptionNecessary" name="is_necessary[#NUM#]" value="T"> 필수옵션으로 사용</label></p></td>
+                                            <td>
+                                                <ul class="mForm typeHor">
+                                                    <li class="block"><label class="gLabel eSelected"><input type="checkbox" class="fChk _all_option_check" checked="checked"> 전체</label></li>
+                                                </ul>
+                                            </td>
+                                            <td class="center eOptionStyleTitle">-</td>
+                                            <td class="center">
+                                                <a href="#none" target="_blank" title="새창 열림" class="btnNormal eOptionModify"><span>옵션값 수정<em class="icoLink"></em></span></a>
+                                            </td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="mCtrl typeFooter eOptionCombine">
+                                    <div class="gLeft">
+                                        <a href="#none" class="btnNormal option-remove-button" style="display:none"><span><em class="icoDel"></em> 삭제</span></a>
+
+                                    </div>
+                                    <div class="gRight">
+                                        <a href="#none" class="btnCtrl" id="eEntireOption"><span>모든 옵션 품목추가</span></a>
+                                        <a href="#none" class="btnCtrl" id="eSelectedOption"><span>선택한 옵션 품목추가</span></a>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="origin_use_option" value="">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <table border="1" summary="" class="gDivision eMultiProductStock" id="eSingleProductStock" style="display: table;">
+                        <caption>재고관리 사용 설정 </caption>
+                        <colgroup>
+                            <col class="product">
+                            <col style="width:auto">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th scope="row">재고관리 사용 <div class="cTip" code="PR.PE.RE.OP.60"><div class="mTooltip gLarge">
+                                <button type="button" class="icon eTip">도움말</button>
+                                <div class="tooltip" style="z-index : 1; ">
+                                    <div class="content"></div>
+                                    <button type="button" class="close eClose">닫기</button>
+                                    <span class="edge"></span>
+                                </div>
+                            </div>
+                            </div></th>
+                            <td>
+                                <div class="mForm">
+                                    <label class="gLabel"><input type="radio" name="sp_use_manage_stock" class="fChk eMarketChecker" value="T" id="eSingleManageStockT"> 사용함</label>
+                                    <label class="gLabel eSelected"><input type="radio" name="sp_use_manage_stock" class="fChk" checked="checked" value="F" id="eSingleManageStockF"> 사용안함</label><br>
+                                    <div class="addForm gHor" style="display: none;" id="eStockManageBox">
+                                        <ul>
+                                            <li>
+                                                <label id="eSingleStockNumberLabels"><span class="icoDot"></span> 재고수량 <input type="text" class="fText right eMarketChecker" style="width:50px" name="sp_stock_number" id="eSingleStockNumberValue" value="0"></label>
+                                                <label>/ 안전재고 <input type="text" class="fText right" style="width:50px" name="sp_stock_warn_value" id="eSingleStockWarnValue" value="0"></label>
+                                            </li>
+                                            <li class="gDoubleSide">
+                                                <label><span class="icoDot"></span> 재고 수량체크 기준</label>
+                                                <select class="fSelect" style="width: 100px;" name="sp_sold_out_stock_type">
+                                                    <option value="A">주문기준</option>
+                                                    <option value="B">결제기준</option>
+                                                </select>
+                                            </li>
+                                            <li class="gDoubleSide">
+                                                <label><span class="icoDot"></span> 재고관리 등급</label>
+                                                <select class="fSelect" style="width: 100px;" name="sp_stock_type">
+                                                    <option value="A">일반재고</option>
+                                                    <option value="B">중요재고</option>
+                                                </select>
+                                            </li>
+                                            <li class="gDoubleSide">
+                                            </li>
+                                        </ul>
+
+                                        <div class="gSingle">
+                                            <label class="gLabel" id="eSingleUseSoldOutLabels"> <input type="checkbox" class="fChk eMarketChecker" name="sp_use_soldout" id="eSingleUseSoldOut" value="T"> 품절표시 사용 <div class="cTip" code="PR.PE.RE.OP.320"><div class="mTooltip gMedium">
+                                                <button type="button" class="icon eTip">도움말</button>
+                                                <div class="tooltip" style="z-index : 1; ">
+                                                    <div class="content"></div>
+                                                    <button type="button" class="close eClose">닫기</button>
+                                                    <span class="edge"></span>
+                                                </div>
+                                            </div>
+                                            </div>
+                                            </label></div>
+                                    </div>
+                                </div></td>
+                        </tr>
+                        </tbody>
+                    </table>
+<!--test-->
+
+                    <div class="mBoardArea gDouble productSetArea" id="eItemListContainer" style="display:none">
+                        <input type="hidden" name="mp_del_item_code">
+                        <div class="mCtrl typeHeader">
+                            <div class="gLeft">
+                                <a href="#none" class="btnNormal eItemDelete"><span><em class="icoDel"></em>삭제</span></a>
+                                <a href="#layerOptionSet" class="btnNormal eModal eItemBatchButton" style="display: none"><span>일괄설정</span></a>        </div>
+                            <div class="gRight">
+                                <a href="#none" class="btnNormal eAddOptionDelimiter" style="display: none"><span>옵션 구분명 추가</span></a>
+                                <a href="#none" class="btnNormal eItemCodeDuplicate" style="display: none"><span>자체 품목코드 중복확인</span></a>
+                                <a href="#layerSoldoutMark" class="btnNormal eLayerClick" style="display: none"><span>품절표시 문구</span></a>
+                            </div>
+                        </div>
+                        <div class="mBoard typeHead">
+                            <table border="1" summary="">
+                                <caption>품목 재고관리</caption>
+                                <tbody>
+                                <tr>
+                                    <th scope="col" class="w14"><input type="checkbox" id="chkAllItem"></th>
+                                    <th scope="col" class="w24 sItemSortableElement">편집</th>
+                                    <th scope="col" class="w24">No</th>
+                                    <th scope="col" class="w75 eSolidOptionVisibleArea" style="display: none;">필수여부
+                                        <div class="mFilter typeSelect">
+                                            <button type="button" class="btnFilter eNecessaryFilter">&nbsp;</button>
+                                            <ul class="list eNecessaryFilterList">
+                                                <li data-value="A" style="cursor: pointer;"><label><strong>전체</strong></label></li>
+                                                <li data-value="N" style="cursor: pointer;"><label><strong>필수</strong></label></li>
+                                                <li data-value="S" style="cursor: pointer;"><label><strong>선택</strong></label></li>
+                                            </ul>
+                                        </div>
+                                    </th>
+                                    <th scope="col">품목명/품목코드
+                                        <div class="mFilter itemFilterArea">
+                                            <button id="itemFilter" type="button" class="btnFilter">품목 필터링</button>
+                                            <ul class="list">
+                                                <li id="eViewAllItem" class="all"><a href="#none">전체</a></li>
+                                                <li id="eFilterOptionNameTemplate">
+                                                    <a class="eFilterOptionName" href="#none"></a>
+                                                    <ul class="subList">
+                                                    </ul>
+                                                </li>
+                                                <li id="eActiveOptionTemplate" class="disabled"><a class="eFilterOptionValue" href="#none"></a></li>
+                                                <li option_seq="0" option_code="O000000A">
+                                                    <a class="eFilterOptionName" href="#none">색상</a>
+                                                    <ul class="subList">
+                                                        <li class="eActiveOption" option_seq="0"><a class="eFilterOptionValue" href="#none">블랙</a></li><li class="eActiveOption" option_seq="0"><a class="eFilterOptionValue" href="#none">화이트</a></li></ul>
+                                                </li><li option_seq="1" option_code="O000000B">
+                                                <a class="eFilterOptionName" href="#none">사이즈</a>
+                                                <ul class="subList">
+                                                    <li class="eActiveOption" option_seq="1"><a class="eFilterOptionValue" href="#none">S</a></li><li class="eActiveOption" option_seq="1"><a class="eFilterOptionValue" href="#none">M</a></li><li class="eActiveOption" option_seq="1"><a class="eFilterOptionValue" href="#none">L</a></li></ul>
+                                            </li></ul>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="w150">자체 품목코드</th>
+                                    <th scope="col" class="w80">재고관리 사용</th>
+                                    <th scope="col" class="w80">재고관리 등급</th>
+                                    <th scope="col" class="w110">수량체크 기준</th>
+                                    <th scope="col" class="w60">재고수량</th>
+                                    <th scope="col" class="w60">안전재고</th>
+                                    <th scope="col" class="w77">품절표시 <div class="cTip" code="PR.PE.RE.OP.320"><div class="mTooltip gMedium">
+                                        <button type="button" class="icon eTip">도움말</button>
+                                        <div class="tooltip" style="z-index : 1; ">
+                                            <div class="content"></div>
+                                            <button type="button" class="close eClose">닫기</button>
+                                            <span class="edge"></span>
+                                        </div>
+                                    </div>
+                                    </div></th>
+
+
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="loadingArea">
+                            <div id="eItemList" class="mBoard typeBody gCellSingle gProduct gPrdDrag eMarketChecker eMarketItem eItemListContainer">
+                                <table border="1" summary="" class="eChkColor eItemRow" id="eItemRowTemplate">
+                                    <caption>품목 재고관리</caption>
+                                    <input type="hidden" name="mp_prd_item_code[]">
+                                    <input type="hidden" name="mp_product_sub_code[]">
+                                    <input type="hidden" name="sOptionDelimiterData">
+                                    <tbody class="center">
+                                    <tr>
+                                        <td rowspan="2" class="w14"><input type="checkbox" class="rowChk eItemCheckBox"></td>
+                                        <td rowspan="2" class="w24 sItemSortableElement">
+                                            <button type="button" class="btnOption lv2Up"><span>선택한 항목 한줄 위로 이동</span></button>
+                                            <span class="gSingle"><button type="button" class="btnOption lv2Down"><span>선택한 항목 한줄 아래로 이동</span></button></span>
+                                        </td>
+                                        <td rowspan="2" class="w24 eItemSequnce"></td>
+                                        <td rowspan="2" class="w75 eSolidOptionVisibleArea eSolidOptionNecessaryValue" style="display: none;"></td>
+                                        <td rowspan="2" class="left eItemValue"><span class="eOptionValue"></span> (<span class="txtCode">자동생성</span>)
+                                            <div class="setColorchip"></div>
+                                            <input type="hidden" class="eOptionValueHidden" name="mp_option_value[]" data-default-shop="">
+                                            <input type="hidden" class="eOptionNameHidden" name="mp_option_name[]">
+                                            <input type="hidden" class="eOptionImageHidden" name="mp_item_image[]">
+                                            <p class="gSingle" style="display: none">
+                                                <span class="figure">
+                                                    <a href="#layerImgSelectProductList" class="eModal eButtonImageRegister" data-target="item">
+                                                        <img class="eOptionImageView" src="//img.echosting.cafe24.com/thumb/48x48.gif" alt="" width="48" height="48">
+                                                    </a>
+                                                </span>
+                                                <button type="button" class="btnIcon icoDel top eOptionImageDelete" data-target="item" style="display:none;"><span>삭제</span></button>
+                                            </p>
+                                        </td>
+                                        <td class="w150">
+                                            <input type="text" class="fText" style="width:130px" value="" temp-name="mp_self_item_code[]" maxlength="40" maxcount="40" default-value="">
+                                        </td>
+                                        <td class="w80">
+                                            <select class="fSelect eBatchUseManageStockMp eStockValueDisabledControl" name="mp_use_manage_stock[]">
+                                                <option value="T">사용함</option>
+                                                <option value="F" selected="selected">사용안함</option>
+                                            </select>
+                                        </td>
+                                        <td class="w80">
+                                            <select class="fSelect eBatchStockTypeMp eStockValueDisabled" name="mp_stock_type[]" style="display:none;">
+                                                <option value="A" selected="selected">일반재고</option>
+                                                <option value="B">중요재고</option>
+                                            </select>
+                                            <span class="ec-use-inventory-display-item">-</span>                </td>
+                                        <td class="w110">
+                                            <select class="fSelect eBatchSoldOutStockTypeMp eStockValueDisabled" name="mp_sold_out_stock_type[]" style="display:none;">
+                                                <option value="A">주문기준</option>
+                                                <option value="B" selected="selected">결제기준</option>
+                                            </select>
+                                            <span class="ec-use-inventory-display-item">-</span>                </td>
+                                        <td class="w60">
+                                            <input type="text" class="fText right eBatchStockNumberMp eStockValueDisabled eTotalStockCount" style="width:50px;display:none;" value="0" name="mp_stock_number[]">
+                                            <span class="ec-use-inventory-display-item">-</span>                </td>
+                                        <td class="w60">
+                                            <input type="text" class="fText right eBatchStockWarnValueMp eStockValueDisabled" style="width:50px;display:none;" value="0" name="mp_stock_warn_value[]">
+                                            <span class="ec-use-inventory-display-item">-</span>                </td>
+                                        <td class="w60">
+                                            <input type="checkbox" class="eBatchUseSoldoutMp eStockValueDisabled" name="mp_use_soldout[0]" value="T" style="display:none;">
+                                            <span class="ec-use-inventory-display-item">-</span>                </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7" class="left" style="display: none">
+                                            <div class="mBoard gSmall gCellNarrow">
+                                                <table border="1" summary="">
+                                                    <caption>쇼핑몰목록</caption>
+                                                    <tbody>
+                                                    <tr>
+                                                        <th scope="row">기본 (디폴트)</th>
+                                                        <td>
+                                            <span class="gWidth w140">
+                                                <span class="icoDot"></span>진열상태
+                                                <select class="fSelect eBatchIsDisplay1Mp" temp-name="mp_is_display[1][]" default-value="T">
+                                                    <option value="T">진열함</option>
+                                                    <option value="F">진열안함</option>
+                                                </select>
+                                            </span>
+                                                            <span class="gWidth w140">
+                                                <span class="icoDot"></span> 판매상태
+                                                <select class="fSelect eBatchIsSellingStatus1Mp" temp-name="mp_selling_status[1][]" default-value="T">
+                                                    <option value="T">판매함</option>
+                                                    <option value="F">판매안함</option>
+                                                </select>
+                                            </span>
+                                                            <span class="icoDot"></span> <span class="eSolidOptionPriceText">추가금액</span>
+                                                            <select class="fSelect eHasModifyProductAuth eOptionAddPrice eBatchStockPriceMark1Mp stock-price-mark" temp-name="mp_stock_price_mark[1][]" default-value="+">
+                                                                <option value="+">+</option>
+                                                                <option value="-">-</option>
+                                                            </select>
+                                                            <div class="mTooltip gSmall mOptionTooltip">
+                                                                <input type="text" class="fText right eSolidOptionPriceValue eTip eBatchSolidStockPriceValue1Mp stock-price-value" value="0" style="width:70px; display: none;" fw-filter="isPrice" fw-label="옵션 추가 가격" fw-alone="Y" shop_no="1">
+                                                            </div>
+                                                            <input type="text" class="fText right eOptionAddedPrice eHasModifyProductAuth eBatchStockPriceValue1Mp  eAddedPrice" style="width:70px" value="" temp-name="mp_stock_price_value[1][]" fw-label="옵션 추가금액" fw-filter="" shop_no="1" default-value="0"> <span class="txtCode"></span>
+                                                            <input type="hidden" name="mp_stock_price_without_tax[1][]" value="">
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <table border="1" summary="" class="eChkColor eOptionDelimiterRow" id="eOptionDelimiterRowTemplate">
+                                    <caption>품목 재고관리</caption>
+                                    <tbody class="center">
+                                    <tr class="positive">
+                                        <td class="w14"><input type="checkbox" class="rowChk eItemCheckBox"></td>
+                                        <td class="w24">
+                                            <button type="button" class="btnOption lv2Up"><span>선택한 항목 한줄 위로 이동</span></button>
+                                            <span class="gSingle"><button type="button" class="btnOption lv2Down"><span>선택한 항목 한줄 아래로 이동</span></button></span>
+                                        </td>
+                                        <td class="w24">구 분 명</td>
+                                        <td colspan="9" class="left"><input type="text" class="fText eOptionDelimiter" style="width:90%;">
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                        <div class="mCtrl typeFooter">
+                            <div class="gLeft">
+                                <a href="#none" class="btnNormal eItemDelete"><span><em class="icoDel"></em> 삭제</span></a>
+                                <a href="#layerOptionSet" class="btnNormal eModal eItemBatchButton" style="display: none"><span>일괄설정</span></a>        </div>
+                            <div class="gRight">
+                                <a href="#none" class="btnNormal eAddOptionDelimiter" style="display: none"><span>옵션 구분명 추가</span></a>
+                                <a href="#none" class="btnNormal eItemCodeDuplicate" style="display: none"><span>자체 품목코드 중복확인</span></a>
+                                <a href="#layerSoldoutMark" class="btnNormal eLayerClick" style="display: none"><span>품절표시 문구</span></a>
+                            </div>
+                        </div>
+                        <div class="ctrlHeight ui-draggable" id="eContorlHeightItemExplorerBtn"><span>상품분류 설정 높이 영역 조절</span></div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+                <div id="QA_register5" class="section" style=" margin-top: 25px">
                     <div class="mToggleBar eToggle selected">
                         <h2>이미지 정보</h2>
                         <div class="ctrl">

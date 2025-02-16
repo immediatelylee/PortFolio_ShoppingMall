@@ -1,27 +1,33 @@
 package com.shoppingmall.project_shoppingmall.controller;
 
-import com.shoppingmall.project_shoppingmall.constant.*;
-import com.shoppingmall.project_shoppingmall.domain.*;
-import com.shoppingmall.project_shoppingmall.dto.*;
+import com.shoppingmall.project_shoppingmall.constant.ItemCategory;
+import com.shoppingmall.project_shoppingmall.constant.ItemSearchType;
+import com.shoppingmall.project_shoppingmall.domain.Brand;
+import com.shoppingmall.project_shoppingmall.domain.OptionSet;
+import com.shoppingmall.project_shoppingmall.dto.IdsTransferDto;
+import com.shoppingmall.project_shoppingmall.dto.ItemFormDto;
+import com.shoppingmall.project_shoppingmall.dto.ItemWithImgDto;
 import com.shoppingmall.project_shoppingmall.service.*;
-import lombok.*;
-import lombok.experimental.*;
-import org.springframework.data.domain.*;
-import org.springframework.data.web.*;
-import org.springframework.http.*;
-import org.springframework.stereotype.*;
-import org.springframework.ui.*;
-import org.springframework.validation.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.*;
-import org.springframework.web.servlet.mvc.support.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.persistence.*;
-import javax.validation.*;
-import java.io.*;
+import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.security.Principal;
-import java.util.*;
-import java.util.stream.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller
@@ -30,6 +36,8 @@ public class ItemController {
     private final BrandService brandService;
     private final PaginationService paginationService;
     private final WishlistService wishlistService;
+    private final OptionSetService optionSetService;
+
 
     @ModelAttribute("ItemCategory")
     public ItemCategory[] itemCategories(){
@@ -140,6 +148,10 @@ public class ItemController {
         System.out.println(depth2);
         System.out.println(depth3);
 
+        // 1) 모든 OptionSet 조회
+        List<OptionSet> setList = optionSetService.getAllOptionSets();
+        model.addAttribute("optionSets", setList);
+
         return "item/itemAdd";
     }
 
@@ -244,6 +256,87 @@ public class ItemController {
         model.addAttribute("item", itemFormDto);
         return "item/itemDetail";
     }
+
+//    @ResponseBody
+//    @PostMapping("/item/{itemId}/options")
+//    public ResponseEntity<List<UsedOption>> addOptions(@PathVariable Long itemId) {
+//        Item item = itemService.getItemById(itemId);
+//        List<UsedOption> usedOptions = usedOptionService.generateUsedOptions(item);
+//        return ResponseEntity.ok(usedOptions);
+//    }
+
+    // TODO:usedoption 사용하는것으로 보아 이전 레거시 코드일지로 확인후 삭제
+    // 옵션 조합 생성 API  -
+//    @ResponseBody
+//    @PostMapping("/item/{itemId}/options/combinations")
+//    public ResponseEntity<List<OptionCombination>> generateCombinations(@PathVariable Long itemId) {
+//        Item item = itemService.getItemById(itemId);
+//        List<UsedOption> usedOptions = usedOptionService.getUsedOptionsByItem(item);  // 조회 구현 연결
+//
+//        // 조합 생성
+//        List<OptionCombination> combinations = combinationService.generateCombinations(item, usedOptions);
+//        return ResponseEntity.ok(combinations);
+//    }
+
+    // 옵션 조합 조회 API
+//    @ResponseBody
+//    @GetMapping("/item/{itemId}/options/combinations")
+//    public ResponseEntity<List<OptionCombination>> getCombinations(@PathVariable Long itemId) {
+//        Item item = itemService.getItemById(itemId);
+//        List<OptionCombination> combinations = combinationService.getCombinationsByItem(item);
+//        return ResponseEntity.ok(combinations);
+//    }
+
+//    /**
+//     *  분리 선택형 상품 등록
+//     */
+//    @PostMapping("/admin/item/new/separated")
+//    public String createSeparatedItem(@Valid ItemFormDto itemFormDto,
+//                                      BindingResult bindingResult,
+//                                      @RequestParam(required = false) Long optionSetId,
+//                                      @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,
+//                                      @RequestParam("itemDetailImgFile") List<MultipartFile> itemDetailImgFileList,
+//                                      Model model) {
+//        // Validation
+//        if(bindingResult.hasErrors()){
+//            // ...
+//            return "redirect:/admin/item/management";
+//        }
+//        try {
+//            // 예: optionSetId = 1L
+//            Long itemId = itemService.createSeparatedItem(itemFormDto, optionSetId,
+//                    itemImgFileList, itemDetailImgFileList);
+//            return "redirect:/admin/item/management";
+//        } catch(Exception e){
+//            model.addAttribute("errorMessage", "상품 등록 중 에러가 발생하였습니다.");
+//            return "redirect:/admin/item/management";
+//        }
+//    }
+//
+//    /**
+//     *  조합 일체형 상품 등록
+//     */
+//    @PostMapping("/admin/item/new/combined")
+//    public String createCombinedItem(@Valid ItemFormDto itemFormDto,
+//                                     BindingResult bindingResult,
+//                                     @RequestParam("combinations") List<String> combinationList,
+//                                     @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,
+//                                     @RequestParam("itemDetailImgFile") List<MultipartFile> itemDetailImgFileList,
+//                                     Model model) {
+//        // Validation
+//        if(bindingResult.hasErrors()){
+//            // ...
+//            return "redirect:/admin/item/management";
+//        }
+//        try {
+//            Long itemId = itemService.createCombinedItem(itemFormDto, combinationList,
+//                    itemImgFileList, itemDetailImgFileList);
+//            return "redirect:/admin/item/management";
+//        } catch(Exception e){
+//            model.addAttribute("errorMessage", "상품 등록 중 에러가 발생하였습니다.");
+//            return "redirect:/admin/item/management";
+//        }
+//    }
 
 }
 
