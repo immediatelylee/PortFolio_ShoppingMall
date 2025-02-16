@@ -22,8 +22,10 @@ public class OptionCombination {
 
     private String combination; // 예: "블랙/90"
 
+    private boolean use_stock;
     private int stock; // 재고
-    private boolean useManageStock;
+
+
 
     @ManyToOne
     @JoinColumn(name = "item_id")
