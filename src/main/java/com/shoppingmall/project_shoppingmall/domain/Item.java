@@ -1,12 +1,17 @@
 package com.shoppingmall.project_shoppingmall.domain;
 
-import com.shoppingmall.project_shoppingmall.constant.*;
-import com.shoppingmall.project_shoppingmall.dto.*;
-import com.shoppingmall.project_shoppingmall.exception.*;
-import lombok.*;
+import com.shoppingmall.project_shoppingmall.constant.ItemDisplayStatus;
+import com.shoppingmall.project_shoppingmall.constant.ItemSellStatus;
+import com.shoppingmall.project_shoppingmall.constant.OptionDisplayType;
+import com.shoppingmall.project_shoppingmall.dto.ItemFormDto;
+import com.shoppingmall.project_shoppingmall.exception.OutOfStockException;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="item")
@@ -32,6 +37,9 @@ public class Item extends BaseEntity {
     @Column(nullable = false)
     private int stockNumber; //재고수량
 
+    @Column
+    private Boolean useOptionStock;
+
     @Lob
     @Column(nullable = false)
     private String itemDetail; //상품 상세 설명
@@ -48,6 +56,7 @@ public class Item extends BaseEntity {
 
     private String color;
     private Integer size;
+
 
     //    추가
     @ManyToOne
