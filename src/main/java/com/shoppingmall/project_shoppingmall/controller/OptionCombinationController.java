@@ -24,39 +24,28 @@ public class OptionCombinationController {
     private final OptionCombinationService optionCombinationService;
     private final ItemRepository itemRepository; // 상품 조회용
 
-    @PostMapping("/generate/{itemId}")
-    public ResponseEntity<List<OptionCombinationDto>> generateCombinations(
-            @PathVariable Long itemId,
-            @RequestBody OptionCombinationRequest request) {
-
-        // 해당 아이템 조회 (없으면 404 응답)
-        Item item = itemRepository.findById(itemId).orElse(null);
-        if(item == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        List<UsedOption> usedOptions = new ArrayList<>();
-        // 예시: request.getGroups()가 [["블랙", "화이트"], ["S", "M", "L"], ["면", "폴리에스터"]] 라면,
-        // 실제 옵션명은 미리 정해져 있다고 가정하고 (예: ["색상", "사이즈", "소재"]) - 실제로는 사용안함
-        // optioncombination생성용도로 optionName을 받음 generateCombinations을 해도 실제 optionName을 사용하지 않고
-        // usedopiton도 아직 db에 저장하지 않음 추후에 사용할 예정
-        List<String> optionNames = Arrays.asList("색상", "사이즈", "소재");
-        List<List<String>> groups = request.getGroups();
-        for (int i = 0; i < groups.size(); i++) {
-            String optionName = optionNames.get(i);
-            for(String optionValue : groups.get(i)) {
-                UsedOption usedOption = new UsedOption();
-                usedOption.setOptionName(optionName);
-                usedOption.setOptionValue(optionValue);
-                usedOptions.add(usedOption);
-            }
-        }
-
-        // 데카르트 곱 조합 생성 및 저장
-        List<OptionCombination> combinationEntities = optionCombinationService.generateCombinations(item, usedOptions);
-        List<OptionCombinationDto> dtos = combinationEntities.stream()
-                .map(OptionCombinationDto::fromEntity)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(dtos);
-    }
+//    @PostMapping("/generate/{itemId}")
+//    public ResponseEntity<List<OptionCombinationDto>> generateCombinations(
+//            @PathVariable Long itemId,
+//            @RequestBody OptionCombinationRequest request) {
+//
+//        // 해당 아이템 조회 (없으면 404 응답)
+//        Item item = itemRepository.findById(itemId).orElse(null);
+//        if(item == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//
+//
+//         데카르트 곱 조합 생성 및 저장
+//         현재 뷰에서 상품옵션을 생성해서 itemsave때 저장하고 있으므로
+//         레거시 코드로 남김 추후에 옵션 분리형 구현한 이후에도 사용처 없으면 삭제
+//        List<OptionCombination> combinationEntities = optionCombinationService.generateCombinations(itemId, request);
+//        // OptionCombinationDto로 변환
+//        List<OptionCombinationDto> dtos = combinationEntities.stream()
+//                .map(OptionCombinationDto::fromEntity)
+//                .collect(Collectors.toList());
+//        return ResponseEntity.ok(dtos);
+//
+//    }
 }
