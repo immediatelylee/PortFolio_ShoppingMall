@@ -464,6 +464,48 @@ public class ItemService {
         return itemRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Item not found"));
     }
+
+    /**
+     * [조합 일체형] 옵션 처리
+     * - combinationList: ["블랙-S","블랙-M","화이트-S"] 등
+     */
+    private void handleCombinedOptions(Item item, List<String> combinationList) {
+        // 조합 목록을 반복하며 OptionCombination 생성
+        if (combinationList != null) {
+            for (String combo : combinationList) {
+                OptionCombination oc = new OptionCombination();
+                oc.setCombination(combo);
+                oc.setStock(0); // 필요하면 재고 필드 활용
+
+                // item.addOptionCombination(oc);
+                // 연관관계 편의 메서드
+                item.addOptionCombination(oc);
+            }
+        }
+    }
+
+    /**
+     * [분리 선택형] 옵션 처리
+     * - 예) itemFormDto로부터 optionSetId를 가져올 수도 있고,
+     *       color/size 필드를 직접 사용해 UsedOption을 만든다든지
+     */
+    private void handleSeparatedOptions(Item item, ItemFormDto itemFormDto) {
+        // 예: OptionSet을 미리 만들어놓았다면
+        // Long optionSetId = itemFormDto.getOptionSetId(); (필드 추가 필요)
+        // OptionSet optionSet = optionSetService.getOptionSetById(optionSetId);
+        // item.setOptionSet(optionSet);
+
+        // or color/size 등 직접 저장
+        // if (itemFormDto.getColor() != null && itemFormDto.getSize() != null) {
+        //     UsedOption usedOptColor = new UsedOption("색상", itemFormDto.getColor());
+        //     usedOptColor.setItem(item);
+        //     UsedOption usedOptSize = new UsedOption("사이즈", String.valueOf(itemFormDto.getSize()));
+        //     usedOptSize.setItem(item);
+        //     // usedOptionRepository.save(...); cascade 설정에 따라 다름
+        // }
+
+        // etc...
+    }
 }
 
 
