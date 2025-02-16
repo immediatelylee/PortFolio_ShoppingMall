@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface OptionCombinationRepository extends JpaRepository<OptionCombination,Long> {
     List<OptionCombination> findByItem(Item item);
+
+    void deleteByItem(Item item);
 }
