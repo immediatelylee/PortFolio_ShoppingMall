@@ -6,7 +6,6 @@
 <th:block layout:fragment="script">
     <script>
         function toggleWishlist(element) {
-
             var itemId = element.getAttribute("data-item-id");
             var currentSrc = element.getAttribute("src");
 
@@ -41,6 +40,37 @@
                         window.location.href = "/members/login";
                     } else {
                         alert("위시리스트 업데이트에 실패했습니다.");
+                    }
+                }
+            });
+        }
+        function toggleCart(element) {
+            var itemId = element.getAttribute("data-item-id");
+            var count = element.getAttribute("data-count");
+
+            // CSRF 토큰 설정 (Spring Security 사용 시)
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            var url = `/cart`
+            // 서버에 요청
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: "application/json",
+                data: JSON.stringify({ itemId: itemId ,count:count}),
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function () {
+                    alert("장바구니에 추가되었습니다.")
+
+                },
+                error: function (xhr) {
+                    if (xhr.status === 401) {
+                        // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+                        window.location.href = "/members/login";
+                    } else {
+                        alert("장바구니 업데이트에 실패했습니다.");
                     }
                 }
             });
@@ -171,6 +201,9 @@
                                                                 src="/web/upload/icon/shopping_cart_icon.svg"
                                                                 alt="장바구니 담기"
                                                                 class="ec-admin-icon cart"
+                                                                onclick="toggleCart(this)"
+                                                                th:data-item-id="${item.itemId}"
+                                                                th:data-count=1
                                                                 style="
                                                             background-blend-mode: normal !important;
                                                             background-clip: content-box !important;
@@ -181,6 +214,7 @@
                                                             background-origin: content-box !important;
                                                             background-repeat: no-repeat !important;
                                                         "
+
                                                         />
                                                     </p>
                                                 </div>
