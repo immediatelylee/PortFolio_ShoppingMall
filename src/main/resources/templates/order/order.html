@@ -75,13 +75,8 @@
     var orderName = '[[${itemSummary}]]';
     console.log("orderName: " + orderName);
 
-
-
-
-
     function initPayment() {
         console.log("initPayment_start")
-
         console.log("cartItems :" + cartItems);
 
         var csrfToken = $('meta[name="_csrf"]').attr('content');
@@ -139,8 +134,6 @@
         console.log("orderName:"+orderName);
         console.log("paymentPrice:"+paymentPrice);
 
-
-
     IMP.request_pay({
         pg: 'html5_inicis.INIpayTest',
         pay_method: 'card',
@@ -156,10 +149,10 @@
         var result = '';
         if ( rsp.success ) {
             var msg = '결제가 완료되었습니다.';
-            msg += '고유ID : ' + rsp.imp_uid;
-            msg += '상점 거래ID : ' + rsp.merchant_uid;
-            msg += '결제 금액 : ' + rsp.paid_amount;
-            msg += '카드 승인번호 : ' + rsp.apply_num;
+            // msg += '고유ID : ' + rsp.imp_uid;
+            // msg += '상점 거래ID : ' + rsp.merchant_uid;
+            // msg += '결제 금액 : ' + rsp.paid_amount;
+            // msg += '카드 승인번호 : ' + rsp.apply_num;
             result ='0';
         } else {
             var msg = '결제에 실패하였습니다.';
@@ -170,15 +163,19 @@
             location.href= "/order/success";
         }
         alert(msg);
-
     });
     }
-
-
     </script>
 
 </th:block>
 <div layout:fragment="content" style="background-color: white">
+    <input type="hidden" id="orderMode" th:value="${orderMode}">
+    <input type="hidden" id="direct_itemNm" th:value="${direct_itemNm}">
+    <input type="hidden" id="productCode" th:value="${itemCode}" />
+    <input type="hidden" id="productPrice" th:value="${price}" />
+    <input type="hidden" id="productCount" th:value="${count}" />
+<!--    이미지는 따로 추가안했음-->
+<!--    <input type="hidden" id="productImg" th:value="${item.imgUrl}" />-->
 
     <div id="body" style="width: 1020px;margin: 0 auto 20px;">
         <div class="middle">
