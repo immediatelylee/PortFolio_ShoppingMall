@@ -10,20 +10,43 @@
         IMP.init('imp55234458');
 
         $(document).ready(function() {
-            // API를 통해 JSON 데이터를 비동기적으로 가져옴
-            // /json/cart-items는 세션에 있는 cartItem정보를 json화 해서 여기 자바스크립트에 저장함.
-            $.ajax({
-                url: '/json/cart-items',
-                method: 'GET',
-                success: function(data) {
-                    cartItems = data;  // 전역 변수에 데이터 저장
-                    console.log("Cart items loaded:", cartItems);  // JSON 데이터를 확인
-                    // JSON 데이터를 사용하여 필요한 동작 수행
-                },
-                error: function(error) {
-                    console.error("Error fetching cart items:", error);
-                }
-            });
+            console.log("order.html start")
+            // 주문 모드 가져오기 ("direct" 또는 "cart")
+            var orderMode = $('#orderMode').val();
+            var direct_itemNm = $('#direct_itemNm').val();
+            // 장바구니 주문인 경우
+            if (orderMode === 'cart') {
+                // 예시: "blue sky hat 및 3개의 상품"
+                var orderName = '[[${itemSummary}]]';
+
+                // API를 통해 JSON 데이터를 비동기적으로 가져옴
+                // /json/cart-items는 세션에 있는 cartItem정보를 json화 해서 여기 자바스크립트에 저장함.
+                $.ajax({
+                    url: '/json/cart-items',
+                    method: 'GET',
+                    success: function (data) {
+                        cartItems = data;  // 전역 변수에 데이터 저장
+                        console.log("Cart items loaded:", cartItems);  // JSON 데이터를 확인
+                        // JSON 데이터를 사용하여 필요한 동작 수행
+                    },
+                    error: function (error) {
+                        console.error("Error fetching cart items:", error);
+                    }
+                });
+            } else if (orderMode === 'direct') {
+                console.log("start direct")
+                // 직접 주문: product 정보는 이미 페이지에 있으므로 직접 변수에 할당
+                // 예를 들어, 페이지에서 data-* attribute나 hidden input을 통해 상품 정보를 가져온다고 가정
+                cartItems = [{
+                    cartItemId: null, // 직접 주문이므로 cartItemId는 없을 수 있음
+                    itemNm: direct_itemNm,  // 페이지에 표시된 상품명
+                    itemCode: $('#productCode').val(),   // 예: hidden input에 담긴 상품코드
+                    price: parseInt($('#productPrice').text(), 10),  // 가격 정보
+                    count: parseInt($('#productCount')),  // 직접 주문은 기본 1개로 가정
+                    imgUrl: $('#productImg').attr('src')
+                }];
+                console.log("Direct order product info loaded:", cartItems);
+            }
 
             // 배달 예정날짜 구하기
             // 오늘 날짜 가져오기
@@ -322,6 +345,8 @@
                                     </span>
                             </div>
                             <div class="bundle-info__item-list ">
+                                <!-- 장바구니 주문인 경우 -->
+                                <div th:if="${orderMode == 'cart'}">
                                 <div class="bundle-info__vendor-item-box" th:each="cartItem : ${cartItems}">
                                     <div class="bundle-info__vendor-item" >
 <!--                                        ENFANT SEERSUCKER BUCKET HAT sky blue-->
@@ -330,17 +355,30 @@
                                             " th:text="${cartItem.itemNm}">상품명
                                             <span></span>
                                             <span class="bundle-info__vendor-item__offer-condition" ></span>
-
                                         </p>
                                     </div>
-
+                                    <div th:if="${orderMode == 'cart'}">
                                     <div class="bundle-info__item-description bundle-info__vendor-item-description--last" th:utext="'수량 ' + ${cartItem.count} + '개 / ' + (${totalProductPrice > 50000} ? '<span>무료배송</span>' : '<span>배송비 2,500원</span>')">
                                         수량 1개 / <span>무료배송</span>
                                     </div>
-                                </div>
+                                    </div>
 
+                                </div>
                             </div>
+                                <!-- 직접 주문인 경우 -->
+                                <div th:if="${orderMode != 'cart'}">
+                                    <div class="bundle-info__vendor-item-box">
+                                        <div class="bundle-info__vendor-item">
+                                            <p style="border-bottom: 0;" th:text="${direct_itemNm}">상품명</p>
+                                        </div>
+                                        <!-- 직접 주문의 경우 수량 및 배송정보 등은 별도로 처리 -->
+                                        <div class="bundle-info__item-description bundle-info__vendor-item-description--last" th:utext="'수량 ' + ${direct_count} + '개 / ' + (${totalProductPrice > 50000} ? '<span>무료배송</span>' : '<span>배송비 2,500원</span>')">
+                                            수량 1개 / <span>무료배송</span>
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
+                    </div>
                     </div>
                 </div>
                 <div data-delivery-info="rocketInstall"></div>

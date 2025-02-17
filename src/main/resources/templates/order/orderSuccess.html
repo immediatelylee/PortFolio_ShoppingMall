@@ -28,15 +28,16 @@
                         <div class="sc-15vqfmy-0 hSQoBl">
                             <div class="sc-15vqfmy-1 jvmSBN">상품배송 정보</div>
                             <div class="sc-1qr3oxa-0 julitQ">
-
+                                <!-- 주문 모드가 cart인 경우 -->
+                                <div th:if="${orderMode == 'cart'}">
                                 <div class="sc-1qr3oxa-1 dyLcUX" th:each="cartItem: ${cartItems}">
                                     <div class="sc-ch64hn-0 jdSYUa">
                                         <span class="sc-ch64hn-2 dUrtMr">내일(일) 도착 (상품 1개)</span>
                                         <div class="sc-ch64hn-5 iGmVTY"></div>
                                     </div>
-                                    <div class="sc-18pc8pe-0 iuCGcW">
+                                    <div class="sc-18pc8pe-0 iuCGcW" th:if="${orderMode == 'cart'}">
                                         <a class="sc-18pc8pe-1 eQfPNh float-left" href="" target="blank">
-                                        <img class="sc-18pc8pe-2 daJtqk" th:src="@{${cartItem.imgUrl}}" alt="product img">
+                                        <img class="sc-18pc8pe-2 daJtqk" th:src="${cartItem.imgUrl}" alt="product img">
                                         </a>
                                         <div>
                                             <a href="" target="_blank" class="sc-18pc8pe-3 gGAwML" th:text="${cartItem.itemNm}">쿨링스노우 최강 보들보들 쿨링MAX 쿨토시 남여공용, 손등형2p, 그레이</a>
@@ -45,6 +46,49 @@
 
                                             </div>
                                             <div class="sc-18pc8pe-8 dCzZgT" th:text="'수량 :' + ${cartItem.count} + '개'">수량: 1개</div>
+                                        </div>
+                                    </div>
+                                    <div class="sc-18pc8pe-0 iuCGcW" th:if="${orderMode != 'cart'}">
+                                        <a class="sc-18pc8pe-1 eQfPNh float-left" href="" target="blank">
+                                            <img class="sc-18pc8pe-2 daJtqk" th:src="${productimg}" alt="product img">
+                                        </a>
+                                        <div>
+                                            <a href="" target="_blank" class="sc-18pc8pe-3 gGAwML" th:text="${cartItem.itemNm}">쿨링스노우 최강 보들보들 쿨링MAX 쿨토시 남여공용, 손등형2p, 그레이</a>
+                                            <div class="sc-18pc8pe-5 pLEoM">
+                                                <span class="sc-18pc8pe-9 fFYOeI" th:text="${cartItem.price} + ' 원'">4,100</span>
+
+                                            </div>
+                                            <div class="sc-18pc8pe-8 dCzZgT" th:text="'수량 :' + ${direct_count} + '개'">수량: 1개</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                <!-- 주문 모드가 direct인 경우 -->
+                                <div th:if="${orderMode != 'cart'}">
+                                    <div class="sc-1qr3oxa-1 dyLcUX">
+                                        <div class="sc-ch64hn-0 jdSYUa">
+                                            <span class="sc-ch64hn-2 dUrtMr" th:text="${direct_itemNm}">
+                                                상품명
+                                            </span>
+                                            <div class="sc-ch64hn-5 iGmVTY"></div>
+                                        </div>
+                                        <div class="sc-18pc8pe-0 iuCGcW">
+                                            <a class="sc-18pc8pe-1 eQfPNh float-left" href="#" target="_blank">
+                                                <img class="sc-18pc8pe-2 daJtqk" th:src="@{${productimg}}" alt="product img">
+                                            </a>
+                                            <div>
+                                                <a href="#" target="_blank" class="sc-18pc8pe-3 gGAwML" th:text="${direct_itemNm}">
+                                                    상품명
+                                                </a>
+                                                <div class="sc-18pc8pe-5 pLEoM">
+                                                    <span class="sc-18pc8pe-9 fFYOeI" th:text="${totalPayPrice} + ' 원'">
+                                                    가격
+                                                    </span>
+                                                </div>
+                                                <div class="sc-18pc8pe-8 dCzZgT" th:text="'수량 :' + ${direct_count} + '개'">
+                                                    수량: 1개
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
