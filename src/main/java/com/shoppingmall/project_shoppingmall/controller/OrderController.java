@@ -32,6 +32,8 @@ public class OrderController {
     private final OrderService orderService;
     private final MemberService memberService;
     private final CartService cartService;
+    private final ItemService itemService;
+    private final ItemImgService itemImgService;
 
     // 세션에 저장하지 않고 바로 하는 전체 상품주문형태
     // selected는 cartController의 /cart/order에 존재함.
@@ -54,13 +56,13 @@ public class OrderController {
         model.addAttribute("totalProductPrice", totalProductPrice);
         model.addAttribute("deliveryFee", deliveryFee);
         model.addAttribute("totalPayPrice", totalPayPrice);
-
         String itemSummary = generateItemSummary(cartItems);
-
         model.addAttribute("itemSummary", itemSummary);
 
         return "order/Order";
     }
+
+
 
     @GetMapping("/order/selected")
     public String orderSelectedItemsGet(Principal principal, Model model, HttpSession session) {
@@ -72,12 +74,21 @@ public class OrderController {
         Integer totalProductPrice = (Integer) session.getAttribute("totalProductPrice");
         Integer deliveryFee = (Integer) session.getAttribute("deliveryFee");
         Integer totalPayPrice = (Integer) session.getAttribute("totalPayPrice");
+        String orderMode = (String) session.getAttribute("orderMode");
+        String itemNm = (String) session.getAttribute("itemNm");
+        Integer direct_count = (Integer) session.getAttribute("direct_count");
+        String itemCode = (String) session.getAttribute("itemCode");
+        ItemImg itemImg = (ItemImg) session.getAttribute("productimg");
 
+        model.addAttribute("direct_itemNm",itemNm);
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("totalProductPrice", totalProductPrice);
         model.addAttribute("deliveryFee", deliveryFee);
         model.addAttribute("totalPayPrice", totalPayPrice);
-
+        model.addAttribute("orderMode",orderMode);
+        model.addAttribute("direct_count",direct_count);
+        model.addAttribute("itemCode",itemCode);
+        model.addAttribute("productimg",itemImg);
         String itemSummary = generateItemSummary(cartItems);
 
         model.addAttribute("itemSummary", itemSummary);
@@ -100,7 +111,9 @@ public class OrderController {
 
         return "order/Order";
     }
-
+    // ===========================================
+    //  결제가 완료된 이후에 order를 생성하는 prework
+    // ===========================================
     @PostMapping("/order/prework")
     public ResponseEntity<?> createOrderWithPayment(@RequestBody OrderPayRequestDto orderPayRequestDto) {
         // 1. Order와 OrderItem 생성, OrderPayment 준비
@@ -126,13 +139,80 @@ public class OrderController {
         Integer totalProductPrice = (Integer) session.getAttribute("totalProductPrice");
         Integer deliveryFee = (Integer) session.getAttribute("deliveryFee");
         Integer totalPayPrice = (Integer) session.getAttribute("totalPayPrice");
+        String orderMode = (String) session.getAttribute("orderMode");
+        String itemNm = (String) session.getAttribute("itemNm");
+        Integer direct_count = (Integer) session.getAttribute("direct_count");
+        String itemCode = (String) session.getAttribute("itemCode");
+        ItemImg itemImg = (ItemImg) session.getAttribute("productimg");
+
+        // TODO ItemImg타입으로 그냥 받아왔는데 문제가 생긴다면 처음부터 String타입으로 url받아오도록 수정할 것.
+        String productImgurl = itemImg.getImgUrl();
+
 
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("totalProductPrice", totalProductPrice);
         model.addAttribute("deliveryFee", deliveryFee);
         model.addAttribute("totalPayPrice", totalPayPrice);
+        model.addAttribute("productimg",productImgurl);
+        model.addAttribute("direct_itemNm",itemNm);
+        model.addAttribute("orderMode",orderMode);
+        model.addAttribute("direct_count",direct_count);
+        model.addAttribute("direct_itemCode",itemCode);
+
+
+
         return "order/orderSuccess";
     }
+
+    @PostMapping("/order/iteminfo")
+    public  ResponseEntity<Map<String, Object>> processOrderItemInfo(
+            @RequestBody OrderItemRequestDto request,
+            HttpSession session) {
+        System.out.println("iteminfo start");
+        Long itemId = request.getItemId();
+        int count = request.getCount();
+
+        // 상품 조회 (없으면 404 응답)
+        Item item = itemService.getItemById(itemId);
+        if (item == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("error", "Item not found"));
+        }
+
+        ItemImg itemImg = itemImgService.getByItemId(itemId);
+
+        String itemNm = item.getItemNm();
+        int totalProductPrice = (item.getPrice() * count);
+        int deliveryFee = (totalProductPrice == 0 || totalProductPrice > 50000) ? 0 : 2500;
+        int totalPayPrice = totalProductPrice + deliveryFee;
+        String itemCode = item.getItemCode();
+
+
+
+        System.out.println("itemId : " + itemId);
+        System.out.println("count : " + count);
+        System.out.println("totalProductPrice : " + totalProductPrice);
+        System.out.println("deliveryFee : "+deliveryFee);
+        System.out.println("totalPayPrice : "+ totalPayPrice);
+        System.out.println("totalProductPrice : " +totalProductPrice);
+        System.out.println("itemCode : " + itemCode);
+
+        session.setAttribute("itemNm", itemNm);
+        session.setAttribute("totalProductPrice", totalProductPrice);
+        session.setAttribute("deliveryFee", deliveryFee);
+        session.setAttribute("totalPayPrice", totalPayPrice);
+        session.setAttribute("orderMode","direct");
+        session.setAttribute("itemCode",itemCode);
+        session.setAttribute("direct_count",count);
+        session.setAttribute("itemCode",itemCode);
+        session.setAttribute("productimg",itemImg);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("success", true);
+        result.put("redirectUrl", "/order/selected");
+        return ResponseEntity.ok(result);
+    }
+
 
     private String generateItemSummary(List<CartDetailDto> cartItems) {
         if (cartItems == null || cartItems.isEmpty()) {
@@ -156,6 +236,7 @@ public class OrderController {
             return firstItemName;
         }
     }
+
 
 
 
