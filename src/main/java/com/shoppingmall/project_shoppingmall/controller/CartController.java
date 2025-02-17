@@ -141,6 +141,7 @@ public class CartController {
         session.setAttribute("totalProductPrice", totalProductPrice);
         session.setAttribute("deliveryFee", deliveryFee);
         session.setAttribute("totalPayPrice", totalPayPrice);
+        session.setAttribute("orderMode","cart");
         System.out.println("cartItems (session) " +cartItems);
         System.out.println("totalPayPrice (session)" +totalPayPrice);
         System.out.println("totalProductPrice (session)" +totalProductPrice);
