@@ -6,15 +6,18 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         function order(){
-
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
 
-            var url = "/order";
+            var url = "/order/iteminfo";
+            var itemId = $("#itemIdInput").val();
+            var count = $("#option_box1_quantity").val();
             var paramData = {
-                itemId : $("#itemId").val(),
-                count : $("#count").val()
+                itemId :itemId,
+                count : count
             };
+            console.log(itemId)
+            console.log(count)
 
             var param = JSON.stringify(paramData);
 
@@ -30,8 +33,7 @@
                 dataType : "json",
                 cache   : false,
                 success  : function(result, status){
-                    alert("주문이 완료 되었습니다.");
-                    location.href='/';
+                    window.location.href = "/order/selected";
                 },
                 error : function(jqXHR, status, error){
 
@@ -40,6 +42,8 @@
                         alert('로그인 후 이용해주세요');
                         location.href='/members/login';
                     } else{
+                        console.log(jqXHR.status)
+                        console.log("error2")
                         alert(jqXHR.responseText);
                     }
 
@@ -395,7 +399,7 @@
                     <p class="ec-base-help txt11 displaynone EC-price-warning">할인가가 적용된 최종 결제예정금액은 주문 시 확인할 수 있습니다.</p>
                     <div class="xans-element- xans-product xans-product-action ">
                         <div class=" gColumn">
-                            <a href="#none" class="btnNormalDetail sizeL " onclick="product_submit(1, '/exec/front/order/basket/', this)" style="padding:20px 0;
+                            <a href="#none" class="btnNormalDetail sizeL " onclick="order()" style="padding:20px 0;
                                 border-radius: 0px;
                                 border: 0px;
                                 font-weight: 600;
