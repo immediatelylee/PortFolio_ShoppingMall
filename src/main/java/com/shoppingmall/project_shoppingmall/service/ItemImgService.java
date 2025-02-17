@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -137,6 +138,9 @@ public class ItemImgService {
             itemThumbnailRepository.save(savedItemThumbnail);
         }
 
+    }
+    public ItemImg getByItemId(Long itemId){
+        return itemImgRepository.findFirstByItemIdOrderByIdAsc(itemId);
     }
 
 }
