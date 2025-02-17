@@ -6,15 +6,18 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         function order(){
-
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
 
-            var url = "/order";
+            var url = "/order/iteminfo";
+            var itemId = $("#itemIdInput").val();
+            var count = $("#option_box1_quantity").val();
             var paramData = {
-                itemId : $("#itemId").val(),
-                count : $("#count").val()
+                itemId :itemId,
+                count : count
             };
+            console.log(itemId)
+            console.log(count)
 
             var param = JSON.stringify(paramData);
 
@@ -30,8 +33,7 @@
                 dataType : "json",
                 cache   : false,
                 success  : function(result, status){
-                    alert("주문이 완료 되었습니다.");
-                    location.href='/';
+                    window.location.href = "/order/selected";
                 },
                 error : function(jqXHR, status, error){
 
@@ -40,6 +42,8 @@
                         alert('로그인 후 이용해주세요');
                         location.href='/members/login';
                     } else{
+                        console.log(jqXHR.status)
+                        console.log("error2")
                         alert(jqXHR.responseText);
                     }
 
@@ -221,7 +225,7 @@
         <div class="xans-element- xans-product xans-product-detail ">
 <!--            itemId를 받기위해 value를 여기서 받음.-->
             <div class="headingArea">
-                <input hidden class="itemIdInput" type="text" th:value="${item.id}">
+                <input hidden class="itemIdInput" id="itemIdInput" type="text" th:value="${item.id}">
             </div>
             <div class="detailArea">
                 <div class="xans-element- xans-product xans-product-image imgArea ">
@@ -295,10 +299,13 @@
                         <tr>
                             <th scope="row">Color</th>
                             <td>
-                                <select option_product_no="8978" option_select_element="ec-option-select-finder" option_sort_no="1" option_type="T" item_listing_type="S" option_title="Color" product_type="product_option" product_option_area="product_option_8978_0" name="option1" id="colorOption" class="ProductOption0" option_style="select" required="true">
+                                <select option_product_no="8978" option_select_element="ec-option-select-finder" option_sort_no="1" option_type="T" item_listing_type="S" option_title="Color" product_type="product_option" product_option_area="product_option_8978_0" name="option1" id="colorOption" class="ProductOption0" option_style="select" required="true" th:switch="${item.id}">
                                     <option value="*" selected="" link_image="">- [필수] 옵션을 선택해 주세요 -</option>
                                     <option value="**" disabled="" link_image="">-------------------</option>
-                                    <option value="Ivory" link_image="">Ivory</option>
+                                    <option th:case="1" th:value="'ivory'" th:text="'Ivory'"></option>
+                                    <option th:case="2" th:value="'blue'" th:text="'Blue'"></option>
+                                    <option th:case="3" th:value="'red'" th:text="'Red'"></option>
+                                    <option th:case="4" th:value="'sky blue'" th:text="'Sky Blue'"></option>
                                 </select>
                                 <p class="value"></p>
                             </td>
@@ -316,6 +323,7 @@
                                 <p class="value"></p>
                             </td>
                         </tr>
+
                         </tbody>
                         <tbody>
                         <tr class="displaynone" id="">
@@ -350,7 +358,12 @@
                                 <td>
                                     <input type="hidden" class="option_box_id" id="option_box1_id" value="P0000NHI000B" name="item_code[]" data-item-add-option="" data-item-reserved="N" data-option-id="000B" data-option-index="1">
                                     <p class="product" th:utext="${item.itemNm} +' <br> ' + ${item.itemCode}" >상품명<br>상품코드<br> -   </p>
-                                    <span>Ivory/160</span>
+                                    <span th:switch="${item.id}">
+                                        <span th:case="1" th:text="'Ivory/free'"></span>
+                                        <span th:case="2" th:text="'Blue/free'"></span>
+                                        <span th:case="3" th:text="'Red/free'"></span>
+                                        <span th:case="4" th:text="'Sky Blue/free'"></span>
+                                    </span>
 <!--                                    TODO:나중에 옵션도 실제 적용할수 있도록-->
                                 </td>
                                 <td>
@@ -386,7 +399,7 @@
                     <p class="ec-base-help txt11 displaynone EC-price-warning">할인가가 적용된 최종 결제예정금액은 주문 시 확인할 수 있습니다.</p>
                     <div class="xans-element- xans-product xans-product-action ">
                         <div class=" gColumn">
-                            <a href="#none" class="btnNormalDetail sizeL " onclick="product_submit(1, '/exec/front/order/basket/', this)" style="padding:20px 0;
+                            <a href="#none" class="btnNormalDetail sizeL " onclick="order()" style="padding:20px 0;
                                 border-radius: 0px;
                                 border: 0px;
                                 font-weight: 600;

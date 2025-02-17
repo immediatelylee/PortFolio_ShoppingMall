@@ -15,4 +15,6 @@ public class OrderRestController {
         List<CartDetailDto> cartItems = (List<CartDetailDto>) session.getAttribute("cartItems");
         return cartItems;  // JSON으로 자동 직렬화되어 반환됨
     }
+
+
 }
