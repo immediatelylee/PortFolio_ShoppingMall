@@ -1,0 +1,1 @@
+web: java -jar target/project_shoppingmall-0.0.1-SNAPSHOT-plain.jar
