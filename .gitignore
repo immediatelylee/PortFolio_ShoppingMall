@@ -7,7 +7,7 @@
 
 # IntelliJ Cache and Output Cleanup files
 outputCleanup/
-*.properties
+#*.properties
 cache.properties
 
 # User-specific stuff
