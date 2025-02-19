@@ -21,7 +21,7 @@ tasks.withType(JavaCompile) {
 
 
 group = 'com.shoppingmall'
-version = '0.0.1-SNAPSHOT'
+version = 'v1.1'
 
 java {
     sourceCompatibility = '11'
@@ -113,6 +113,4 @@ jar {
         attributes('Main-Class':'com.shoppingmall.project_shoppingmall.ProjectShoppingmallApplication')
     }
 }
-jar {
-    enabled = false
-}
+
