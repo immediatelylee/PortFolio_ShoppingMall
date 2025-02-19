@@ -113,6 +113,3 @@ jar {
         attributes('Main-Class':'com.shoppingmall.project_shoppingmall.ProjectShoppingmallApplication')
     }
 }
-jar {
-    enabled = false
-}
