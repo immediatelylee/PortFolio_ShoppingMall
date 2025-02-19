@@ -112,4 +112,6 @@ jar {
     manifest {
         attributes('Main-Class':'com.shoppingmall.project_shoppingmall.ProjectShoppingmallApplication')
     }
+    archiveBaseName.set('project_shoppingmall')
+    version =  'v1.1'
 }
