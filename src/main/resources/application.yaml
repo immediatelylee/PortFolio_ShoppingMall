@@ -1,7 +1,7 @@
 debug: false
 management.endpoints.web.exposure.include: "*"
 
-#server.port: 9091
+server.port: 9091
 
 #나중에 제거해야함
 server.servlet.session.timeout: 180000
