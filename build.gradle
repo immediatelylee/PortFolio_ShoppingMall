@@ -106,3 +106,10 @@ configurations {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+// heroku 설정
+jar {
+    manifest {
+        attributes('Main-Class':'com.shoppingmall.project_shoppingmall.ProjectShoppingmallApplication')
+    }
+}
