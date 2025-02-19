@@ -109,9 +109,11 @@ tasks.named('test') {
 
 // heroku 설정
 jar {
+    enabled = false
+}
+bootJar {
     manifest {
-        attributes('Main-Class':'com.shoppingmall.project_shoppingmall.ProjectShoppingmallApplication')
+        attributes 'Main-Class': 'com.shoppingmall.project_shoppingmall.ProjectShoppingmallApplication'
     }
-    archiveBaseName.set('project_shoppingmall')
-    version =  'v1.1'
+    archiveFileName.set("project_shoppingmall-v1.1.jar")
 }
