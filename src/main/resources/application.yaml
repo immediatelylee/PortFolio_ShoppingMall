@@ -1,18 +1,21 @@
 debug: false
 management.endpoints.web.exposure.include: "*"
 
-server.port: 9091
+server.port: 8080
 
 #나중에 제거해야함
 server.servlet.session.timeout: 180000
 
+# docker에 맞게 오버라이드 할수 있도록 환경변수 수정
+# 로컬db을 사용할 경우 접두사인 SPRING을 LOCAL로 변경할것
 
 spring:
   datasource:
-    url: ${Local_DB_URL}
-    username: ${LOCAL_DB_USERNAME}
-    password: ${LOCAL_DB_PASSWORD}
+    url: ${SPRING_DB_URL}
+    username: ${SPRING_DB_USERNAME}
+    password: ${SPRING_DB_PASSWORD}
   jpa:
+    database: mysql # 추가 해준 부분
     open-in-view: false
     defer-datasource-initialization: true
     hibernate.ddl-auto: create
@@ -20,9 +23,13 @@ spring:
     properties:
       hibernate.format_sql: true
       hibernate.default_batch_fetch_size: 100
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
   sql.init.mode: always
   # Thymeleaf cache 사용중지
   thymeleaf.cache: false
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
 
 logging:
   level:
@@ -31,16 +38,20 @@ logging:
         cj:
           jdbc=DEBUG:
     org.hibernate.type.descriptor.sql.BasicBinder: trace
+    # ResourceHandler의 최종경로확인(이미지경로)
+    org.springframework.web.servlet.resource: DEBUG
 
 #파일 한 개당 최대 사이즈
 spring.servlet.multipart.maxFileSize: 20MB
 #요청당 최대 파일 크기
 spring.servlet.multipart.maxRequestSize: 100MB
 #상품 이미지 업로드 경로
-itemImgLocation: C:/shop/item
-brandImgLocation: C:/shop/brand
+itemImgLocation: ${ITEM_IMG_LOCATION:file:///C:/shop/item}
+brandImgLocation: ${BRAND_IMG_LOCATION:file:///C:/shop/brand}
 #리소스 업로드 경로
-uploadPath: file:///C:/shop/
+uploadPath: ${UPLOAD_PATH:file:///C:/shop/}
+
+
 
 #포트원
 apiKey: ${PO_apiKey}
