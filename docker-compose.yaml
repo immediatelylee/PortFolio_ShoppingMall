@@ -1,0 +1,49 @@
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${SPRING_DB_PASSWORD}
+      MYSQL_DATABASE: shop
+      MYSQL_USER: ${SPRING_DB_USERNAME}
+      MYSQL_PASSWORD: ${SPRING_DB_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  springboot:
+    image: shoppingmall-app:latest
+    container_name: my_springboot
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/shop?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+      SPRING_DB_USERNAME: ${SPRING_DB_USERNAME}
+      SPRING_DB_PASSWORD: ${SPRING_DB_PASSWORD}
+      PO_apiKey: ${PO_apiKey}
+      PO_secretKey: ${PO_secretKey}
+      ITEM_IMG_LOCATION: file:/images/item
+      BRAND_IMG_LOCATION: /images/brand
+      UPLOAD_PATH: file:/images/
+    ports:
+      - "8080:8080"
+      - "5005:5005"  # 디버그 포트 매핑 추가
+    networks:
+      - app-network
+
+volumes:
+  mysql-data:
+
+networks:
+  app-network:
+    driver: bridge
