@@ -126,7 +126,7 @@
                                     <li id="anchorBoxId_53163" data-aos="fade-in" class="list_item xans-record-" th:each="item:${items}">
                                         <div class="listImg">
                                             <div class="thumbnail">
-                                                <a th:href="@{'http://localhost:9091/item/' +${item.itemId}}" target="_parent" name="anchorBoxName_53163">
+                                                <a  th:href="@{/item/{id}(id=${item.itemId})}"  target="_parent" name="anchorBoxName_53163">
                                                     <img
                                                             th:src="${item.itemImgUrl}"
                                                             class="listImage"
@@ -136,7 +136,7 @@
                                                 </a>
                                                 <div class="listOver">
                                                     <p class="oZoom">
-                                                        <a th:href="@{'http://localhost:9091/item/' + ${item.itemId}}">
+                                                        <a  th:href="@{/item/{id}(id=${item.itemId})}" >
                                                         <img
                                                                 src="/web/upload/icon/search-outline.svg"
                                                                 style="
@@ -243,7 +243,7 @@
                                             <div class="description">
                                                 <div class="name">
 
-                                                    <a th:href="@{'http://localhost:9091/item/' +${item.itemId}}" target="_parent">
+                                                    <a th:href="@{/item/{id}(id=${item.itemId})}"  target="_parent">
                                                         <span style="font-size: 15px; color: #000000;"th:text="${item.itemNm}">상품명</span>
                                                     </a>
                                                 </div>
@@ -284,10 +284,10 @@
                             </a>
 <!--                            시간이 없어서 목업으로 pagination하였음 추후에 수정-->
                             <ol>
-                                <li class="xans-record-"><a th:href="@{http://localhost:9091/item/infant?page=1}" class="this">1</a></li>
-                                <li class="xans-record-"><a th:href="@{http://localhost:9091/item/infant?page=2}" class="other">2</a></li>
-                                <li class="xans-record-"><a th:href="@{http://localhost:9091/item/infant?page=3}" class="other">3</a></li>
-                                <li class="xans-record-"><a th:href="@{http://localhost:9091/item/infant?page=4}" class="other">4</a></li>
+                                <li class="xans-record-"><a th:href="@{/item/infant?page=1}" class="this">1</a></li>
+                                <li class="xans-record-"><a th:href="@{/item/infant?page=2}" class="other">2</a></li>
+                                <li class="xans-record-"><a th:href="@{/item/infant?page=3}" class="other">3</a></li>
+                                <li class="xans-record-"><a th:href="@{/item/infant?page=4}" class="other">4</a></li>
                             </ol>
                             <a href="">
                                 <img
