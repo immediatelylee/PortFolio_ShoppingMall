@@ -40,13 +40,13 @@ public class ItemFormDto {
     private String mainCategory;
     private String subCategory;
     private String subSubCategory;
-
+// 상품 수정시 이미지 정보 로드
     private List<ItemImgDto> itemImgDtoList = new ArrayList<>();
 
     private List<ItemDetailImgDto> itemDetailImgDtoList = new ArrayList<>();
 
     private List<ItemThumbnailDto> itemThumbnailDtoList = new ArrayList<>();
-
+//
     private String color;
     private Integer size;
 
