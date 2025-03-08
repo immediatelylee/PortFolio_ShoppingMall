@@ -28,9 +28,9 @@
             //     return;
             // }
 
-            var depth1 = $depth1.text().replace(' >', '');
-            var depth2 = $depth2.text().replace(' >', '');
-            var depth3 = $depth3.text().replace(' >', '');
+            var depth1 = $depth1.text().replace(' >', '').trim();
+            var depth2 = $depth2.text().replace(' >', '').trim();
+            var depth3 = $depth3.text().replace(' >', '').trim();
 
             // $("#category").val("ItemCategory." + depth3);  추후에 itemccategory의 enum형태로 변경시에 이방식으로 저장.
             $("#mainCategory").val(depth1);
