@@ -7,8 +7,6 @@ VOLUME /tmp
 # 빌드 시 jar 파일의 경로 지정 (default 값)
 ARG JAR_FILE=build/libs/project_shoppingmall-v1.1.jar
 
-# 빌드 컨텍스트 내 build/libs 디렉터리의 파일 목록 출력
-RUN echo "build/libs 디렉터리 내용 확인:" && ls -al build/libs
 
 # 로컬의 jar 파일을 이미지 내 /app.jar 로 복사
 COPY ${JAR_FILE} app.jar

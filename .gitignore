@@ -209,6 +209,8 @@ $RECYCLE.BIN/
 .gradle
 **/build/
 !src/**/build/
+## deploy
+!build/libs/project_shoppingmall-v1.1.jar
 
 # Ignore Gradle GUI config
 gradle-app.setting
