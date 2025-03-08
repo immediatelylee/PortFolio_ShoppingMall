@@ -171,13 +171,13 @@ public class ItemController {
                 System.out.println("Message: " + error.getDefaultMessage());
             }
 
-            return "item/itemManagement";
+            return "redirect:/admin/item/management";
         }
 
         if(itemImgFileList.get(0).isEmpty() && itemFormDto.getId() == null){
             model.addAttribute("errorMessage", "첫번째 상품 이미지는 필수 입력 값 입니다.");
             System.out.println("error2");
-            return "item/itemManagement";
+            return "redirect:/admin/item/management";
         }
 
         try {
@@ -185,7 +185,7 @@ public class ItemController {
         } catch (Exception e){
             model.addAttribute("errorMessage", "상품 등록 중 에러가 발생하였습니다.");
             System.out.println("error3");
-            return "item/itemManagement";
+            return "redirect:/admin/item/management";
         }
 
         return "redirect:/admin/item/management";
