@@ -21,7 +21,7 @@ tasks.withType(JavaCompile) {
 
 
 group = 'com.shoppingmall'
-version = 'v1.1'
+version = 'v1_1'
 
 java {
     sourceCompatibility = '11'

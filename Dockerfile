@@ -5,7 +5,7 @@ FROM openjdk:11-jre-slim
 VOLUME /tmp
 
 # 빌드 시 jar 파일의 경로 지정 (default 값)
-ARG JAR_FILE=build/libs/project_shoppingmall-v1.1.jar
+ARG JAR_FILE=build/libs/project_shoppingmall-v1_1.jar
 
 
 # 로컬의 jar 파일을 이미지 내 /app.jar 로 복사
