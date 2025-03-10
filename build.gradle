@@ -108,10 +108,19 @@ tasks.named('test') {
 }
 
 // heroku 설정
-jar {
-    manifest{
-        attributes 'Main-Class' : 'com.shoppingmall.project_shoppingmall.ProjectShoppingmallApplication'
-    }
+//jar {
+//    manifest{
+//        attributes 'Main-Class' : 'com.shoppingmall.project_shoppingmall.ProjectShoppingmallApplication'
+//    }
+//}
+
+jar{
+    enabled = false
+}
+bootJar {
+    destinationDirectory = file("$buildDir/libs")
+    archivesBaseName = 'project_shoppingmall'
+    archiveFileName = 'project_shoppingmall-v1_1.jar'
 }
 
 //bootJar{
