@@ -7,7 +7,6 @@ VOLUME /tmp
 # 빌드 시 jar 파일의 경로 지정 (default 값)
 ARG JAR_FILE=build/libs/*.jar
 
-
 # 로컬의 jar 파일을 이미지 내 /app.jar 로 복사
 COPY ${JAR_FILE} app.jar
 
