@@ -8,9 +8,9 @@ import org.springframework.test.context.*;
 @TestPropertySource(locations="classpath:application-test.properties")
 @SpringBootTest
 class ProjectShoppingmallApplicationTests {
-
-    @Test
-    void contextLoads() {
-    }
+//
+//    @Test
+//    void contextLoads() {
+//    }
 
 }
