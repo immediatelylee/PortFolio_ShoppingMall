@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -Dspring.profiles.active=production $JAVA_OPTS -jar target/project_shoppingmall-v1_1.jar
+web: java -Dserver.port=$PORT -Dspring.profiles.active=production $JAVA_OPTS -jar app.jar
