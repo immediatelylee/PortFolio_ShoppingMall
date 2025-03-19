@@ -124,7 +124,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
     private BooleanExpression searchByLike(String searchBy, String searchQuery) {
 
-        if (StringUtils.equals("itemNm", searchBy)) {
+        if (StringUtils.equals("ITEM_NM", searchBy)) {
             return QItem.item.itemNm.like("%" + searchQuery + "%");
         } else if (StringUtils.equals("itemCode", searchBy)) {
             return QItem.item.itemCode.like("%" + searchQuery + "%");
@@ -142,6 +142,10 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
     @Override
     public Page<ItemFormDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+
+        System.out.println("searchBy: " + itemSearchDto.getSearchBy());
+        System.out.println("searchQuery: " + itemSearchDto.getSearchQuery());
+
         QItem item = QItem.item;
         QItemThumbnail itemThumbnail = QItemThumbnail.itemThumbnail;
 
@@ -163,7 +167,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .from(itemThumbnail)
                 .join(itemThumbnail.item, item)
                 .where(
-                        searchByLike(itemSearchDto.getSearchBy().toString().toLowerCase(), itemSearchDto.getSearchQuery()),
+                        searchByLike(itemSearchDto.getSearchBy().toString(), itemSearchDto.getSearchQuery()),
                         searchSellStatusEq(itemSearchDto.getSearchSellStatus()),
                         searchDisplayStatusEq(itemSearchDto.getSearchDisplayStatus()),
                         regDtsAfter(itemSearchDto.getSearchDateType()),
