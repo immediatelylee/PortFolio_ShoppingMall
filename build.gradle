@@ -9,16 +9,21 @@ plugins {
     id 'org.springframework.boot' version '2.5.2'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 
-    //querydsl 추가
-    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+    //querydsl 추가  - build시 충돌나서 일단 주석
+//    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
-
+//querydsl 추가 시작 - 최상단에 선언
+def querydslDir = "$buildDir/generated/querydsl"
 compileJava.options.encoding = 'UTF-8'
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
+//tasks.withType(JavaCompile) {
+//    options.encoding = 'UTF-8'
+//}
 
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.generatedSourceOutputDirectory = file(querydslDir)
+}
 
 group = 'com.shoppingmall'
 version = 'v1_1'
@@ -86,25 +91,29 @@ dependencies {
 
 }
 
-//querydsl 추가 시작
-def querydslDir = "$buildDir/generated/querydsl"
 
-querydsl {
-    jpa = true
-    querydslSourcesDir = querydslDir
-}
+
+// 충돌나서 주석
+//querydsl {
+//    jpa = true
+//    querydslSourcesDir = querydslDir
+//}
+
 sourceSets {
-    main.java.srcDir querydslDir
+    main.java.srcDirs += [ querydslDir ]
 }
-compileQuerydsl{
-    options.annotationProcessorPath = configurations.querydsl
-}
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-    querydsl.extendsFrom compileClasspath
-}
+
+//compileQuerydsl{
+//    options.annotationProcessorPath = configurations.annotationProcessor
+//}
+
+//configurations {
+//    compileOnly {
+//        extendsFrom annotationProcessor
+//    }
+//    querydsl.extendsFrom compileClasspath
+//}
+
 //querydsl 추가 끝
 tasks.named('test') {
     useJUnitPlatform()
