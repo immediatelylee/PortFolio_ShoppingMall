@@ -7,66 +7,57 @@
 <th:block layout:fragment="css">
 
 </th:block>
+<th:block layout:fragment="script">
+    <script>
+        $(document).ready(function(){
+            var $popup = $('#introPopup');
+            var doNotShowAgain = localStorage.getItem('doNotShowIntro');
+            var visitCount = parseInt(localStorage.getItem('visitCount') || '0', 10);
+
+            if (!doNotShowAgain && visitCount < 3) {
+                // 다시보지 않기가 체크되지 않았고, 방문 횟수가 3번 미만이면 팝업 표시
+                $popup.css('display', 'flex');
+            }
+
+            visitCount++;
+            localStorage.setItem('visitCount', visitCount);
+        });
+
+        function closePopup() {
+            var $popup = $('#introPopup');
+            var check = $('#doNotShowAgain').is(':checked');
+
+            if (check) {
+                localStorage.setItem('doNotShowIntro', 'true');
+            }
+
+            $popup.css('display', 'none');
+        }
+    </script>
+</th:block>
 
 <div layout:fragment="content">
 
+    <!-- popup.html -->
+    <div id="introPopup" class="popup" style="display:none;">
+        <div class="popup-content">
+            <p>이 쇼핑몰 프로젝트에서 무엇을 구현했는지 보시겠어요?</p>
+            <p>[admin]</p>
+            <p>계정 admin@example.com</p>
+            <p>패스워드 test1234</p>
+            <p>[customer]</p>
+            <p>계정 </p>
+            <p></p>
+            <a href="https://github.com/immediatelylee/PortFolio_ShoppingMall/" target="_blank">
+                <button>구현 내용 보기 (Github로 이동)</button>
+            </a>
+            <br>
+            <input type="checkbox" id="doNotShowAgain"> 다시 보지 않기
+            <br>
+            <button onclick="closePopup()">닫기</button>
+        </div>
+    </div>
 
-<!--        <div class="bxslider">-->
-<!--            <div><img src="/img/banner/pc_mainBnr_2.jpg"></div>-->
-<!--            <div><img src="/img/banner/pc_mainBnr_4.jpg"></div>-->
-<!--            <div><img src="/img/banner/pc_mainBnr_5.jpg"></div>-->
-<!--            <div><img src="/img/banner/pc_mainBnr_7.jpg"></div>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash;    controller 조정css&ndash;&gt;-->
-<!--        <style>-->
-<!--            /* .bx-controls-direction 위치를 우측 하단으로 배치 */-->
-<!--            .bx-wrapper .bx-controls-direction {-->
-<!--                position: absolute;-->
-<!--                bottom: 10px; /* 하단에서 10px 간격 */-->
-<!--                right: 10px;  /* 우측에서 10px 간격 */-->
-<!--                display: flex;-->
-<!--                gap: 5px;     /* 좌우 화살표 간의 간격 */-->
-<!--            }-->
-
-<!--            /* 화살표 버튼의 기본 스타일 유지 */-->
-<!--            .bx-wrapper .bx-controls-direction a {-->
-<!--                position: static; /* 개별 위치 지정 없이 flex 정렬을 따름 */-->
-<!--                width: 32px;-->
-<!--                height: 32px;-->
-<!--            }-->
-<!--            /* .bx-controls-auto 버튼 기본 설정 */-->
-<!--            .bx-wrapper .bx-controls-auto {-->
-<!--                position: absolute;-->
-<!--                bottom: 20px;-->
-<!--                left: 50%;-->
-<!--                display: flex;-->
-<!--                z-index: 1000;-->
-<!--                /*추가*/-->
-<!--                border-radius:50%;-->
-<!--                background: #bbb5;-->
-<!--            }-->
-
-<!--            /* 커스텀 아이콘 스타일 */-->
-<!--            .bx-wrapper .bx-controls-auto a {-->
-<!--                display: inline-block;-->
-<!--                width: 32px; /* 아이콘 크기 */-->
-<!--                height: 32px;-->
-<!--                background-size: cover;-->
-<!--                text-indent: -9999px; /* 텍스트 숨기기 */-->
-
-<!--            }-->
-
-<!--            /* 재생 아이콘 (start 상태) */-->
-<!--            .bx-wrapper .bx-controls-auto .bx-start {-->
-<!--                background: url('/web/upload/img/controls.png') -86px -11px no-repeat; /* 재생 아이콘 */-->
-<!--            }-->
-
-<!--            /* 일시정지 아이콘 (stop 상태) */-->
-<!--            .bx-wrapper .bx-controls-auto .bx-stop {-->
-<!--                background: url('/web/upload/img/controls.png') -86px -44px no-repeat; /* 일시정지 아이콘 */-->
-<!--            }-->
-<!--        </style>-->
 
 
 

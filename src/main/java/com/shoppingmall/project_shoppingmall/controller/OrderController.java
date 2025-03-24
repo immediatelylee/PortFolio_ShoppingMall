@@ -59,7 +59,7 @@ public class OrderController {
         String itemSummary = generateItemSummary(cartItems);
         model.addAttribute("itemSummary", itemSummary);
 
-        return "order/Order";
+        return "order/order";
     }
 
 
@@ -109,7 +109,7 @@ public class OrderController {
             System.out.println("No items in the cart.");
         }
 
-        return "order/Order";
+        return "order/order";
     }
     // ===========================================
     //  결제가 완료된 이후에 order를 생성하는 prework

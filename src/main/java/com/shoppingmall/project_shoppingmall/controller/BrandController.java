@@ -35,7 +35,7 @@ public class BrandController {
     @GetMapping("/admin/brand/brandadd")
     public String brandForm(@ModelAttribute("brandFormDto") BrandFormDto brandFormDto){
 
-        return "brand/brandAdd";
+        return "brand/BrandAdd";
     }
 
     @PostMapping("/admin/brand/brandadd")
@@ -43,7 +43,7 @@ public class BrandController {
                             BindingResult bindingResult, Model model){
         if(bindingResult.hasErrors()){
 
-            return "brand/brandForm";
+            return "brand/BrandForm";
         }
 
         try {
@@ -53,7 +53,7 @@ public class BrandController {
 
         } catch (Exception e){
             model.addAttribute("errorMessage", "브렌드 등록에 실패했습니다.");
-            return "brand/brandForm";
+            return "brand/BrandForm";
         }
 
     }
@@ -77,7 +77,7 @@ public class BrandController {
         model.addAttribute("IdsTransferDto",new IdsTransferDto());  // retrun list
         model.addAttribute("searchBrands",searchBrands);
 
-        return "brand/brandForm";
+        return "brand/BrandForm";
     }
 
     @GetMapping(value = "/admin/brand/management/{brandId}")
@@ -86,19 +86,19 @@ public class BrandController {
         model.addAttribute("brandFormDto",brandFormDto);
 
 
-    return "brand/brandAdd";
+    return "brand/BrandAdd";
     }
 
     @PostMapping(value = "/admin/brand/management/{brandId}")
     public String updateBrand(@Valid BrandFormDto brandFormDto,BindingResult bindingResult,Model model) {
         if(bindingResult.hasErrors()){
-            return "brand/brandForm";
+            return "brand/BrandForm";
         }
         try {
             brandService.updateBrand(brandFormDto);
         } catch (Exception e){
             model.addAttribute("errorMessage","브랜드 수정중 에러가 발생하였습니다.");
-            return "brand/brandForm";
+            return "brand/BrandForm";
         }
         return "redirect:/admin/brand/management";
     }
