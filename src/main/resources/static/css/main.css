@@ -5578,3 +5578,18 @@ html[xmlns] .flexslider .slides {
 }
 
 .main_bn {display:flex;}
+/* 간단한 팝업 스타일 (popup.css) */
+.popup {
+    position: fixed;
+    top:0; left:0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display:flex; justify-content:center; align-items:center;
+    z-index:1000;
+}
+.popup-content {
+    background-color:#fff;
+    padding:20px;
+    border-radius:10px;
+    text-align:center;
+}
