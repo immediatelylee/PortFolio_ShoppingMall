@@ -14,8 +14,8 @@
             var doNotShowAgain = localStorage.getItem('doNotShowIntro');
             var visitCount = parseInt(localStorage.getItem('visitCount') || '0', 10);
 
-            if (!doNotShowAgain && visitCount < 3) {
-                // 다시보지 않기가 체크되지 않았고, 방문 횟수가 3번 미만이면 팝업 표시
+            if (!doNotShowAgain && visitCount < 10) {
+                // 다시보지 않기가 체크되지 않았고, 방문 횟수가 10번 미만이면 팝업 표시
                 $popup.css('display', 'flex');
             }
 
@@ -46,13 +46,16 @@
             <p>계정 admin@example.com</p>
             <p>패스워드 test1234</p>
             <p>[customer]</p>
-            <p>계정 </p>
+            <p>계정 customer@example.com</p>
+            <p>패스워드 test1234</p>
             <p></p>
             <a href="https://github.com/immediatelylee/PortFolio_ShoppingMall/" target="_blank">
                 <button>구현 내용 보기 (Github로 이동)</button>
             </a>
             <br>
+            <br>
             <input type="checkbox" id="doNotShowAgain"> 다시 보지 않기
+            <br>
             <br>
             <button onclick="closePopup()">닫기</button>
         </div>
