@@ -3,6 +3,18 @@
 혼자서 진행한 쇼핑몰 프로젝트입니다.
 
 프리미엄 영유아 쇼핑몰입니다.
+<p></p>
+
+[AWS를 통하여 시연한 웹페이지입니다.]<p></p>
+<a href="http://spring-mysql.ap-northeast-2.elasticbeanstalk.com/" target="_blank"> http://spring-mysql.ap-northeast-2.elasticbeanstalk.com/
+</a><p></p>
+[admin]<p></p>
+계정 : `admin@example.com`                 
+패스워드 : test1234
+
+[customer]<p></p>
+계정 : `user@example.com` <p></p>
+패스워드 : test1234 <p></p>
 
 # Description
 
