@@ -226,6 +226,7 @@
                                                             font-size: 12px;
                                                             color: #333;">
                                                     <button type="submit" data-customer-phone--submit-tel="" style="
+                                                                display: none;
                                                                 padding: 4px 8px;
                                                                 border: 1px solid #999;
                                                                 color: #333;
@@ -256,7 +257,8 @@
             <div data-component="deliveryAddress">
                 <h2 class="delivery-address__caption-header">
                     받는사람정보
-                    <button class="delivery-address__popup-list-button" type="button" data-delivery-address__popup-list-button="" style="    padding: 4px 8px;
+                    <button class="delivery-address__popup-list-button" type="button" data-delivery-address__popup-list-button="" style=" display: none;
+                        padding: 4px 8px;
                         border: 1px solid #999;
                         color: #333;
                         border-radius: 2px;
@@ -313,7 +315,7 @@
                                             </span>
                                     <span class="delivery-request-message__dawn-type-label" data-delivery-request-message__dawn-type-label="">
                                             </span>
-                                    <button class="delivery-request-message__popup-list-button" type="button" data-delivery-request-message__popup-list-button="">
+                                    <button class="delivery-request-message__popup-list-button" type="button" data-delivery-request-message__popup-list-button="" style="display: none">
                                         변경
                                     </button>
                                     <div class="delivery-request-message__covid-nudge-container"></div>
@@ -522,7 +524,7 @@
                                     <div id="payTypeInfoList" class="balloon-wrap" style="display: none;"></div>
                                     <div class="type-selector-list-wrapper">
                                         <ul id="payTypeList" class="type-selector-list">
-                                            <li id="rocketPayBox" class="type-selector-li">
+                                            <li id="rocketPayBox" class="type-selector-li" style="display: none">
                                                 <input class="type-selector-radio" type="radio" name="payType" id="payType8" value="ROCKET_BANK">
                                                 <label class="type-selector-label type-selector-label--bank" for="payType8" style="font-weight: normal;">
                                                     <span class="type-selector-label__text">계좌이체</span>
@@ -534,19 +536,19 @@
                                                     <span class="type-selector-label__text">신용/체크카드</span>
                                                 </label>
                                             </li>
-                                            <li id="cardPayBox" class="type-selector-li">
+                                            <li id="cardPayBox" class="type-selector-li" style="display: none">
                                                 <input class="type-selector-radio" type="radio" name="payType" id="payType1" value="CARD">
                                                 <label class="type-selector-label" for="payType1" style="font-weight: normal;">
                                                     <span class="type-selector-label__text">법인카드</span>
                                                 </label>
                                             </li>
-                                            <li id="phonePayBox" class="type-selector-li">
+                                            <li id="phonePayBox" class="type-selector-li" style="display: none">
                                                 <input class="type-selector-radio" type="radio" name="payType" id="payType6" value="PHONE">
                                                 <label class="type-selector-label" for="payType6" style="font-weight: normal;">
                                                     <span class="type-selector-label__text">휴대폰</span>
                                                 </label>
                                             </li>
-                                            <li id="virtualAccountPayBox" class="type-selector-li">
+                                            <li id="virtualAccountPayBox" class="type-selector-li" style="display: none">
                                                 <input class="type-selector-radio" type="radio" name="payType" id="payType7" value="VIRTUALACCOUNT">
                                                 <label class="type-selector-label" for="payType7" style="font-weight: normal;">
                                                     <span class="type-selector-label__text">무통장입금(가상계좌)</span>
