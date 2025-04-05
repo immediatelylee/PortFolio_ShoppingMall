@@ -101,13 +101,13 @@ $mode = basket
                             <input type="checkbox" name="basket_product_normal_type_normal" th:value="${wishlistItem.wishlistItemId}" th:data-index="${wishlistItem.wishlistItemId}" checked>
                         </td>
                         <td class="thumb">
-                            <a href="상품위치 등록해야함.">
+                            <a th:href="@{/item/{id}(id=${wishlistItem.itemId})}">
                                 <img th:src="@{${wishlistItem.imgUrl}}" style="max-width: 80px">
                             </a>
                         </td>
                         <td class="left">
                             <strong class="name">
-                                <a href="상품위치 등록해야함." th:utext="${wishlistItem.itemNm} + ' <br> ' + ${wishlistItem.itemCode}">상품명<br>상품코드</a>
+                                <a th:href="@{/item/{id}(id=${wishlistItem.itemId})}" th:utext="${wishlistItem.itemNm} + ' <br> ' + ${wishlistItem.itemCode}">상품명<br>상품코드</a>
                             </strong>
                         </td>
                         <td class="price right">
@@ -120,7 +120,7 @@ $mode = basket
                         <td class="price right">₩45,500</td>
                         <td class="button">
 <!--                            <a href="#none" style="width: 90px;height: 22px;margin: 1px 0;padding: 0px 0px 20px 1px;border: 1px solid transparent;background-color: #333;vertical-align: middle;/* text-align: center; */" onclick="CAPP_SHOP_NEW_PRODUCT_OPTIONSELECT.selectOptionCommon(8978,  29, 'wishlist', '')" class="btnSubmit ">주문</a>-->
-                            <a href="#none" style="width: 90px;margin: 1px 0;padding: 5px 8px;border: 1px solid #ececec" onclick="CAPP_SHOP_NEW_PRODUCT_OPTIONSELECT.selectOptionCommon(8978,  29, 'wishlist', '')" class="btnNormal ">장바구니</a>
+                            <a th:href="@{/item/{id}(id=${wishlistItem.itemId})}" style="width: 90px;margin: 1px 0;padding: 5px 8px;border: 1px solid #ececec"  class="btnNormal ">상품 페이지</a>
                             <a href="#none" style="width: 90px;margin: 1px 0;padding: 5px 8px;border: 1px solid #ececec" class="btnNormal btn_wishlist_del" onclick="deleteWishlistItem(this)" th:data-wishlistitem-id="${wishlistItem.wishlistItemId}"><i class="icoDelete"></i> 삭제</a>
                         </td>
                     </tr>
