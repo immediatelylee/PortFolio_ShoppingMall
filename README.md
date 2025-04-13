@@ -16,14 +16,6 @@
 계정 : `user@example.com` <p></p>
 패스워드 : test1234 <p></p>
 
-# Description
-
-Mary market Version 1 (2023 8.18 ~ 9.29)  
-
-Mary market Version 2 (2023 12.17 ~ 8.24)  
-
-Mary market Version 3 (2024 9.1 ~ 현재)
-
 # Views
 
 * 전체 프로젝트 설명 (마우스 우클릭 - 새탭에서 열기)
@@ -35,13 +27,36 @@ Mary market Version 3 (2024 9.1 ~ 현재)
 
 * 프로젝트의 각 기능을 설명한 부분을 모아서 연결한 영상입니다.
 * 영상 아래는 각 기능을 나눠서 설명한 부분이며 이 영상을 한번 보는것이 더 프로젝트를 이해하기 좋습니다.
+<br>
+
+![image](https://github.com/user-attachments/assets/0f3f6d73-046a-433b-bb78-2f6e4444f5cf)
+![image](https://github.com/user-attachments/assets/a77701c6-9732-4143-bf65-845cf2edda4e)
+![image](https://github.com/user-attachments/assets/eacc0675-966d-4bb1-ac19-16cb980cfe32)
+![image](https://github.com/user-attachments/assets/805cb7c9-003a-423d-b5e5-5b2061628781)
+![image](https://github.com/user-attachments/assets/9bfe72e3-e516-42c0-a17f-9082c79e1502)
+![image](https://github.com/user-attachments/assets/57951358-6982-4947-a9c7-ec349cc6f200)
+![image](https://github.com/user-attachments/assets/9cbb77ce-a479-46b9-a2fc-c375b18cb69f)
+![image](https://github.com/user-attachments/assets/80c8acf2-71a7-441e-9762-38cc0ed4cd40)
+![image](https://github.com/user-attachments/assets/a7aa2424-8108-4afe-a989-fac2ece7da02)
+![image](https://github.com/user-attachments/assets/4515a82d-aa02-46c5-b15f-ac491412aaef)
+![image](https://github.com/user-attachments/assets/c846cd7d-7386-41d6-abb0-97d73ae47775)
+![image](https://github.com/user-attachments/assets/49dfd1ff-6dd9-46d4-822f-892a31cf589b)
+![image](https://github.com/user-attachments/assets/716cfc09-eafa-4286-8ed5-28a87f86321f)
+![image](https://github.com/user-attachments/assets/6c689d57-5b13-4179-9e84-2842bc0f73e5)
+![image](https://github.com/user-attachments/assets/c710d8f2-36e2-42c9-bfa9-f00f55cee595)
+![image](https://github.com/user-attachments/assets/8dfcdba4-d8e1-4416-9d38-a404beef6a73)
+![image](https://github.com/user-attachments/assets/0fe011c6-f3e9-4ae9-a348-45e1cf9a88e4)
+![image](https://github.com/user-attachments/assets/bad10287-5e7f-4305-8cbc-15d38dc5df94)
+![image](https://github.com/user-attachments/assets/492a8f55-00e3-49b4-a514-92b268254a46)
+
+
+
+
+
+
 
   
-<br />
-<br />
-<br />
-<br />
-<br />
+
 
 # Description
 
