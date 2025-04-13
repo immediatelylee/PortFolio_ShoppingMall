@@ -299,13 +299,17 @@
                         <tr>
                             <th scope="row">Color</th>
                             <td>
-                                <select option_product_no="8978" option_select_element="ec-option-select-finder" option_sort_no="1" option_type="T" item_listing_type="S" option_title="Color" product_type="product_option" product_option_area="product_option_8978_0" name="option1" id="colorOption" class="ProductOption0" option_style="select" required="true" th:switch="${item.id}">
+                                <select option_product_no="8978" option_select_element="ec-option-select-finder" option_sort_no="1" option_type="T" item_listing_type="S" option_title="Color" product_type="product_option" product_option_area="product_option_8978_0" name="option1" id="colorOption" class="ProductOption0" option_style="select" required="true" >
                                     <option value="*" selected="" link_image="">- [필수] 옵션을 선택해 주세요 -</option>
                                     <option value="**" disabled="" link_image="">-------------------</option>
-                                    <option th:case="1" th:value="'ivory'" th:text="'Ivory'"></option>
-                                    <option th:case="2" th:value="'blue'" th:text="'Blue'"></option>
-                                    <option th:case="3" th:value="'red'" th:text="'Red'"></option>
-                                    <option th:case="4" th:value="'sky blue'" th:text="'Sky Blue'"></option>
+                                    <option th:if="${item.id == 1}" th:value="'ivory'" th:text="'Ivory'"></option>
+                                    <option th:if="${item.id == 2}" th:value="'blue'" th:text="'Blue'"></option>
+                                    <option th:if="${item.id == 3}" th:value="'red'" th:text="'Red'"></option>
+                                    <option th:if="${item.id == 4}" th:value="'sky blue'" th:text="'Sky Blue'"></option>
+                                    <!-- item.id가 4 이상인 경우 -->
+<!--                                    <option th:if="${item.id > 4}" th:each="option : ${productOptions}"-->
+<!--                                            th:value="${option.value}"-->
+<!--                                            th:text="${option.text}"></option>-->
                                 </select>
                                 <p class="value"></p>
                             </td>
