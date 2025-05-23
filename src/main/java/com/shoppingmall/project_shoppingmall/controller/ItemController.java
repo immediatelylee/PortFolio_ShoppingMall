@@ -137,7 +137,6 @@ public class ItemController {
 
         List<Brand> brands = brandService.findAll();
 
-
         model.addAttribute("depth1",depth1);
         model.addAttribute("depth2",depth2);
         model.addAttribute("depth3",depth3);
@@ -257,86 +256,7 @@ public class ItemController {
         return "item/itemDetail";
     }
 
-//    @ResponseBody
-//    @PostMapping("/item/{itemId}/options")
-//    public ResponseEntity<List<UsedOption>> addOptions(@PathVariable Long itemId) {
-//        Item item = itemService.getItemById(itemId);
-//        List<UsedOption> usedOptions = usedOptionService.generateUsedOptions(item);
-//        return ResponseEntity.ok(usedOptions);
-//    }
 
-    // TODO:usedoption 사용하는것으로 보아 이전 레거시 코드일지로 확인후 삭제
-    // 옵션 조합 생성 API  -
-//    @ResponseBody
-//    @PostMapping("/item/{itemId}/options/combinations")
-//    public ResponseEntity<List<OptionCombination>> generateCombinations(@PathVariable Long itemId) {
-//        Item item = itemService.getItemById(itemId);
-//        List<UsedOption> usedOptions = usedOptionService.getUsedOptionsByItem(item);  // 조회 구현 연결
-//
-//        // 조합 생성
-//        List<OptionCombination> combinations = combinationService.generateCombinations(item, usedOptions);
-//        return ResponseEntity.ok(combinations);
-//    }
-
-    // 옵션 조합 조회 API
-//    @ResponseBody
-//    @GetMapping("/item/{itemId}/options/combinations")
-//    public ResponseEntity<List<OptionCombination>> getCombinations(@PathVariable Long itemId) {
-//        Item item = itemService.getItemById(itemId);
-//        List<OptionCombination> combinations = combinationService.getCombinationsByItem(item);
-//        return ResponseEntity.ok(combinations);
-//    }
-
-//    /**
-//     *  분리 선택형 상품 등록
-//     */
-//    @PostMapping("/admin/item/new/separated")
-//    public String createSeparatedItem(@Valid ItemFormDto itemFormDto,
-//                                      BindingResult bindingResult,
-//                                      @RequestParam(required = false) Long optionSetId,
-//                                      @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,
-//                                      @RequestParam("itemDetailImgFile") List<MultipartFile> itemDetailImgFileList,
-//                                      Model model) {
-//        // Validation
-//        if(bindingResult.hasErrors()){
-//            // ...
-//            return "redirect:/admin/item/management";
-//        }
-//        try {
-//            // 예: optionSetId = 1L
-//            Long itemId = itemService.createSeparatedItem(itemFormDto, optionSetId,
-//                    itemImgFileList, itemDetailImgFileList);
-//            return "redirect:/admin/item/management";
-//        } catch(Exception e){
-//            model.addAttribute("errorMessage", "상품 등록 중 에러가 발생하였습니다.");
-//            return "redirect:/admin/item/management";
-//        }
-//    }
-//
-//    /**
-//     *  조합 일체형 상품 등록
-//     */
-//    @PostMapping("/admin/item/new/combined")
-//    public String createCombinedItem(@Valid ItemFormDto itemFormDto,
-//                                     BindingResult bindingResult,
-//                                     @RequestParam("combinations") List<String> combinationList,
-//                                     @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,
-//                                     @RequestParam("itemDetailImgFile") List<MultipartFile> itemDetailImgFileList,
-//                                     Model model) {
-//        // Validation
-//        if(bindingResult.hasErrors()){
-//            // ...
-//            return "redirect:/admin/item/management";
-//        }
-//        try {
-//            Long itemId = itemService.createCombinedItem(itemFormDto, combinationList,
-//                    itemImgFileList, itemDetailImgFileList);
-//            return "redirect:/admin/item/management";
-//        } catch(Exception e){
-//            model.addAttribute("errorMessage", "상품 등록 중 에러가 발생하였습니다.");
-//            return "redirect:/admin/item/management";
-//        }
-//    }
 
 }
 
