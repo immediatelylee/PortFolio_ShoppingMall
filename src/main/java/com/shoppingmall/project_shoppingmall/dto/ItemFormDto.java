@@ -31,9 +31,11 @@ public class ItemFormDto {
     @NotBlank(message = "상품 상세는 필수 입력 값입니다.")
     private String itemDetail;
 
-    private ItemSellStatus itemSellStatus;
+    //상품 등록페이지 기본값 설정을 위한 초기값 설정(thymeleaf 기능때문)
+    private ItemSellStatus itemSellStatus = ItemSellStatus.SOLD_OUT;
 
-    private ItemDisplayStatus itemDisplayStatus;
+    //상품 등록페이지 기본값 설정을 위한 초기값 설정(thymeleaf 기능때문)
+    private ItemDisplayStatus itemDisplayStatus = ItemDisplayStatus.NOT_DISPLAY;
 
 
 //    @NotNull(message = "카테고리는 필수 입력값입니다.")

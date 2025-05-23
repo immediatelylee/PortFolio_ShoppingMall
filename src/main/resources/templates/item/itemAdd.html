@@ -991,12 +991,25 @@
                                     <th scope="row" rowspan="2">표시상태설정</th>
                                     <td>
                                         <div class="gIcoShop">
-                                            <label class="gLabel">
-                                                <input type="radio" th:field="*{itemDisplayStatus}" th:value="DISPLAY"  class="form-check-input" name="itemDisplayStatus">
+                                            <label class="gLabel"
+                                                   th:classappend="${itemFormDto.itemDisplayStatus ==
+                        T(com.shoppingmall.project_shoppingmall.constant.ItemDisplayStatus).DISPLAY} ? ' eSelected' : ''">
+                                                <input type="radio"
+                                                       th:field="*{itemDisplayStatus}"
+                                                       th:value="DISPLAY"
+                                                       class="form-check-input"
+                                                       name="itemDisplayStatus">
 
                                                 진열함</label>
-                                            <label class="gLabel eSelected">
-                                                <input type="radio" th:field="*{itemDisplayStatus}" th:value="NOT_DISPLAY"  class="form-check-input" name="itemDisplayStatus">
+                                            <label class="gLabel"
+                                                   th:classappend="${itemFormDto.itemDisplayStatus ==
+                        T(com.shoppingmall.project_shoppingmall.constant.ItemDisplayStatus).NOT_DISPLAY} ? ' eSelected' : ''">
+
+                                                <input type="radio"
+                                                       th:field="*{itemDisplayStatus}"
+                                                       th:value="NOT_DISPLAY"
+                                                       class="form-check-input"
+                                                       name="itemDisplayStatus">
 
                                                 진열안함</label>
                                         </div>
@@ -1007,11 +1020,15 @@
                                     <td>
                                         <div class="gIcoShop">
 
-                                            <label class="gLabel">
+                                            <label class="gLabel"
+                                                   th:classappend="${itemFormDto.itemSellStatus ==
+                        T(com.shoppingmall.project_shoppingmall.constant.ItemSellStatus).SELL} ? ' eSelected' : ''">
                                                 <input type="radio" th:field="*{itemSellStatus}" th:value="SELL"  class="form-check-input" name="itemSellStatus">
 
                                                 판매함</label>
-                                            <label class="gLabel eSelected">
+                                            <label class="gLabel"
+                                                   th:classappend="${itemFormDto.itemSellStatus ==
+                        T(com.shoppingmall.project_shoppingmall.constant.ItemSellStatus).SOLD_OUT} ? ' eSelected' : ''">
                                                 <input type="radio" th:field="*{itemSellStatus}" th:value="SOLD_OUT"  class="form-check-input" name="itemSellStatus">
 
                                                 판매안함</label>
@@ -1220,8 +1237,8 @@
                             <th scope="row">옵션사용
                             </th>
                             <td>
-                                <label class="gLabel eSelected"><input type="radio" name="has_option" class="fChk eMarketChecker" id="eOptionUseT" value="T"> 사용함</label>
-                                <label class="gLabel"><input type="radio" name="has_option" class="fChk" id="eOptionUseF" value="F" checked="checked"> 사용안함</label>
+                                <label class="gLabel"><input type="radio" name="has_option" class="fChk eMarketChecker" id="eOptionUseT" value="T"> 사용함</label>
+                                <label class="gLabel eSelected"><input type="radio" name="has_option" class="fChk" id="eOptionUseF" value="F" checked="checked"> 사용안함</label>
                                 <input type="hidden" name="has_option_old" value="">
                                 <input type="hidden" name="product_sub_code_old" value="">
                             </td>
