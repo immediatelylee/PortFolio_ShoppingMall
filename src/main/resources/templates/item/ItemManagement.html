@@ -277,15 +277,27 @@
                         <tr>
                             <th scope="row">진열상태</th>
                             <td>
-                                <label class="gSingleLabel eSelected"><input type="radio" class="fChk eDisplayStatus" name="displayStatus" value="A" checked="&quot;checked&quot;"> 전체</label>
-                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="displayStatus" value="T"> 진열함</label>
-                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="displayStatus" value="F"> 진열안함</label>
+                                <label class="gSingleLabel eSelected">
+                                    <input type="radio" name="searchDisplayStatus" value="" checked> 전체
+                                </label>
+                                <label class="gSingleLabel">
+                                    <input type="radio" name="searchDisplayStatus" value="DISPLAY"> 진열함
+                                </label>
+                                <label class="gSingleLabel">
+                                    <input type="radio" name="searchDisplayStatus" value="NOT_DISPLAY"> 진열안함
+                                </label>
                             </td>
                             <th scope="row">판매상태</th>
                             <td>
-                                <label class="gSingleLabel eSelected"><input type="radio" class="fChk eDisplayStatus" name="sellStatus" value="A" checked="&quot;checked&quot;"> 전체</label>
-                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="sellStatus" value="T"> 판매함</label>
-                                <label class="gSingleLabel"><input type="radio" class="fChk eDisplayStatus" name="sellStatus" value="F"> 판매안함</label>
+                                <label class="gSingleLabel eSelected">
+                                    <input type="radio" name="searchSellStatus" value="" checked> 전체
+                                </label>
+                                <label class="gSingleLabel">
+                                    <input type="radio" name="searchSellStatus" value="SELL"> 판매함
+                                </label>
+                                <label class="gSingleLabel">
+                                    <input type="radio" name="searchSellStatus" value="SOLD_OUT"> 판매안함
+                                </label>
                             </td>
                         </tr>
 
@@ -437,7 +449,8 @@
                     <ol>
                         <li><strong title="현재페이지">1</strong></li>
                     </ol>
-                </div>    </div>
+                </div>
+            </div>
         </form>
     </div>
 </div>

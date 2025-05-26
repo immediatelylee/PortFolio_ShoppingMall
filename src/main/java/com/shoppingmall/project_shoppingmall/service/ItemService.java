@@ -131,63 +131,10 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ItemFormDto> searchItems(ItemSearchType itemSearchType, String searchValue, String searchDateType, String sellStatus, String displayStatus, String mainCategory, String subCategory, String subSubCategory, Pageable pageable) {
-        Page<ItemFormDto> items;
+    public Page<ItemFormDto> searchItems(ItemSearchDto itemSearchDto, Pageable pageable) {
 
-        // 검색어가없으면서 검색 조건이 있는경우
-        if (searchValue == null || searchValue.isEmpty()) {
-            ItemSearchDto itemSearchDto = new ItemSearchDto();
-            itemSearchDto.setSearchDateType(searchDateType);
-            itemSearchDto.setMainCategory(mainCategory);
-            itemSearchDto.setSubCategory(subCategory);
-            itemSearchDto.setSubSubCategory(subSubCategory);
-
-            if ("SELL".equals(sellStatus)) {
-                itemSearchDto.setSearchSellStatus(ItemSellStatus.SELL);
-            } else if ("SOLD_OUT".equals(sellStatus)) {
-                itemSearchDto.setSearchSellStatus(ItemSellStatus.SOLD_OUT);
-            }
-
-            if ("DISPLAY".equals(displayStatus)) {
-                itemSearchDto.setSearchDisplayStatus(ItemDisplayStatus.DISPLAY);
-            } else if ("NOT_DISPLAY".equals(displayStatus)) {
-                itemSearchDto.setSearchDisplayStatus(ItemDisplayStatus.NOT_DISPLAY);
-            }
-
-            if (itemSearchDto.hasSearchConditions()) {
-                items = itemRepository.getMainItemPage(itemSearchDto, pageable);
-            } else {
-                items = itemRepository.findAll(pageable).map(item -> {
-                    ItemFormDto dto = ItemFormDto.of(item);
-                    String thumbnailUrl = itemThumbnailRepository.findThumbnailUrlByItemId(item.getId());
-                    dto.setThumbnailImgUrl(thumbnailUrl);
-                    return dto;
-                });
-            }
-
-        } else {
-            ItemSearchDto itemSearchDto = new ItemSearchDto();
-            itemSearchDto.setSearchBy(itemSearchType);
-            itemSearchDto.setSearchQuery(searchValue);
-            itemSearchDto.setSearchDateType(searchDateType);
-            itemSearchDto.setMainCategory(mainCategory);
-            itemSearchDto.setSubCategory(subCategory);
-            itemSearchDto.setSubSubCategory(subSubCategory);
-
-            if ("SELL".equals(sellStatus)) {
-                itemSearchDto.setSearchSellStatus(ItemSellStatus.SELL);
-            } else if ("SOLD_OUT".equals(sellStatus)) {
-                itemSearchDto.setSearchSellStatus(ItemSellStatus.SOLD_OUT);
-            }
-
-            if ("DISPLAY".equals(displayStatus)) {
-                itemSearchDto.setSearchDisplayStatus(ItemDisplayStatus.DISPLAY);
-            } else if ("NOT_DISPLAY".equals(displayStatus)) {
-                itemSearchDto.setSearchDisplayStatus(ItemDisplayStatus.NOT_DISPLAY);
-            }
-
-            items = itemRepository.getMainItemPage(itemSearchDto, pageable);
-        }
+        // 조건 여부 상관없이 항상 DTO를 전달하여 검색
+        Page<ItemFormDto> items = itemRepository.getMainItemPage(itemSearchDto, pageable);
 
         // 이미지 설정이 안 되어 있다면 여기서 설정
         Page<ItemFormDto> itemFormDtoPage = items.map(item -> {

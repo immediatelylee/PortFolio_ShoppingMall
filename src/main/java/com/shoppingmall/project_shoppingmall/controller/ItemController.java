@@ -6,6 +6,7 @@ import com.shoppingmall.project_shoppingmall.domain.Brand;
 import com.shoppingmall.project_shoppingmall.domain.OptionSet;
 import com.shoppingmall.project_shoppingmall.dto.IdsTransferDto;
 import com.shoppingmall.project_shoppingmall.dto.ItemFormDto;
+import com.shoppingmall.project_shoppingmall.dto.ItemSearchDto;
 import com.shoppingmall.project_shoppingmall.dto.ItemWithImgDto;
 import com.shoppingmall.project_shoppingmall.service.*;
 import lombok.RequiredArgsConstructor;
@@ -60,18 +61,11 @@ public class ItemController {
 
 
     @GetMapping(value = "/admin/item/management")
-    public String ItemManagement(@RequestParam(required = false) ItemSearchType itemSearchType,
-                                 @RequestParam(required = false) String searchValue,
-                                 @RequestParam(required = false) String searchDateType,
-                                 @RequestParam(required = false) String sellStatus,
-                                 @RequestParam(required = false) String displayStatus,
-                                 @RequestParam(required = false) String mainCategory,
-                                 @RequestParam(required = false) String subCategory,
-                                 @RequestParam(required = false) String subSubCategory,
+    public String ItemManagement(@ModelAttribute ItemSearchDto searchDto,
                                  @PageableDefault(page = 0,size = 10 ,sort = "id" ,direction = Sort.Direction.DESC) Pageable pageable,
                                  Model model){
 
-        Page<ItemFormDto> searchItems = itemService.searchItems(itemSearchType,searchValue,searchDateType,sellStatus,displayStatus,mainCategory,subCategory,subSubCategory,pageable);
+        Page<ItemFormDto> searchItems = itemService.searchItems(searchDto, pageable);
         List<Integer> barNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(),searchItems.getTotalPages());
 
 
@@ -83,7 +77,7 @@ public class ItemController {
         Long notDisplayedItemCount = itemService.getItemsNotDisplayedCount();
 
 
-        model.addAttribute("ItemSearchType",itemSearchType.values());
+        model.addAttribute("ItemSearchType",ItemSearchType.values());
         model.addAttribute("paginationBarNumbers", barNumbers);
         model.addAttribute("searchItems",searchItems);
         model.addAttribute("totalItemCount", totalItemCount);
