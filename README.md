@@ -68,7 +68,7 @@
 
 &nbsp;
 * 메인페이지  
-![8mb개선전개선후](https://github.com/user-attachments/assets/fde8a04a-fa5f-4053-91e3-dc4eb2a79912)
+![개선전개선후](https://github.com/user-attachments/assets/fde8a04a-fa5f-4053-91e3-dc4eb2a79912)
 
   * 부트스트랩을 삭제하고 새로 뷰를 작성
   * bxSlider를 이용해여 이미지 슬라이더 구성
