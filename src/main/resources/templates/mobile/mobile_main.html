@@ -1,0 +1,2998 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>캐리마켓 클론</title>
+    <link rel="stylesheet" href="/mobile/assets/css/main.css"/>
+    <link rel="stylesheet" href="/mobile/assets/css/aos.css"/>
+    <link rel="stylesheet" href="/mobile/assets/css/myPage.css"/>
+    <link rel="stylesheet" href="/mobile/assets/css/join.css"/>
+    <link rel="stylesheet" href="/mobile/assets/css/order.css"/>
+    <link rel="stylesheet" href="/mobile/assets/css/category.css"/>
+    <link rel="stylesheet" href="/mobile/assets/css/fnb.css"/>
+    <link rel="stylesheet" href="/mobile/assets/css/product.css"/>
+    <link rel="stylesheet" href="/mobile/assets/css/event.css"/>
+    <link rel="stylesheet" href="/mobile/assets/css/globals.css"/>
+    <link rel="stylesheet" href="/mobile/assets/css/style.css"/>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/mobile/plugins/fontawesome-free/css/all.min.css">
+    <!-- flag-icon-css -->
+    <link rel="stylesheet" href="/mobile/plugins/flag-icon-css/css/flag-icon.min.css">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="/mobile/plugins/toastr/toastr.min.css">
+    <!-- summernote -->
+    <link rel="stylesheet" href="/mobile/plugins/summernote/summernote-bs4.min.css">
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="/mobile/plugins/jquery-ui/jquery-ui.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="/mobile/plugins/daterangepicker/daterangepicker.css">
+    <!-- slick -->
+    <link rel="stylesheet" href="/mobile/plugins/slick/slick.css">
+    <!-- swiper -->
+    <link rel="stylesheet" href="/mobile/plugins/swiper/swiper-bundle.min.css" />
+
+    <!-- jQuery -->
+    <script src="/mobile/plugins/jquery/jquery.min.js"></script>
+    <!-- jQuery UI -->
+    <script src="/mobile/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="/mobile/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Toastr -->
+    <script src="/mobile/plugins/toastr/toastr.min.js"></script>
+    <!-- jquery-validation -->
+    <script src="/mobile/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="/mobile/plugins/jquery-validation/additional-methods.min.js"></script>
+    <!-- InputMask -->
+    <script src="/mobile/plugins/moment/moment.min.js"></script>
+    <script src="/mobile/plugins/inputmask/jquery.inputmask.min.js"></script>
+    <!-- date-range-picker -->
+    <script src="/mobile/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- Summernote Editor -->
+    <script src="/mobile/plugins/summernote/summernote-bs4.min.js"></script>
+    <!-- Editor language pack KR,JP,CN ,Default US-->
+    <script src="/mobile/plugins/summernote/lang/summernote-ko-KR.min.js"></script>
+    <script src="/mobile/plugins/summernote/lang/summernote-ja-JP.min.js"></script>
+    <script src="/mobile/plugins/summernote/lang/summernote-zh-CN.min.js"></script>
+    <!-- slick -->
+    <script src="/mobile/plugins/slick/slick.min.js"></script>
+    <!-- Include Handlebars from a CDN -->
+    <script src="/mobile/plugins/handlebars/handlebars.js"></script>
+    <!-- daum post -->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <!-- swiper -->
+    <script src="/mobile/plugins/swiper/swiper-bundle.min.js"></script>
+    <!-- spinner -->
+    <script src="/mobile/plugins/spin/spin.min.js"></script>
+
+    <link rel="stylesheet" href="/mobile/plugins/swiper/swiper-bundle.min.css">
+
+
+
+    <!-- commmon script -->
+    <!--[if lte IE 8]> <script src="/mobile/assets/js/ie/html5shiv.js"></script><![endif]-->
+    <!--[if lte IE 8]><script src="/mobile/assets/js/ie/respond.min.js"></script><![endif]-->
+    <script src="/mobile/assets/js/spinner.js"></script>
+    <script src="/mobile/assets/js/skel.min.js"></script>
+    <script src="/mobile/dist/js/thekary.js"></script>
+
+
+    <!-- 임의로 head에 위치시킴 -->
+    <script src="/mobile/assets/js/util.js"></script>
+    <script src="/mobile/assets/js/main.js"></script>
+    <script src="/mobile/assets/js/joinus.js"></script>
+    <script src="/mobile/assets/js/common.js"></script>
+
+
+</head>
+<body>
+<!-- 로그인 유지시간 초과 알림 -->
+<div class="modal2" id="modal100">
+    <!-- modal_content start -->
+    <div class="modal_content2">
+        <ul>
+            <li>로그인 유지 시간이 초과되어, 초기 화면으로 이동합니다.</li>
+            <li onclick="javascript:location.href='/'">확인</li>
+        </ul>
+    </div>
+</div>
+<!-- 에러메시지 모달 -->
+<div class="modal2" id="modal999">
+    <!-- modal_content start -->
+    <div class="modal_content2">
+        <ul>
+            <li id="modalErrorMsg">작업 중 오류가 발생 하였습니다. 잠시 후 다시 시도해 주시기 바랍니다.</li>
+            <li onclick="closeModal('modal999')">확인</li>
+        </ul>
+    </div>
+</div>
+<!-- 로딩 스피너 -->
+<div id="spinnerLay1000" style="display: none">
+    <div id="spinnerContainer1000">
+        <img loading="lazy" src="/mobile/images/loading.gif" alt="Loading..." width="230px">
+    </div>
+</div>
+
+<!-- 키프레임 쇼핑몰 배너 -->
+<style>
+    @keyframes scroll {
+        0% {
+            transform: translateX(100%);
+        }
+        100% {
+            transform: translateX(-100%);
+        }
+    }
+</style>
+
+<!-- ui동작  -->
+<script type="text/javascript">
+
+    //카테고리 이동
+    function fn001(categoryCode) {
+        if('C17' == categoryCode) {
+            // 이벤트
+            location.href = '/event';
+        }else if('C15' == categoryCode) {
+            // 베스트
+            location.href = '/category/best';
+        }else if('C16' == categoryCode) {
+            // 아울렛
+            location.href = '/category/outlet';
+        }else {
+            location.href = replaceQueryValue('/category', 'categoryCode', categoryCode);
+        }
+    }
+
+    //검색
+    function fn002() {
+        let keyword = $("#inputKeyword").val() ? $("#inputKeyword").val() : $("#inputKeyword").prop("placeholder");
+        if (keyword) {
+            location.href = replaceQueryValue('/s/kw', 'keyword', keyword);
+        } else {
+            openModal('modal0', document.getElementById('inputKeyword'));
+        }
+    }
+
+    //탭메뉴 정렬
+    function fn003(target, detailTarget, groupName) {
+
+        if(groupName !== undefined) {
+            let categoryClass = 'category_'+target.split('slideItem_')[1];
+            let thisCategory = $('.'+categoryClass+'.on').children('img');
+            let thisCategorySrc = $(thisCategory).attr('src');
+
+            let categoryImgList = $('.'+categoryClass).children('img');
+            for(let i=0; i<categoryImgList.length; i++) {
+                let data = categoryImgList[i];
+                let src = $(data).attr('src');
+                $(data).attr('src', src.replace('_wh.svg', '_b.svg'));
+            }
+
+            if(groupName.indexOf('/image') > -1) {
+                $(thisCategory).attr('src', thisCategorySrc.replace('_b.svg', '_wh.svg'));
+            }
+
+        }
+        if (detailTarget) {
+            $('.' + target).hide();
+            $('.' + detailTarget).show();
+        } else {
+            $('.' + target).show();
+        }
+    }
+
+    //상품상세
+    //GA 전자상거래 이벤트 수집을 위해 title, dpGroupSeq 추가
+    function fn004(productCode, dpGroupSeq, listName, index) {
+        let url = replaceQueryValue('/product', 'productCode', productCode); // 기본 productCode url 생성
+
+        if (dpGroupSeq) {
+            url = replaceQueryValue(url, 'dpGroupSeq', dpGroupSeq);
+            if (index !== undefined && index !== null) {
+                url = replaceQueryValue(url, 'index', index);
+            }
+
+        } else if (listName) {
+            url = replaceQueryValue(url, 'listName', listName);
+            if (index !== undefined && index !== null) {
+                url = replaceQueryValue(url, 'index', index);
+            }
+        }
+        location.href = url; // 최종 url로 이동
+    }
+
+    //기획전 상세
+    function fn005(exSeq) {
+        location.href = replaceQueryValue('/ar/e', 'exSeq', exSeq);
+    }
+
+    //진열 상세
+    function fn006(areaSeq) {
+        location.href = replaceQueryValue('/ar/d', 'areaSeq', areaSeq);
+    }
+
+    //로그인
+    function fn007() {
+        if ('' == 'true')
+            location.href = '/inquiry';
+        else
+            openLoginModal();
+    }
+
+    //브랜드 페이지 이동
+    function fn008(brandCode) {
+        location.href = replaceQueryValue('/brand/detail', 'brandCode', brandCode);
+    }
+
+    // 로그인 콜백
+    function loginModalCallback() {
+        location.href = '/inquiry';
+    }
+
+    //광고 상품리스트 상세
+    function fnAdv(advAreaSeq) {
+        location.href = replaceQueryValue('/ar/adv', 'advAreaSeq', advAreaSeq);
+    }
+
+    // 인기검색어 영역 검색
+    function search(v) {
+        let keyword = $("#srchKeyword").val();
+        if (v) {
+            keyword = v;
+        }
+        if (keyword) {
+            location.href = replaceQueryValue('/s/kw', 'keyword', keyword);
+        } else {
+            openModal('modal0', document.getElementById('srchKeyword'));
+        }
+    }
+
+    function checkLogin() {
+        if ('' != 'true') {
+            openLoginModal();
+        } else {
+            location.href = '/notification';
+        }
+    }
+
+    function loginModalCallback() {
+        location.href = '/notification';
+    }
+
+    function searchExec(v) {
+        let keyword = $("#inputKeyword").val();
+        if( v ){
+            keyword = v;
+        }else if(!keyword && !v){
+            keyword = $("#inputKeyword").prop("placeholder");
+        }
+        if( keyword ) {
+            location.href = replaceQueryValue('/s/kw', 'keyword', keyword);
+        } else {
+            openModal('modal0', document.getElementById('inputKeyword'));
+        }
+    }
+    function delKeyword(v) {
+        const t = event.target;
+        const isDelete = $(t).hasClass("delete_keyword");
+        if(!isDelete){
+            searchExec(v);
+            return false;
+        }
+        event.stopPropagation();
+
+        $.ajax({
+            url: "/rest/search/keyword/delete-exec",
+            method: "post",
+            dataType: "json",
+            data: {keyword : v}
+        }).done((data) =>{
+            console.log(v);
+            if(data.body == 'SUCCESS') {
+                v == undefined ? $('.inner_lnb_list').remove() : $(t).closest('div').remove();
+            }
+        });
+    }
+
+    // 검색페이지 이동
+    function goKeyword(keyword) {
+        location.href = '/s/kw?keyword=' + keyword;
+    }
+
+    $(document).ready(function() {
+        // 랭킹탭 첫번째 영역 클릭처리
+        $(".keyword_btn:eq(0)").trigger('click');
+
+        $(window).scroll(function() {
+            let scroll = $(window).scrollTop();
+            let headerHeight = $('#header').height();
+
+            if (scroll > headerHeight) {
+                // $('#main_header_inner').addClass('border_bottom_black5');
+            } else if (scroll <= headerHeight) {
+                $('#main_header_inner').removeClass('border_bottom_black5');
+            }
+        });
+
+        userLocation("DPS162", ""); // 위치정보를 기반으로 FNB 접근 권한 체크
+        try {
+            window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
+                window.flutter_inappwebview
+                    .callHandler("myLocation", "Hellow world", ["koko", 33])
+                    // .callHandler("test", "Hellow world", ["koko", 33])
+                    .then((result) => {
+                        userLocation("DPS162", ""); // 위치정보를 기반으로 FNB 접근 권한 체크
+                    });
+            });
+        } catch (e) {}
+
+        // 배너+텍스트 타입 노출처리
+        let bTxtArr = new Array();
+
+        bTxtArr.push({
+            bannerImage: '/mobile/banner/c300305c-962b-4030-93f4-f1a575247341-1754630061907.png'
+            , linkUrl: 'https://karymarket.com/ar/ex?exSeq=6777'
+            , title: '베이비 등원 룩'
+        });
+
+
+
+        bTxtArr.push({
+            bannerImage: '/mobile/banner/0760b12d-f7f4-45fe-8682-e7e21fd5ef20-1754630064618.png'
+            , linkUrl: 'https://karymarket.com/ar/ex?exSeq=6778'
+            , title: '신학기 패션'
+        });
+
+
+
+        bTxtArr.push({
+            bannerImage: '/mobile/banner/1cca61d3-f5ca-4af5-b3c0-52f8e4116ced-1754628456203.png'
+            , linkUrl: 'https://karymarket.com/ar/ex?exSeq=5326'
+            , title: '8월 주니어 패션'
+        });
+
+
+        bTxtArr.push({
+            bannerImage: '/mobile/banner/47dd2d8b-c4ce-4622-8b41-d3476e0a932c-1754628462053.png'
+            , linkUrl: 'https://karymarket.com/ar/ex?exSeq=5796'
+            , title: '신발·액세서리'
+        });
+
+
+
+        bTxtArr.push({
+            bannerImage: '/mobile/banner/a97c99e9-eae5-4498-b912-d0fd37388c84-1754628464715.png'
+            , linkUrl: 'https://karymarket.com/ar/ex?exSeq=6784'
+            , title: '문구·완구'
+        });
+
+
+
+        bTxtArr.push({
+            bannerImage: '/mobile/banner/da7e2193-4fb7-418c-a9f8-313aecf85e08-1754628467309.png'
+            , linkUrl: 'https://karymarket.com/ar/ex?exSeq=6785'
+            , title: '낮잠 이불'
+        });
+
+
+
+        bTxtArr.push({
+            bannerImage: '/mobile/banner/a13516ea-d2dd-4c8c-ad31-d01716f891ab-1754628470206.png'
+            , linkUrl: 'https://karymarket.com/ar/ex?exSeq=6786'
+            , title: '어린이집 준비물'
+        });
+
+
+
+        bTxtArr.push({
+            bannerImage: '/mobile/banner/99295131-c743-4711-a67c-5e4fbc18deee-1754545742412.png'
+            , linkUrl: 'https://karymarket.com/class/curation/482'
+            , title: '배쓰프로젝트 팝업'
+        });
+
+
+        let totalLength = bTxtArr.length;
+        let halfLength = Math.round(totalLength / 2);
+        let html = '';
+
+        for (let i = 0; i < totalLength; i += halfLength) {
+            html += '<div class="item_box">';
+            for (let j = i; j < i + halfLength && j < totalLength; j++) {
+                if(bTxtArr[j] != undefined) {
+                    html += '<a class="main_menu_keyword_item" href="'+bTxtArr[j].linkUrl+'">';
+                    html += '  <img class="keyword_item_img" src="'+bTxtArr[j].bannerImage+'"/>';
+                    html += '  <span>'+bTxtArr[j].title+'</span>';
+                    html += '</a>';
+                }
+
+            }
+            html += '</div>';
+        }
+
+        $('#bTxtArea').html(html);
+
+        var listNormalSwiper5 = new Swiper('.swiper-container.list_normal5', {
+            // slidesPerView: 1,
+            slidesPerView: "auto",
+            // slidesPerGroup: 1,
+            // 그룹수가 맞지 않을 경우 빈칸으로 메우기
+            // 3개가 나와야 되는데 1개만 있다면 2개는 빈칸으로 채워서 3개를 만듬
+            /*loopFillGroupWithBlank: true,*/
+            loop: false,
+            freeMode: true,
+            observer: true,
+            observeParents: true,
+            // spaceBetween: 10,
+        });
+
+    });
+</script>
+
+<div id="wrapper">
+    <!-- 전체 배경이미지 -->
+    <div class="wrapper floating" style="--before-background-image: url(https://cdn.thekary.com/km/display/1001/banner/b38ef773-7be3-4870-b18b-739d4d5832a3-1753059748120);">
+        <input type="text" name="id" style="width:0; height:0; border:0; position: absolute;">
+        <!-- main_guide 좌측부분 -->
+        <div class="main_guide">
+            <!-- 좌측 로고, 문구 부분 -->
+            <div class="kr_pc_tit">
+                <a href="/"><img loading="lazy" src="/mobile/banner/b38ef773-7be3-4870-b18b-739d4d5832a3-1753059748120.jpg" id="leftLogo" class="icon_kr_logo"></a>
+                <p id="leftTitle" class="title">마리마켓에서 감사의 마음과 함께 따뜻함을 선물하세요</p>
+            </div>
+            <!-- 검색창 -->
+            <div class="search_wrap">
+                <input type="text" placeholder="지금 찾고 계신 상품을 검색해 보세요!" class="search" id="srchKeyword" name="searchKeyword" onkeyup="if(event.keyCode==13){ event.preventDefault(); searchKeyword(); }">
+                <img loading="lazy" src="/mobile/images/icon_search.svg" alt="icon_search" class="icon_search cursor_pointer" onclick="searchKeyword()">
+            </div>
+            <div id="mainTrendKeyword" class="main_keyword" style="display: block;">
+                <div class="default_flex_box">
+                    <p class="main_keyword_title">인기 검색어</p>
+                    <span>2025.07.27 13:11 기준</span>
+                </div>
+                <!-- TODO: 일단 하드코딩 추후에 loop로 수정 -->
+                <ul class="main_keyword_ul">
+                    <li><span class="text_bold">
+                  <span style="width: 20px;">1</span>
+                  <a href="javascript:searchKeyword('수영복')" class="ml-15px font_weight_normal" title="">수영복</a>
+                  </span>
+                        <span class="rectangle"></span>
+                    </li>
+                    <li>
+                        <span class="text_bold"><span style="width: 20px;">2</span><a href="javascript:searchKeyword('래쉬가드')" class="ml-15px font_weight_normal" title="">래쉬가드</a></span><span class="flex_align_center font_red" style="font-size:1.125rem !important"><span class="equilateral-triangle-up mr-9px"></span>4</span>
+                    </li>
+                    <li><span class="text_bold"><span style="width: 20px;">3</span><a href="javascript:searchKeyword('하우키즈풀')" class="ml-15px font_weight_normal" title="">하우키즈풀</a></span><span class="flex_align_center font_red" style="font-size:1.125rem !important"><span class="equilateral-triangle-up mr-9px"></span>8</span></li>
+                    <li><span class="text_bold"><span style="width: 20px;">4</span><a href="javascript:searchKeyword('몬치치')" class="ml-15px font_weight_normal" title="">몬치치</a></span><span class="flex_align_center font_blue" style="font-size:1.125rem !important"><span class="equilateral-triangle-down mr-9px"></span>2</span></li>
+                    <li><span class="text_bold"><span style="width: 20px;">5</span><a href="javascript:searchKeyword('누누누')" class="ml-15px font_weight_normal" title="">누누누</a></span><span class="flex_align_center font_blue" style="font-size:1.125rem !important"><span class="equilateral-triangle-down mr-9px"></span>1</span></li>
+                    <li><span class="text_bold"><span style="width: 20px;">6</span><a href="javascript:searchKeyword('아뜰리에슈')" class="ml-15px font_weight_normal" title="">아뜰리에슈</a></span><span class="flex_align_center font_blue" style="font-size:1.125rem !important"><span class="equilateral-triangle-down mr-9px"></span>1</span></li>
+                    <li><span class="text_bold"><span style="width: 20px;">7</span><a href="javascript:searchKeyword('원피스')" class="ml-15px font_weight_normal" title="">원피스</a></span><span class="flex_align_center font_red" style="font-size:1.125rem !important"><span class="equilateral-triangle-up mr-9px"></span>5</span></li>
+                    <li><span class="text_bold"><span style="width: 20px;">8</span><a href="javascript:searchKeyword('베베드피노')" class="ml-15px font_weight_normal" title="">베베드피노</a></span><span class="flex_align_center font_blue" style="font-size:1.125rem !important"><span class="equilateral-triangle-down mr-9px"></span>5</span></li>
+                    <li><span class="text_bold"><span style="width: 20px;">9</span><a href="javascript:searchKeyword('모자')" class="ml-15px font_weight_normal" title="">모자</a></span><span class="flex_align_center font_blue" style="font-size:1.125rem !important"><span class="equilateral-triangle-down mr-9px"></span>1</span></li>
+                    <li><span class="text_bold"><span style="width: 20px;">10</span>
+                  <a href="javascript:searchKeyword('아쿠아슈즈')" class="ml-15px font_weight_normal" title="">아쿠아슈즈</a>
+                  </span>
+                        <span class="flex_align_center font_blue" style="font-size:1.125rem !important">
+                  <span class="equilateral-triangle-down mr-9px"></span>1</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- main_guide -->
+
+        <!-- pc_logo_floating 삭제금지 -->
+
+        <!-- pc_logo_floating -->
+
+        <!-- modal start -->
+        <div class="modal2" id="keywordModal" tabindex="99999">
+            <!-- modal_content start -->
+            <div class="modal_content2">
+                <ul>
+                    <li>검색어를 입력하세요.</li>
+                    <li onclick="closeModal('keywordModal')">확인</li>
+                </ul>
+            </div>
+        </div>
+        <!-- /modal end -->
+
+    </div>
+    <!-- 검색관련 스크립트 -->
+    <script>
+        // 인기검색어 영역 검색
+        function searchKeyword(v) {
+            let keyword = $("#srchKeyword").val();
+            if (v) {
+                keyword = v;
+            }
+            if (keyword) {
+                location.href = replaceQueryValue('/s/kw', 'keyword', keyword);
+            } else {
+                openModal('keywordModal', document.getElementById('srchKeyword'));
+            }
+        }
+
+        $(function () {
+            if(!isMobile()) {
+                // 인기검색어
+                $.ajax({
+                    url: "/rest/search/trend/list",
+                    method: "get",
+                    dataType: "json",
+                    data: {}
+                })
+                    .done(function(res) {
+                        if(res.body) {
+                            let springMessagePopularSearchTerm = '인기 검색어';
+                            let data = res.body?.searchTrendList;
+                            let rankTime = res.body?.rankTime;
+                            let html = '';
+
+                            html += '<div class="default_flex_box"><p class="main_keyword_title">'+ springMessagePopularSearchTerm + '</p><span>'+ rankTime+ ' 기준</span></div>';
+                            html += '<ul class="main_keyword_ul">';
+                            for (let i = 0; i < data.length; i++) {
+                                if(i <= 9) {
+                                    let updown = '';
+                                    if(data[i].rankDirection == 'N') {
+                                        updown = '<span class="font_red_9px" style="font-size:1.125rem !important">New</span>';
+                                    }else if(data[i].rankDirection == 'P') {
+                                        const abs = Math.abs(data[i].previousRank - data[i].currentRank)
+                                        updown = '<span class="flex_align_center font_red" style="font-size:1.125rem !important"><span class="equilateral-triangle-up mr-9px"></span>'+ data[i].rankChange +'</span>';
+                                    }
+                                    else if(data[i].rankDirection == 'M') {
+                                        const abs = Math.abs(data[i].previousRank - data[i].currentRank)
+                                        updown = '<span class="flex_align_center font_blue" style="font-size:1.125rem !important"><span class="equilateral-triangle-down mr-9px"></span>'+ data[i].rankChange +'</span>';
+                                    }
+                                    else if(data[i].rankDirection == 'E') {
+                                        updown = '<span class="rectangle"></span>';
+                                    }
+                                    html += '<li>';
+                                    html += '<span class="text_bold">' + '<span style="width: 20px;">' + (i + 1) + '</span>' + '<a href="javascript:searchKeyword(\'' + data[i].keyword + '\')" class="ml-15px font_weight_normal" title="">' + data[i].keyword + '</a></span>';
+                                    html += updown;
+                                    html += '</li>';
+                                }
+                            }
+                            html += '</ul>';
+                            $('#mainTrendKeyword').html(html);
+                            $('#mainTrendKeyword').css('display', 'block');
+                            if(!$("#inputKeyword").val()){
+                                $(".main_search_box #inputKeyword").prop("placeholder", data?.[0]?.keyword);
+                            }
+                        }
+                    });
+
+                let backgroundImageIndex = parseInt(getCookie('backgroundImageIndex'));
+                if(isNaN(backgroundImageIndex)) {
+                    backgroundImageIndex = 0;
+                    setCookie('backgroundImageIndex', backgroundImageIndex, 1);
+                }
+                let navigationEntries = performance.getEntriesByType('navigation');
+                if (navigationEntries.length > 0) {
+                    let navigationType = navigationEntries[0].type;
+                    if(navigationType === 'reload') {
+                        if(backgroundImageIndex+1 >= 3) {
+                            backgroundImageIndex = 0;
+                        } else {
+                            backgroundImageIndex += 1;
+                        }
+                        setCookie('backgroundImageIndex', backgroundImageIndex, 1);
+                    }
+                }
+
+                // PC백그라운드 이미지
+                $.ajax({
+                    url: "/rest/area/pc/background",
+                    method: "get",
+                    dataType: "json",
+                    data: {}
+                })
+                    .done(function(res) {
+
+                        if(res.body) {
+                            let data = res.body[backgroundImageIndex];
+                            var floatingWrapper = document.querySelector('.wrapper.floating');
+                            // var newBackgroundImage = 'https://www.karymarket.com/web/upload/img/karyHouse_ep4/pc01.png';
+                            if(undefined != data) {
+                                var newBackgroundImage = 'https://cdn.thekary.com/'+data.bannerImage;
+                                if (floatingWrapper) {
+                                    floatingWrapper.style.setProperty('--before-background-image', 'url(' + newBackgroundImage + ')');
+                                }
+                            }
+                        }
+                    });
+
+                // PC 좌측로고 / 하단문구
+                $.ajax({
+                    url: "/rest/area/pc/left",
+                    method: "get",
+                    dataType: "json",
+                    data: {}
+                })
+                    .done(function(res) {
+                        if(res.body) {
+                            let data = res.body[0];
+                            if(undefined != data) {
+                                $('#leftLogo').attr('src', 'https://cdn.thekary.com/'+data.bannerImage);
+                                $('#leftTitle').html(data.subTitle1);
+                            }
+                        }
+                    });
+            }
+        });
+
+
+    </script>
+    <!-- 소셜로그인 초기화 -->
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js" integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
+    <script type="text/javascript" src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
+    <!-- 소셜로그인 초기화 관련 스크립트 init정보는 수정할 것 -->
+    <script th:inline="none">
+        Kakao.init('792d1131353d19af620bab26bae1a99b');
+        function loginWithKakao() {
+            Kakao.Auth.authorize({
+                redirectUri: getHost() + '/kakao/signIn',
+                state: ''
+            });
+        }
+
+        //아이디 저장
+        $(document).ready(function(){
+            if( getCookie('kmSaveId') ) {
+                $('#customerId').val(getCookie('kmSaveId'));
+                $('#idSaveCheck').prop('checked', true);
+            }
+        });
+        function loginWithNaver() {
+            let url='https://nid.naver.com/oauth2.0/authorize?'+
+                '&response_type=code' +
+                '&client_id='+'O1WLgLHqCOfH0rfpWzCk'+
+                '&redirect_uri='+getHost()+'/naver/signIn'+
+                '&state='+'';
+            window.location.href = url;
+        }
+        function loginWithGoogle() {
+            let url = 'https://accounts.google.com/o/oauth2/v2/auth?'+
+                '&response_type=code' +
+                '&client_id='+'925295896467-57vtrjeen1o375m0uacuq0h1n8g25uc8.apps.googleusercontent.com'+
+                '&redirect_uri='+getHost()+'/google/signIn'+
+                '&scope='+'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
+            window.location.href =url;
+        }
+        let firstClick = true;
+        function loginWithApple() {
+            if(!firstClick) return;
+            firstClick = false;
+            AppleID.auth.init({
+                clientId : 'com.thekary.karymarketnew',
+                scope : 'name email',
+                redirectURI : getHost() + '/apple/signIn',
+                usePopup : false
+            });
+            AppleID.auth.signIn();
+        }
+
+        //로그인
+        let _appJwtToken = null;
+        let loginCheckCnt = 0;
+
+        function fnLoginModal001(appJwtToken) {
+            if (loginCheckCnt == 0) {
+                loginCheckCnt++;
+            } else {
+                return false;
+            }
+
+            _appJwtToken = appJwtToken || ''; // 전역 변수에 저장
+
+            $('.notice_text_box').hide();
+            let customerId = $('#customerId');
+            let password = $('#customerPassword');
+            let loginType = '';
+
+            if (customerId.val() && password.val() || _appJwtToken) {
+                if(isApp()) {
+                    loginType = "APP";
+                }else {
+                    if(isMobile()) {
+                        loginType = "MC";
+                    }else {
+                        loginType = "PC";
+                    }
+                }
+
+                const data = {
+                    customerId: customerId.val()
+                    , password: password.val()
+                    , appJwtToken: _appJwtToken
+                    , loginType: loginType
+                    //, returnUrl: getQueryString('returnUrl')
+                }
+
+                $.ajax({
+                    url: "/rest/cust/login",
+                    method: "post",
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function(res) {
+                        switch(res.body.result) {
+                            case 'NOTFOUND': //없음
+                                $('.notice_text').html('아이디 또는 비밀번호를 확인하세요.');
+                                $('.notice_text_box').show();
+                                loginCheckCnt = 0;
+                                break;
+                            case 'WITHDRAW_MBS_CANCEL_POSSIBLE': // 통합 회원 - 탈퇴 대기중
+                                openModal('modalMbsWithdrawCancel');
+                                break;
+                            case 'WITHDRAW_KM_CANCEL_POSSIBLE': // 캐리마켓 회원 - 탈퇴 대기중
+                                loginCheckCnt = 0;
+                                openModal('modalKmWithdrawCancel');
+                                break;
+                            case 'WITHDRAW_CANCEL_IMPOSSIBLE': // 탈퇴 철회 불가
+                                openModal('modalWithdrawCancelImpossible');
+                                break;
+                            case 'TEMPPASSWORD': //임시비밀번호사용회원
+                                openModal('passwordChangeAlarm');
+                                break;
+                            case 'PASSWORDCHANGE': // 비밀번호 변경 주기 해당 회원
+                                goToPasswordChange('EF');
+                                break;
+                            case 'SLEEP': //휴면 회원 - 휴면회원 모달창
+                                sleepInfo.push(res.body.id);
+                                sleepInfo.push(res.body.name);
+                                sleepInfo.push(res.body.phone);
+                                sleepInfo.push(res.body.lastLogin);
+                                sleepInfo.push(res.body.sleepDate);
+
+                                $('#sleep_id').html(sleepInfo[0]);
+                                $('#sleep_name').html(sleepInfo[1]);
+                                $('#sleep_phone').html(sleepInfo[2]);
+                                $('#last_login').html(sleepInfo[3]);
+                                $('#sleep_date').html(sleepInfo[4]);
+                                openModal('modal4');
+                                break;
+                            case 'CAFE24MIG': // 카페24 마이그레이션 회원
+                                custSeq = res.body.customerSeq;
+                                openModal('changeWelcomeModal');
+                                break;
+                            case 'SUCCESS':
+                                if( $('#idSaveCheck:checked').val() ){
+                                    setCookie('kmSaveId', customerId.val(), 30);
+                                } else {
+                                    deleteCookie('kmSaveId')
+                                }
+                                closeLoginModal();
+                                loginModalCallback(); //로그인 모달 콜백 함수 페이지에 작성
+                                break;
+                            default:
+                                if(res.body.result != 'SUCCESS') {
+                                    loginCheckCnt = 0;
+                                }
+                                break;
+                        }
+                    })
+            } else {
+                loginCheckCnt = 0;
+                $('.notice_text').html('아이디 또는 비밀번호를 입력하세요.');
+                $('.notice_text_box').show();
+            }
+        }
+
+        //회원탈퇴 철회
+        function fnLoginModal002() {
+            let customerId = $('#customerId');
+            let password = $('#customerPassword');
+
+            if (customerId.val() && password.val()) {
+                const data = {
+                    customerId: customerId.val()
+                    , password: password.val()
+                }
+
+                $.ajax({
+                    url: "/rest/cust/customer/withdraw/repeal-exec",
+                    method: "post",
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function(res) {
+                        closeModal('loginModal00')
+                        if( res.body == 'SUCCESS' ){
+                            fnLoginModal001();
+                        } else {
+                            openModal('loginModal02');
+                        }
+                    })
+            } else {
+                openModal('loginModal02');
+            }
+        }
+
+        //임시비밀번호 변경
+        function fnLoginModal003(){
+            closeModal('passwordChangeAlarm');
+            let customerId = $('#customerId');
+
+            if (customerId.val()) {
+                pageGoPost({
+                    url: "/cust/password/modify",
+                    target: "_self",
+                    values: [
+                        ["customerId", customerId.val()],
+                        ["passwordChangeType", "UC"]
+                    ]
+                });
+            } else {
+                $('.notice_text').html('아이디 또는 비밀번호를 입력하세요.');
+                $('.notice_text_box').show();
+            }
+        }
+
+        // 임시비밀번호 or 비밀번호 유효 기간 만료 변경
+        function goToPasswordChange(passwordChangeType){
+            closeModal('passwordChangeAlarm');
+
+            let customerId = $('#customerId');
+            let password = $('#customerPassword');
+
+            if (customerId.val() && password.val() || _appJwtToken) {
+                pageGoPost({
+                    url: "/cust/password/modify",
+                    target: "_self",
+                    values: [
+                        ["customerId", customerId.val()],
+                        ["password", password.val()],
+                        ["appJwtToken", _appJwtToken],
+                        ["passwordChangeType", passwordChangeType],
+                    ]
+                });
+            } else {
+                $('.notice_text').html('아이디 또는 비밀번호를 입력하세요.');
+                $('.notice_text_box').show();
+            }
+        }
+
+        function goChangeAgreePage() {
+            pageGoPost({
+                url: "/cust/change/agreement",
+                target: "_self",
+                values: [["customerSeq", custSeq]]
+            });
+        }
+
+
+        $(document).ready(function() {
+            $("#customerId, #customerPassword").on("keydown", function(e) {
+
+                if(e.keyCode == 13)
+                    $("#loginBtn").click();
+            })
+        })
+
+        function checkCapsLock(event) {
+            if(!$("#loginModal").is(":visible")) {
+                return;
+            }
+            try {
+                if (event?.getModifierState("CapsLock")) {
+                    document.getElementById(
+                        "message").innerText = 'Caps Lock이 활성화된 상태입니다.';
+                } else {
+                    document.getElementById("message").innerText = ""
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        function goToMbsLogin() {
+            closeModal('modalMbsWithdrawCancel');
+            location.href = 'https://membership.thekary.com/customer/login';
+        }
+
+        function goToJoin() {
+            closeModal('modalWithdrawCancelImpossible');
+            location.href = '/cust/join';
+        }
+    </script>
+
+    <!-- 로그인 &탈퇴 관련 모달 -->
+    <!-- modal start -->
+    <div class="modal2" id="loginModal00">
+        <!-- modal_content start -->
+        <div class="modal_content2">
+            <ul>
+                <li>탈퇴회원입니다. 탈퇴를 철회하시겠습니까?</li>
+                <li class="modal_content2_flex">
+                    <span class="modal_content2_left" onclick="javascript:fnLoginModal002();">확인</span>
+                    <span class="modal_content2_right" onclick="closeModal('loginModal00')">취소</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal2" id="loginModal01">
+        <!-- modal_content start -->
+        <div class="modal_content2">
+            <ul>
+                <li>회원탈퇴가 철회되었습니다.</li>
+                <li onclick="closeModal('loginModal01')">확인</li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal2" id="loginModal02">
+        <!-- modal_content start -->
+        <div class="modal_content2">
+            <ul>
+                <li>회원탈퇴 철회에 실패하였습니다.</li>
+                <li onclick="closeModal('loginModal02')">확인</li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal2" id="loginModal03">
+        <!-- modal_content start -->
+        <div class="modal_content2">
+            <ul>
+                <li>
+                    임시 비밀번호를 사용 중입니다.
+                    <br/>
+                    비밀번호를 변경해야 다른 화면으로 이동할 수 있습니다.
+                </li>
+                <li onclick="javascript:fnLoginModal002();">확인</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="modal2" id="passwordChangeAlarm">
+        <!-- modal_content start -->
+        <div class="modal_content2">
+            <ul>
+                <li>
+                    임시 비밀번호를 사용 중입니다.
+                    <br/>
+                    비밀번호 변경 페이지로 이동합니다.
+                </li>
+                <li onclick="javascript:goToPasswordChange('UC');">확인</li>
+            </ul>
+        </div>
+    </div>
+
+    <!--카페24 전환회원 모달-->
+    <div class="modal2" id="changeWelcomeModal">
+        <!-- modal_content start -->
+        <div class="modal_content2">
+            <ul>
+                <li>환영합니다.<br/>회원전환 페이지로 이동합니다.</li>
+                <li class="modal_content2_flex">
+                    <span class="modal_content2_left" onclick="goChangeAgreePage();">확인</span>
+                    <span class="modal_content2_right" onclick="closeModal('changeWelcomeModal')">취소 </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="modal2" id="firstBuyPrdModal">
+        <!-- modal_content start -->
+        <div class="modal_content2">
+            <ul>
+                <li>
+                    <div>
+                        <p>회원 전용 이벤트 상품입니다.<br/>회원가입 후 이용해주세요.</p>
+                    </div>
+                </li>
+                <li onclick="closeModal('firstBuyPrdModal')">확인</li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal2" id="modalKmWithdrawCancel">
+        <!-- modal_content start -->
+        <div class="modal_content2">
+            <ul>
+                <li>탈퇴회원입니다. 탈퇴를 철회하시겠습니까?</li>
+                <li class="modal_content2_flex">
+                    <span class="modal_content2_left" onclick="closeModal('modalKmWithdrawCancel')">취소 </span>
+                    <span class="modal_content2_right" onclick="javascript:fnLoginModal002();">확인</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal2" id="modalMbsWithdrawCancel">
+        <!-- modal_content start -->
+        <div class="modal_content2">
+            <ul>
+                <li>탈퇴 대기중인 통합 멤버십 회원입니다. 더캐리포인트에서 탈퇴를 철회해주세요.</li>
+                <li class="modal_content2_flex">
+                    <span class="modal_content2_left" onclick="closeModal('modalMbsWithdrawCancel')">취소 </span>
+                    <span class="modal_content2_right" onclick="javascript:goToMbsLogin();">이동하기</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal2" id="modalWithdrawCancelImpossible">
+        <!-- modal_content start -->
+        <div class="modal_content2">
+            <ul>
+                <li>탈퇴 회원입니다. 재가입 후 이용해주세요.</li>
+                <li class="modal_content2_flex">
+                    <span class="modal_content2_left" onclick="closeModal('modalWithdrawCancelImpossible')">취소 </span>
+                    <span class="modal_content2_right" onclick="javascript:goToJoin();">이동하기</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- modal end -->
+    <!-- 로그인 모달 시작 -->
+    <div class="common_layer" id="loginModal">
+        <!-- wrapper_box start -->
+        <div class="wrapper_box wrapper_app hg-100 background_white">
+
+            <!-- header start -->
+            <header id="header">
+                <div class="page_header_top3 border_bottom_black5">
+                    <a href="javascript:closeLoginModal();"><img loading="lazy" class="icon_left_anchor" src="/mobile/images/icon_left_back_anchor.png" alt="icon_left_anchor"></a>
+                    <p class="page_header_top3_title" style="margin-left: 14px;">로그인</p>
+                </div>
+            </header>
+            <!-- /header end -->
+
+            <!-- main start -->
+            <div id="main">
+                <!-- inner start -->
+                <div class="inner pb-0">
+
+                    <!-- logo_box start -->
+                    <div class="logo_box">
+                        <a href="/" title="home">
+                            <img loading="lazy" class="kary_logo" src="/mobile/images/logo_karymarket_bl.svg" alt="kary_logo">
+                        </a>
+                    </div>
+                    <!-- /logo_box end -->
+
+                    <!-- logo_title_box start -->
+                    <div class="logo_title_box">
+                        <p class="logo_title">안녕하세요.</p>
+                        <p class="logo_title"><span class="text_bold">캐리마켓</span>입니다.</p>
+                    </div>
+                    <!-- /logo_title_box end -->
+
+                    <!-- login_box start -->
+                    <div class="login_box">
+                        <input type="text" placeholder="아이디 또는 이메일" class="login_id" id="customerId">
+                        <input type="password" placeholder="비밀번호" class="login_pw" id="customerPassword" onkeyup="checkCapsLock(event)">
+                        <div id="message" style="color:red"></div>
+                        <div class="notice_text_box" style="display: none;">
+                            <div class="exclamation_box">
+                                <img loading="lazy" class="icon_exclamation_mark" src="/mobile/images/icon_exclamation_mark.png" alt="icon_exclamation_mark">
+                            </div>
+                            <p class="notice_text"></p>
+                        </div>
+                        <button class="login_btn" id="loginBtn" onclick="javascript:fnLoginModal001()">로그인</button>
+                        <div class="login_text_box">
+                            <div class="login_id_check">
+                                <input type="checkbox" class="id_check_icon" name="check1" id="idSaveCheck">
+                                <label for="idSaveCheck" class="id_check_label">아이디 저장</label>
+                            </div>
+
+                            <div class="find_id_pw_box">
+                                <a href="/cust/find" title="">
+                                    <p class="fine_id_pw_text">아이디 / 비밀번호 찾기</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /login_box end -->
+
+                    <!-- sns_login_box start -->
+                    <div class="sns_login_box">
+                        <p class="sns_login_text">SNS 로그인</p>
+                        <div class="sns_box mt-15px">
+                            <button type="button" class="sns_login_btn naver_login_box" onclick="javascript:loginWithNaver()">
+                                <img loading="lazy" class="icon_naver_logo" src="/mobile/images/icon_naver_logo.png" alt="icon_naver_logo">
+                            </button>
+
+                            <button type="button" class="sns_login_btn kakao_login_box" onclick="javascript:loginWithKakao();">
+                                <img loading="lazy" class="icon_kakao_logo" src="/mobile/images/icon_kakao_logo.png" alt="icon_kakao_logo">
+                            </button>
+
+                            <button type="button" class="sns_login_btn apple_login_box" onclick="javascript:loginWithApple();">
+                                <img loading="lazy" class="icon_apple_logo" src="/mobile/images/icon_apple_logo.png" alt="icon_apple_logo">
+                            </button>
+
+                            <button type="button" class="sns_login_btn google_login_box" onclick="javascript:loginWithGoogle()">
+                                <img loading="lazy" class="icon_google_logo" src="/mobile/images/icon_google_logo.png" alt="icon_google_logo">
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /sns_login_box end -->
+
+                    <!-- gray_line3 start -->
+                    <div class="gray_line3_box mt-30px">
+                        <hr class="gray_line3">
+                    </div>
+                    <!-- /gray_line3 end -->
+
+                    <!-- join_btn_box start -->
+                    <div class="join_btn_box">
+                        <a href="/cust/join"><button class="join_btn">회원가입</button></a>
+                    </div>
+
+
+
+                    <!-- /join_btn_box end -->
+
+                    <!-- guest_text_box start -->
+                    <div class="guest_text_box pb-0 non_member_buy">
+                        <a href="/cust/login/guest" title="" class="guest_text">비회원 주문조회</a>
+                    </div>
+                    <!-- /guest_text_box end -->
+
+                </div>
+                <!-- /inner end -->
+            </div>
+
+        </div>
+        <!-- /wrapper_box end -->
+    </div>
+    <!-- 로그인 모달 끝 -->
+    <!-- 검색어 모달 -->
+    <div class="modal2" id="modal0" tabindex="99999">
+        <!-- modal_content start -->
+        <div class="modal_content2">
+            <ul>
+                <li>검색어를 입력하세요.</li>
+                <li onclick="closeModal('modal0');">확인</li>
+            </ul>
+        </div>
+    </div>
+    <!-- 검색어 모달 끝 -->
+    <!-- wrapper_box start -->
+    <div class="wrapper_box wrapper_app">
+        <!-- header start -->
+        <header id="header" class="main_header">
+            <div id="scroll-container" class="background_black">
+                <div id="scroll-text-1" class="scroll-text background_black" style="animation: 10s linear 0s infinite normal none running scroll; white-space: nowrap; margin-top: 1.25rem;">
+                    <a href="/inquiry" class="text_white">
+                        상품 구매에 대해 궁금한 점은 마이캐리&gt;고객센터를 통해서 문의해 주세요.
+                    </a>
+                </div>
+            </div>
+            <script>
+                function resetAnimation(element) {
+                    element.style.animation = 'scroll 10s linear infinite';
+                    element.offsetHeight; // Trigger reflow
+                    element.style.whiteSpace = 'nowrap';
+                    element.style.marginTop = '1.25rem';
+                    setTimeout(() => {
+
+                    }, 0);
+                }
+
+                function toggleText() {
+                    const scrollContainer = document.getElementById('scroll-container');
+
+                    if (scrollContainer.innerHTML.includes('scroll-text-1')) {
+                        scrollContainer.innerHTML = `
+            			<div id="scroll-text-2" class="scroll-text background_black">
+            				<a href="/my/children/list" class="text_white">마이마리에서 내 아이의 정보를 입력해 보세요.</a>
+            			</div>`;
+                        const newText2 = document.getElementById('scroll-text-2');
+                        resetAnimation(newText2);
+                        newText2.addEventListener('animationiteration', toggleText);
+                    } else {
+                        scrollContainer.innerHTML = `
+            			<div id="scroll-text-1" class="scroll-text background_black">
+            				<a href="/inquiry" class="text_white">상품 구매에 대해 궁금한 점은 마이마리>고객센터를 통해서 문의해 주세요.</a>
+            			</div>`;
+                        const newText1 = document.getElementById('scroll-text-1');
+                        resetAnimation(newText1);
+                        newText1.addEventListener('animationiteration', toggleText);
+                    }
+                }
+
+                document.addEventListener("DOMContentLoaded", function() {
+                    const text1 = document.getElementById('scroll-text-1');
+                    text1.addEventListener('animationiteration', toggleText);
+                    // 초기 애니메이션 설정
+                    resetAnimation(text1);
+                });
+
+
+            </script>
+            <!-- header_inner start -->
+            <div class="header_inner border_bottom_0 " id="main_header_inner">
+                <!-- 알림함 -->
+                <a href="/notification" class="header_icon_box2" rel="nosublink">
+                    <img loading="lazy" src="/mobile/images/icon_bell.svg" class="header_icon" alt="알림함">
+                </a>
+                <!-- 최상단 캐리마켓 로고 -->
+                <a href="/" class="logo" style="background-image: url('/mobile/source/logoBgWhite.jpg'); background-size: cover">
+                    <p class="LOGO_WRAP"><span class="TEXT_LOGO">MARYMARKET</span></p>
+                </a>
+                <!-- 알림함 -->
+                <div class="header_icon_box3">
+                    <a href="/s" rel="nosublink">
+                        <img loading="lazy" class="header_search_icon" src="/mobile/images/icon/search_bk.svg" alt="검색">
+                    </a>
+                </div>
+            </div>
+            <!-- /header_inner end -->
+        </header>
+        <!-- /header end -->
+        <!-- main start -->
+        <div id="main">
+            <!-- inner start -->
+            <div class="inner pt-0">
+                <!-- 메인 상단 탭 start -->
+                <div id="main_tab" class="main_tab">
+                    <div class="swiper-container list_normal main_tab_container swiper-initialized swiper-horizontal swiper-free-mode swiper-backface-hidden">
+                        <div class="swiper-wrapper cursor_pointer" id="swiper-wrapper-12f34bdbbbf94a4f" aria-live="polite">
+                            <div class="swiper-slide main_tab_category swiper-slide-active" onclick="javascript:goHeaderLink('https://karymarket.com/ar/d?areaSeq=361')" role="group" aria-label="1 / 7">추천</div>
+                            <div class="swiper-slide main_tab_category swiper-slide-next" onclick="javascript:goHeaderLink('https://karymarket.com/brand/search')" role="group" aria-label="2 / 7">브랜드</div>
+                            <div class="swiper-slide main_tab_category" onclick="javascript:goHeaderLink('https://www.karymarket.com/ar/d?areaSeq=782')" role="group" aria-label="3 / 7">랭킹</div>
+                            <div class="swiper-slide main_tab_category" onclick="javascript:goHeaderLink('https://karymarket.com/ar/d?areaSeq=4858')" role="group" aria-label="4 / 7">신규</div>
+                            <div class="swiper-slide main_tab_category" onclick="javascript:goHeaderLink('https://karymarket.com/ar/d?areaSeq=2846')" role="group" aria-label="5 / 7">선물</div>
+                            <div class="swiper-slide main_tab_category" onclick="javascript:goHeaderLink('https://www.karymarket.com/event')" role="group" aria-label="6 / 7">이벤트</div>
+                            <div class="swiper-slide main_tab_category" onclick="javascript:goHeaderLink('https://karymarket.com/event/reviewEvent')" role="group" aria-label="7 / 7">리뷰 이벤트</div>
+                        </div>
+                        <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+                    </div>
+                </div>
+                <!-- 메인 상단 탭 end -->
+                <!-- 메인 이미지슬라이드 start -->
+                <div>
+                    <!-- main_slider -->
+                    <div class="swiper-container main_slider">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide main_banner" style="opacity: 1 !important;">
+                                <a href="https://karymarket.com/ar/ex?exSeq=1215&areaSeq=981" class="is_square" target="_SELF">
+                          <span class="main_banner_oapa ">
+                          <img loading="lazy"  class="main_banner_img" src="/mobile/display/981/banner/9befe9a9-39bd-4d54-953f-06b372564f62-1755736800217.jpg"/>
+                          </span>
+                                    <div class="main_banner_text_box">
+                                        <ul>
+                                            <li class="sub_text">
+                                                <p>
+                                                    <span class="text_decoration_underline">SPECIAL</span>
+                                                </p>
+                                            </li>
+                                            <li class="title">ICEBISCUIT</li>
+                                            <li class="text">
+                                                <p>25 F/W 스마일리 컬렉션</p>
+                                                <p>구매 고객 대상 파우치백 증정</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="swiper-slide main_banner" style="opacity: 1 !important;">
+                                <a href="https://karymarket.com/ar/ex?exSeq=1229&areaSeq=981" class="is_square" target="_SELF">
+                          <span class="main_banner_oapa ">
+                          <img loading="lazy"  class="main_banner_img" src="/mobile/display/981/banner/f29c2d3f-a706-4289-83fe-c67adc7006c1-1755672118950.jpg"/>
+                          </span>
+                                    <div class="main_banner_text_box">
+                                        <ul>
+                                            <li class="sub_text">
+                                                <p>
+                                                    <span class="text_decoration_underline">SPECIAL</span>
+                                                </p>
+                                            </li>
+                                            <li class="title">PUMA KIDS</li>
+                                            <li class="text">
+                                                <p>스포티 룩 완성 필수 아이템</p>
+                                                <p>25 F/W 컬렉션 2차 신상품 공개</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="swiper-slide main_banner" style="opacity: 1 !important;">
+                                <a href="https://karymarket.com/ar/ex?exSeq=5527&areaSeq=981" class="is_square" target="_SELF">
+                          <span class="main_banner_oapa ">
+                          <img loading="lazy"  class="main_banner_img" src="/mobile/display/981/banner/gclef.jpg"/>
+                          </span>
+                                    <div class="main_banner_text_box">
+                                        <ul>
+                                            <li class="sub_text">
+                                                <p>
+                                                    <span class="text_decoration_underline">SPECIAL</span>
+                                                </p>
+                                            </li>
+                                            <li class="title">GCLEF</li>
+                                            <li class="text">
+                                                <p>프리미엄 패밀리 리조트 웨어</p>
+                                                <p>캐리 단독 굿바이 서머 혜택</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="swiper-slide main_banner" style="opacity: 1 !important;">
+                                <a href="https://karymarket.com/ar/ex?exSeq=6944&areaSeq=981" class="is_square" target="_SELF">
+                          <span class="main_banner_oapa ">
+                          <img loading="lazy"  class="main_banner_img" src="/mobile/display/981/banner/17349b7e-abe0-45ab-a526-b04880bd622f-1755853961838.jpg"/>
+                          </span>
+                                    <div class="main_banner_text_box">
+                                        <ul>
+                                            <li class="sub_text">
+                                                <p>
+                                                    <span class="text_decoration_underline">SPECIAL</span>
+                                                </p>
+                                            </li>
+                                            <li class="title">ORIGO</li>
+                                            <li class="text">
+                                                <p>디즈니 미키 토퍼&이불 발매</p>
+                                                <p>단독 사은품 혜택 받고 가을 준비</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="swiper-slide main_banner" style="opacity: 1 !important;">
+                                <a href="https://karymarket.com/ar/ex?exSeq=6949&areaSeq=981" class="is_square" target="_SELF">
+                          <span class="main_banner_oapa ">
+                          <img loading="lazy"  class="main_banner_img" src="/mobile/display/981/banner/e6573cd0-01cb-4cbe-888a-e15a7d71f1de-1755853962620.jpg"/>
+                          </span>
+                                    <div class="main_banner_text_box">
+                                        <ul>
+                                            <li class="sub_text">
+                                                <p>
+                                                    <span class="text_decoration_underline">SPECIAL</span>
+                                                </p>
+                                            </li>
+                                            <li class="title">OLI&CAROL</li>
+                                            <li class="text">
+                                                <p>글로벌 인기 프리미엄 토이</p>
+                                                <p>더블 쿠폰 혜택 받고 애착인형 챙기기</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="swiper-slide main_banner" style="opacity: 1 !important;">
+                                <a href="https://karymarket.com/ar/ex?exSeq=4199&areaSeq=981" class="is_square" target="_SELF">
+                          <span class="main_banner_oapa ">
+                          <img loading="lazy"  class="main_banner_img" src="/mobile/display/981/banner/1b9f5b5b-3068-4aac-a262-f60260a47070-1755853960570.jpg"/>
+                          </span>
+                                    <div class="main_banner_text_box">
+                                        <ul>
+                                            <li class="sub_text">
+                                                <p>
+                                                    <span class="text_decoration_underline">SPECIAL</span>
+                                                </p>
+                                            </li>
+                                            <li class="title">ODDBI</li>
+                                            <li class="text">
+                                                <p>사랑스러운 컬러의 잡화</p>
+                                                <p>신학기 '백꾸' 아이템 만나기</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </a>
+                            </div>
+                            <!-- image_slider -->
+                        </div>
+                        <!-- 메인 이미지슬라이드  end -->
+                        <!-- 메인 카테고리 20250103 START -->
+                        <div id="main_menu_keyword" class="main_menu_keyword">
+                            <div class="swiper-container list_normal5 main_menu_keyword_container default_pl_28 swiper-initialized swiper-horizontal swiper-free-mode swiper-backface-hidden">
+                                <div class="swiper-wrapper cursor_pointer" id="swiper-wrapper-0975f2f570194a6d" aria-live="polite" style="transform: translate3d(0px, 0px, 0px);">
+                                    <article class="swiper-slide swiper-slide-active" id="bTxtArea" role="group" aria-label="1 / 1">
+                                        <!-- <div class="item_box"><a class="main_menu_keyword_item" href="https://karymarket.com/event/karyhouse9">  <img class="keyword_item_img" src="https://cdn.thekary.com/km/display/4868/banner/87214bac-c567-4dae-b60c-e631971b406d-1753678971826">  <span>캐리하우스</span></a><a class="main_menu_keyword_item" href="https://karymarket.com/ar/ex?exSeq=6293">  <img class="keyword_item_img" src="https://cdn.thekary.com/km/display/4868/banner/90567b7c-0d46-43d5-b5d8-99d06173d045-1752733834432">  <span>베스트 브랜드</span></a><a class="main_menu_keyword_item" href="https://karymarket.com/ar/ex?exSeq=6670">  <img class="keyword_item_img" src="https://cdn.thekary.com/km/display/4868/banner/74f49f3f-f0c5-4dde-a9aa-abb5bee36bac-1753428283157">  <span>키즈 언더웨어</span></a><a class="main_menu_keyword_item" href="https://karymarket.com/ar/ex?exSeq=6603">  <img class="keyword_item_img" src="https://cdn.thekary.com/km/display/4868/banner/3812fcba-ef21-4d79-b761-a497b120bcfd-1753428286430">  <span>사계절 아이템</span></a><a class="main_menu_keyword_item" href="https://karymarket.com/ar/ex?exSeq=6682">  <img class="keyword_item_img" src="https://cdn.thekary.com/km/display/4868/banner/63332542-c24b-465e-8886-6e4116242777-1753428289271">  <span>여름 신발</span></a><a class="main_menu_keyword_item" href="https://karymarket.com/ar/ex?exSeq=5158">  <img class="keyword_item_img" src="https://cdn.thekary.com/km/display/4868/banner/3e3d555b-2562-4052-8b42-c8d51c8f5345-1753428291954">  <span>수경·수모·튜브</span></a><a class="main_menu_keyword_item" href="https://karymarket.com/ar/ex?exSeq=6681">  <img class="keyword_item_img" src="https://cdn.thekary.com/km/display/4868/banner/7cd755e6-787d-4fe0-92c7-2433b9a494c0-1753429124998">  <span>인형&amp;키링</span></a></div>
+                                        <div class="item_box"><a class="main_menu_keyword_item" href="https://karymarket.com/ar/ex?exSeq=6543">  <img class="keyword_item_img" src="https://cdn.thekary.com/km/display/4868/banner/ba46f3e2-05cb-4ee1-bca3-7396395dec83-1753428556027">  <span>리빙 시즌오프</span></a><a class="main_menu_keyword_item" href="https://karymarket.com/ar/ex?exSeq=6679">  <img class="keyword_item_img" src="https://cdn.thekary.com/km/display/4868/banner/1ae28d6c-3280-46ac-9d53-081f57d302b3-1753429182641">  <span>구강 케어</span></a><a class="main_menu_keyword_item" href="https://karymarket.com/class/curation/442">  <img class="keyword_item_img" src="https://cdn.thekary.com/km/display/4868/banner/67054529-5127-4c95-9139-78065cccd763-1750993232645">  <span>스크럽대디 팝업</span></a><a class="main_menu_keyword_item" href="https://karymarket.com/class/curation/461">  <img class="keyword_item_img" src="https://cdn.thekary.com/km/display/4868/banner/bb93c9ce-2e18-471f-841d-6ac5db8238d3-1752108187468">  <span>비욘 단독 발매</span></a><a class="main_menu_keyword_item" href="https://karymarket.com/category?categoryCode=C22">  <img class="keyword_item_img" src="https://cdn.thekary.com/km/display/4868/banner/849f6844-51be-4052-a91d-a2fd245b946d-1744354991181">  <span>캐리마켓 신사</span></a><a class="main_menu_keyword_item" href="https://www.karymarket.com/class/list?year=2025&amp;month=8">  <img class="keyword_item_img" src="https://cdn.thekary.com/km/display/4868/banner/b8827a2b-3482-4314-a9cb-d58dfd422e71-1744354991309">  <span>클래스 신청</span></a><a class="main_menu_keyword_item" href="https://membership.thekary.com/event/detail/461">  <img class="keyword_item_img" src="https://cdn.thekary.com/km/display/4868/banner/83c394b8-9359-465f-aa99-b0f172cfd0a9-1754035353368">  <span>회원 혜택</span></a></div> -->
+                                    </article>
+                                </div>
+                                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+                            </div>
+                        </div>
+                        <!-- 메인 카테고리 20250103 END -->
+
+
+
+
+                        <!-- 상품 롤링형 -->
+                        <div class="prd_slide_list_normal">
+                            <div class="pd_list_title_box">
+                                <p class="pd_list_title">#아가방 역시즌</p>
+                                <a href="javascript:fn006('6757')">
+                                    <p class="pd_list_title_more">더보기 <img loading="lazy" src="/mobile/images/icon_right_anchor.png" class="icon_right_anchor" alt="icon_right_anchor"></p>
+                                </a>
+                            </div>
+                            <!-- swiper inner_lnb3 -->
+                            <div class="swiper-container list_normal swiper-initialized swiper-horizontal swiper-free-mode swiper-backface-hidden">
+                                <div class="swiper-wrapper" style="transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;" id="swiper-wrapper-71095a840c3439cef" aria-live="polite">
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6757 slideItem_32400 swiper-slide-active" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="1 / 10">
+                                        <a href="javascript:fn004('P104208240', '32400', '', 1)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/289e4d7a-919f-467a-82e6-06603b30cf36-1753772503079.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('b1528')">
+                                            <h6 class="best_product_brand">아가방</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P104208240', '32400', '', 1)">
+                                            <p class="best_product_name">[아가방 겨울]제프무봉제다운조끼(IVORY,NAVY,PINK)_01R751305</p>
+                                            <p class="best_product_price_line">39,900원 </p>
+                                            <p class="best_product_price_discount">29,900원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">25% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6757 slideItem_32400 swiper-slide-next" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="2 / 10">
+                                        <a href="javascript:fn004('P104208484', '32400', '', 2)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/6af56019-153c-4b0d-85b1-2057a98aea05-1753772685392.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('b1528')">
+                                            <h6 class="best_product_brand">아가방</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P104208484', '32400', '', 2)">
+                                            <p class="best_product_name">[아가방 겨울]제프프릴경량다운점퍼(PINK)_01R755051</p>
+                                            <p class="best_product_price_line">69,900원 </p>
+                                            <p class="best_product_price_discount">49,900원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">29% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6757 slideItem_32400" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="3 / 10">
+                                        <a href="javascript:fn004('P104208006', '32400', '', 3)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/96a530ef-5f3b-46fd-bb92-9a4b90cee98a-1753772319316.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('b1528')">
+                                            <h6 class="best_product_brand">아가방</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P104208006', '32400', '', 3)">
+                                            <p class="best_product_name">[아가방 겨울]모모경량패딩점퍼(BEIGE)_01R735001</p>
+                                            <p class="best_product_price_line">69,000원 </p>
+                                            <p class="best_product_price_discount">51,900원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">25% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6757 slideItem_32400" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="4 / 10">
+                                        <a href="javascript:fn004('P104207487', '32400', '', 4)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/ebde3e9a-4a1c-4cb7-9428-162a457ec547-1753771755294.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('b1528')">
+                                            <h6 class="best_product_brand">아가방</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P104207487', '32400', '', 4)">
+                                            <p class="best_product_name">[아가방 겨울]리온별퀼팅점퍼(CREAM,PINK)_01R725001</p>
+                                            <p class="best_product_price_line">69,000원 </p>
+                                            <p class="best_product_price_discount">51,900원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">25% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6757 slideItem_32400" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="5 / 10">
+                                        <a href="javascript:fn004('P104208365', '32400', '', 5)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/e5d0200d-c0ee-4104-a8e6-f39108e17454-1753772593873.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('b1528')">
+                                            <h6 class="best_product_brand">아가방</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P104208365', '32400', '', 5)">
+                                            <p class="best_product_name">[아가방 겨울]베프무봉제다운점퍼(IVORY,BEIGE)_01R755001</p>
+                                            <p class="best_product_price_line">69,900원 </p>
+                                            <p class="best_product_price_discount">52,900원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">24% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6757 slideItem_32400" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="6 / 10">
+                                        <a href="javascript:fn004('P104207509', '32400', '', 6)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/596e8cc4-8c7c-4e3b-9f61-c1e4d07fff82-1753771850172.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('b1528')">
+                                            <h6 class="best_product_brand">아가방</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P104207509', '32400', '', 6)">
+                                            <p class="best_product_name">[아가방 겨울]클라벨웰론점퍼(IVORY,YELLOW)_01R725003</p>
+                                            <p class="best_product_price_line">89,000원 </p>
+                                            <p class="best_product_price_discount">66,900원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">25% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6757 slideItem_32400" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="7 / 10">
+                                        <a href="javascript:fn004('P104207743', '32400', '', 7)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/c0122d40-de8b-4b36-a7af-047ec99cd725-1753772035713.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('b1528')">
+                                            <h6 class="best_product_brand">아가방</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P104207743', '32400', '', 7)">
+                                            <p class="best_product_name">[아가방 겨울]리온치프무스탕점퍼(BROWN)_01R725008</p>
+                                            <p class="best_product_price_line">99,000원 </p>
+                                            <p class="best_product_price_discount">74,900원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">24% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6757 slideItem_32400" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="8 / 10">
+                                        <a href="javascript:fn004('P104207861', '32400', '', 8)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/2f4d38dc-98be-47b7-aad0-6ef6fe63f4fb-1753772132038.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('b1528')">
+                                            <h6 class="best_product_brand">아가방</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P104207861', '32400', '', 8)">
+                                            <p class="best_product_name">[아가방 겨울]클리퍼점퍼(가방)(IVORY)_01R725052</p>
+                                            <p class="best_product_price_line">109,000원 </p>
+                                            <p class="best_product_price_discount">81,900원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">25% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6757 slideItem_32400" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="9 / 10">
+                                        <a href="javascript:fn004('P104207989', '32400', '', 9)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/c10b9f3f-de6e-4b59-9e76-e59517b6eda7-1753772222765.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('b1528')">
+                                            <h6 class="best_product_brand">아가방</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P104207989', '32400', '', 9)">
+                                            <p class="best_product_name">[아가방 겨상]클라데이자수다운점퍼(PINK)_01R725054</p>
+                                            <p class="best_product_price_line">139,000원 </p>
+                                            <p class="best_product_price_discount">103,900원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">25% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6757 slideItem_32400" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="10 / 10">
+                                        <a href="javascript:fn004('P104207620', '32400', '', 10)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/14978ef8-72cc-4982-b675-160fe9e57658-1753771941343.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('b1528')">
+                                            <h6 class="best_product_brand">아가방</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P104207620', '32400', '', 10)">
+                                            <p class="best_product_name">[아가방 겨울]리온데이롱다운점퍼(BEIGE)_01R725006</p>
+                                            <p class="best_product_price_line">139,000원 </p>
+                                            <p class="best_product_price_discount">103,900원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">25% 할인</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 슬라이드 좌우버튼 -->
+                                <!-- /슬라이드 좌우버튼 -->
+                                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+                            </div>
+                        </div>
+                        <!-- 검정선 -->
+                        <!-- /검정선 -->
+
+
+                        <!-- 상품 롤링형 -->
+                        <div class="prd_slide_list_normal">
+                            <div class="pd_list_title_box">
+                                <p class="pd_list_title">#기분 전환 양말 추천</p>
+                                <a href="javascript:fn006('6750')">
+                                    <p class="pd_list_title_more">더보기 <img loading="lazy" src="/mobile/images/icon_right_anchor.png" class="icon_right_anchor" alt="icon_right_anchor"></p>
+                                </a>
+                            </div>
+                            <!-- swiper inner_lnb3 -->
+                            <div class="swiper-container list_normal swiper-initialized swiper-horizontal swiper-free-mode swiper-backface-hidden">
+                                <div class="swiper-wrapper" style="transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;" id="swiper-wrapper-fddeef1f79ee82f10" aria-live="polite">
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6750 slideItem_31979 swiper-slide-active" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="1 / 10">
+                                        <a href="javascript:fn004('P101710242', '31979', '', 1)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/48d2c39a-a3db-4fe8-8c32-04c8a52fd362-1725080116121.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CBK')">
+                                            <h6 class="best_product_brand">꼴레지앙</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P101710242', '31979', '', 1)">
+                                            <p class="best_product_name">릴리 (한국공식 수입정품)</p>
+                                            <p class="best_product_price">
+                                                26,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6750 slideItem_31979 swiper-slide-next" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="2 / 10">
+                                        <a href="javascript:fn004('P101710124', '31979', '', 2)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/7ed169ec-b950-491f-87cc-27bc57207b63-1725079723717.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CBK')">
+                                            <h6 class="best_product_brand">꼴레지앙</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P101710124', '31979', '', 2)">
+                                            <p class="best_product_name">홀탕스 (한국공식 수입정품)</p>
+                                            <p class="best_product_price">
+                                                27,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6750 slideItem_31979" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="3 / 10">
+                                        <a href="javascript:fn004('P101709861', '31979', '', 3)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/8f0f9f24-fd16-486d-b039-80551767829d-1725079096135.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CBK')">
+                                            <h6 class="best_product_brand">꼴레지앙</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P101709861', '31979', '', 3)">
+                                            <p class="best_product_name">델핀 (한국공식 수입정품)</p>
+                                            <p class="best_product_price">
+                                                25,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6750 slideItem_31979" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="4 / 10">
+                                        <a href="javascript:fn004('P101709743', '31979', '', 4)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/35c746e9-a793-4429-967a-af87547a987f-1725078670055.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CBK')">
+                                            <h6 class="best_product_brand">꼴레지앙</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P101709743', '31979', '', 4)">
+                                            <p class="best_product_name">마농 (한국공식 수입정품)</p>
+                                            <p class="best_product_price">
+                                                27,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6750 slideItem_31979" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="5 / 10">
+                                        <a href="javascript:fn004('P101709626', '31979', '', 5)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/8c7a3385-7264-4154-8ca5-2187a4f121a4-1725078105225.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CBK')">
+                                            <h6 class="best_product_brand">꼴레지앙</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P101709626', '31979', '', 5)">
+                                            <p class="best_product_name">엘리자베스 (한국공식 수입정품)</p>
+                                            <p class="best_product_price">
+                                                27,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6750 slideItem_31979" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="6 / 10">
+                                        <a href="javascript:fn004('P101709366', '31979', '', 6)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/eb197ab2-5b6b-4616-8d72-65da596c5ad9-1725075463169.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CBK')">
+                                            <h6 class="best_product_brand">꼴레지앙</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P101709366', '31979', '', 6)">
+                                            <p class="best_product_name">마리 리오니 (한국공식 수입정품)</p>
+                                            <p class="best_product_price">
+                                                27,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6750 slideItem_31979" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="7 / 10">
+                                        <a href="javascript:fn004('P101709246', '31979', '', 7)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/25f48184-48e0-4f6b-aacd-7f88ccba19bb-1725075159902.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CBK')">
+                                            <h6 class="best_product_brand">꼴레지앙</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P101709246', '31979', '', 7)">
+                                            <p class="best_product_name">리오니 (한국공식 수입정품)</p>
+                                            <p class="best_product_price">
+                                                20,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6750 slideItem_31979" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="8 / 10">
+                                        <a href="javascript:fn004('P101711129', '31979', '', 8)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/5a35c2d5-a8f5-4604-a0cf-f370b9c06bde-1725082566796.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CBK')">
+                                            <h6 class="best_product_brand">꼴레지앙</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P101711129', '31979', '', 8)">
+                                            <p class="best_product_name">안젤리크 (한국공식 수입정품)</p>
+                                            <p class="best_product_price">
+                                                50,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6750 slideItem_31979" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="9 / 10">
+                                        <a href="javascript:fn004('P101710981', '31979', '', 9)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/18e1644e-ed3d-4812-a956-409c0b9796b4-1725081836658.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CBK')">
+                                            <h6 class="best_product_brand">꼴레지앙</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P101710981', '31979', '', 9)">
+                                            <p class="best_product_name">세베린 (한국공식 수입정품)</p>
+                                            <p class="best_product_price">
+                                                48,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6750 slideItem_31979" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="10 / 10">
+                                        <a href="javascript:fn004('P101710746', '31979', '', 10)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/9bb92a74-8abc-4578-89b7-101e629d4f3b-1725081549878.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CBK')">
+                                            <h6 class="best_product_brand">꼴레지앙</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P101710746', '31979', '', 10)">
+                                            <p class="best_product_name">맥상스 (한국공식 수입정품)</p>
+                                            <p class="best_product_price">
+                                                48,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- 슬라이드 좌우버튼 -->
+                                <!-- /슬라이드 좌우버튼 -->
+                                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+                            </div>
+                        </div>
+                        <!-- 검정선 -->
+                        <!-- /검정선 -->
+                        <!-- 상품 롤링형 -->
+                        <div class="prd_slide_list_normal">
+                            <div class="pd_list_title_box">
+                                <p class="pd_list_title">#쥬다르 놀이 매트</p>
+                                <a href="javascript:fn006('6755')">
+                                    <p class="pd_list_title_more">더보기 <img loading="lazy" src="/mobile/images/icon_right_anchor.png" class="icon_right_anchor" alt="icon_right_anchor"></p>
+                                </a>
+                            </div>
+                            <!-- swiper inner_lnb3 -->
+                            <div class="swiper-container list_normal swiper-initialized swiper-horizontal swiper-free-mode swiper-backface-hidden">
+                                <div class="swiper-wrapper" style="transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;" id="swiper-wrapper-4487cf3cd79d9dcc" aria-live="polite">
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6755 slideItem_32012 swiper-slide-active" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="1 / 8">
+                                        <a href="javascript:fn004('P0000TWU', '32012', '', 1)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/bdd7afdf7291e00f3b1cca8c53d74612.png" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B00000TJ')">
+                                            <h6 class="best_product_brand">쥬다르</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P0000TWU', '32012', '', 1)">
+                                            <p class="best_product_name">Drawing mat  [8/4부터 순차출고]</p>
+                                            <p class="best_product_price">
+                                                45,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6755 slideItem_32012 swiper-slide-next" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="2 / 8">
+                                        <a href="javascript:fn004('P0000FQW', '32012', '', 2)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/5c586b919be5fee9ff798f64c44776c2.png" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B00000TJ')">
+                                            <h6 class="best_product_brand">쥬다르</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P0000FQW', '32012', '', 2)">
+                                            <p class="best_product_name"> ART PLAYMAT [8/4부터 순차출고]</p>
+                                            <p class="best_product_price">
+                                                64,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6755 slideItem_32012" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="3 / 8">
+                                        <a href="javascript:fn004('P0000TUA', '32012', '', 3)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/3bd55a978d7ec3e663fc4aa8e4c01b34.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B00000TJ')">
+                                            <h6 class="best_product_brand">쥬다르</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P0000TUA', '32012', '', 3)">
+                                            <p class="best_product_name"> Half moon [8/18 부터 순차출고]</p>
+                                            <p class="best_product_price">
+                                                83,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6755 slideItem_32012" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="4 / 8">
+                                        <a href="javascript:fn004('P000BFLL', '32012', '', 4)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/633015bb1059b77a83508615f4996ab4.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B00000TJ')">
+                                            <h6 class="best_product_brand">쥬다르</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000BFLL', '32012', '', 4)">
+                                            <p class="best_product_name">Classy - Second Mat / Dove , Coat [8/4부터 순차출고]</p>
+                                            <p class="best_product_price_line">48,000원 </p>
+                                            <p class="best_product_price_discount">44,000원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">8% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6755 slideItem_32012" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="5 / 8">
+                                        <a href="javascript:fn004('P0000TUB', '32012', '', 5)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/3f673c107ad6c090136cc04deb2d6fb8.png" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B00000TJ')">
+                                            <h6 class="best_product_brand">쥬다르</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P0000TUB', '32012', '', 5)">
+                                            <p class="best_product_name">Classy - Second Mat /Clay [8/4부터 순차출고]</p>
+                                            <p class="best_product_price_line">48,000원 </p>
+                                            <p class="best_product_price_discount">44,000원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">8% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6755 slideItem_32012" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="6 / 8">
+                                        <a href="javascript:fn004('P000BFMS', '32012', '', 6)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/91dcc75586375d74e11e87ac4417d583.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B00000TJ')">
+                                            <h6 class="best_product_brand">쥬다르</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000BFMS', '32012', '', 6)">
+                                            <p class="best_product_name">Classy - Dove 거실매트  [8/4부터 순차출고]</p>
+                                            <p class="best_product_price_line">255,000원 </p>
+                                            <p class="best_product_price_discount">213,000원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">16% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6755 slideItem_32012" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="7 / 8">
+                                        <a href="javascript:fn004('P000BFMX', '32012', '', 7)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/4193e8be9a735db31fae15e4ea23a74c.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B00000TJ')">
+                                            <h6 class="best_product_brand">쥬다르</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000BFMX', '32012', '', 7)">
+                                            <p class="best_product_name"> Classy - CLAY 거실매트 [8/4부터 순차출고]</p>
+                                            <p class="best_product_price_line">255,000원 </p>
+                                            <p class="best_product_price_discount">213,000원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">16% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6755 slideItem_32012" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="8 / 8">
+                                        <a href="javascript:fn004('P0000TUC', '32012', '', 8)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/445bc92b998f40e0885f9d745a4ceb19.png" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B00000TJ')">
+                                            <h6 class="best_product_brand">쥬다르</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P0000TUC', '32012', '', 8)">
+                                            <p class="best_product_name">Classy - 복도매트  [8/4부터 순차출고]</p>
+                                            <p class="best_product_price_line">240,000원 </p>
+                                            <p class="best_product_price_discount">183,000원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">24% 할인</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 슬라이드 좌우버튼 -->
+                                <!-- /슬라이드 좌우버튼 -->
+                                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+                            </div>
+                        </div>
+                        <!-- 검정선 -->
+                        <!-- /검정선 -->
+                        <!-- 상품 롤링형 -->
+                        <div class="prd_slide_list_normal">
+                            <div class="pd_list_title_box">
+                                <p class="pd_list_title">#향기 좋은 희녹</p>
+                                <a href="javascript:fn006('6764')">
+                                    <p class="pd_list_title_more">더보기 <img loading="lazy" src="/mobile/images/icon_right_anchor.png" class="icon_right_anchor" alt="icon_right_anchor"></p>
+                                </a>
+                            </div>
+                            <!-- swiper inner_lnb3 -->
+                            <div class="swiper-container list_normal swiper-initialized swiper-horizontal swiper-free-mode swiper-backface-hidden">
+                                <div class="swiper-wrapper" style="transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;" id="swiper-wrapper-f5832acb01017247e" aria-live="polite">
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6764 slideItem_32155 swiper-slide-active" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="1 / 10">
+                                        <a href="javascript:fn004('P000DAKQ', '32155', '', 1)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/9c00dedaffb97ba8260a668b1279017a.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000BNZ')">
+                                            <h6 class="best_product_brand">희녹</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000DAKQ', '32155', '', 1)">
+                                            <p class="best_product_name">더 핸드워시 450ml - 제주 편백 핸드워시</p>
+                                            <p class="best_product_price">
+                                                42,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6764 slideItem_32155 swiper-slide-next" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="2 / 10">
+                                        <a href="javascript:fn004('P000BHKN', '32155', '', 2)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/4072e20e7f8d6a7977382924fbb872da.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000BNZ')">
+                                            <h6 class="best_product_brand">희녹</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000BHKN', '32155', '', 2)">
+                                            <p class="best_product_name">스페이스 스프레이 900ml 세트 - 57% 곡물 에탄올 + 제주 편백 탈취 스프레이</p>
+                                            <p class="best_product_price">
+                                                42,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6764 slideItem_32155" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="3 / 10">
+                                        <a href="javascript:fn004('P000BDPT', '32155', '', 3)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/2800f8d066fad6a778065862ea17af8e.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000BNZ')">
+                                            <h6 class="best_product_brand">희녹</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000BDPT', '32155', '', 3)">
+                                            <p class="best_product_name">더 디터전트 900ml - 제주 편백 세탁세제</p>
+                                            <p class="best_product_price">
+                                                38,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6764 slideItem_32155" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="4 / 10">
+                                        <a href="javascript:fn004('P000BDPS', '32155', '', 4)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/75a3d9bc1d3f346bec5dad7c676df61d.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000BNZ')">
+                                            <h6 class="best_product_brand">희녹</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000BDPS', '32155', '', 4)">
+                                            <p class="best_product_name">더 스프레이 450ml 세트 - 제주 편백수 탈취제</p>
+                                            <p class="best_product_price">
+                                                32,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6764 slideItem_32155" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="5 / 10">
+                                        <a href="javascript:fn004('P000BDPU', '32155', '', 5)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/4c885ed7aedc6550ae2cec6f8397ab2e.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000BNZ')">
+                                            <h6 class="best_product_brand">희녹</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000BDPU', '32155', '', 5)">
+                                            <p class="best_product_name">더 스프레이 리필팩 900ml - 제주 편백수 탈취제</p>
+                                            <p class="best_product_price">
+                                                42,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6764 slideItem_32155" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="6 / 10">
+                                        <a href="javascript:fn004('P000BHKO', '32155', '', 6)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/46e9fcea5659d56eab2cbc9037658c18.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000BNZ')">
+                                            <h6 class="best_product_brand">희녹</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000BHKO', '32155', '', 6)">
+                                            <p class="best_product_name">스페이스 스프레이 900ml 리필 - 57% 곡물 에탄올 + 제주 편백 탈취 스프레이</p>
+                                            <p class="best_product_price">
+                                                34,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6764 slideItem_32155" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="7 / 10">
+                                        <a href="javascript:fn004('P000BDPR', '32155', '', 7)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/94f43cb08ccc550c4429b41a6af58896.jpeg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000BNZ')">
+                                            <h6 class="best_product_brand">희녹</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000BDPR', '32155', '', 7)">
+                                            <p class="best_product_name">더 스프레이 기프트 세트 (공병+900ml 리필팩+파우치)</p>
+                                            <p class="best_product_price">
+                                                55,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6764 slideItem_32155" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="8 / 10">
+                                        <a href="javascript:fn004('P000BUFI', '32155', '', 8)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/bcd03acf422c41bb327d641db94def71.jpeg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000BNZ')">
+                                            <h6 class="best_product_brand">희녹</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000BUFI', '32155', '', 8)">
+                                            <p class="best_product_name">더 스프레이 기프트 세트 (공병+450ml 리필팩+파우치)</p>
+                                            <p class="best_product_price">
+                                                37,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6764 slideItem_32155" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="9 / 10">
+                                        <a href="javascript:fn004('P000DAKN', '32155', '', 9)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/45246698ace723ba68a55f0c881c1095.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000BNZ')">
+                                            <h6 class="best_product_brand">희녹</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000DAKN', '32155', '', 9)">
+                                            <p class="best_product_name">린넨 파우치</p>
+                                            <p class="best_product_price">
+                                                5,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6764 slideItem_32155" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="10 / 10">
+                                        <a href="javascript:fn004('P000DAKO', '32155', '', 10)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/5a21c5d640657bafcdf9eddc54a773c9.jpeg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000BNZ')">
+                                            <h6 class="best_product_brand">희녹</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000DAKO', '32155', '', 10)">
+                                            <p class="best_product_name">기프트백 S</p>
+                                            <p class="best_product_price">
+                                                2,000원
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- 슬라이드 좌우버튼 -->
+                                <!-- /슬라이드 좌우버튼 -->
+                                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+                            </div>
+                        </div>
+                        <!-- 검정선 -->
+                        <!-- /검정선 -->
+                        <!-- 상품 롤링형 -->
+                        <div class="prd_slide_list_normal">
+                            <div class="pd_list_title_box">
+                                <p class="pd_list_title">#자극없는 빕스  쪽쪽이</p>
+                                <a href="javascript:fn006('6765')">
+                                    <p class="pd_list_title_more">더보기 <img loading="lazy" src="/mobile/images/icon_right_anchor.png" class="icon_right_anchor" alt="icon_right_anchor"></p>
+                                </a>
+                            </div>
+                            <!-- swiper inner_lnb3 -->
+                            <div class="swiper-container list_normal swiper-initialized swiper-horizontal swiper-free-mode swiper-backface-hidden">
+                                <div class="swiper-wrapper" style="transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;" id="swiper-wrapper-92475966d4593f5c" aria-live="polite">
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6765 slideItem_32156 swiper-slide-active" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="1 / 10">
+                                        <a href="javascript:fn004('P000CDTR', '32156', '', 1)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/fd395b22b087522877e1a47c012eea2e.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CEK')">
+                                            <h6 class="best_product_brand">빕스</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000CDTR', '32156', '', 1)">
+                                            <p class="best_product_name">Boheme 2 PACK / Latex Blossom / Dusky Lilac</p>
+                                            <p class="best_product_price_line">16,000원 </p>
+                                            <p class="best_product_price_discount">12,800원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">20% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6765 slideItem_32156 swiper-slide-next" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="2 / 10">
+                                        <a href="javascript:fn004('P000CDTQ', '32156', '', 2)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/e0966bac3832db7b307e1984b4805315.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CEK')">
+                                            <h6 class="best_product_brand">빕스</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000CDTQ', '32156', '', 2)">
+                                            <p class="best_product_name">Boheme 2 PACK (Latex) Dark Oak / Blush</p>
+                                            <p class="best_product_price_line">16,000원 </p>
+                                            <p class="best_product_price_discount">12,800원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">20% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6765 slideItem_32156" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="3 / 10">
+                                        <a href="javascript:fn004('P000CDTX', '32156', '', 3)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/e6ca9f31e1797404d1c80ad164f3b7ad.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CEK')">
+                                            <h6 class="best_product_brand">빕스</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000CDTX', '32156', '', 3)">
+                                            <p class="best_product_name">Colour 2 PACK (Latex) Vanilla GLOW / Dark Oak GLOW</p>
+                                            <p class="best_product_price_line">14,000원 </p>
+                                            <p class="best_product_price_discount">11,200원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">20% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6765 slideItem_32156" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="4 / 10">
+                                        <a href="javascript:fn004('P000CDTW', '32156', '', 4)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/4e8469387ec6a129457ce61916303e85.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CEK')">
+                                            <h6 class="best_product_brand">빕스</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000CDTW', '32156', '', 4)">
+                                            <p class="best_product_name">Colour 2 PACK (Latex) Iron GLOW / Baby Blue GLOW</p>
+                                            <p class="best_product_price_line">14,000원 </p>
+                                            <p class="best_product_price_discount">11,200원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">20% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6765 slideItem_32156" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="5 / 10">
+                                        <a href="javascript:fn004('P000CDTV', '32156', '', 5)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/cbdadfa4bea342f4f450eb22b21b3ef8.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CEK')">
+                                            <h6 class="best_product_brand">빕스</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000CDTV', '32156', '', 5)">
+                                            <p class="best_product_name">De Lux 2 PACK Woodchuck / Blush</p>
+                                            <p class="best_product_price_line">15,000원 </p>
+                                            <p class="best_product_price_discount">12,000원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">20% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6765 slideItem_32156" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="6 / 10">
+                                        <a href="javascript:fn004('P000CDTU', '32156', '', 6)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/78856fd079a742fd63eae09a9e080359.jpg" alt="best_product_image" class="best_product_image">
+                                            <div class="sold_out_text">SOLD<br>OUT</div>
+                                        </a>
+                                        <a href="javascript:fn008('B0000CEK')">
+                                            <h6 class="best_product_brand">빕스</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000CDTU', '32156', '', 6)">
+                                            <p class="best_product_name">De Lux 2 PACK Dusky Lilac / Heather</p>
+                                            <p class="best_product_price_line">15,000원 </p>
+                                            <p class="best_product_price_discount">12,000원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">20% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6765 slideItem_32156" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="7 / 10">
+                                        <a href="javascript:fn004('P000CDTT', '32156', '', 7)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/894482f5f71ab24b22cfdf88f2168d12.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CEK')">
+                                            <h6 class="best_product_brand">빕스</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000CDTT', '32156', '', 7)">
+                                            <p class="best_product_name">De Lux 2 PACK Vanilla / Dark Oak</p>
+                                            <p class="best_product_price_line">15,000원 </p>
+                                            <p class="best_product_price_discount">12,000원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">20% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6765 slideItem_32156" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="8 / 10">
+                                        <a href="javascript:fn004('P000CDTL', '32156', '', 8)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/c29730504f9d6b564292d462609badcc.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CEK')">
+                                            <h6 class="best_product_brand">빕스</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000CDTL', '32156', '', 8)">
+                                            <p class="best_product_name">BIBS Paci Braid Petrol / Baby Blue</p>
+                                            <p class="best_product_price_line">19,500원 </p>
+                                            <p class="best_product_price_discount">15,600원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">20% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6765 slideItem_32156" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="9 / 10">
+                                        <a href="javascript:fn004('P000CDTK', '32156', '', 9)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/05fd818cdf39f6a0bc92fdd5cf54f7fc.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CEK')">
+                                            <h6 class="best_product_brand">빕스</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000CDTK', '32156', '', 9)">
+                                            <p class="best_product_name">BIBS Baby Bitie Star - Blush</p>
+                                            <p class="best_product_price_line">19,700원 </p>
+                                            <p class="best_product_price_discount">15,760원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">20% 할인</p>
+                                        </div>
+                                    </div>
+                                    <div class="best_product_img_box_cont swiper-slide slideItem_6765 slideItem_32156" aria-hidden="true" aria-disabled="true" tabindex="-1" role="group" aria-label="10 / 10">
+                                        <a href="javascript:fn004('P000CDUA', '32156', '', 10)" class="is_square">
+                                            <img loading="lazy" src="/mobile/product/image/migration/f822ed156dd3611b362e7da5baee0131.jpg" alt="best_product_image" class="best_product_image">
+                                        </a>
+                                        <a href="javascript:fn008('B0000CEK')">
+                                            <h6 class="best_product_brand">빕스</h6>
+                                        </a>
+                                        <a href="javascript:fn004('P000CDUA', '32156', '', 10)">
+                                            <p class="best_product_name">Colour 2 PACK (Latex) Ivory / Blush</p>
+                                            <p class="best_product_price_line">14,000원 </p>
+                                            <p class="best_product_price_discount">11,200원 </p>
+                                        </a>
+                                        <div class="best_product_price_discount_amount">
+                                            <p class="best_product_price_discount_amount_text">20% 할인</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 슬라이드 좌우버튼 -->
+                                <!-- /슬라이드 좌우버튼 -->
+                                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+                            </div>
+                        </div>
+                        <!-- 검정선 -->
+                        <!-- /검정선 -->
+                        <!-- 마지막 배너 끝 체크 -->
+                    </div>
+                    <!-- /inner end -->
+                </div>
+                <!-- /main end -->
+                <!-- footer start -->
+                <script type="text/javascript">
+                    function fnBizPopup() {
+                        window.open('https://www.ftc.go.kr/bizCommPop.do?wrkr_no=1288703548')
+                    }
+                    function goToUrl(url) {
+                        location.href=url;
+                    }
+                </script>
+                <footer id="footer">
+                    <div class="footer_navigation">
+                        <ul class="footer_accordion">
+                            <li class="footer_accordion_nav">
+                                <a href="/aboutUs">
+                                    ABOUT US
+                                    <img loading="lazy" class="icon_right_anchor" src="/mobile/images/icon_right_anchor_white.svg" alt="more">
+                                </a>
+                            </li>
+                            <li class="footer_accordion_nav">
+                                <a href="/notice">
+                                    COMMUNITY
+                                    <img loading="lazy" class="icon_right_anchor" src="/mobile/images/icon_right_anchor_white.svg" alt="more">
+                                </a>
+                            </li>
+                            <li class="footer_accordion_nav">
+                                <a href="/business">
+                                    BUSINESS
+                                    <img loading="lazy" class="icon_right_anchor" src="/mobile/images/icon_right_anchor_white.svg" alt="more">
+                                </a>
+                            </li>
+                            <li class="footer_accordion_nav">
+                                <a href="/store">STORE
+                                    <img loading="lazy" class="icon_right_anchor" src="/mobile/images/icon_right_anchor_white.svg" alt="more">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer_cs">
+                        <p class="footer_cs_title">CS CENTER</p>
+                        <p class="footer_cs_number">1833-2001</p>
+                        <p class="footer_cs_text">월 ~ 금 - AM 09:00 ~ PM 17:00</p>
+                        <p class="footer_cs_text">주말/공휴일 - 휴무 ( 1:1 상담을 이용해주세요 )</p>
+                        <p class="footer_cs_text">점심시간 - PM 12:00 ~ PM 01:00</p>
+                    </div>
+                    <div class="gray_line"></div>
+                    <div class="footer_fnb">
+                        <ul class="footer_fnb_box">
+                            <li class="footer_fnb_text">
+                                <a href="/privacy">개인정보처리방침</a>
+                            </li>
+                            <li class="footer_fnb_text">
+                                <a href="/guide">이용안내</a>
+                            </li>
+                            <li class="footer_fnb_text">
+                                <a href="/agreement">이용약관</a>
+                            </li>
+                            <li class="footer_fnb_text">
+                                <a href="/location_agreement"> 위치정보서비스이용약관</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="gray_line"></div>
+                    <div class="footer_information mb-10px">
+                        <!-- footer_information_top start -->
+                        <div class="footer_information_top">
+                            <!-- Logo -->
+                            <a href="/">
+                                <img loading="lazy" src="/mobile/images/karymarket_logo.svg" class="footer_logo" alt="logo">
+                            </a>
+                            <a href="https://www.instagram.com/karymarket_/">
+                                <img loading="lazy" src="/mobile/images/icon_instagram.png" alt="icon_instagram" class="footer_instagram">
+                            </a>
+                        </div>
+                        <!-- /footer_information_top end -->
+                        <!-- footer_information_bottom start -->
+                        <div class="footer_information_bottom default_p_38_lr">
+                            <ul class="footer_information_bottom_box">
+                                <li class="footer_information_bottom_text">
+                                    Company : (주)더캐리&nbsp;&nbsp;&nbsp;대표 : 이은정, 윤중용
+                                </li>
+                                <li class="footer_information_bottom_text">
+                                    Address : 서울특별시 용산구 한남동 738-36 2F
+                                </li>
+                                <li class="footer_information_bottom_text">
+                                    Tel : 1833-2001 Email : karyonline@thekary.com
+                                </li>
+                                <li class="footer_information_bottom_text display_flex">
+                                    Business License : 128-87-03548 <a href="javascript:fnBizPopup()" class="ml-5px">[사업자정보확인]</a>
+                                </li>
+                                <li class="footer_information_bottom_text display_flex">
+                                    <a href="http://www.easypay.co.kr/escrow/escrow_memb_auth.jsp?memb_id=05566379" target="_blank">[이지페이 구매안전 서비스 가입사실 확인]</a>
+                                </li>
+                                <li class="footer_information_bottom_text display_flex">
+                                    통신판매업신고 : 2021-서울용산-1694
+                                </li>
+                            </ul>
+                        </div>
+                        <!--  20241029 CK 정보 추가 -->
+                        <!-- /footer_information_bottom end -->
+                    </div>
+                </footer>
+                <!-- scroll_top -->
+                <div class="scroll_top show" id="top_btn">
+                    <a href="#">
+                        <i class="fa-solid fa-angle-up"></i>
+                    </a>
+                </div>
+                <!-- /scroll_top -->
+                <script>
+                    // // 스크롤이 일정 높이 이상으로 내려갔을 때 버튼을 보이게 하기
+                    // $(window).scroll(function() {
+                    //     if ($(this).scrollTop() > 450) { // 스크롤 위치가 100px 이상이면
+                    //         // $('.scroll_top').fadeIn(); // 버튼을 보이게 함
+                    //         $(".scroll_top").addClass("show"); // 버튼을 보이게 함
+                    //     } else {
+                    //         // $(".scroll_top").fadeOut(); // 스크롤 위치가 400px 미만이면 버튼을 숨김
+                    //         $(".scroll_top").removeClass("show"); // 스크롤 위치가 400px 미만이면 버튼을 숨김
+                    //     }
+                    // });
+                    //
+                    // // 버튼을 클릭하면 페이지 상단으로 스크롤
+                    // $('#top_btn').click(function() {
+                    //     $('html, body').animate({scrollTop: 0}, 800); // 800ms 동안 페이지 상단으로 스크롤
+                    //     return false;
+                    // });
+
+                    function changeLanguage(lan){
+                        const url = new URL(window.location.href);
+                        const path = url.pathname;
+                        const queryString = url.search;
+
+                        if(queryString === "")
+                            location.href = path + '?lang=' + lan;
+                        else
+                            location.href = path + '?lang=' + lan;
+                    }
+
+                    // 아코디언 토글
+                    $(".accordion_parent").click(function() {
+                        $(this).next(".accordion_sibling").stop().slideToggle(300);
+                        $(this).toggleClass('on').siblings().removeClass('on');
+                        $(this).next(".accordion_sibling").siblings(".accordion_sibling").slideUp(300); // 1개씩 펼치기
+                    });
+
+                </script>
+                <!-- /footer end -->
+                <!-- tab_bar start -->
+                <!-- tab_bar start -->
+                <div class="tab_bar">
+                    <ul class="tab_bar_ul">
+                        <li class="tab_bar_list">
+                            <a href="/menu">
+                                <img loading="lazy" class="icon_tab_hamburger" src="/mobile/images/icon_tab_hamburger.png" alt="icon_tab_hamburger">
+                                <p class="tab_bar_text">카테고리</p>
+                            </a>
+                        </li>
+                        <li class="tab_bar_list">
+                            <a href="/my/wish/list">
+                                <img loading="lazy" class="icon_tab_search" src="/mobile/images/icon/heart_wh.svg" alt="icon_tab_heart">
+                                <p class="tab_bar_text">관심 상품</p>
+                            </a>
+                        </li>
+                        <li class="tab_bar_list">
+                            <a href="/">
+                                <img loading="lazy" class="icon_tab_home" src="/mobile/images/icon_tab_home.png" alt="icon_tab_home">
+                                <p class="tab_bar_text">캐리홈</p>
+                            </a>
+                        </li>
+                        <li class="tab_bar_list">
+                            <a href="/my">
+                                <img loading="lazy" class="icon_tab_my_kary" src="/mobile/images/icon_tab_my_kary.png" alt="icon_tab_my_kary">
+                                <p class="tab_bar_text">마이캐리</p>
+                            </a>
+                        </li>
+                        <li class="tab_bar_list">
+                            <a href="/cart" class="cartCount" id="fnb_cart">
+                                <img loading="lazy" class="icon_tab_cart" src="/mobile/images/icon_tab_cart.png" alt="icon_tab_cart">
+                                <p class="tab_bar_text">장바구니</p>
+                                <span id="fnb_cart_count" style="display: none;">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /tab_bar end -->
+                <script>
+                    $(function() {
+                        getCartCount();
+                    });
+                </script>
+                <!-- /tab_bar end -->
+            </div>
+            <!-- /wrapper_box end -->
+        </div>
+
+
+
+        <!-- 타임세일 script -->
+        <script>
+            // 목표 시간 설정 (YYYY-MM-DD HH:MM:SS 형식)
+            const targetDate = new Date("2023-07-27 00:00:00");
+
+            // 1초마다 업데이트 함수 실행
+            setInterval(updateCountdown, 1000);
+
+            function updateCountdown() {
+                let currentDate = new Date();
+                let difference = targetDate - currentDate;
+
+                // 차이를 일, 시간, 분, 초로 변환
+                let days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                let hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+                let minutes = Math.floor((difference / (1000 * 60)) % 60);
+                let seconds = Math.floor((difference / 1000) % 60);
+
+                // 카운트다운 엘리먼트 업데이트
+                $("#countdown").html(days + ":" + hours + ":" + minutes + ":" + seconds);
+            }
+        </script>
+        <!-- /타임세일 script -->
+
+
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const text = document.getElementById("birthday_phrase");
+                const text2 = document.getElementById("birthday_phrase_name");
+                const gif = document.getElementById("birthday_img");
+
+                // 1. 텍스트 애니메이션 시작
+                text.classList.add("fade-loop");
+                text2.classList.add("fade-loop2");
+
+                setTimeout(() => {
+                    // 2. GIF도 이 시점부터 재생 시작
+                    gif.src = "/mobile/source/hbd.gif"; // 여기서 GIF가 처음 로드되면서 재생 시작
+                    gif.style.display = "block";
+
+                }, 800);
+            });
+        </script>
+
+        <!-- Scripts -->
+        <script>
+
+            /** Swiper */
+            function initSwiper(selector, options) {
+                return new Swiper(selector, {
+                    slidesPerView: options.slidesPerView || 'auto',
+                    slidesPerGroup: options.slidesPerGroup || 1,
+                    loopFillGroupWithBlank: options.loopFillGroupWithBlank !== undefined
+                        ? options.loopFillGroupWithBlank : true,
+                    loop: options.loop !== undefined ? options.loop : true,
+                    observer: options.observer !== undefined ? options.observer : true,
+                    observeParents: options.observeParents !== undefined ? options.observeParents : true,
+                    spaceBetween: options.spaceBetween || 14,
+                    navigation: {
+                        nextEl: options.navigationNextEl || null,
+                        prevEl: options.navigationPrevEl || null,
+                    },
+                    ...(options.pagination === true && {
+                        pagination: {
+                            el: options.paginationEl || '.swiper-pagination',
+                            clickable: options.paginationClickable !== undefined ? options.paginationClickable
+                                : true,
+                            type: options.paginationType || 'bullets',
+                            renderBullet: options.renderBullet || function (index, className) {
+                                return '<div class="' + className + '">' + '</div>';
+                            },
+                        },
+                    }),
+                    ...(options.autoplay === true && {
+                        autoplay: {
+                            delay: options.autoplayDelay || 5000,
+                            disableOnInteraction: options.autoplayDisableOnInteraction !== undefined
+                                ? options.autoplayDisableOnInteraction : true,
+                        },
+                    }),
+                    // Add more options here as needed
+                });
+            }
+
+            function reloadSwiper() {
+                new Swiper('.swiper-container.list_normal', {
+                    // slidesPerView: 2.3,
+                    slidesPerView: "auto",
+                    slidesPerGroup: 1,
+                    // 그룹수가 맞지 않을 경우 빈칸으로 메우기
+                    // 3개가 나와야 되는데 1개만 있다면 2개는 빈칸으로 채워서 3개를 만듬
+                    loopFillGroupWithBlank: true,
+                    loop: false,
+                    freeMode: true,
+                    observer: true,
+                    observeParents: true,
+                    // spaceBetween: 10,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    // breakpoints: {
+                    // 	390: {
+                    // 		slidesPerView: 2.3,
+                    // 		slidesPerGroup: 1,
+                    // 	},
+                    // 	360: {
+                    // 		slidesPerView: 2.1,
+                    // 		slidesPerGroup: 1,
+                    // 	},
+                    // 	280: {
+                    // 		slidesPerView: 1.8,
+                    // 		slidesPerGroup: 1,
+                    // 	}
+                    // }
+                });
+            }
+
+            function icoMenuSwiper() {
+                initSwiper('.swiper-container.ico-menu-swiper', {
+                    slidesPerView         : 'auto',
+                    slidesPerGroup        : 1,
+                    loopFillGroupWithBlank: true,
+                    loop                  : true,
+                    observer              : true,
+                    observeParents        : true,
+                    spaceBetween          : 14,
+                    navigationNextEl      : '.swiper-button-next',
+                    navigationPrevEl      : '.swiper-button-prev',
+                    pagination            : true,
+                    paginationEl          : '.bullet',
+                    paginationClickable   : true,
+                    paginationType        : 'bullets',
+                    autoplay              : false,
+                    autoplayDelay         : 5000
+                });
+            }
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+                // list_normal
+                var listNormalSwiper = new Swiper('.swiper-container.list_normal', {
+                    // slidesPerView: 2.3,
+                    slidesPerView: "auto",
+                    slidesPerGroup: 1,
+                    // 그룹수가 맞지 않을 경우 빈칸으로 메우기
+                    // 3개가 나와야 되는데 1개만 있다면 2개는 빈칸으로 채워서 3개를 만듬
+                    loopFillGroupWithBlank: true,
+                    loop: false,
+                    freeMode: true,
+                    observer: true,
+                    observeParents: true,
+                    // spaceBetween: 10,
+                    /* 전체적인 슬라이드의 오른쪽에 20px 공백을 준다. */
+                    slidesOffsetAfter: 20,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    // breakpoints: {
+                    // 	390: {
+                    // 		slidesPerView: 2.3,
+                    // 		slidesPerGroup: 1,
+                    // 	},
+                    // 	360: {
+                    // 		slidesPerView: 2.1,
+                    // 		slidesPerGroup: 1,
+                    // 	},
+                    // 	280: {
+                    // 		slidesPerView: 1.8,
+                    // 		slidesPerGroup: 1,
+                    // 	}
+                    // }
+                });
+
+                // list_normal2 (2단 스와이프)
+                var listNormalSwiper2 = new Swiper('.swiper-container.list_normal2', {
+                    slidesPerView: 2.5,
+                    // slidesPerView: "auto",
+                    grid: {
+                        rows: 2,
+                        fill: 'row',  // 슬라이드가 로우별로 채워짐
+                    },
+                    //slidesPerGroup: 1,
+                    // 그룹수가 맞지 않을 경우 빈칸으로 메우기
+                    // 3개가 나와야 되는데 1개만 있다면 2개는 빈칸으로 채워서 3개를 만듬
+                    loopFillGroupWithBlank: true,
+                    loop: false,
+                    freeMode: true,
+                    observer: true,
+                    observeParents: true,
+                    spaceBetween: 10,
+                    /* 전체적인 슬라이드의 오른쪽에 20px 공백을 준다. */
+                    slidesOffsetAfter: 20,
+                    // navigation: {
+                    //     nextEl: '.swiper-button-next',
+                    //     prevEl: '.swiper-button-prev',
+                    // },
+                    pagination: {
+                        el: '.swiper-pagination',  // 페이지네이션 요소
+                        clickable: true,            // 사용자가 클릭할 수 있도록 설정
+                    },
+                });
+
+                // list_normal3
+                var listNormalSwiper3 = new Swiper('.swiper-container.list_normal3', {
+                    // slidesPerView: 2.3,
+                    slidesPerView: "auto",
+                    // slidesPerGroup: 1,
+                    // 그룹수가 맞지 않을 경우 빈칸으로 메우기
+                    // 3개가 나와야 되는데 1개만 있다면 2개는 빈칸으로 채워서 3개를 만듬
+                    loopFillGroupWithBlank: true,
+                    loop: false,
+                    freeMode: true,
+                    observer: true,
+                    observeParents: true,
+                    spaceBetween: 10,
+                    /* 전체적인 슬라이드의 오른쪽에 20px 공백을 준다. */
+                    slidesOffsetAfter: 20,
+                });
+
+                // list_normal4 (2단 스와이프-keywords)
+                var listNormalSwiper4 = new Swiper('.swiper-container.list_normal4', {
+                    slidesPerView: "3.5",
+                    grid: {
+                        rows: 2,
+                        fill: 'row',  // 슬라이드가 로우별로 채워짐
+                    },
+                    //slidesPerGroup: 1,
+                    // 그룹수가 맞지 않을 경우 빈칸으로 메우기
+                    // 3개가 나와야 되는데 1개만 있다면 2개는 빈칸으로 채워서 3개를 만듬
+                    /*loopFillGroupWithBlank: true,*/
+                    loop: false,
+                    freeMode: true,
+                    observer: true,
+                    observeParents: true,
+                    spaceBetween: 10,
+                    /* 전체적인 슬라이드의 오른쪽에 20px 공백을 준다. */
+                    slidesOffsetAfter: 20,
+                    // navigation: {
+                    //     nextEl: '.swiper-button-next',
+                    //     prevEl: '.swiper-button-prev',
+                    // },
+                    pagination: {
+                        el: '.swiper-pagination',  // 페이지네이션 요소
+                        clickable: true,            // 사용자가 클릭할 수 있도록 설정
+                    },
+                });
+
+
+
+                $(".inner_lnb2_list").click(function () {
+                    // 이전에 선택된 요소에서 'on' 클래스를 제거
+                    $(".inner_lnb2_list.on").removeClass("on");
+                    // 현재 클릭한 요소에 'on' 클래스를 추가
+                    $(this).addClass("on");
+                    reloadSwiper();
+                });
+
+                $(".inner_category_item").click(function () {
+                    let target = $(this).data('class');
+                    $("." + target).removeClass("on");
+                    //this는 함수를 실행하게 만든 그 클릭한 요소다!
+                    $(this).addClass("on");//그 요소에게 효과주고v
+                    reloadSwiper();
+                });
+
+                //inner_lnb3
+                const innerLnb3Swiper = new Swiper('.swiper-container.inner_lnb3', {
+
+                    slidesPerView: "auto", // 한 슬라이드에 보여줄 갯수
+                    slidesPerGroup: 1,
+                    // spaceBetween: 10, // 슬라이드 사이 여백
+                    loop: false, // 슬라이드 반복 여부
+                    freeMode: true,
+                    loopFillGroupWithBlank: false,
+                    loopAdditionalSlides: 1, // 슬라이드 반복 시 마지막 슬라이드에서 다음 슬라이드가 보여지지 않는 현상 수정
+                    pagination: false, // pager 여부
+                    roundLengths: true,
+                    autoplay: false,
+                    navigation: {   // 버튼 사용자 지정
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    autoHeight: true, // true로 설정하면 슬라이더 래퍼가 현재 활성 슬라이드의 높이에 맞게 높이를 조정합니다.
+                    a11y: false, // 접근성 매개변수(접근성 관련 대체 텍스트 설정이 가능) - api문서 참고!
+                    resistance: false, // 슬라이드 터치에 대한 저항 여부 설정
+                    slideToClickedSlide: true, // 해당 슬라이드 클릭시 슬라이드 위치로 이동
+                    centeredSlides: false, // true시에 슬라이드가 가운데로 배치
+                    allowTouchMove: true, // false시에 스와이핑이 되지 않으며 버튼으로만 슬라이드 조작이 가능
+                    watchOverflow: true, // 슬라이드가 1개 일 때 pager, button 숨김 여부 설정
+                    slidesOffsetBefore: 0, // 슬라이드 시작 부분 여백
+                    slidesOffsetAfter: 0, // 슬라이드 시작 부분 여백
+                    on: {
+                        slideChange: function () {
+                            //이벤트 또는 조건문으로 이용하면 된다.
+                        },
+                    },
+
+                });
+
+
+                // image_slider
+                var imageSliderSwiper = new Swiper('.swiper-container.main_slider', {
+                    direction: 'horizontal',
+                    loop: true,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        type: 'fraction',
+                        formatFractionCurrent: function (number) {
+                            return +number;
+                        }
+                    },
+                    autoplay: {
+                        delay: 3000,
+                        // delay: 0,
+                    },
+                });
+
+                // big_img_slide
+                var mySwiper = new Swiper('.swiper-container.big_img_slide', {
+                    // slidesPerView: 4,
+                    // slidesPerView: 1.2,
+                    slidesPerView: "auto",
+                    // slidesPerGroup: 4,
+                    slidesPerGroup: 1,
+                    // 그룹수가 맞지 않을 경우 빈칸으로 메우기
+                    // 3개가 나와야 되는데 1개만 있다면 2개는 빈칸으로 채워서 3개를 만듬
+                    loopFillGroupWithBlank: true,
+                    loop: true,
+                    observer: true,
+                    observeParents: true,
+                    // spaceBetween: 14,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    autoplay: {
+                        delay: 5000,
+                        // delay: 0,
+                    },
+                });
+
+
+                // 20240828 추가
+                icoMenuSwiper();
+
+                // 202405 추가
+                // signBannerSwiper();
+
+            });
+
+            var headerMenuSwiper = new Swiper('.swiper-container.menu-container', {
+                slidesPerView: 'auto',
+                spaceBetween: 10,
+                freeMode: true,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
+
+            // 202405 추가
+            let signBannerSwiper = new Swiper('.swiper-container.sign-banner-swiper-container', {
+                slidesPerView: 'auto',
+                spaceBetween: 10,
+                direction: 'horizontal',
+                loop: true,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                autoplay: {
+                    delay: 3000,
+                    // delay: 0,
+                },
+            });
+
+            var commonSwiper = new Swiper('.swiper-container.common-swiper-container', {
+                slidesPerView: 'auto',
+                spaceBetween: 10,
+                freeMode: true,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    // 반응형 브레이크포인트 추가 (원하는 크기에 따라 수정 가능)
+                    420: {
+                        slidesPerView: 5,
+                    },
+                    //280: {
+                    //	  slidesPerView: 3,
+                    //},
+                },
+            });
+            document.addEventListener("DOMContentLoaded", function () {
+                // popularProductSwiper();
+            });
+            // 카테고리 swiper-slide inner_lnb_list
+            $(".inner_lnb_list").click(function(){
+                $(".inner_lnb_list").removeClass("on");
+                //this는 함수를 실행하게 만든 그 클릭한 요소다!
+                $(this).addClass("on");//그 요소에게 효과주고
+            });
+
+            const swiper = new Swiper('.swiper-container.inner_lnb', {
+                slidesPerView : "auto", // 한 슬라이드에 보여줄 갯수
+                slidesPerGroup: 1,
+                spaceBetween : 8, // 슬라이드 사이 여백
+                loop : false, // 슬라이드 반복 여부
+                freeMode: true,
+                loopFillGroupWithBlank : false,
+                loopAdditionalSlides : 1, // 슬라이드 반복 시 마지막 슬라이드에서 다음 슬라이드가 보여지지 않는 현상 수정
+                pagination : false, // pager 여부
+                roundLengths: true,
+                autoplay: false,
+                navigation: {   // 버튼 사용자 지정
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                autoHeight : true, // true로 설정하면 슬라이더 래퍼가 현재 활성 슬라이드의 높이에 맞게 높이를 조정합니다.
+                a11y : false, // 접근성 매개변수(접근성 관련 대체 텍스트 설정이 가능) - api문서 참고!
+                resistance : false, // 슬라이드 터치에 대한 저항 여부 설정
+                slideToClickedSlide : true, // 해당 슬라이드 클릭시 슬라이드 위치로 이동
+                centeredSlides : false, // true시에 슬라이드가 가운데로 배치
+                allowTouchMove : true, // false시에 스와이핑이 되지 않으며 버튼으로만 슬라이드 조작이 가능
+                watchOverflow : true, // 슬라이드가 1개 일 때 pager, button 숨김 여부 설정
+                slidesOffsetBefore : 0, // 슬라이드 시작 부분 여백
+                slidesOffsetAfter : 0, // 슬라이드 시작 부분 여백
+                on: {
+                    slideChange : function() {
+                        //이벤트 또는 조건문으로 이용하면 된다.
+                    },
+                },
+            });
+
+            $("#inputKeyword").focus();
+            function autoSearch() {
+                let keyword = $("#inputKeyword").val();
+                $("#autoSearchArea").hide();
+                if(!keyword){
+                    $("#autoSearchArea").height('auto');
+                    $("#autoSearchArea").empty();
+                    return false;
+                }
+                $.ajax({
+                    url: '/rest/search/keyword',
+                    type: 'GET',
+                    data: {
+                        keyword: keyword
+                    },
+                    success: function (response) {
+                        const autoSearchArea =  $("#autoSearchArea");
+                        autoSearchArea.show();
+                        // autoSearchArea.height('50rem');
+                        autoSearchArea.height('80%');
+                        autoSearchArea.empty();
+                        let ul = `<ul class="mt-10px">`;
+                        response.body?.result_brand.forEach((item, index) => {
+                            ul += `
+
+                          <li class="font_weight_normal">
+                              <a class="search_text" href="/brand/detail?brandCode=${item.brandCode}">
+                              <div class="default_flex_box">
+                                  <div class="default_100_flex_box pb-5px">
+                                      <div class="pd_detail_brand_img_wrap wd-50px hg-50px">
+                                          <img loading="lazy"  class="pd_detail_brand_img wd-100" src="https://cdn.thekary.com/km/partner/${item.partnerCode}/brand/${item.brandCode}/${item.thumbnailImage}">
+                                      </div>
+                                      <span>${item.highlightedBrandName ? item.highlightedBrandName : item.brandName}</span>
+                                      </div>
+                                  </div>
+                                  <img loading="lazy"  class="icon_right_anchor_black wd-16px" src="/mobile/images/icon_right_anchor_black.png">
+                              </div>
+                              </a>
+                          </li>
+                      `;
+                        });
+                        response.body?.result_category.forEach((item, index) => {
+                            let url = "/s/ca";
+                            if(item.depth == 3){
+                                url += `?categoryCode=${item.parentcode}&subCategoryCode=${item.categoryCode}`
+                            }else {
+                                url += `?categoryCode=${item.categoryCode}`
+                            }
+                            ul +=`
+                          <li class="font_weight_normal">
+                              <a href="${url}" class="search_text">
+                                  <span>${item.highlightedCategoryPath ? item.highlightedCategoryPath : item.categoryPath}</span>
+                              </a>
+                          </li>
+                        `;
+                        });
+                        response.body?.result_keyword.forEach((item, index) => {
+                            ul += `
+                  <li class="font_weight_normal">
+                      <a href="/s/kw?keyword=${item.keyword}" class="search_text">
+                          <span>${item.highlightedKeyword ? item.highlightedKeyword : item.keyword}</span>
+                      </a>
+                  </li>
+              `;
+                        });
+                        ul += `</ul>`;
+                        autoSearchArea.append(ul);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr, status, error); // 에러 처리
+                    }
+                });
+            }
+
+            // 한개의 아코디언만 펼쳤다/접기
+            $(".keyword_btn").click(function() {
+                let siblingAccordion = $(this).closest('.popular_keyword_li').find('.accordion_sibling');
+                let parentAccordion = $(this).closest('.popular_keyword_li').find('.accordion_parent');
+                let isAccordionOpen = siblingAccordion.is(":visible");
+
+                // 다른 아코디언들을 닫기
+                $(".accordion_sibling").slideUp(300);
+                $(".accordion_parent").removeClass('on');
+
+                // 현재 아코디언의 상태에 따라 토글
+                if (!isAccordionOpen) {
+                    siblingAccordion.stop().slideDown(300);
+                    parentAccordion.addClass('on');
+                    //$(this).addClass('on');
+                }
+            });
+
+            let popularProductSwiper = new Swiper('.swiper-container.popular-swiper-container', {
+                slidesPerView : "auto", // 한 슬라이드에 보여줄 갯수
+                slidesPerGroup: 1,
+                spaceBetween : 10, // 슬라이드 사이 여백
+                loop : true, // 슬라이드 반복 여부
+                freeMode: true,	// 20250213 추가
+                loopFillGroupWithBlank : false,
+                // loopAdditionalSlides : 1, // 슬라이드 반복 시 마지막 슬라이드에서 다음 슬라이드가 보여지지 않는 현상 수정
+                pagination : false, // pager 여부
+                // roundLengths: true,
+                autoplay: false,
+                navigation: {   // 버튼 사용자 지정
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
+
+            /**
+             * 메인 탭 클릭 시 MD추천/랭킹 구분
+             */
+            $(".main_inner_tab_list").click(function() {
+                $(".main_inner_tab_list").removeClass("on");
+                $(this).addClass("on");
+                // 현재 클릭된 요소의 인덱스 확인
+                const index = $(".main_inner_tab_list").index(this);
+
+                // 0번째 요소인지 확인
+                if (index == 0) {
+                    $(".recommend_tab_container").show();
+                    $(".ranking_tab_container").hide();
+                } else {
+                    $(".recommend_tab_container").hide();
+                    $(".ranking_tab_container").show();
+                    $(".ranking_tab_container").removeClass("display_none");
+                }
+            });
+
+            // 헤더메뉴 링크 이동
+            function goHeaderLink(url) {
+                location.href = url;
+            }
+
+        </script>
+
+
+
+
+
+</body>
+</html>
