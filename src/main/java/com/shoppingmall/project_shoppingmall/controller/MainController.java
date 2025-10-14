@@ -26,8 +26,11 @@ public class MainController {
         return "mockup";
     }
 
-    @GetMapping(value = "/mobile")
+    @GetMapping(value = "/mobile_main")
     public String mobilemain(){return "mobile/mobile_main";}
+
+    @GetMapping(value = "/mobile_detail")
+    public String mobiledetail(){return "mobile/mobile_detail";}
 
 
 }
