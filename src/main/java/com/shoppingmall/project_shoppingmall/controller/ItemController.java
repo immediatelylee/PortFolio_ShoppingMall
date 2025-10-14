@@ -249,8 +249,13 @@ public class ItemController {
         model.addAttribute("item", itemFormDto);
         return "item/itemDetail";
     }
-
-
+//TODO: 테스트 후에는 다시 합칠것
+    @GetMapping(value = "/item_mobile/{itemId}")
+    public String mobile_itemDetail(Model model,@PathVariable("itemId") Long itemId){
+        ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
+        model.addAttribute("item", itemFormDto);
+        return "mobile/mobile_detail";
+    }
 
 }
 
