@@ -21,7 +21,13 @@ public interface ItemRepositoryCustom {
     List<Item> findItemsBySellStatus(ItemSellStatus sellStatus);
     List<Item> findItemsByDisplayStatus(ItemDisplayStatus displayStatus);
 
-    List<ItemWithImgDto> findItemsWithImgsBySubCategory(String subCategory);
+    List<ItemWithImgDto> findItemsWithImgsByMainCategory(String main);
+    List<ItemWithImgDto> findItemsWithImgsBySubCategory(String main, String sub);
+    List<ItemWithImgDto> findItemsWithImgsBySubSubCategory(String main, String sub, String subSub);
+    List<ItemWithImgDto> findItemsWithImgsByOnlySubCategory(String sub);
 
+//    List<ItemWithImgDto> findItemsWithImgsByMainCategoryId(int mainId);
+//    List<ItemWithImgDto> findItemsWithImgsBySubCategoryId(int mainId, int subId);
+//    List<ItemWithImgDto> findItemsWithImgsBySubSubCategoryId(int mainId, int subId, int subSubId);
 }
 

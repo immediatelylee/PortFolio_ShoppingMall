@@ -25,5 +25,7 @@ public class CategoryController {
     public List<ItemCategory> getChildCategories2(@RequestParam String parentTitle) {
         ItemCategory parentCategory = ItemCategory.titleOf(parentTitle);
         return parentCategory != null ? parentCategory.getChildCategories() : List.of();
+
+//        TODO:상품등록할때 카테고리 조회하는 코드 추후에 리팩토링 할것.
     }
 }

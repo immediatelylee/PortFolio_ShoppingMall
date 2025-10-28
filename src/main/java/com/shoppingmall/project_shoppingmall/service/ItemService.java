@@ -4,6 +4,7 @@ import com.shoppingmall.project_shoppingmall.constant.*;
 import com.shoppingmall.project_shoppingmall.domain.*;
 import com.shoppingmall.project_shoppingmall.dto.*;
 import com.shoppingmall.project_shoppingmall.repository.*;
+import com.shoppingmall.project_shoppingmall.resolver.CategoryResolver;
 import lombok.*;
 import org.modelmapper.*;
 import org.springframework.data.domain.*;
@@ -28,6 +29,7 @@ public class ItemService {
     // 상품에서 브랜드를 수정시에 brand를 조회하기 위하여
     private final BrandRepository brandRepository;
     private final OptionCombinationRepository optionCombinationRepository;
+    private final CategoryResolver resolver;
 
 
     public Long saveItem(ItemFormDto itemFormDto,
@@ -403,9 +405,73 @@ public class ItemService {
         return itemRepository.countByBrandId(brandId);
     }
 
-    public List<ItemWithImgDto> getItemsWithImgsBySubCategory(String subCategory) {
-        return itemRepository.findItemsWithImgsBySubCategory(subCategory);
+    //Mobile :
+    // 1뎁스
+    public List<ItemWithImgDto> getItemsWithImgsByMainCategoryId(int mainId) {
+        String mainTitle = resolver.toTitle(mainId);
+        return itemRepository.findItemsWithImgsByMainCategory(mainTitle);
     }
+
+    // 2뎁스
+    public List<ItemWithImgDto> getItemsWithImgsBySubCategoryId(int mainId, int subId) {
+        String mainTitle = resolver.toTitle(mainId);
+        String subTitle  = resolver.toTitle(subId);
+        return itemRepository.findItemsWithImgsBySubCategory(mainTitle, subTitle);
+    }
+
+    // 3뎁스
+    public List<ItemWithImgDto> getItemsWithImgsBySubSubCategoryId(int mainId, int subId, int subSubId) {
+        String mainTitle   = resolver.toTitle(mainId);
+        String subTitle    = resolver.toTitle(subId);
+        String subSubTitle = resolver.toTitle(subSubId);
+        return itemRepository.findItemsWithImgsBySubSubCategory(mainTitle, subTitle, subSubTitle);
+    }
+
+    //PC : thymeleaf 에서 model로 정보가 들어갈때 활용(기존)
+
+    /** 1뎁스: 메인 카테고리만으로 조회 */
+    @Transactional(readOnly = true)
+    public List<ItemWithImgDto> getItemsWithImgsByMainCategory(String mainCategory) {
+        return itemRepository.findItemsWithImgsByMainCategory(mainCategory);
+    }
+
+    /** 2뎁스: 메인 + 서브 카테고리로 조회 */
+    @Transactional(readOnly = true)
+    public List<ItemWithImgDto> getItemsWithImgsBySubCategory(String mainCategory, String subCategory) {
+        System.out.println("==itemservice==");
+        System.out.println(itemRepository.findItemsWithImgsBySubCategory(mainCategory, subCategory));
+        return itemRepository.findItemsWithImgsBySubCategory(mainCategory, subCategory);
+    }
+
+    /** 3뎁스: 메인 + 서브 + 서브서브 카테고리로 조회 */
+    @Transactional(readOnly = true)
+    public List<ItemWithImgDto> getItemsWithImgsBySubSubCategory(String mainCategory,
+                                                                 String subCategory,
+                                                                 String subSubCategory) {
+        return itemRepository.findItemsWithImgsBySubSubCategory(mainCategory, subCategory, subSubCategory);
+    }
+
+    /** 테스트 */
+    @Transactional(readOnly = true)
+    public List<ItemWithImgDto> getItemsWithImgsByOnlySubCategory(String subCategory) {
+        return itemRepository.findItemsWithImgsByOnlySubCategory(subCategory);
+    }
+
+//    /** 1뎁스: 메인 카테고리만으로 조회 */
+//    public List<ItemWithImgDto> getItemsWithImgsByMainCategory(int mainId) {
+//        return itemRepository.findItemsWithImgsByMainCategoryId(mainId);
+//    }
+//    /** 2뎁스: 메인 + 서브 카테고리로 조회 */
+//    public List<ItemWithImgDto> getItemsWithImgsBySubCategory(int mainId, int subId) {
+//        return itemRepository.findItemsWithImgsBySubCategoryId(mainId, subId);
+//    }
+//    /** 3뎁스: 메인 + 서브 + 서브서브 카테고리로 조회 */
+//    public List<ItemWithImgDto> getItemsWithImgsBySubSubCategory(int mainId, int subId, int subSubId) {
+//        return itemRepository.findItemsWithImgsBySubSubCategoryId(mainId, subId, subSubId);
+//    }
+
+
+
 
     public Item getItemById(Long id) {
         return itemRepository.findById(id)

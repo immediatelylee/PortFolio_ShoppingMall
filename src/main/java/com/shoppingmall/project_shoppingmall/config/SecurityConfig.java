@@ -31,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ;
 
         http.authorizeRequests()
-                .mvcMatchers("/", "/members/**", "/item/**", "/img/**","images/**","/web/**","/error","/notification","/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .mvcMatchers("/", "/members/**", "/item/**", "/img/**","/images/**","/web/**","/error","/notification","/swagger-ui/**", "/v3/api-docs/**","/api/categories/**","/api/search/**").permitAll()
                 .mvcMatchers("/admin/**").hasRole("ADMIN")
                 .mvcMatchers("/wishlist/**").authenticated() // 위시리스트 경로 보호 - 비회원 위시리스트 클릭시 로그인창 이동
                 .anyRequest().authenticated()
