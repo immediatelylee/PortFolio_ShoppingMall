@@ -203,7 +203,34 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
 
     @Override
-    public List<ItemWithImgDto> findItemsWithImgsBySubCategory(String subCategory) {
+    public List<ItemWithImgDto> findItemsWithImgsByMainCategory(String mainCategory) {
+        QItem item = QItem.item;
+        QItemImg itemImg = QItemImg.itemImg;
+
+        return queryFactory
+                .select(new QItemWithImgDto(
+                        item.id,
+                        item.itemNm,
+                        item.price,
+                        item.itemDetail,
+                        item.itemSellStatus.stringValue(),
+                        item.itemDisplayStatus.stringValue(),
+                        item.mainCategory,
+                        item.subCategory,
+                        item.subSubCategory,
+                        item.brand.brandNm,
+                        itemImg.imgUrl
+                ))
+                .from(item)
+                .leftJoin(itemImg).on(itemImg.item.eq(item))
+                .where(item.mainCategory.eq(mainCategory),
+                        (item.itemDisplayStatus.eq(ItemDisplayStatus.DISPLAY)), // 진열 상태 조건 추가
+                        itemImg.repimgYn.eq("Y")) // 대표 이미지 조건
+                .fetch();
+    }
+
+    @Override
+    public List<ItemWithImgDto> findItemsWithImgsByOnlySubCategory(String subCategory) {
         QItem item = QItem.item;
         QItemImg itemImg = QItemImg.itemImg;
 
@@ -228,5 +255,148 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                         itemImg.repimgYn.eq("Y")) // 대표 이미지 조건
                 .fetch();
     }
+
+    @Override
+    public List<ItemWithImgDto> findItemsWithImgsBySubCategory(String mainCategory, String subCategory) {
+        QItem item = QItem.item;
+        QItemImg itemImg = QItemImg.itemImg;
+
+        return queryFactory
+                .select(new QItemWithImgDto(
+                        item.id,
+                        item.itemNm,
+                        item.price,
+                        item.itemDetail,
+                        item.itemSellStatus.stringValue(),
+                        item.itemDisplayStatus.stringValue(),
+                        item.mainCategory,
+                        item.subCategory,
+                        item.subSubCategory,
+                        item.brand.brandNm,
+                        itemImg.imgUrl
+                ))
+                .from(item)
+                .leftJoin(itemImg).on(itemImg.item.eq(item))
+                .where(
+                        item.mainCategory.eq(mainCategory),
+                        item.subCategory.eq(subCategory),
+                        item.itemDisplayStatus.eq(ItemDisplayStatus.DISPLAY),
+                        itemImg.repimgYn.eq("Y")
+                )
+                .orderBy(item.id.desc())
+                .fetch();
+    }
+    @Override
+    public List<ItemWithImgDto> findItemsWithImgsBySubSubCategory(String mainCategory, String subCategory, String subSubCategory) {
+        QItem item = QItem.item;
+        QItemImg itemImg = QItemImg.itemImg;
+
+        return queryFactory
+                .select(new QItemWithImgDto(
+                        item.id,
+                        item.itemNm,
+                        item.price,
+                        item.itemDetail,
+                        item.itemSellStatus.stringValue(),
+                        item.itemDisplayStatus.stringValue(),
+                        item.mainCategory,
+                        item.subCategory,
+                        item.subSubCategory,
+                        item.brand.brandNm,
+                        itemImg.imgUrl
+                ))
+                .from(item)
+                .leftJoin(itemImg).on(itemImg.item.eq(item))
+                .where(
+                        item.mainCategory.eq(mainCategory),
+                        item.subCategory.eq(subCategory),
+                        item.subSubCategory.eq(subSubCategory),
+                        item.itemDisplayStatus.eq(ItemDisplayStatus.DISPLAY),
+                        itemImg.repimgYn.eq("Y")
+                )
+                .orderBy(item.id.desc())
+                .fetch();
+    }
+
+
+//        @Override
+//        public List<ItemWithImgDto> findItemsWithImgsByMainCategoryId(int mainId) {
+//            QItem item = QItem.item;
+//            QItemImg img = QItemImg.itemImg;
+//
+//            return queryFactory
+//                    .select(new QItemWithImgDto(
+//                            item.id, item.itemNm, item.price, item.itemDetail,
+//                            item.itemSellStatus.stringValue(),
+//                            item.itemDisplayStatus.stringValue(),
+//                            item.mainCategoryTitle,  // 표시용 컬럼(옵션)
+//                            item.subCategoryTitle,
+//                            item.subSubCategoryTitle,
+//                            item.brand.brandNm,
+//                            img.imgUrl
+//                    ))
+//                    .from(item)
+//                    .leftJoin(img).on(img.item.eq(item))
+//                    .where(
+//                            item.mainCategoryId.eq(mainId),       // ✅ id로 비교
+//                            item.itemDisplayStatus.eq(ItemDisplayStatus.DISPLAY),
+//                            img.repimgYn.eq("Y")
+//                    )
+//                    .orderBy(item.id.desc())
+//                    .fetch();
+//        }
+//
+//        @Override
+//        public List<ItemWithImgDto> findItemsWithImgsBySubCategoryId(int mainId, int subId) {
+//            QItem item = QItem.item;
+//            QItemImg img = QItemImg.itemImg;
+//
+//            return queryFactory
+//                    .select(new QItemWithImgDto(
+//                            item.id, item.itemNm, item.price, item.itemDetail,
+//                            item.itemSellStatus.stringValue(),
+//                            item.itemDisplayStatus.stringValue(),
+//                            item.mainCategory, item.subCategory, item.subSubCategory,
+//                            item.brand.brandNm, img.imgUrl
+//                    ))
+//                    .from(item)
+//                    .leftJoin(img).on(img.item.eq(item))
+//                    .where(
+//                            item.mainCategoryId.eq(mainId),
+//                            item.subCategoryId.eq(subId),         // ✅ id로 비교
+//                            item.itemDisplayStatus.eq(ItemDisplayStatus.DISPLAY),
+//                            img.repimgYn.eq("Y")
+//                    )
+//                    .orderBy(item.id.desc())
+//                    .fetch();
+//        }
+//
+//        @Override
+//        public List<ItemWithImgDto> findItemsWithImgsBySubSubCategoryId(int mainId, int subId, int subSubId) {
+//            QItem item = QItem.item;
+//            QItemImg img = QItemImg.itemImg;
+//
+//            return queryFactory
+//                    .select(new QItemWithImgDto(
+//                            item.id, item.itemNm, item.price, item.itemDetail,
+//                            item.itemSellStatus.stringValue(),
+//                            item.itemDisplayStatus.stringValue(),
+//                            item.mainCategoryTitle, item.subCategoryTitle, item.subSubCategoryTitle,
+//                            item.brand.brandNm, img.imgUrl
+//                    ))
+//                    .from(item)
+//                    .leftJoin(img).on(img.item.eq(item))
+//                    .where(
+//                            item.mainCategoryId.eq(mainId),
+//                            item.subCategoryId.eq(subId),
+//                            item.subSubCategoryId.eq(subSubId),   // ✅ id로 비교
+//                            item.itemDisplayStatus.eq(ItemDisplayStatus.DISPLAY),
+//                            img.repimgYn.eq("Y")
+//                    )
+//                    .orderBy(item.id.desc())
+//                    .fetch();
+//        }
+
+
 }
 

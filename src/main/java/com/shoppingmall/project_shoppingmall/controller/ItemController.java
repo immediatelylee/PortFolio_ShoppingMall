@@ -103,7 +103,7 @@ public class ItemController {
 
         // 추후에 수정해야함(각 코너마다의 count로 바꿔야함)
         Long onSaleItemCount = itemService.getItemsOnSaleCount();
-        List<ItemWithImgDto> items = itemService.getItemsWithImgsBySubCategory("아동");
+        List<ItemWithImgDto> items = itemService.getItemsWithImgsBySubCategory("패션의류/잡화","아동");
 
         List<Long> wishlistItemIds = new ArrayList<>(); // 사용자의 위시리스트 상품 ID 리스트
 
