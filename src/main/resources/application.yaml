@@ -32,12 +32,14 @@ spring:
     cache: false
 
 logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: ./logs
   level:
-    com:
-      mysql:
-        cj:
-          jdbc=DEBUG:
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    com.mysql.cj.jdbc: DEBUG
+    com.shoppingmall.project_shoppingmall: DEBUG
+    com.shoppingmall.project_shoppingmall.filter.WebLogFilter: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     # ResourceHandler의 최종경로확인(이미지경로)
     org.springframework.web.servlet.resource: DEBUG
 
