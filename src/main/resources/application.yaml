@@ -4,7 +4,7 @@ management.endpoints.web.exposure.include: "*"
 server.port: ${SERVER_PORT:8080}
 
 #나중에 제거해야함
-server.servlet.session.timeout: 180000
+server.servlet.session.timeout: 3m
 
 # docker에 맞게 오버라이드 할수 있도록 환경변수 수정
 # 로컬db을 사용할 경우 접두사인 SPRING을 LOCAL로 변경할것
