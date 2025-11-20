@@ -39,15 +39,13 @@ public class ItemController {
     private final WishlistService wishlistService;
     private final OptionSetService optionSetService;
 
-
+    // 카테고리 조회
     @ModelAttribute("ItemCategory")
     public ItemCategory[] itemCategories(){
         return ItemCategory.values();
     }
 
-
-
-
+    //ItemManagement 에서 상품 CRUD기능
     @PostMapping("/admin/item/multiaction")
     public String updateMultipleItems(@Valid IdsTransferDto idsTransferDto,
                                       RedirectAttributes redirectAttributes) {
@@ -59,7 +57,7 @@ public class ItemController {
         return "redirect:/admin/item/management";
     }
 
-
+    //ItemManagement에서 상품 조회후 나열
     @GetMapping(value = "/admin/item/management")
     public String ItemManagement(@ModelAttribute ItemSearchDto searchDto,
                                  @PageableDefault(page = 0,size = 10 ,sort = "id" ,direction = Sort.Direction.DESC) Pageable pageable,
@@ -95,7 +93,7 @@ public class ItemController {
         return "item/itemManagement";
     }
 
-
+    //신생아 카테고리 상품 조회 후 나열
     @GetMapping(value = "/item/infant")
     public String itemInfant(@PageableDefault(page = 0,size = 10 ,sort = "id" ,direction = Sort.Direction.DESC) Pageable pageable, Model model, Principal principal){
 
@@ -123,6 +121,7 @@ public class ItemController {
         return "item/itemList";
     }
 
+    //상품 등록
     @GetMapping(value = "/admin/item/itemadd")
     public String itemAdd(Model model){
         List<ItemCategory> depth1 = itemService.getCategoryBydepth(1L);

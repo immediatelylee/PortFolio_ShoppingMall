@@ -4,7 +4,7 @@ management.endpoints.web.exposure.include: "*"
 server.port: ${SERVER_PORT:8080}
 
 #나중에 제거해야함
-server.servlet.session.timeout: 180000
+server.servlet.session.timeout: 3m
 
 # docker에 맞게 오버라이드 할수 있도록 환경변수 수정
 # 로컬db을 사용할 경우 접두사인 SPRING을 LOCAL로 변경할것
@@ -26,18 +26,20 @@ spring:
       hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
   sql.init.mode: always
   # Thymeleaf cache 사용중지
-  thymeleaf.cache: false
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+    cache: false
 
 logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: ./logs
   level:
-    com:
-      mysql:
-        cj:
-          jdbc=DEBUG:
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    com.mysql.cj.jdbc: DEBUG
+    com.shoppingmall.project_shoppingmall: DEBUG
+    com.shoppingmall.project_shoppingmall.filter.WebLogFilter: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     # ResourceHandler의 최종경로확인(이미지경로)
     org.springframework.web.servlet.resource: DEBUG
 

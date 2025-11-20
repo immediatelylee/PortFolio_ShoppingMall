@@ -14,7 +14,8 @@
     <script src="/js/mdpick.js" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <th:block layout:fragment="css"></th:block>
 
@@ -26,7 +27,7 @@
 <div layout:fragment="content" class="content"></div>
 
 <div th:replace="fragments/footer::footer"></div>
-<th:block layout:fragment="script"></th:block>
 
+<th:block layout:fragment="script"></th:block>
 </body>
 </html>
