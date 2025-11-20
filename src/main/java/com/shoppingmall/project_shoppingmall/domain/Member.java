@@ -49,7 +49,7 @@ public class Member extends BaseEntity{
         String password = passwordEncoder.encode(memberFormDto.getPassword());
         member.setPassword(password);
         member.setPhone(memberFormDto.getPhone());
-        member.setRole(Role.ADMIN);
+        member.setRole(Role.USER);
         return member;
     }
 
