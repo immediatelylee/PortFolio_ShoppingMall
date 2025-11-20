@@ -27,6 +27,14 @@ public class MemberService implements UserDetailsService {
         }
     }
 
+    // [추가] 이메일 존재 여부 확인 (AJAX 중복 체크용)
+    @Transactional(readOnly = true)
+    public boolean existsByEmail(String email) {
+        Member member = memberRepository.findByEmail(email);
+        return member != null;
+    }
+
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email);
