@@ -11,6 +11,7 @@ import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.*;
 import javax.validation.*;
 import java.security.*;
@@ -24,37 +25,52 @@ public class CartController {
     private final CartService cartService;
     private final ObjectMapper objectMapper;
 
+
+    /**      장바구니 담기 (AJAX)     */
     //itemdetail (ajax)-> cart  (장바구니 버튼 클릭 -> 장바구니에 담기)
     // CartItemDto는 ItemId, Count만 있는 단순 dto
     @PostMapping(value = "/cart")
     public @ResponseBody ResponseEntity cart(@RequestBody @Valid CartItemDto cartItemDto, BindingResult bindingResult, Principal principal){
 
         if(bindingResult.hasErrors()){
-            StringBuilder sb = new StringBuilder();
-            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(FieldError::getDefaultMessage)
+                    .collect(Collectors.joining("\n"));
 
-            for (FieldError fieldError : fieldErrors) {
-                sb.append(fieldError.getDefaultMessage());
-            }
+            return ResponseEntity.badRequest().body(errorMessage);
 
-            return new ResponseEntity<String>(sb.toString(), HttpStatus.BAD_REQUEST);
+
+
         }
 
-        String email = principal.getName();
-        Long cartItemId;
+        if (principal == null) {
+            // 프론트에서 401 체크 후 로그인 페이지로 이동
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("로그인 후 이용해주세요.");
+        }
 
         try {
-            cartItemId = cartService.addCart(cartItemDto, email);
-        } catch(Exception e){
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            Long cartItemId = cartService.addCart(cartItemDto, principal.getName());
+            return ResponseEntity.ok(cartItemId);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body("상품 또는 회원 정보를 찾을 수 없습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("장바구니 처리 중 오류가 발생했습니다.");
         }
 
-        return new ResponseEntity<Long>(cartItemId, HttpStatus.OK);
     }
 
     //사용자정보 이용 카트의 전체 상품정보 로드
     @GetMapping(value = "/cart")
     public String newCart(Principal principal, Model model){
+
+        if (principal == null) {
+            return "redirect:/members/login";
+        }
+
         List<CartDetailDto> cartDetailList = cartService.getCartList(principal.getName());
         model.addAttribute("cartItems", cartDetailList);
         return "cart/newCart";
@@ -94,9 +110,14 @@ public class CartController {
     // 세션에 상품 정보와 count를 넣음.
     @PostMapping("/cart/order")
     public String orderCartItems(@RequestBody OrderRequestDto orderRequestDto,HttpSession session,Principal principal){
+        if (principal == null) {
+            return "redirect:/members/login";
+        }
+
         List<Long> cartItemIds = orderRequestDto.getItems().stream()
                 .map(CartItemOrderDto::getCartItemId)
                 .collect(Collectors.toList());
+
         System.out.println("cartItemIds  " +cartItemIds); // 1 출력됨
 
         List<CartDetailDto> cartItems = cartService.getCartListByIds(principal.getName(), cartItemIds); //getName : admin@example.com
