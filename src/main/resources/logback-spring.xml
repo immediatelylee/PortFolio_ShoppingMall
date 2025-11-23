@@ -78,11 +78,16 @@
             <includeMdcKeyName>reason</includeMdcKeyName>
             <includeMdcKeyName>remote_ip</includeMdcKeyName>
             <includeMdcKeyName>referer</includeMdcKeyName>
-            <!-- 필요시 도메인 키 추가 가능 -->
+            <!-- 도메인 키 -->
             <includeMdcKeyName>product_id</includeMdcKeyName>
             <includeMdcKeyName>order_id</includeMdcKeyName>
             <includeMdcKeyName>amount</includeMdcKeyName>
             <includeMdcKeyName>payment_method</includeMdcKeyName>
+
+            <!-- 장바구니/주문 상세 -->
+            <includeMdcKeyName>quantity</includeMdcKeyName>
+            <includeMdcKeyName>unit_price</includeMdcKeyName>
+            <includeMdcKeyName>total_price</includeMdcKeyName>
 
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
