@@ -57,49 +57,128 @@ public class BusinessEventLogger {
 
     // ========= 이벤트 메서드들: 모두 try-with-resources 로 통일 =========
 
-    public void logProductView(Long userId, Long productId, String productName, Double price) {
+    public void logProductView(Long userId, Long productId, String productName, Integer priceInWon) {
         try (MdcScope m = new MdcScope()) {
             putBase(m, "product_view");
             m.put("user_id", userId);
             m.put("product_id", productId);
             m.put("product_name", productName);
-            m.put("price", price);
+            m.put("unit_price", priceInWon);
             businessLog.info("business_event");
         }
     }
 
-    public void logAddToCart(Long userId, Long productId, int quantity, Double price) {
+    // ==========================
+    //     장바구니 관련 이벤트
+    // ==========================
+    /**  장바구니 페이지 진입 */
+    public void logViewCart(Long userId, int itemCount, int cartTotalPrice) {
+        try (MdcScope m = new MdcScope()) {
+            putBase(m, "view_cart");
+            m.put("user_id", userId);
+            m.put("cart_item_count", itemCount);       // 장바구니 안 상품 총 개수(수량 합)
+            m.put("cart_total_price", cartTotalPrice); // 장바구니 총 금액
+            businessLog.info("business_event");
+        }
+    }
+
+    /**  장바구니 수량 변경 */
+    public void logUpdateCartItem(Long userId,
+                                  Long productId,
+                                  int oldQuantity,
+                                  int newQuantity,
+                                  int unitPrice) {
+        try (MdcScope m = new MdcScope()) {
+            putBase(m, "update_cart_item");
+            m.put("user_id", userId);
+            m.put("product_id", productId);
+            m.put("old_quantity", oldQuantity);
+            m.put("new_quantity", newQuantity);
+            m.put("unit_price", unitPrice);
+            m.put("total_price_before", unitPrice * oldQuantity);
+            m.put("total_price_after", unitPrice * newQuantity);
+            businessLog.info("business_event");
+        }
+    }
+
+    /**  장바구니에서 결제(주문) 절차 시작 */
+    public void logCartCheckoutStart(Long userId,
+                                     int itemCount,
+                                     int cartTotalPrice) {
+        try (MdcScope m = new MdcScope()) {
+            putBase(m, "cart_checkout_start");
+            m.put("user_id", userId);
+            m.put("cart_item_count", itemCount);
+            m.put("cart_total_price", cartTotalPrice);
+            businessLog.info("business_event");
+        }
+    }
+
+    /**  게스트 카트 → 회원 카트 병합 (지금은 메서드만, 나중에 사용) */
+    public void logCartMerge(Long userId,
+                             int anonymousCartItemCount,
+                             int userCartItemCountBefore,
+                             int mergedItemCount) {
+        try (MdcScope m = new MdcScope()) {
+            putBase(m, "cart_merge");
+            m.put("user_id", userId);
+            m.put("anonymous_cart_item_count", anonymousCartItemCount);
+            m.put("user_cart_item_count_before", userCartItemCountBefore);
+            m.put("merged_item_count", mergedItemCount);
+            businessLog.info("business_event");
+        }
+    }
+
+    public void logAddToCart(Long userId, Long productId, int quantity, Integer unitPriceInWon) {
         try (MdcScope m = new MdcScope()) {
             putBase(m, "add_to_cart");
             m.put("user_id", userId);
             m.put("product_id", productId);
             m.put("quantity", quantity);
-            m.put("price", price);
-            if (price != null) m.put("total_amount", price * quantity);
+            m.put("unit_price", unitPriceInWon);
+            if (unitPriceInWon != null) {
+                m.put("total_price", unitPriceInWon * quantity);
+            }
             businessLog.info("business_event");
         }
     }
 
-    public void logOrderCreated(Long userId, Long orderId, Double totalAmount,
+
+    public void logRemoveFromCart(Long userId, Long productId, int quantity, Integer unitPriceInWon) {
+        try (MdcScope m = new MdcScope()) {
+            putBase(m, "remove_from_cart");
+            m.put("user_id", userId);
+            m.put("product_id", productId);
+            m.put("quantity", quantity);
+            m.put("unit_price", unitPriceInWon);
+            if (unitPriceInWon != null) {
+                m.put("total_price", unitPriceInWon * quantity);
+            }
+            businessLog.info("business_event");
+        }
+    }
+
+
+    public void logOrderCreated(Long userId, Long orderId, Integer totalAmountInWon,
                                 int itemCount, String paymentMethod) {
         try (MdcScope m = new MdcScope()) {
             putBase(m, "order_created");
             m.put("user_id", userId);
             m.put("order_id", orderId);
-            m.put("total_amount", totalAmount);
+            m.put("amount", totalAmountInWon);
             m.put("item_count", itemCount);
             m.put("payment_method", paymentMethod);
             businessLog.info("business_event");
         }
     }
 
-    public void logPaymentCompleted(Long userId, Long orderId, Double amount,
+    public void logPaymentCompleted(Long userId, Long orderId, Integer amountInWon,
                                     String paymentMethod, boolean success) {
         try (MdcScope m = new MdcScope()) {
             putBase(m, "payment_completed");
             m.put("user_id", userId);
             m.put("order_id", orderId);
-            m.put("amount", amount);
+            m.put("amount", amountInWon);
             m.put("payment_method", paymentMethod);
             m.put("success", success);
             businessLog.info("business_event");
