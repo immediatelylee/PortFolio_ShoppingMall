@@ -24,7 +24,9 @@ public class Order extends BaseEntity {
 //    private Long price;
 
     private String orderName;
-    private String orderUid; // 주문 번호
+
+    @Column(unique = true, nullable = false)
+    private String orderUid; // 주문 번호 (PG 연동용)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -42,9 +44,18 @@ public class Order extends BaseEntity {
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private OrderPayment orderPayment;
 
-    public Order(LocalDateTime orderDate) {
+    // 주문 생성자 (PENDING 상태)
+    @Builder
+    private Order(Member member, String orderUid, LocalDateTime orderDate, OrderStatus orderStatus) {
+        this.member = member;
+        this.orderUid = orderUid;
         this.orderDate = orderDate;
+        this.orderStatus = orderStatus;
     }
+
+//    public Order(LocalDateTime orderDate) {
+//        this.orderDate = orderDate;
+//    }
     public void addOrderItem(OrderItem item) {
         orderItems.add(item);
         item.setOrder(this);
@@ -67,41 +78,23 @@ public class Order extends BaseEntity {
             this.orderName = firstProductName;
         }
     }
+
     public BigDecimal getTotalPrice() {
         return orderItems.stream()
                 .map(OrderItem::getTotalPrice)  // 각 OrderItem의 총 금액을 BigDecimal로 가져옴
                 .reduce(BigDecimal.ZERO, BigDecimal::add);  // BigDecimal의 합계를 구함
     }
 
-    //    orderItem사용처 주석
-//    public static Order createOrder(Member member, List<OrderItem> orderItemList) {
-//
-//        Order order = new Order();
-//        order.setMember(member);
-//
-//        for(OrderItem orderItem : orderItemList) {
-//            order.addOrderItem(orderItem);
-//        }
-//
-//        order.setOrderStatus(OrderStatus.ORDER);
-//        order.setOrderDate(LocalDateTime.now());
-//        return order;
-//    }
-//    orderItem사용처 주석
-//    public int getTotalPrice() {
-//        int totalPrice = 0;
-//        for(OrderItem orderItem : orderItems){
-//            totalPrice += orderItem.getTotalPrice();
-//        }
-//        return totalPrice;
-//    }
-////    orderItem사용처 주석
-//    // 주문 취소 로직
-//    public void cancelOrder() {
-//        this.orderStatus = OrderStatus.CANCEL;
-//        for (OrderItem orderItem : orderItems) {
-//            orderItem.cancel();
-//        }
-//    }
 
+    public void markPaid() {
+        this.orderStatus = OrderStatus.PAID;
+    }
+
+    public void markFailed() {
+        this.orderStatus = OrderStatus.FAILED;
+    }
+
+    public void markCancelled() {
+        this.orderStatus = OrderStatus.CANCELLED;
+    }
 }
