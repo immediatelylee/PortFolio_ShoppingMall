@@ -5,120 +5,58 @@
 
 <th:block layout:fragment="script">
     <script>
-        var cartItems = [];
+        // var cartItems = [];
         var IMP = window.IMP;
         IMP.init('imp55234458');
 
+        // 서버에서 온 값들 (Thymeleaf 바인딩)
+        var orderUid    = '[[${order.orderUid}]]';
+        var orderName   = '[[${order.orderName}]]';
+        var paymentPrice = [[${totalPayPrice}]];  // BigDecimal이라 숫자로 들어옴
+
+        var buyerName    = '[[${UserInfo.name}]]';
+        var buyerEmail   = '[[${UserInfo.email}]]';
+        var buyerAddress = '[[${UserInfo.roadAddress} + ' ' + ${UserInfo.detailAddress}]]';
+        var buyerTel     = '[[${UserInfo.phone}]]';
+
         $(document).ready(function() {
             console.log("order.html start")
-            // 주문 모드 가져오기 ("direct" 또는 "cart")
-            var orderMode = $('#orderMode').val();
-            var direct_itemNm = $('#direct_itemNm').val();
-            // 장바구니 주문인 경우
-            if (orderMode === 'cart') {
-                // 예시: "blue sky hat 및 3개의 상품"
-                var orderName = '[[${itemSummary}]]';
+            console.log("orderUid:", orderUid);
+            console.log("orderName:", orderName);
+            console.log("paymentPrice:", paymentPrice);
 
-                // API를 통해 JSON 데이터를 비동기적으로 가져옴
-                // /json/cart-items는 세션에 있는 cartItem정보를 json화 해서 여기 자바스크립트에 저장함.
-                $.ajax({
-                    url: '/json/cart-items',
-                    method: 'GET',
-                    success: function (data) {
-                        cartItems = data;  // 전역 변수에 데이터 저장
-                        console.log("Cart items loaded:", cartItems);  // JSON 데이터를 확인
-                        // JSON 데이터를 사용하여 필요한 동작 수행
-                    },
-                    error: function (error) {
-                        console.error("Error fetching cart items:", error);
-                    }
-                });
-            } else if (orderMode === 'direct') {
-                console.log("start direct")
-                // 직접 주문: product 정보는 이미 페이지에 있으므로 직접 변수에 할당
-                // 예를 들어, 페이지에서 data-* attribute나 hidden input을 통해 상품 정보를 가져온다고 가정
-                cartItems = [{
-                    cartItemId: null, // 직접 주문이므로 cartItemId는 없을 수 있음
-                    itemNm: direct_itemNm,  // 페이지에 표시된 상품명
-                    itemCode: $('#productCode').val(),   // 예: hidden input에 담긴 상품코드
-                    price: parseInt($('#productPrice').text(), 10),  // 가격 정보
-                    count: parseInt($('#productCount')),  // 직접 주문은 기본 1개로 가정
-                    imgUrl: $('#productImg').attr('src')
-                }];
-                console.log("Direct order product info loaded:", cartItems);
-            }
-
-            // 배달 예정날짜 구하기
-            // 오늘 날짜 가져오기
+            // 🔹 배달 예정 날짜 계산
             const today = new Date();
-
-            // 내일 날짜 계산 (하루 더하기)
             const tomorrow = new Date(today);
             tomorrow.setDate(today.getDate() + 1);
 
-            // 요일 배열
             const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
-
-            // 내일의 요일 계산
             const dayOfWeek = daysOfWeek[tomorrow.getDay()];
-
-            // 월과 일을 숫자로 가져오기 (9/7 형식으로 표시)
-            const month = tomorrow.getMonth() + 1;  // getMonth()는 0부터 시작하므로 1을 더함
+            const month = tomorrow.getMonth() + 1;
             const day = tomorrow.getDate();
 
-            // 날짜와 요일을 HTML에 넣기 (9/7 형식)
             $('#delivery-date').text(`내일(${dayOfWeek}) ${month}/${day} 도착 예정`);
+
+
         });
 
 
-    var orderUid = null; // 전역 변수 선언
-    var orderName = '[[${itemSummary}]]';
-    console.log("orderName: " + orderName);
+
 
     function initPayment() {
         console.log("initPayment_start")
-        console.log("cartItems :" + cartItems);
+        console.log("orderUid:", orderUid);
+        console.log("orderName:", orderName);
+        console.log("paymentPrice:", paymentPrice);
 
-        var csrfToken = $('meta[name="_csrf"]').attr('content');
-        var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 
-        var orderPayRequestDto = {
-            cartDetailDtoList: cartItems,
-            paymentMethod: "CREDIT_CARD"
-        };
-        console.log("orderPayRequestDto:", orderPayRequestDto);
+        requestPay();
 
-        fetch('/order/prework', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                [csrfHeader]: csrfToken
-            },
-            body: JSON.stringify(orderPayRequestDto)
-        })
-            .then(response => {
-                console.log("response:", response);
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    orderUid = data.orderUid;
-                    console.log("orderUid prework after:"+orderUid)
-                    orderName = data.orderName;
-                    console.log("orderName prework after:"+orderName)
-                    requestPay()
-
-                } else {
-                    alert('주문 처리 중 오류가 발생했습니다.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('주문 처리 중 오류가 발생했습니다.');
-            });
     }
 
     function requestPay(){
+
+        console.log("requestPay 호출");
 
         var paymentPrice = [[${totalPayPrice}]];
         var buyerName = '[[${UserInfo.name}]]';
@@ -146,36 +84,64 @@
         buyer_addr: buyerAddress,
         buyer_postcode: '443-1773'
     }, function (rsp) {
-        var result = '';
+        console.log("iamport callback rsp:", rsp);
+
+
+        // var result = '';
         if ( rsp.success ) {
-            var msg = '결제가 완료되었습니다.';
-            // msg += '고유ID : ' + rsp.imp_uid;
-            // msg += '상점 거래ID : ' + rsp.merchant_uid;
-            // msg += '결제 금액 : ' + rsp.paid_amount;
-            // msg += '카드 승인번호 : ' + rsp.apply_num;
-            result ='0';
+            // 결제 성공 → 서버로 검증 요청
+            var csrfToken = $('meta[name="_csrf"]').attr('content');
+            var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+            var payload = {
+                orderUid: orderUid,
+                impUid: rsp.imp_uid,
+                pgTid: rsp.pg_tid || null,
+                paidAmount: rsp.paid_amount
+            };
+
+            fetch('/order/complete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('결제 검증 실패');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('결제가 완료되었습니다.');
+                        location.href = '/order/success/' + encodeURIComponent(orderUid);
+                    } else {
+                        alert('결제는 되었지만 서버 검증에 실패했습니다. 관리자에게 문의해주세요.');
+                    }
+                })
+                .catch(error => {
+                    console.error('결제 검증 중 오류:', error);
+                    alert('결제 검증 중 오류가 발생했습니다. 관리자에게 문의해주세요.');
+                });
+
         } else {
-            var msg = '결제에 실패하였습니다.';
+            var msg = '결제에 실패하였습니다.\n';
             msg += rsp.error_msg;
-            result ='1';
+            alert(msg);
         }
-        if(result=='0') {
-            location.href= "/order/success";
-        }
-        alert(msg);
+
+
+
     });
     }
     </script>
 
 </th:block>
 <div layout:fragment="content" style="background-color: white">
-    <input type="hidden" id="orderMode" th:value="${orderMode}">
-    <input type="hidden" id="direct_itemNm" th:value="${direct_itemNm}">
-    <input type="hidden" id="productCode" th:value="${itemCode}" />
-    <input type="hidden" id="productPrice" th:value="${price}" />
-    <input type="hidden" id="productCount" th:value="${count}" />
-<!--    이미지는 따로 추가안했음-->
-<!--    <input type="hidden" id="productImg" th:value="${item.imgUrl}" />-->
+
 
     <div id="body" style="width: 1020px;margin: 0 auto 20px;">
         <div class="middle">
@@ -344,38 +310,54 @@
                                     </span>
                             </div>
                             <div class="bundle-info__item-list ">
-                                <!-- 장바구니 주문인 경우 -->
-                                <div th:if="${orderMode == 'cart'}">
-                                <div class="bundle-info__vendor-item-box" th:each="cartItem : ${cartItems}">
-                                    <div class="bundle-info__vendor-item" >
-<!--                                        ENFANT SEERSUCKER BUCKET HAT sky blue-->
-                                        <p style="
-                                                border-bottom: 0;
-                                            " th:text="${cartItem.itemNm}">상품명
-                                            <span></span>
-                                            <span class="bundle-info__vendor-item__offer-condition" ></span>
+                                <div class="bundle-info__vendor-item-box"
+                                     th:each="orderItem : ${order.orderItems}">
+                                    <div class="bundle-info__vendor-item">
+                                        <p style="border-bottom: 0;"
+                                           th:text="${orderItem.productName}">
+                                            상품명
                                         </p>
                                     </div>
-                                    <div th:if="${orderMode == 'cart'}">
-                                    <div class="bundle-info__item-description bundle-info__vendor-item-description--last" th:utext="'수량 ' + ${cartItem.count} + '개 / ' + (${totalProductPrice > 50000} ? '<span>무료배송</span>' : '<span>배송비 2,500원</span>')">
+                                    <div class="bundle-info__item-description bundle-info__vendor-item-description--last"
+                                         th:utext="'수량 ' + ${orderItem.quantity} + '개 / ' + (${totalProductPrice > 50000} ? '<span>무료배송</span>' : '<span>배송비 2,500원</span>')">
                                         수량 1개 / <span>무료배송</span>
                                     </div>
-                                    </div>
+                                </div>
 
-                                </div>
-                            </div>
-                                <!-- 직접 주문인 경우 -->
-                                <div th:if="${orderMode != 'cart'}">
-                                    <div class="bundle-info__vendor-item-box">
-                                        <div class="bundle-info__vendor-item">
-                                            <p style="border-bottom: 0;" th:text="${direct_itemNm}">상품명</p>
-                                        </div>
-                                        <!-- 직접 주문의 경우 수량 및 배송정보 등은 별도로 처리 -->
-                                        <div class="bundle-info__item-description bundle-info__vendor-item-description--last" th:utext="'수량 ' + ${direct_count} + '개 / ' + (${totalProductPrice > 50000} ? '<span>무료배송</span>' : '<span>배송비 2,500원</span>')">
-                                            수량 1개 / <span>무료배송</span>
-                                        </div>
-                                    </div>
-                                </div>
+
+<!--                                &lt;!&ndash; 장바구니 주문인 경우 &ndash;&gt;-->
+<!--                                <div th:if="${orderMode == 'cart'}">-->
+<!--                                <div class="bundle-info__vendor-item-box" th:each="cartItem : ${cartItems}">-->
+<!--                                    <div class="bundle-info__vendor-item" >-->
+<!--&lt;!&ndash;                                        ENFANT SEERSUCKER BUCKET HAT sky blue&ndash;&gt;-->
+<!--                                        <p style="-->
+<!--                                                border-bottom: 0;-->
+<!--                                            " th:text="${cartItem.itemNm}">상품명-->
+<!--                                            <span></span>-->
+<!--                                            <span class="bundle-info__vendor-item__offer-condition" ></span>-->
+<!--                                        </p>-->
+<!--                                    </div>-->
+<!--                                    <div th:if="${orderMode == 'cart'}">-->
+<!--                                    <div class="bundle-info__item-description bundle-info__vendor-item-description&#45;&#45;last" th:utext="'수량 ' + ${cartItem.count} + '개 / ' + (${totalProductPrice > 50000} ? '<span>무료배송</span>' : '<span>배송비 2,500원</span>')">-->
+<!--                                        수량 1개 / <span>무료배송</span>-->
+<!--                                    </div>-->
+<!--                                    </div>-->
+
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                                &lt;!&ndash; 직접 주문인 경우 &ndash;&gt;-->
+<!--                                <div th:if="${orderMode != 'cart'}">-->
+<!--                                    <div class="bundle-info__vendor-item-box">-->
+<!--                                        <div class="bundle-info__vendor-item">-->
+<!--                                            <p style="border-bottom: 0;" th:text="${direct_itemNm}">상품명</p>-->
+<!--                                        </div>-->
+<!--                                        &lt;!&ndash; 직접 주문의 경우 수량 및 배송정보 등은 별도로 처리 &ndash;&gt;-->
+<!--                                        <div class="bundle-info__item-description bundle-info__vendor-item-description&#45;&#45;last" th:utext="'수량 ' + ${direct_count} + '개 / ' + (${totalProductPrice > 50000} ? '<span>무료배송</span>' : '<span>배송비 2,500원</span>')">-->
+<!--                                            수량 1개 / <span>무료배송</span>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
                         </div>
                     </div>
                     </div>
@@ -1121,10 +1103,9 @@
                         <img src="/img/cancle.png" width="250" height="60" alt="취소하기">
                         <span class="wow-selection-txt"></span>
                     </button>
-                    <button th:with="cartItems = ${cartItems}" onclick="initPayment()" type="button" id="paymentBtn">
+                    <button  onclick="initPayment()" type="button" id="paymentBtn">
                         <img src="/img/payment.gif" width="260" height="60" alt="결제하기">
                     </button>
-
                 </div>
                 <div class="agree_btn none" id="btn_all_ing">
                     <span style="background:url('//image10.coupangcdn.com/image/www/newBuy/loading.gif') no-repeat"></span>
