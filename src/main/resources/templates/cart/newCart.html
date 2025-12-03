@@ -171,7 +171,14 @@
                     xhr.setRequestHeader(csrfHeader, csrfToken);
                 },
                 success: function(response) {
-                    window.location.href = '/order/selected';
+                    console.log("cart/order response:", response);
+
+                    if (response && response.success && response.redirectUrl) {
+                        window.location.href = response.redirectUrl;
+                    } else {
+                        alert("주문 처리에 실패했습니다. 잠시 후 다시 시도해주세요.");
+                        console.error("Unexpected response:", response);
+                    }
                 },
                 error: function(error) {
                     alert("주문 처리 중 오류가 발생했습니다.");
@@ -202,11 +209,14 @@
                     xhr.setRequestHeader(csrfHeader, csrfToken);
                 },
                 success: function(response) {
-                    window.location.href = '/order/selected';
+                    if (response.success) {
+                        window.location.href = response.redirectUrl; // 예: /order/checkout/{orderUid}
+                    } else {
+                        alert(response.error || '주문 생성에 실패했습니다.');
+                    }
                 },
                 error: function(error) {
-                    alert("주문 처리 중 오류가 발생했습니다.");
-                    console.log(error);
+                    alert('주문 처리 중 오류가 발생했습니다.');
                 }
             });
         }
