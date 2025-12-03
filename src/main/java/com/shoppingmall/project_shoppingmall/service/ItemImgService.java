@@ -99,73 +99,18 @@ public class ItemImgService {
         itemDetailImgRepository.save(itemDetailImg);
     }
 
-    // TODO: 하위 메소드들이 사용되고 있지 않는데 상품수정에서 문제가 없는지 확인하고 제거
-    // 상품 수정: 이미지 업데이트
-//    public void updateItemImg(Long itemImgId, MultipartFile itemImgFile) throws Exception {
-//        if (!itemImgFile.isEmpty()) {
-//            ItemImg savedItemImg = itemImgRepository.findById(itemImgId)
-//                    .orElseThrow(EntityNotFoundException::new);
-//
-//            // 올바른 basePath를 구함
-//            String basePath = getItemImgDirectory().toString();
-//
-//            // 기존 이미지 파일 삭제
-//            if (!StringUtils.isEmpty(savedItemImg.getImgName())) {
-//                fileService.deleteFile(basePath + "/" + savedItemImg.getImgName());
-//            }
-//
-//            String oriImgName = itemImgFile.getOriginalFilename();
-//            String imgName = fileService.uploadFile(basePath, oriImgName, itemImgFile.getBytes());
-//            String imgUrl = "/images/item/" + imgName;
-//            savedItemImg.updateItemImg(oriImgName, imgName, imgUrl);
-//
-//            itemImgRepository.save(savedItemImg); // 변경사항 저장
-//        }
-//    }
-//
-//    public void updateItemDetailImg(Long itemDetailImgId, MultipartFile itemDetailImgFile) throws Exception {
-//        if (!itemDetailImgFile.isEmpty()) {
-//            ItemDetailImg savedItemDetailImg = itemDetailImgRepository.findById(itemDetailImgId)
-//                    .orElseThrow(EntityNotFoundException::new);
-//
-//            // 올바른 basePath를 구함
-//            String basePath = getItemImgDirectory().toString();
-//
-//            // 기존 이미지 파일 삭제
-//            if (!StringUtils.isEmpty(savedItemDetailImg.getImgName())) {
-//                fileService.deleteFile(basePath + "/" + savedItemDetailImg.getImgName());
-//            }
-//
-//            String oriImgName = itemDetailImgFile.getOriginalFilename();
-//            String imgName = fileService.uploadFile(basePath, oriImgName, itemDetailImgFile.getBytes());
-//            String imgUrl = "/images/item/" + imgName;
-//            savedItemDetailImg.updateItemDetailImg(oriImgName, imgName, imgUrl);
-//
-//            itemDetailImgRepository.save(savedItemDetailImg);
-//        }
-//    }
-//
-//    public void updateItemThumbnail(Long itemThumbnailId, MultipartFile itemThumbnailFile) throws Exception {
-//        if (!itemThumbnailFile.isEmpty()) {
-//            ItemThumbnail savedItemThumbnail = itemThumbnailRepository.findById(itemThumbnailId)
-//                    .orElseThrow(EntityNotFoundException::new);
-//
-//            // 올바른 basePath를 구함
-//            String basePath = getItemImgDirectory().toString();
-//
-//            // 기존 이미지 파일 삭제
-//            if (!StringUtils.isEmpty(savedItemThumbnail.getImgName())) {
-//                fileService.deleteFile(basePath + "/" + savedItemThumbnail.getImgName());
-//            }
-//
-//            String oriImgName = itemThumbnailFile.getOriginalFilename();
-//            String imgName = fileService.createThumbnail(basePath, oriImgName, itemThumbnailFile.getBytes());
-//            String imgUrl = "/images/item/" + imgName;
-//            savedItemThumbnail.updateItemThumbnail(oriImgName, imgName, imgUrl);
-//
-//            itemThumbnailRepository.save(savedItemThumbnail);
-//        }
-//    }
+    public String getRepImageUrl(Long itemId) {
+        ItemImg repImg = itemImgRepository
+                .findByItemIdAndRepimgYn(itemId, "Y")
+                .orElse(null);
+
+        if (repImg == null) {
+            return "/images/default-product.jpg"; // ✅ 기본 이미지 경로
+        }
+
+        return repImg.getImgUrl();
+    }
+
     public ItemImg getByItemId(Long itemId){
         return itemImgRepository.findFirstByItemIdOrderByIdAsc(itemId);
     }
