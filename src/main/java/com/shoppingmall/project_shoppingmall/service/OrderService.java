@@ -3,6 +3,7 @@ package com.shoppingmall.project_shoppingmall.service;
 import com.shoppingmall.project_shoppingmall.constant.*;
 import com.shoppingmall.project_shoppingmall.domain.*;
 import com.shoppingmall.project_shoppingmall.dto.*;
+import com.shoppingmall.project_shoppingmall.logging.BusinessEventLogger;
 import com.shoppingmall.project_shoppingmall.repository.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -33,10 +34,11 @@ public class OrderService {
     private final ItemService itemService;
     private final IamportClientService iamportClientService;
 
+    private final BusinessEventLogger businessEventLogger;
+
     // 1) 장바구니 기반 주문 생성
     public Order createOrderFromCart(Member member, List<CartDetailDto> cartItems) {
 
-//        String orderUid = "order_" + UUID.randomUUID();
         String orderUid = generateOrderUid();
         Order order = Order.builder()
                 .member(member)
@@ -60,6 +62,18 @@ public class OrderService {
 
         orderRepository.save(order); // cascade로 OrderItem까지 저장
 
+        // 🔹 비즈니스 로그: 주문 생성
+        int itemCount = order.getOrderItems().size();
+        int totalAmount = order.getTotalPrice().intValue(); // BigDecimal → int (원 단위)
+
+        businessEventLogger.logOrderCreated(
+                member.getId(),          // userId
+                order.getId(),           // orderId
+                totalAmount,             // totalAmountInWon
+                itemCount,               // itemCount
+                "UNKNOWN"                // paymentMethod (아직 결제수단 미정)
+        );
+
         return order;
     }
 
@@ -70,7 +84,7 @@ public class OrderService {
             throw new IllegalArgumentException("Item not found: " + itemId);
         }
 
-//        String orderUid = "order_" + UUID.randomUUID();
+
         String orderUid = generateOrderUid();
         Order order = Order.builder()
                 .member(member)
@@ -88,6 +102,18 @@ public class OrderService {
         order.addOrderItem(orderItem);
 
         orderRepository.save(order);
+
+        // 비즈니스 로그: 주문 생성
+        int itemCount = order.getOrderItems().size();
+        int totalAmount = order.getTotalPrice().intValue();
+
+        businessEventLogger.logOrderCreated(
+                member.getId(),
+                order.getId(),
+                totalAmount,
+                itemCount,
+                "UNKNOWN"    // 아직 결제수단 모름
+        );
 
         return order;
     }
@@ -213,6 +239,21 @@ public class OrderService {
 
         orderPaymentRepository.save(payment);
         orderRepository.save(order);
+
+        // 🔹 비즈니스 로그: 결제 완료
+        int totalAmountInWon = order.getTotalPrice().intValue();
+
+        businessEventLogger.logPaymentCompleted(
+                order.getOrderUid(),               // orderUid
+                order.getMember().getId(),         // userId
+                totalAmountInWon,                  // totalAmountInWon
+                true,                              // success
+                payment.getPaymentMethod(),        // paymentMethod
+                payment.getPaymentStatus().name(), // paymentStatus
+                order.getOrderStatus().name(),     // orderStatus
+                payment.getId(),                   // paymentId
+                null                               // cancelReason (성공이라 없음)
+        );
     }
 
 

@@ -172,15 +172,50 @@ public class BusinessEventLogger {
         }
     }
 
-    public void logPaymentCompleted(Long userId, Long orderId, Integer amountInWon,
-                                    String paymentMethod, boolean success) {
+    public void logPaymentCompleted(
+            String orderUid,        // 주문번호(merchant_uid)
+            Long userId,            // 회원 ID
+            Integer amountInWon,    // 결제 금액 (원)
+            boolean success,        // 성공 여부
+            String paymentMethod,   // 결제 수단 (CARD 등)
+            String paymentStatus,   // PaymentStatus (SUCCESS / FAILED ...)
+            String orderStatus,     // OrderStatus (PAID / CANCELLED ...)
+            Long paymentId,         // order_payment PK
+            String cancelReason     // 취소 사유 (성공 시 null)
+    ) {
         try (MdcScope m = new MdcScope()) {
+            // 공통 필드 + event_type
             putBase(m, "payment_completed");
-            m.put("user_id", userId);
-            m.put("order_id", orderId);
-            m.put("amount", amountInWon);
-            m.put("payment_method", paymentMethod);
+
+            if (orderUid != null) {
+                m.put("order_uid", orderUid);
+            }
+            if (userId != null) {
+                m.put("user_id", userId);
+            }
+
+            if (amountInWon != null) {
+                m.put("amount", amountInWon);
+            }
+
             m.put("success", success);
+
+            if (paymentMethod != null) {
+                m.put("payment_method", paymentMethod);
+            }
+            if (paymentStatus != null) {
+                m.put("payment_status", paymentStatus);
+            }
+            if (orderStatus != null) {
+                m.put("order_status", orderStatus);
+            }
+            if (paymentId != null) {
+                m.put("payment_id", paymentId);
+            }
+            if (cancelReason != null) {
+                m.put("cancel_reason", cancelReason);
+            }
+
             businessLog.info("business_event");
         }
     }
