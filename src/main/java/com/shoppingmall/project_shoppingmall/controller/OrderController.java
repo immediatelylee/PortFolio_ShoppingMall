@@ -4,10 +4,7 @@ import com.shoppingmall.project_shoppingmall.domain.Item;
 import com.shoppingmall.project_shoppingmall.domain.ItemImg;
 import com.shoppingmall.project_shoppingmall.domain.Member;
 import com.shoppingmall.project_shoppingmall.domain.Order;
-import com.shoppingmall.project_shoppingmall.dto.CartDetailDto;
-import com.shoppingmall.project_shoppingmall.dto.DirectOrderRequestDto;
-import com.shoppingmall.project_shoppingmall.dto.OrderItemRequestDto;
-import com.shoppingmall.project_shoppingmall.dto.OrderPayRequestDto;
+import com.shoppingmall.project_shoppingmall.dto.*;
 import com.shoppingmall.project_shoppingmall.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -74,15 +71,18 @@ public class OrderController {
         model.addAttribute("orderItems", order.getOrderItems());
 //        model.addAttribute("totalProductPrice", order.getTotalPrice());
 
-        BigDecimal totalProductPrice = order.getTotalPrice();
+//        BigDecimal totalProductPrice = order.getTotalPrice();
+//
+//        int deliveryFee = order.getTotalPrice().compareTo(BigDecimal.valueOf(50000)) > 0
+//                ? 0 : 2500;
+//        BigDecimal totalPay = order.getTotalPrice().add(BigDecimal.valueOf(deliveryFee));
 
-        int deliveryFee = order.getTotalPrice().compareTo(BigDecimal.valueOf(50000)) > 0
-                ? 0 : 2500;
-        BigDecimal totalPay = order.getTotalPrice().add(BigDecimal.valueOf(deliveryFee));
+        // ✅ 공통 금액 계산 사용
+        PaymentAmounts paymentAmounts = orderService.getPaymentAmounts(order);
 
-        model.addAttribute("totalProductPrice", totalProductPrice);
-        model.addAttribute("deliveryFee", deliveryFee);
-        model.addAttribute("totalPayPrice", totalPay);
+        model.addAttribute("totalProductPrice", paymentAmounts.getItemsTotal());
+        model.addAttribute("deliveryFee", paymentAmounts.getDeliveryFee());
+        model.addAttribute("totalPayPrice", paymentAmounts.getTotalPay());
 
         return "order/order"; // 기존 order/order.html 재사용
     }
@@ -116,6 +116,9 @@ public class OrderController {
 
         Member member = memberService.getCurrentMember(principal);
         Order order = orderService.getOrderWithItems(orderUid);
+
+        // 공통 금액 계산 사용
+        PaymentAmounts paymentAmounts = orderService.getPaymentAmounts(order);
 
         model.addAttribute("UserInfo", member);
         model.addAttribute("order", order);

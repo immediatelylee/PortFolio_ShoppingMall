@@ -64,7 +64,7 @@ public class OrderService {
 
         // 🔹 비즈니스 로그: 주문 생성
         int itemCount = order.getOrderItems().size();
-        int totalAmount = order.getTotalPrice().intValue(); // BigDecimal → int (원 단위)
+        int totalAmount = calculateExpectedPayAmount(order).intValue(); // BigDecimal → int (원 단위)
 
         businessEventLogger.logOrderCreated(
                 member.getId(),          // userId
@@ -105,7 +105,7 @@ public class OrderService {
 
         // 비즈니스 로그: 주문 생성
         int itemCount = order.getOrderItems().size();
-        int totalAmount = order.getTotalPrice().intValue();
+        int totalAmount = calculateExpectedPayAmount(order).intValue();
 
         businessEventLogger.logOrderCreated(
                 member.getId(),
@@ -178,82 +178,163 @@ public class OrderService {
     @Transactional
     public void completePayment(PaymentCompleteRequestDto dto) {
 
-        log.info(">>> [DTO COMPLETE] start");
+        log.info(">>> [DTO COMPLETE] start, orderUid={}", dto.getOrderUid());
 
-        // 1) DB에서 Order 조회 (클라이언트가 준 orderUid 사용)
-        Order order = orderRepository.findByOrderUid(dto.getOrderUid())
-                .orElseThrow(() -> new IllegalArgumentException("해당 주문을 찾을 수 없습니다."));
+        Order order = null;
+        Integer amountFromPg = null;          // PG에서 조회한 금액
+        String paymentMethodForLog = null;    // 로그용 결제수단
+        Long paymentIdForLog = null;          // 저장된 OrderPayment PK
 
-        // 2) Iamport 토큰 발급
-        String accessToken = iamportClientService.getAccessToken();
+        try {
+            // 1) DB에서 Order 조회
+            order = orderRepository.findByOrderUid(dto.getOrderUid())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 주문을 찾을 수 없습니다."));
 
-        // 3) imp_uid로 결제 정보 조회
-        Map<String, Object> paymentData = iamportClientService.getPaymentData(dto.getImpUid(), accessToken);
+            // 2) Iamport 토큰 발급
+            String accessToken = iamportClientService.getAccessToken();
 
-        Integer amountFromPg = (Integer) paymentData.get("amount");
-        String status = (String) paymentData.get("status");
-        String merchantUidFromPg = (String) paymentData.get("merchant_uid");
+            // 3) imp_uid로 결제 정보 조회
+            Map<String, Object> paymentData = iamportClientService.getPaymentData(dto.getImpUid(), accessToken);
 
-        // 🔍 4) 디버깅용 로그 (한 번 찍어보면 바로 차이 보임)
-        log.info(">>> [PG] merchant_uid   = {}", merchantUidFromPg);
-        log.info(">>> [DB] order.orderUid = {}", order.getOrderUid());
-        log.info(">>> [PG] amount         = {}", amountFromPg);
-        log.info(">>> [DB] totalPrice     = {}", order.getTotalPrice());
+            amountFromPg = (Integer) paymentData.get("amount");    // ex) 13500
+            String status = (String) paymentData.get("status");    // paid, ready, cancelled 등
+            String merchantUidFromPg = (String) paymentData.get("merchant_uid");
 
-        // 5) 주문번호 일치 검증: PG vs DB
-        if (!merchantUidFromPg.equals(order.getOrderUid())) {
-            throw new IllegalStateException("주문번호(merchant_uid)가 일치하지 않습니다.");
+            // 🔍 디버깅 로그
+            log.info(">>> [PG] merchant_uid   = {}", merchantUidFromPg);
+            log.info(">>> [DB] order.orderUid = {}", order.getOrderUid());
+            log.info(">>> [PG] amount         = {}", amountFromPg);
+            log.info(">>> [DB] totalPrice     = {}", order.getTotalPrice());
+
+            BigDecimal expectedAmount = calculateExpectedPayAmount(order);
+            BigDecimal pgAmount = BigDecimal.valueOf(amountFromPg.longValue());
+
+            // 4) 주문번호 검증
+            if (!merchantUidFromPg.equals(order.getOrderUid())) {
+
+                businessEventLogger.logPaymentCompleted(
+                        order.getOrderUid(),                                  // orderUid
+                        order.getMember() != null ? order.getMember().getId() : null, // userId
+                        pgAmount.intValue(),                                  // amountInWon
+                        false,                                                // success
+                        "UNKNOWN",                                            // paymentMethod
+                        PaymentStatus.FAILED.name(),                          // paymentStatus
+                        order.getOrderStatus().name(),                        // orderStatus (PENDING)
+                        null,                                                 // paymentId
+                        "merchant_uid mismatch"                               // cancelReason
+                );
+                throw new IllegalStateException("주문번호(merchant_uid)가 일치하지 않습니다.");
+            }
+
+            // 5) 결제 금액 검증 (배송비 포함 총 결제금액으로 비교했다면 그 기준에 맞춰서)
+            if (expectedAmount.compareTo(pgAmount) != 0) {
+                businessEventLogger.logPaymentCompleted(
+                        order.getOrderUid(),
+                        order.getMember() != null ? order.getMember().getId() : null,
+                        pgAmount.intValue(),
+                        false,
+                        "UNKNOWN",
+                        PaymentStatus.FAILED.name(),
+                        order.getOrderStatus().name(),        // 아직 PENDING
+                        null,
+                        "amount mismatch"
+                );
+                throw new IllegalStateException("결제 금액이 일치하지 않습니다.");
+            }
+
+            // 서버에서 "기대하는 결제 금액" (상품합 + 배송비)
+
+
+            log.info(">>> [CHECK] expectedAmount = {}", expectedAmount);
+            log.info(">>> [CHECK] pgAmount       = {}", pgAmount);
+
+            if (expectedAmount.compareTo(pgAmount) != 0) {
+                throw new IllegalStateException("결제 금액이 일치하지 않습니다.");
+            }
+
+            // 6) 결제 상태 검증
+            if (!"paid".equals(status)) {
+                businessEventLogger.logPaymentCompleted(
+                        order.getOrderUid(),
+                        order.getMember() != null ? order.getMember().getId() : null,
+                        pgAmount.intValue(),
+                        false,
+                        "UNKNOWN",
+                        PaymentStatus.FAILED.name(),
+                        order.getOrderStatus().name(),
+                        null,
+                        "status=" + status
+                );
+                throw new IllegalStateException("결제 상태가 완료(paid)가 아닙니다. 상태=" + status);
+            }
+
+            // 7) 여기까지 통과하면 결제 정상 → 주문/결제 상태 확정
+            order.setOrderStatus(OrderStatus.PAID);
+
+            OrderPayment payment = order.getOrderPayment();
+            if (payment == null) {
+                payment = new OrderPayment();
+                payment.setOrder(order);
+            }
+
+            // TODO: 필요하면 paymentData 에서 실제 pay_method 읽어서 세팅
+            payment.setPaymentMethod("CARD");
+            payment.setAmount(expectedAmount);
+            payment.setPaymentDate(LocalDateTime.now());
+            payment.setPaymentStatus(PaymentStatus.SUCCESS);
+
+            paymentMethodForLog = payment.getPaymentMethod();
+
+            orderPaymentRepository.save(payment);
+            orderRepository.save(order);
+
+            paymentIdForLog = payment.getId();
+
+            // ✅ 결제 성공 비즈니스 로그
+            businessEventLogger.logPaymentCompleted(
+                    order.getOrderUid(),                  // orderUid (merchant_uid)
+                    order.getMember().getId(),            // userId
+                    amountFromPg,                         // amountInWon
+                    true,                                 // success
+                    payment.getPaymentMethod(),           // paymentMethod
+                    payment.getPaymentStatus().name(),    // paymentStatus = SUCCESS
+                    order.getOrderStatus().name(),        // orderStatus = PAID
+                    payment.getId(),                      // paymentId
+                    null                                  // cancelReason 없음
+            );
+
+        } catch (Exception e) {
+
+            log.warn(">>> 결제 검증/완료 처리 중 예외 발생: {}", e.getMessage(), e);
+
+            // ❌ 주문 상태를 FAILED 로 마킹 (원하면 여기서 CANCELLED 로 바꾸는 정책도 가능)
+            if (order != null) {
+                order.setOrderStatus(OrderStatus.FAILED);
+                orderRepository.save(order);
+            }
+
+            // ❌ 결제 실패/취소 실패 비즈니스 로그 (취소 실패도 여기 패턴 재사용)
+            try {
+                businessEventLogger.logPaymentCompleted(
+                        dto.getOrderUid(),                                         // orderUid (요청 기준)
+                        (order != null && order.getMember() != null)
+                                ? order.getMember().getId()
+                                : null,                                           // userId (없으면 null)
+                        amountFromPg != null ? amountFromPg : dto.getPaidAmount(),// amountInWon (PG 금액 또는 요청 금액)
+                        false,                                                    // success = false
+                        paymentMethodForLog,                                      // 결제수단 (알 수 없으면 null)
+                        PaymentStatus.FAILED.name(),                              // paymentStatus = FAILED
+                        (order != null) ? order.getOrderStatus().name() : null,   // orderStatus = FAILED or null
+                        paymentIdForLog,                                          // 결제 PK (저장 안됐으면 null)
+                        e.getMessage()                                            // cancelReason / 실패 사유
+                );
+            } catch (Exception logEx) {
+                log.warn("payment_completed 비즈니스 로그 기록 실패", logEx);
+            }
+
+            // 컨트롤러 쪽에 그대로 예외 전달
+            throw e;
         }
-
-        // 6) 결제 금액 검증: PG vs DB (상품 + 배송비 기준)
-        BigDecimal pgAmount = BigDecimal.valueOf(amountFromPg.longValue());
-
-        // 서버에서 "기대하는 결제 금액" (상품합 + 배송비)
-        BigDecimal expectedAmount = calculateExpectedPayAmount(order);
-
-        log.info(">>> [CHECK] expectedAmount = {}", expectedAmount);
-        log.info(">>> [CHECK] pgAmount       = {}", pgAmount);
-
-        if (expectedAmount.compareTo(pgAmount) != 0) {
-            throw new IllegalStateException("결제 금액이 일치하지 않습니다.");
-        }
-
-        // 7) 결제 상태 검증
-        if (!"paid".equals(status)) {
-            throw new IllegalStateException("결제 상태가 완료(paid)가 아닙니다. 상태=" + status);
-        }
-
-        // 8) 여기까지 통과하면 정상 결제 → 주문/결제 상태 확정
-        order.setOrderStatus(OrderStatus.PAID);
-
-        OrderPayment payment = order.getOrderPayment();
-        if (payment == null) {
-            payment = new OrderPayment();
-            payment.setOrder(order);
-        }
-
-        payment.setPaymentMethod("CARD"); // TODO: rsp.pay_method를 DTO로 받아서 세팅 가능
-        payment.setAmount(order.getTotalPrice());
-        payment.setPaymentDate(LocalDateTime.now());
-        payment.setPaymentStatus(PaymentStatus.SUCCESS);
-
-        orderPaymentRepository.save(payment);
-        orderRepository.save(order);
-
-        // 🔹 비즈니스 로그: 결제 완료
-        int totalAmountInWon = order.getTotalPrice().intValue();
-
-        businessEventLogger.logPaymentCompleted(
-                order.getOrderUid(),               // orderUid
-                order.getMember().getId(),         // userId
-                totalAmountInWon,                  // totalAmountInWon
-                true,                              // success
-                payment.getPaymentMethod(),        // paymentMethod
-                payment.getPaymentStatus().name(), // paymentStatus
-                order.getOrderStatus().name(),     // orderStatus
-                payment.getId(),                   // paymentId
-                null                               // cancelReason (성공이라 없음)
-        );
     }
 
 
@@ -263,25 +344,47 @@ public class OrderService {
         return "order_" + uuid.substring(0, 24);
     }
 
-    private BigDecimal calculateExpectedPayAmount(Order order) {
-        // 1) 상품 합계
+    public PaymentAmounts getPaymentAmounts(Order order) {
         BigDecimal itemsTotal = order.getTotalPrice();
-
-        // 장바구니가 비어 있으면 0원
-        if (itemsTotal.compareTo(BigDecimal.ZERO) == 0) {
-            return BigDecimal.ZERO;
+        if (itemsTotal == null) {
+            itemsTotal = BigDecimal.ZERO;
         }
 
-        // 2) 배송비 계산 (컨트롤러/HTML에서 쓰던 로직과 맞춰야 함)
-        BigDecimal deliveryFee =
-                itemsTotal.compareTo(BigDecimal.valueOf(50000)) > 0
-                        ? BigDecimal.ZERO
-                        : BigDecimal.valueOf(2500);
+        // 장바구니가 비어 있으면 모두 0 처리
+        if (itemsTotal.compareTo(BigDecimal.ZERO) == 0) {
+            return new PaymentAmounts(BigDecimal.ZERO, 0);
+        }
 
-        // 3) 상품 + 배송비
-        return itemsTotal.add(deliveryFee);
+        // 배송비 정책: 5만원 초과면 무료, 아니면 2500원
+        int deliveryFee =
+                itemsTotal.compareTo(BigDecimal.valueOf(50000)) > 0
+                        ? 0
+                        : 2500;
+
+        return new PaymentAmounts(itemsTotal, deliveryFee);
     }
 
+    private BigDecimal calculateExpectedPayAmount(Order order) {
+//        // 1) 상품 합계
+//        BigDecimal itemsTotal = order.getTotalPrice();
+//
+//        // 장바구니가 비어 있으면 0원
+//        if (itemsTotal.compareTo(BigDecimal.ZERO) == 0) {
+//            return BigDecimal.ZERO;
+//        }
+//
+//        // 2) 배송비 계산 (컨트롤러/HTML에서 쓰던 로직과 맞춰야 함)
+//        BigDecimal deliveryFee =
+//                itemsTotal.compareTo(BigDecimal.valueOf(50000)) > 0
+//                        ? BigDecimal.ZERO
+//                        : BigDecimal.valueOf(2500);
+//
+//        // 3) 상품 + 배송비
+//        return itemsTotal.add(deliveryFee);
+//    }
+
+        return getPaymentAmounts(order).getTotalPay();
+    }
 
 }
 
