@@ -41,7 +41,51 @@
         });
 
 
+        function cancelOrderBeforePayment() {
+            if (!confirm('결제를 취소하시겠습니까?\n(장바구니 페이지로 이동합니다)')) {
+                return;
+            }
 
+            var csrfToken  = $('meta[name="_csrf"]').attr('content');
+            var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+            var payload = {
+                orderUid: orderUid,
+                reason: 'USER_CLICK_CANCEL_BUTTON'   // 서버 로그용 취소 사유
+            };
+
+            fetch('/order/cancel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('주문 취소 요청 실패');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('주문이 취소되었습니다.');
+                        // 👉 취소 후 이동할 곳: 장바구니 or 메인 등
+                        if (data.redirectUrl) {
+                            location.href = data.redirectUrl;
+                        } else {
+                            location.href = '/cart';
+                        }
+                    } else {
+                        alert('주문 취소에 실패했습니다.\n사유: ' + (data.message || '알 수 없는 오류'));
+                    }
+                })
+                .catch(error => {
+                    console.error('주문 취소 중 오류:', error);
+                    alert('주문 취소 중 오류가 발생했습니다. 관리자에게 문의해주세요.');
+                });
+        }
 
     function initPayment() {
         console.log("initPayment_start")
@@ -131,6 +175,7 @@
             var msg = '결제에 실패하였습니다.\n';
             msg += rsp.error_msg;
             alert(msg);
+
         }
 
 
@@ -1099,7 +1144,7 @@
                     위 주문 내용을 확인 하였으며, 회원 본인은 개인정보 이용 및 제공(해외직구의 경우 국외제공) 및 결제에 동의합니다.
                 </div>
                 <div class="agreeBtn  hasRocketPayCheckoutButton" id="btn_all">
-                    <button type="button" id="paymentRocketpayBtn" style="display: inline-block;">
+                    <button type="button" onclick="cancelOrderBeforePayment()" id="paymentRocketpayBtn" style="display: inline-block;">
                         <img src="/img/cancle.png" width="250" height="60" alt="취소하기">
                         <span class="wow-selection-txt"></span>
                     </button>

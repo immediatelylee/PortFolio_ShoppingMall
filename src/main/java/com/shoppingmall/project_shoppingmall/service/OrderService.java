@@ -173,6 +173,53 @@ public class OrderService {
 
 
     /**
+     * 결제 진행 전, 사용자가 주문서를 보고 "취소하기" 버튼을 눌렀을 때
+     */
+    public void cancelOrderBeforePayment(String orderUid, String cancelReason) {
+
+        Order order = orderRepository.findByOrderUid(orderUid)
+                .orElseThrow(() -> new IllegalArgumentException("해당 주문을 찾을 수 없습니다."));
+
+        // 이미 결제 완료된 주문은 여기서 취소 X (나중에 PG 환불 API 연동 시 별도 로직)
+        if (order.getOrderStatus() == OrderStatus.PAID) {
+            throw new IllegalStateException("이미 결제 완료된 주문은 이 경로로 취소할 수 없습니다.");
+        }
+
+        // 주문 상태를 CANCELLED 로 변경
+        order.setOrderStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
+
+        // "기대 결제 금액" (상품 + 배송비) 기준으로 로깅
+        BigDecimal expectedAmount = calculateExpectedPayAmount(order);
+        int amountInWon = expectedAmount.intValue();
+
+        // 비즈니스 로그: 결제 실패/취소로 기록
+        // signature:
+        // logPaymentCompleted(String orderUid, Long userId, Integer amountInWon,
+        //                     boolean success, String paymentMethod,
+        //                     String paymentStatus, String orderStatus,
+        //                     Long paymentId, String cancelReason)
+        businessEventLogger.logPaymentCompleted(
+                order.getOrderUid(),                            // orderUid
+                order.getMember() != null ? order.getMember().getId() : null,  // userId
+                amountInWon,                                    // amountInWon (상품+배송비)
+                false,                                          // success = false (취소)
+                null,                                           // paymentMethod (아직 결제 전이므로 없음)
+                "CANCELLED",                                    // paymentStatus
+                order.getOrderStatus().name(),                  // orderStatus = CANCELLED
+                null,                                           // paymentId (결제 자체가 없으므로 null)
+                cancelReason                                    // cancelReason
+        );
+
+        log.info(">>> 주문 취소 완료, orderUid={}, reason={}", orderUid, cancelReason);
+    }
+
+
+
+
+
+
+    /**
      * iamport 결제 검증 및 Order / OrderPayment 확정
      */
     @Transactional
