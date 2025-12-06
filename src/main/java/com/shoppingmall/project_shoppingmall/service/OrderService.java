@@ -240,6 +240,40 @@ public class OrderService {
         log.info(">>> PG 결제 시도 실패 로그 기록, orderUid={}, reason={}", dto.getOrderUid(), dto.getFailReason());
     }
 
+    @Transactional
+    public void handlePgCancelledPayment(IamportWebhookRequestDto dto) {
+
+        Order order = orderRepository.findByOrderUid(dto.getMerchantUid())
+                .orElse(null);
+
+        if (order == null) {
+            log.warn("웹훅 취소: 해당 주문을 찾을 수 없음, merchantUid={}", dto.getMerchantUid());
+            return;
+        }
+
+        // 주문/결제 상태 변경
+        order.setOrderStatus(OrderStatus.CANCELLED);
+
+        OrderPayment payment = order.getOrderPayment();
+        if (payment != null) {
+            payment.setPaymentStatus(PaymentStatus.CANCELLED);
+        }
+
+        // 비즈니스 로그
+        businessEventLogger.logPaymentCompleted(
+                order.getOrderUid(),
+                order.getMember() != null ? order.getMember().getId() : null,
+                dto.getAmount() != null ? dto.getAmount() : 0,
+                false,                         // 결과적으로 "매출이 살아남지 못했으니 fail/cancel"
+                payment != null ? payment.getPaymentMethod() : null,
+                "CANCELLED",                   // paymentStatus
+                order.getOrderStatus().name(), // orderStatus = CANCELLED
+                payment != null ? payment.getId() : null,
+                dto.getCancelReason()
+        );
+
+        log.info(">>> PG 웹훅 취소 처리 완료, orderUid={}", order.getOrderUid());
+    }
 
 
 
