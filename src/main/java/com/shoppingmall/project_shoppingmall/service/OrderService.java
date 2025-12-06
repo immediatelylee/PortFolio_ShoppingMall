@@ -214,7 +214,31 @@ public class OrderService {
         log.info(">>> 주문 취소 완료, orderUid={}, reason={}", orderUid, cancelReason);
     }
 
+    @Transactional
+    public void logPgFailBeforeComplete(PaymentFailRequestDto dto, Long userId) {
 
+        // orderUid로 주문을 찾되, 없으면 그냥 로그만 남기고 종료
+        Order order = orderRepository.findByOrderUid(dto.getOrderUid())
+                .orElse(null);
+
+        String orderStatus = (order != null) ? order.getOrderStatus().name() : "PENDING";
+
+        int amountInWon = (dto.getPaidAmount() != null) ? dto.getPaidAmount() : 0;
+
+        businessEventLogger.logPaymentCompleted(
+                dto.getOrderUid(),            // orderUid (PG 시도 기준)
+                userId,                       // userId (없으면 null)
+                amountInWon,                  // amountInWon (대부분 0)
+                false,                        // success = false
+                dto.getPayMethod(),           // paymentMethod (null 가능)
+                "FAILED",                     // paymentStatus = FAILED
+                orderStatus,                  // 주문 상태 (PENDING, 또는 null)
+                null,                         // paymentId (결제 row 없음)
+                dto.getFailReason()           // cancelReason/실패 사유
+        );
+
+        log.info(">>> PG 결제 시도 실패 로그 기록, orderUid={}, reason={}", dto.getOrderUid(), dto.getFailReason());
+    }
 
 
 

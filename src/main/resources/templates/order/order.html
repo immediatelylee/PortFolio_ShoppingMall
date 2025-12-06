@@ -176,6 +176,28 @@
             msg += rsp.error_msg;
             alert(msg);
 
+            //  여기서 서버에 "PG 결제 실패" 로그 전송
+            var csrfToken  = $('meta[name="_csrf"]').attr('content');
+            var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+            var failPayload = {
+                orderUid: orderUid,                 // 어떤 주문 시도였는지
+                impUid: rsp.imp_uid || null,        // 실패해도 imp_uid가 올 때 있음
+                paidAmount: rsp.paid_amount || 0,   // 거의 0일 가능성이 큼
+                payMethod: rsp.pay_method || null,  // 카드/가상계좌 등 (없을 수도 있음)
+                failCode: rsp.error_code || null,   // PG 에러 코드
+                failReason: rsp.error_msg || 'UNKNOWN' // 사용자/PG가 준 이유
+            };
+            fetch('/order/fail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken
+                },
+                body: JSON.stringify(failPayload)
+            }).catch(function (err) {
+                console.error('결제 실패 로그 전송 중 오류:', err);
+            });
         }
 
 

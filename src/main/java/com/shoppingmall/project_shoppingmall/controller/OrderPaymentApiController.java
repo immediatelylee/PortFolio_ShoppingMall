@@ -80,5 +80,21 @@ public class OrderPaymentApiController {
         }
     }
 
+    @PostMapping("/order/fail")
+    public ResponseEntity<PaymentFailResponseDto> paymentFail(
+            @RequestBody PaymentFailRequestDto dto,
+            Principal principal) {
 
+        Long userId = null;
+        if (principal != null) {
+            Member member = memberService.getCurrentMember(principal);
+            if (member != null) {
+                userId = member.getId();
+            }
+        }
+
+        orderService.logPgFailBeforeComplete(dto, userId);
+
+        return ResponseEntity.ok(new PaymentFailResponseDto(true));
+    }
 }
