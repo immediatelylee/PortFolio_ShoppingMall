@@ -89,6 +89,13 @@
             <includeMdcKeyName>unit_price</includeMdcKeyName>
             <includeMdcKeyName>total_price</includeMdcKeyName>
 
+            <!-- 🔹 결제 관련 새 필드들 -->
+            <includeMdcKeyName>order_uid</includeMdcKeyName>
+            <includeMdcKeyName>payment_status</includeMdcKeyName>
+            <includeMdcKeyName>order_status</includeMdcKeyName>
+            <includeMdcKeyName>payment_id</includeMdcKeyName>
+            <includeMdcKeyName>cancel_reason</includeMdcKeyName>
+
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}/${BUSINESS_FILE_NAME}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>

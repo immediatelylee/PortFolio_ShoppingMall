@@ -1,5 +1,6 @@
 package com.shoppingmall.project_shoppingmall.logging;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -212,45 +213,7 @@ public class BusinessEventLogger {
             businessLog.info("business_event");
         }
     }
-//    public void logPaymentCompleted(
-//            String orderUid,         // 주문번호 (merchant_uid)
-//            Long userId,             // 회원 ID
-//            Integer amountInWon,     // 결제 금액(원 단위)
-//            boolean success,         // true: 성공, false: 실패/취소 실패
-//            String paymentMethod,    // CARD / VBANK / 등
-//            String paymentStatus,    // SUCCESS / FAILED / CANCELLED 등 (PaymentStatus.name())
-//            String orderStatus,      // PENDING / PAID / CANCELLED / FAILED 등 (OrderStatus.name())
-//            Long paymentId,          // OrderPayment PK (없으면 null)
-//            String cancelReason      // 취소/실패 사유(없으면 null)
-//    ) {
-//        try (MdcScope m = new MdcScope()) {
-//            // 공통 베이스 (trace_id, app, timestamp 등)
-//            putBase(m, "payment_completed");
-//
-//            m.put("order_uid", orderUid);
-//            m.put("user_id", userId);
-//            m.put("amount", amountInWon);
-//            m.put("success", success);
-//
-//            if (paymentMethod != null) {
-//                m.put("payment_method", paymentMethod);
-//            }
-//            if (paymentStatus != null) {
-//                m.put("payment_status", paymentStatus);
-//            }
-//            if (orderStatus != null) {
-//                m.put("order_status", orderStatus);
-//            }
-//            if (paymentId != null) {
-//                m.put("payment_id", paymentId);
-//            }
-//            if (cancelReason != null) {
-//                m.put("cancel_reason", cancelReason);
-//            }
-//
-//            businessLog.info("business_event");
-//        }
-//    }
+
 
     public void logSearch(Long userId, String keyword, int resultCount) {
         try (MdcScope m = new MdcScope()) {
