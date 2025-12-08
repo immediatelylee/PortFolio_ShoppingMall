@@ -40,7 +40,7 @@
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
 
-            var url = "/order/iteminfo";
+            var url = "/order/direct";
             var itemId = $("#itemIdInput").val();
             var count = $("#option_box1_quantity").val();
             var paramData = {
@@ -53,31 +53,44 @@
             var param = JSON.stringify(paramData);
 
             $.ajax({
-                url      : url,
-                type     : "POST",
-                contentType : "application/json",
-                data     : param,
+                url        : url,
+                type       : "POST",
+                contentType: "application/json",
+                data       : param,
                 beforeSend : function(xhr){
                     /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
                     xhr.setRequestHeader(header, token);
                 },
-                dataType : "json",
-                cache   : false,
-                success  : function(result, status){
-                    window.location.href = "/order/selected";
-                },
-                error : function(jqXHR, status, error){
+                dataType   : "json",
+                cache      : false,
+                success    : function(result, status){
 
-                    //
-                    if(jqXHR.status == '401'){
-                        alert('로그인 후 이용해주세요');
-                        location.href='/members/login';
-                    } else{
-                        console.log(jqXHR.status)
-                        console.log("error2")
-                        alert(jqXHR.responseText);
+                    console.log("directOrder result:", result);
+
+                    if (result.success) {
+                        // ✅ 서버가 내려주는 redirectUrl이 있으면 그걸 사용
+                        if (result.redirectUrl) {
+                            window.location.href = result.redirectUrl;
+                        } else if (result.orderUid) {
+                            // 혹시나 redirectUrl 없이 orderUid만 내려줄 경우 대비
+                            window.location.href = "/order/checkout/" + result.orderUid;
+                        } else {
+                            alert("주문은 생성되었지만 이동할 URL을 찾을 수 없습니다.");
+                        }
+                    } else {
+                        alert(result.error || "주문 생성에 실패했습니다.");
                     }
+                },
+                error      : function(jqXHR, status, error){
 
+                    if (jqXHR.status == 401) {
+                        alert('로그인 후 이용해주세요');
+                        location.href = '/members/login';
+                    } else {
+                        console.log("status:", jqXHR.status);
+                        console.log("error :", error);
+                        alert(jqXHR.responseText || "주문 처리 중 오류가 발생했습니다.");
+                    }
                 }
             });
         }

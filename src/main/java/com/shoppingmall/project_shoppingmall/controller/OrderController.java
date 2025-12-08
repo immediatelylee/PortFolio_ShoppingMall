@@ -32,7 +32,7 @@ public class OrderController {
     private final ItemService itemService;
     private final ItemImgService itemImgService;
 
-    // 세션에 저장하지 않고 바로 하는 전체 상품주문형태
+
     // 1) 상품 상세에서 바로구매
     @PostMapping("/order/direct")
     @ResponseBody
@@ -69,13 +69,7 @@ public class OrderController {
         model.addAttribute("UserInfo", member);
         model.addAttribute("order", order);
         model.addAttribute("orderItems", order.getOrderItems());
-//        model.addAttribute("totalProductPrice", order.getTotalPrice());
 
-//        BigDecimal totalProductPrice = order.getTotalPrice();
-//
-//        int deliveryFee = order.getTotalPrice().compareTo(BigDecimal.valueOf(50000)) > 0
-//                ? 0 : 2500;
-//        BigDecimal totalPay = order.getTotalPrice().add(BigDecimal.valueOf(deliveryFee));
 
         // ✅ 공통 금액 계산 사용
         PaymentAmounts paymentAmounts = orderService.getPaymentAmounts(order);
@@ -117,21 +111,19 @@ public class OrderController {
         Member member = memberService.getCurrentMember(principal);
         Order order = orderService.getOrderWithItems(orderUid);
 
-        // 공통 금액 계산 사용
-        PaymentAmounts paymentAmounts = orderService.getPaymentAmounts(order);
+
 
         model.addAttribute("UserInfo", member);
         model.addAttribute("order", order);
         model.addAttribute("orderItems", order.getOrderItems());
         model.addAttribute("orderPayment", order.getOrderPayment());
-        model.addAttribute("totalProductPrice", order.getTotalPrice());
 
-        int deliveryFee = order.getTotalPrice().compareTo(BigDecimal.valueOf(50000)) > 0
-                ? 0 : 2500;
-        BigDecimal totalPay = order.getTotalPrice().add(BigDecimal.valueOf(deliveryFee));
+        // 공통 금액 계산 사용
+        PaymentAmounts paymentAmounts = orderService.getPaymentAmounts(order);
 
-        model.addAttribute("deliveryFee", deliveryFee);
-        model.addAttribute("totalPayPrice", totalPay);
+        model.addAttribute("totalProductPrice", paymentAmounts.getItemsTotal());
+        model.addAttribute("deliveryFee", paymentAmounts.getDeliveryFee());
+        model.addAttribute("totalPayPrice", paymentAmounts.getTotalPay());
 
         return "order/orderSuccess";
     }

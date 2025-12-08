@@ -33,7 +33,7 @@ public class OrderService {
     private final OrderPaymentRepository orderPaymentRepository;
     private final ItemService itemService;
     private final IamportClientService iamportClientService;
-
+    private final ItemImgService itemImgService;
     private final BusinessEventLogger businessEventLogger;
 
     // 1) 장바구니 기반 주문 생성
@@ -93,10 +93,14 @@ public class OrderService {
                 .orderStatus(OrderStatus.PENDING)
                 .build();
 
+        String imageUrl = itemImgService.getRepImageUrl(itemId);
+
         OrderItem orderItem = OrderItem.builder()
                 .productName(item.getItemNm())
                 .price(BigDecimal.valueOf(item.getPrice()))
                 .quantity(count)
+                .imageUrl(imageUrl)
+                .order(order)
                 .build();
 
         order.addOrderItem(orderItem);
