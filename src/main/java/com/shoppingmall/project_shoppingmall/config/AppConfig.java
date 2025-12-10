@@ -6,15 +6,15 @@ import org.springframework.context.annotation.*;
 
 @Configuration
 public class AppConfig {
-    @Value("${apiKey}")
+//    @Value("${apiKey}")
     String apiKey;
 
-    @Value("${secretKey}")
+//    @Value("${secretKey}")
     String secretKey;
 
-    @Bean
-    public IamportClient iamportClient() {
-        return new IamportClient(apiKey, secretKey);
-    }
+//    @Bean
+//    public IamportClient iamportClient() {
+//        return new IamportClient(apiKey, secretKey);
+//    }
 
 }

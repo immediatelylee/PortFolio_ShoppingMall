@@ -20,80 +20,72 @@
                         <div class="sc-wp5isd-0 kQvlGP">
                             <span class="sc-wp5isd-1 dntWFS">주문완료</span>
                             <div class="sc-wp5isd-2 fgkLLK" style="display: none">
-                                <span class="sc-wp5isd-3 leEVMz">01 옵션 선택</span><span class="sc-wp5isd-3 leEVMz">02 장바구니</span><span class="sc-wp5isd-3 leEVMz">03 주문/결제</span><span class="sc-wp5isd-4 cCOJLY">04 주문완료</span>
+                                <span class="sc-wp5isd-3 leEVMz">01 옵션 선택</span>
+                                <span class="sc-wp5isd-3 leEVMz">02 장바구니</span>
+                                <span class="sc-wp5isd-3 leEVMz">03 주문/결제</span>
+                                <span class="sc-wp5isd-4 cCOJLY">04 주문완료</span>
                             </div>
                         </div>
                         <div class="sc-lsrlw6-0 kHdGTr"><span class="i18n-wrapper"><strong>주문이 완료</strong>되었습니다. 감사합니다!</span>
                             </div>
+                        <!-- 상품 배송 정보 -->
                         <div class="sc-15vqfmy-0 hSQoBl">
                             <div class="sc-15vqfmy-1 jvmSBN">상품배송 정보</div>
                             <div class="sc-1qr3oxa-0 julitQ">
-                                <!-- 주문 모드가 cart인 경우 -->
-                                <div th:if="${orderMode == 'cart'}">
-                                <div class="sc-1qr3oxa-1 dyLcUX" th:each="cartItem: ${cartItems}">
+
+                                <!-- ✅ 이제 orderItems 기준으로만 렌더링 -->
+                                <div class="sc-1qr3oxa-1 dyLcUX" th:each="orderItem : ${orderItems}">
                                     <div class="sc-ch64hn-0 jdSYUa">
-                                        <span class="sc-ch64hn-2 dUrtMr">내일(일) 도착 (상품 1개)</span>
+                                        <!-- 도착 예정 안내는 일단 하드코딩 텍스트 유지 -->
+                                        <span class="sc-ch64hn-2 dUrtMr">
+                                            내일(일) 도착 (상품 1개)
+                                        </span>
                                         <div class="sc-ch64hn-5 iGmVTY"></div>
                                     </div>
-                                    <div class="sc-18pc8pe-0 iuCGcW" th:if="${orderMode == 'cart'}">
-                                        <a class="sc-18pc8pe-1 eQfPNh float-left" href="" target="blank">
-                                        <img class="sc-18pc8pe-2 daJtqk" th:src="${cartItem.imgUrl}" alt="product img">
-                                        </a>
-                                        <div>
-                                            <a href="" target="_blank" class="sc-18pc8pe-3 gGAwML" th:text="${cartItem.itemNm}">쿨링스노우 최강 보들보들 쿨링MAX 쿨토시 남여공용, 손등형2p, 그레이</a>
-                                            <div class="sc-18pc8pe-5 pLEoM">
-                                                <span class="sc-18pc8pe-9 fFYOeI" th:text="${cartItem.price} + ' 원'">4,100</span>
 
-                                            </div>
-                                            <div class="sc-18pc8pe-8 dCzZgT" th:text="'수량 :' + ${cartItem.count} + '개'">수량: 1개</div>
-                                        </div>
-                                    </div>
-                                    <div class="sc-18pc8pe-0 iuCGcW" th:if="${orderMode != 'cart'}">
-                                        <a class="sc-18pc8pe-1 eQfPNh float-left" href="" target="blank">
-                                            <img class="sc-18pc8pe-2 daJtqk" th:src="${productimg}" alt="product img">
-                                        </a>
-                                        <div>
-                                            <a href="" target="_blank" class="sc-18pc8pe-3 gGAwML" th:text="${cartItem.itemNm}">쿨링스노우 최강 보들보들 쿨링MAX 쿨토시 남여공용, 손등형2p, 그레이</a>
-                                            <div class="sc-18pc8pe-5 pLEoM">
-                                                <span class="sc-18pc8pe-9 fFYOeI" th:text="${cartItem.price} + ' 원'">4,100</span>
+                                    <div class="sc-18pc8pe-0 iuCGcW">
 
-                                            </div>
-                                            <div class="sc-18pc8pe-8 dCzZgT" th:text="'수량 :' + ${direct_count} + '개'">수량: 1개</div>
-                                        </div>
+                                <!-- 🔸 상품 이미지
+                                현재 OrderItem에 이미지 URL이 없으면 기본 이미지/placeholder 사용 -->
+                                <a class="sc-18pc8pe-1 eQfPNh float-left" href="#" target="_blank">
+
+                                    <img class="sc-18pc8pe-2 daJtqk"
+                                         th:src="${orderItem.imageUrl}"
+                                         alt="product img">
+                                </a>
+
+                                <!-- 상품 정보 -->
+                                <div>
+                                    <!-- 상품명 -->
+                                    <a href="#" target="_blank"
+                                       class="sc-18pc8pe-3 gGAwML"
+                                       th:text="${orderItem.productName}">
+                                        상품명
+                                    </a>
+
+                                    <!-- 가격 -->
+                                    <div class="sc-18pc8pe-5 pLEoM">
+                                                <span class="sc-18pc8pe-9 fFYOeI"
+                                                      th:text="${#numbers.formatInteger(orderItem.price, 0, 'COMMA')} + ' 원'">
+                                                    4,100 원
+                                                </span>
                                     </div>
-                                </div>
-                                </div>
-                                <!-- 주문 모드가 direct인 경우 -->
-                                <div th:if="${orderMode != 'cart'}">
-                                    <div class="sc-1qr3oxa-1 dyLcUX">
-                                        <div class="sc-ch64hn-0 jdSYUa">
-                                            <span class="sc-ch64hn-2 dUrtMr" th:text="${direct_itemNm}">
-                                                상품명
-                                            </span>
-                                            <div class="sc-ch64hn-5 iGmVTY"></div>
-                                        </div>
-                                        <div class="sc-18pc8pe-0 iuCGcW">
-                                            <a class="sc-18pc8pe-1 eQfPNh float-left" href="#" target="_blank">
-                                                <img class="sc-18pc8pe-2 daJtqk" th:src="@{${productimg}}" alt="product img">
-                                            </a>
-                                            <div>
-                                                <a href="#" target="_blank" class="sc-18pc8pe-3 gGAwML" th:text="${direct_itemNm}">
-                                                    상품명
-                                                </a>
-                                                <div class="sc-18pc8pe-5 pLEoM">
-                                                    <span class="sc-18pc8pe-9 fFYOeI" th:text="${totalPayPrice} + ' 원'">
-                                                    가격
-                                                    </span>
-                                                </div>
-                                                <div class="sc-18pc8pe-8 dCzZgT" th:text="'수량 :' + ${direct_count} + '개'">
-                                                    수량: 1개
-                                                </div>
-                                            </div>
-                                        </div>
+
+                                    <!-- 수량 -->
+                                    <div class="sc-18pc8pe-8 dCzZgT"
+                                         th:text="'수량 : ' + ${orderItem.quantity} + '개'">
+                                        수량: 1개
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+
+
+
+
+
+
                         <table class="sc-asl422-0 ljJuDb">
                             <tbody>
                             <tr>

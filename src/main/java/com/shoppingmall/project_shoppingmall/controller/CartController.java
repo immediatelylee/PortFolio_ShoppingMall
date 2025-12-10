@@ -1,6 +1,8 @@
 package com.shoppingmall.project_shoppingmall.controller;
 
 import com.fasterxml.jackson.databind.*;
+import com.shoppingmall.project_shoppingmall.domain.Member;
+import com.shoppingmall.project_shoppingmall.domain.Order;
 import com.shoppingmall.project_shoppingmall.dto.*;
 import com.shoppingmall.project_shoppingmall.service.*;
 import lombok.*;
@@ -24,6 +26,8 @@ public class CartController {
 
     private final CartService cartService;
     private final ObjectMapper objectMapper;
+    private final MemberService memberService;
+    private final OrderService orderService;
 
 
     /**      장바구니 담기 (AJAX)     */
@@ -105,71 +109,124 @@ public class CartController {
 
 
 
-    //새로만듬.  newCart.html 선택상품주문 ajax에서 /order/selected가기전 전처리과정
-    // cartItemId 와 count를 받아서 이전 cart의 count와 확인 상이하다면 수정하고 order로 보내기
-    // 세션에 상품 정보와 count를 넣음.
+    // 장바구니 → 주문 생성 (선택/전체 공통)
     @PostMapping("/cart/order")
-    public String orderCartItems(@RequestBody OrderRequestDto orderRequestDto,HttpSession session,Principal principal){
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> orderCartItems(
+            @RequestBody OrderRequestDto orderRequestDto,
+            Principal principal) {
+
         if (principal == null) {
-            return "redirect:/members/login";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Collections.singletonMap("error", "로그인이 필요합니다."));
         }
 
+        Member member = memberService.getCurrentMember(principal);
+
+        // 1. 요청으로부터 cartItemId 목록 추출
         List<Long> cartItemIds = orderRequestDto.getItems().stream()
                 .map(CartItemOrderDto::getCartItemId)
                 .collect(Collectors.toList());
 
-        System.out.println("cartItemIds  " +cartItemIds); // 1 출력됨
+        // 2. 실제 DB 기준 장바구니 정보 조회
+        List<CartDetailDto> cartItems =
+                cartService.getCartListByIds(principal.getName(), cartItemIds);
 
-        List<CartDetailDto> cartItems = cartService.getCartListByIds(principal.getName(), cartItemIds); //getName : admin@example.com
-        System.out.println("cartItems (cart/order)" +cartItems.toString());
-        if (cartItems != null && !cartItems.isEmpty()) {
-            for (CartDetailDto cartItem : cartItems) {
-                System.out.println("CartItem ID: " + cartItem.getCartItemId());
-                System.out.println("Item Name: " + cartItem.getItemNm());
-                System.out.println("Item Code: " + cartItem.getItemCode());
-                System.out.println("Price: " + cartItem.getPrice());
-                System.out.println("Count: " + cartItem.getCount());
-                System.out.println("Image URL: " + cartItem.getImgUrl());
-                System.out.println("------------------------------");
-            }
-        } else {
-            System.out.println("No items in the cart.");
-        }
-
-
+        // 3. 화면에서 넘어온 수량 맵
         Map<Long, Integer> viewCountMap = orderRequestDto.getItems().stream()
                 .collect(Collectors.toMap(CartItemOrderDto::getCartItemId, CartItemOrderDto::getCount));
 
+        // 4. 화면 수량과 DB 수량이 다르면 CartService를 통해 장바구니 수량 업데이트
         for (CartDetailDto cartItem : cartItems) {
-            Integer viewCount = viewCountMap.get(cartItem.getCartItemId()); // get(key) -> value를 출력하므로 count를 출력한다.
+            Integer viewCount = viewCountMap.get(cartItem.getCartItemId());
             if (viewCount != null && cartItem.getCount() != viewCount) {
-                cartItem.setCount(viewCount);
+
+                // DB 업데이트
                 cartService.updateCartItemCount(cartItem.getCartItemId(), viewCount);
-                System.out.println("test==========================");
-                System.out.println("count다른 부분 수정");
+
+                // 주문 생성에 사용할 DTO에도 최신 수량 반영
+                cartItem.setCount(viewCount);
             }
         }
 
-        int totalProductPrice = cartItems.stream()
-                .mapToInt(item -> item.getPrice() * item.getCount())
-                .sum();
-
-        int deliveryFee = (totalProductPrice == 0 || totalProductPrice > 50000) ? 0 : 2500;
-        int totalPayPrice = totalProductPrice + deliveryFee;
-
-        // 세션에 저장
-        session.setAttribute("cartItems", cartItems);
-        session.setAttribute("totalProductPrice", totalProductPrice);
-        session.setAttribute("deliveryFee", deliveryFee);
-        session.setAttribute("totalPayPrice", totalPayPrice);
-        session.setAttribute("orderMode","cart");
-        System.out.println("cartItems (session) " +cartItems);
-        System.out.println("totalPayPrice (session)" +totalPayPrice);
-        System.out.println("totalProductPrice (session)" +totalProductPrice);
-        System.out.println("deliveryFee (session)" +deliveryFee);
+        // 5. OrderService에 “최종 수량이 반영된 cartItems”만 넘겨서 주문 생성
+        Order order = orderService.createOrderFromCart(member, cartItems);
 
 
+        Map<String, Object> result = new HashMap<>();
+        result.put("success", true);
+        result.put("orderUid", order.getOrderUid());
+        result.put("redirectUrl", "/order/checkout/" + order.getOrderUid());
 
-        return "redirect:/order/selected";
+        return ResponseEntity.ok(result);
     }
+
+
+    //새로만듬.  newCart.html 선택상품주문 ajax에서 /order/selected가기전 전처리과정
+    // cartItemId 와 count를 받아서 이전 cart의 count와 확인 상이하다면 수정하고 order로 보내기
+    // 세션에 상품 정보와 count를 넣음.
+//    @PostMapping("/cart/order")
+//    public String orderCartItems(@RequestBody OrderRequestDto orderRequestDto,HttpSession session,Principal principal){
+//        if (principal == null) {
+//            return "redirect:/members/login";
+//        }
+//
+//        List<Long> cartItemIds = orderRequestDto.getItems().stream()
+//                .map(CartItemOrderDto::getCartItemId)
+//                .collect(Collectors.toList());
+//
+//        System.out.println("cartItemIds  " +cartItemIds); // 1 출력됨
+//
+//        List<CartDetailDto> cartItems = cartService.getCartListByIds(principal.getName(), cartItemIds); //getName : admin@example.com
+//        System.out.println("cartItems (cart/order)" +cartItems.toString());
+//        if (cartItems != null && !cartItems.isEmpty()) {
+//            for (CartDetailDto cartItem : cartItems) {
+//                System.out.println("CartItem ID: " + cartItem.getCartItemId());
+//                System.out.println("Item Name: " + cartItem.getItemNm());
+//                System.out.println("Item Code: " + cartItem.getItemCode());
+//                System.out.println("Price: " + cartItem.getPrice());
+//                System.out.println("Count: " + cartItem.getCount());
+//                System.out.println("Image URL: " + cartItem.getImgUrl());
+//                System.out.println("------------------------------");
+//            }
+//        } else {
+//            System.out.println("No items in the cart.");
+//        }
+//
+//
+//        Map<Long, Integer> viewCountMap = orderRequestDto.getItems().stream()
+//                .collect(Collectors.toMap(CartItemOrderDto::getCartItemId, CartItemOrderDto::getCount));
+//
+//        for (CartDetailDto cartItem : cartItems) {
+//            Integer viewCount = viewCountMap.get(cartItem.getCartItemId()); // get(key) -> value를 출력하므로 count를 출력한다.
+//            if (viewCount != null && cartItem.getCount() != viewCount) {
+//                cartItem.setCount(viewCount);
+//                cartService.updateCartItemCount(cartItem.getCartItemId(), viewCount);
+//                System.out.println("test==========================");
+//                System.out.println("count다른 부분 수정");
+//            }
+//        }
+//
+//        int totalProductPrice = cartItems.stream()
+//                .mapToInt(item -> item.getPrice() * item.getCount())
+//                .sum();
+//
+//        int deliveryFee = (totalProductPrice == 0 || totalProductPrice > 50000) ? 0 : 2500;
+//        int totalPayPrice = totalProductPrice + deliveryFee;
+//
+//        // 세션에 저장
+//        session.setAttribute("cartItems", cartItems);
+//        session.setAttribute("totalProductPrice", totalProductPrice);
+//        session.setAttribute("deliveryFee", deliveryFee);
+//        session.setAttribute("totalPayPrice", totalPayPrice);
+//        session.setAttribute("orderMode","cart");
+//        System.out.println("cartItems (session) " +cartItems);
+//        System.out.println("totalPayPrice (session)" +totalPayPrice);
+//        System.out.println("totalProductPrice (session)" +totalProductPrice);
+//        System.out.println("deliveryFee (session)" +deliveryFee);
+//
+//
+//
+//        return "redirect:/order/selected";
+//    }
 }

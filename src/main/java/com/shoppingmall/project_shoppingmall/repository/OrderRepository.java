@@ -21,4 +21,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     )
     Long countOrder(@Param("email") String email);
     Order findByMemberAndOrderStatus(Member member, OrderStatus orderStatus);
+
+    Optional<Order> findByOrderUid(String orderUid);
+
+    @Query("select distinct o from Order o " +
+            "left join fetch o.orderItems " +
+            "where o.orderUid = :orderUid")
+    Optional<Order> findByOrderUidWithItems(@Param("orderUid") String orderUid);
 }

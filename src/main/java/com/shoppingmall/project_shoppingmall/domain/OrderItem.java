@@ -20,15 +20,20 @@ public class OrderItem extends BaseEntity {
 
     private BigDecimal price;
 
+    private String imageUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
 
-    public OrderItem(String productName, int quantity, BigDecimal price) {
+    @Builder
+    public OrderItem(String productName, int quantity, BigDecimal price ,String imageUrl,Order order) {
         this.productName = productName;
         this.quantity = quantity;
         this.price = price;
+        this.imageUrl=imageUrl;
+        this.order=order;
     }
 
     public BigDecimal getTotalPrice() {
