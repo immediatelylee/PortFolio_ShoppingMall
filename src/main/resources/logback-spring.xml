@@ -96,6 +96,16 @@
             <includeMdcKeyName>payment_id</includeMdcKeyName>
             <includeMdcKeyName>cancel_reason</includeMdcKeyName>
 
+            <!-- update_cart_item 전용 -->
+            <includeMdcKeyName>old_quantity</includeMdcKeyName>
+            <includeMdcKeyName>new_quantity</includeMdcKeyName>
+            <includeMdcKeyName>total_price_before</includeMdcKeyName>
+            <includeMdcKeyName>total_price_after</includeMdcKeyName>
+
+            <!--  cart_checkout_start 유지용 -->
+            <includeMdcKeyName>cart_item_count</includeMdcKeyName>
+            <includeMdcKeyName>cart_total_price</includeMdcKeyName>
+
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}/${BUSINESS_FILE_NAME}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
