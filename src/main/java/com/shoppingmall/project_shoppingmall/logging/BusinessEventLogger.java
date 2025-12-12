@@ -72,16 +72,7 @@ public class BusinessEventLogger {
     // ==========================
     //     장바구니 관련 이벤트
     // ==========================
-    /**  장바구니 페이지 진입 */
-    public void logViewCart(Long userId, int itemCount, int cartTotalPrice) {
-        try (MdcScope m = new MdcScope()) {
-            putBase(m, "view_cart");
-            m.put("user_id", userId);
-            m.put("cart_item_count", itemCount);       // 장바구니 안 상품 총 개수(수량 합)
-            m.put("cart_total_price", cartTotalPrice); // 장바구니 총 금액
-            businessLog.info("business_event");
-        }
-    }
+
 
     /**  장바구니 수량 변경 */
     public void logUpdateCartItem(Long userId,
