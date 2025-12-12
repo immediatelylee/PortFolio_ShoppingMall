@@ -98,22 +98,7 @@ public class CartService {
         List<CartDetailDto> cartDetailList =
                 cartItemRepository.findCartDetailDtoList(cart.getId());
 
-        // ★ view_cart 이벤트
-        if (!cartDetailList.isEmpty()) {
-            int itemCount = cartDetailList.stream()
-                    .mapToInt(CartDetailDto::getCount)
-                    .sum();
 
-            int totalPrice = cartDetailList.stream()
-                    .mapToInt(dto -> dto.getPrice() * dto.getCount())
-                    .sum();
-
-            businessEventLogger.logViewCart(
-                    member.getId(),
-                    itemCount,
-                    totalPrice
-            );
-        }
         return  cartDetailList;
     }
 
@@ -208,6 +193,8 @@ public class CartService {
         int quantity = cartItem.getCount();
         int unitPrice = item.getPrice();
 
+        cartItemRepository.delete(cartItem);
+
         if (member != null && item != null) {
             businessEventLogger.logRemoveFromCart(
                     member.getId(),
@@ -217,7 +204,7 @@ public class CartService {
             );
         }
 
-        cartItemRepository.delete(cartItem);
+
     }
 
     /** 복수 삭제 + 각각 remove_from_cart 로그 */
@@ -236,6 +223,8 @@ public class CartService {
             int quantity = cartItem.getCount();
             int unitPrice = item.getPrice();
 
+            cartItemRepository.deleteAll(cartItems);
+
             if (member != null && item != null) {
                 businessEventLogger.logRemoveFromCart(
                         member.getId(),
@@ -246,7 +235,7 @@ public class CartService {
             }
         }
 
-        cartItemRepository.deleteAll(cartItems);
+
     }
 
 
