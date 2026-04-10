@@ -124,6 +124,6 @@
 
 ---
 
-**Contact**: dydgh1095@naver.com  | [Blog](https://immediately-act.tistory.com/)
+**Contact**: dydgh1095@naver.com 
 
 *"지속적으로 발전하는 개발자가 되겠습니다."*
